@@ -1,7 +1,12 @@
 "use client";
 import { Button } from "antd";
-import { useAppDispatch } from "@/lib/hooks";
-import { setUser } from "@/lib/slices/userSlice";
+import { useAppDispatch } from "@/libs/hooks";
+import { setUser } from "@/libs/slices/userSlice";
+import dynamic from "next/dynamic";
+
+const TradingView = dynamic(() => import("@/components/TradingView"), {
+  ssr: false,
+});
 
 export default function Home() {
   const dispatch = useAppDispatch();
@@ -21,6 +26,7 @@ export default function Home() {
       >
         Test Redux
       </Button>
+      <TradingView />
     </>
   );
 }

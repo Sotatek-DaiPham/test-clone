@@ -1,5 +1,5 @@
-import { clearUser } from "@/lib/slices/userSlice";
-import makeStore from "@/lib/store";
+import { clearUser } from "@/libs/slices/userSlice";
+import makeStore from "@/libs/store";
 import axios, { AxiosRequestConfig } from "axios";
 import { toast } from "react-toastify";
 
