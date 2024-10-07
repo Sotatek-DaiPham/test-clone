@@ -6,6 +6,7 @@ import AppLayout from "@/components/Layout";
 import { WagmiRainbowKitProvider } from "@/providers/WagmiProvider";
 import "@rainbow-me/rainbowkit/styles.css";
 import "./globals.css";
+import SocketProvider from "@/libs/socket/SocketProvider";
 
 const ReduxProviders = dynamic(() => import("@/providers/StoreProvider"), {
   ssr: false,
@@ -33,7 +34,9 @@ export default function RootLayout({
         <ReduxProviders>
           <WagmiRainbowKitProvider>
             <AntdRegistry>
-              <AppLayout>{children}</AppLayout>
+              <AppLayout>
+                <SocketProvider>{children}</SocketProvider>
+              </AppLayout>
             </AntdRegistry>
           </WagmiRainbowKitProvider>
         </ReduxProviders>

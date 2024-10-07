@@ -5,6 +5,7 @@ import { useEffect, useRef } from "react";
 import withClient from "@/helpers/with-client";
 import onInitTradingView from "@/libs/trading-view";
 import { Spin } from "antd";
+import { ResolutionString } from "@public/charting_library/charting_library.min";
 
 const TradingViewChart = () => {
   const tradingChartRef = useRef<HTMLDivElement>(null);

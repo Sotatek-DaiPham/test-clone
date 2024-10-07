@@ -1,12 +1,16 @@
-import get from "lodash/get";
-import { configurationData, ID_TRADING_VIEW } from "./constants";
-import { getClientTimezone } from "./helpers";
 import {
   LibrarySymbolInfo,
   ResolveCallback,
   TradingTerminalWidgetOptions,
   widget,
 } from "@public/charting_library/charting_library.min";
+import get from "lodash/get";
+import {
+  configurationData,
+  DEFAULT_TRADING_VIEW_INTERVAL,
+  ID_TRADING_VIEW,
+} from "./constants";
+import { getClientTimezone } from "./helpers";
 
 interface IParams {
   marketId: string;
@@ -20,7 +24,7 @@ interface IDataChart {
 }
 
 async function getData({ resolution, countback, marketId }: IDataChart) {
-  if (!marketId) return [];
+  // if (!marketId) return [];
   // const data = await fetchMarketsHistory([marketId], resolution, countback);
   const data: any = [];
   return get(data, "[0].c")?.map((_: any, index: number) => {
@@ -45,7 +49,8 @@ export default async function onInitTradingView({ marketId, symbol }: IParams) {
     toolbar_bg: "#16171c",
     symbol,
     timezone: getClientTimezone(),
-    interval: "60",
+    enabled_features: ["study_templates"],
+    interval: DEFAULT_TRADING_VIEW_INTERVAL,
     container_id: ID_TRADING_VIEW,
     datafeed: {
       onReady: (callback: any) => {
@@ -70,7 +75,7 @@ export default async function onInitTradingView({ marketId, symbol }: IParams) {
           description: "",
           type: "bitcoin",
           session: "24x7",
-          timezone: "America/Mexico_City",
+          timezone: getClientTimezone(),
           minmov: 1,
           pricescale: 10,
           has_intraday: true,
