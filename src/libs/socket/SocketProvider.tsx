@@ -1,7 +1,5 @@
 "use client";
 
-import { useAppSelector } from "@/libs/redux/store";
-import { getAccessToken } from "@/stores/user/selectors";
 import React, {
   createContext,
   useCallback,
@@ -10,6 +8,7 @@ import React, {
   useState,
 } from "react";
 import { Socket, io } from "socket.io-client";
+import { useAppSelector } from "../hooks";
 
 const domain = process.env.NEXT_PUBLIC_API_ENDPOINT;
 
@@ -37,7 +36,7 @@ export const SocketContext = createContext<SocketInterface>({
 });
 
 const SocketProvider = ({ children }: Props) => {
-  const accessToken = useAppSelector(getAccessToken);
+  const accessToken = useAppSelector((state: any) => state.user.accessToken);
 
   const socket = useRef<Socket | null>(null);
   const [isConnected, setIsConnected] = useState<boolean>(false);
