@@ -1,6 +1,6 @@
 import { API_PATH } from "@/constant/api-path";
-import { useAppDispatch, useAppSelector } from "@/lib/hooks";
-import { clearUser, setUser } from "@/lib/slices/userSlice";
+import { useAppDispatch, useAppSelector } from "@/libs/hooks";
+import { clearUser, setUser } from "@/libs/slices/userSlice";
 import { postAPI } from "@/service";
 import { useMutation } from "@tanstack/react-query";
 import { UserRejectedRequestError } from "viem";
