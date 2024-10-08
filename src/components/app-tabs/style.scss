@@ -1,0 +1,29 @@
+.app-tabs {
+  .ant-tabs-tab {
+    @apply text-[14px] lg:text-[16px] #{!important};
+    // font-size: 16px !important;
+    line-height: 24px !important;
+    font-weight: 500 !important;
+    color: var(--color-text-secondary) !important;
+  }
+
+  .ant-tabs-tab + .ant-tabs-tab {
+    @apply ml-4 lg:ml-8 #{!important};
+  }
+  .ant-tabs-tab.ant-tabs-tab-active {
+    font-weight: 700 !important;
+    .ant-tabs-tab-btn {
+      color: var(--color-text-primary-2) !important;
+    }
+  }
+  .ant-tabs-ink-bar {
+    background: var(--color-text-primary-2) !important;
+    height: 3px !important;
+    border-radius: 8px !important;
+  }
+  .ant-tabs-nav {
+    &::before {
+      border-bottom: 1px solid var(--color-stroke-primary-2) !important;
+    }
+  }
+}

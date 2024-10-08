@@ -1,12 +1,14 @@
-import type { Metadata } from "next";
-import { DM_Sans } from "next/font/google";
-import { AntdRegistry } from "@ant-design/nextjs-registry";
-import dynamic from "next/dynamic";
 import AppLayout from "@/components/Layout";
-import { WagmiRainbowKitProvider } from "@/providers/WagmiProvider";
-import "@rainbow-me/rainbowkit/styles.css";
-import "./globals.css";
+import { NotificationProvider } from "@/libs/antd/NotificationProvider";
 import SocketProvider from "@/libs/socket/SocketProvider";
+import { WagmiRainbowKitProvider } from "@/providers/WagmiProvider";
+import { AntdRegistry } from "@ant-design/nextjs-registry";
+import "@rainbow-me/rainbowkit/styles.css";
+import type { Metadata } from "next";
+import dynamic from "next/dynamic";
+import { DM_Sans } from "next/font/google";
+import "@/assets/scss/globals.scss";
+// import "@/app/globals.scss";
 
 const ReduxProviders = dynamic(() => import("@/providers/StoreProvider"), {
   ssr: false,
@@ -35,7 +37,9 @@ export default function RootLayout({
           <WagmiRainbowKitProvider>
             <AntdRegistry>
               <AppLayout>
-                <SocketProvider>{children}</SocketProvider>
+                <SocketProvider>
+                  <NotificationProvider>{children}</NotificationProvider>
+                </SocketProvider>
               </AppLayout>
             </AntdRegistry>
           </WagmiRainbowKitProvider>
