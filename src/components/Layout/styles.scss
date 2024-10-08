@@ -1,7 +1,31 @@
+@import "@/assets/scss/_colors.scss";
+@import "@/assets/scss/variables.scss";
+@import "@/assets/scss/responsive.scss";
+
 .app-layout {
-  height: 100vh !important;
+  min-height: 100vh;
   overflow: hidden;
-  .app-content {
-    height: 100% !important;
+}
+
+.main-layout {
+  height: calc(100vh - 75px);
+}
+
+.app-content {
+  background: $color-background-black;
+  overflow: auto;
+  padding: 20px;
+  @include mobile {
+    margin-top: 75px;
+  }
+
+  &__main {
+    max-width: 1150px;
+    margin: 0 auto;
+    padding: 25px 40px;
+
+    @include mobile {
+      padding: 15px;
+    }
   }
 }
