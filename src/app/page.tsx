@@ -17,6 +17,11 @@ export default function Home() {
       <span className="text-26px-bold text-primary-white">
         RainMakr Meme Coin
       </span>
+      <h1>RainMakr Meme Coin</h1>
+      <h1 className="text-26px-bold text-primary-white">sy</h1>
+
+      <span className="text-26px-bold text-gray-1">RainMakr Meme Coin</span>
+
       <p>{process.env.NEXT_PUBLIC_ENDPOINT_URL}</p>
       <Button
         onClick={() => {

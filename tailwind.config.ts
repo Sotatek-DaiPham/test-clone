@@ -8,14 +8,17 @@ const config: Config = {
   ],
   theme: {
     extend: {
-      fontFamily: {
-        sfPro: ["var(--font-sf-pro)"],
-      },
+      // fontFamily: {
+      //   sfPro: ["var(--font-sf-pro)"],
+      // },
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
         primary: {
           white: "var(--color-text-neon-primary)",
+        },
+        gray: {
+          1: "var(--bg)",
         },
       },
       width: {

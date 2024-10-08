@@ -1,0 +1,116 @@
+@import "@/assets/scss/_colors.scss";
+@import "@/assets/scss/variables.scss";
+
+.sidebar-menu {
+  background: $color-background-black-1;
+  padding: 20px 10px;
+
+  img {
+    width: 22px;
+    height: 22px;
+  }
+
+  li {
+    span {
+      color: $color-grey-6;
+      font-weight: 500;
+      line-height: 16px;
+      font-size: 16px;
+    }
+  }
+
+  .ant-menu-item-divider {
+    height: 40px;
+    position: relative;
+
+    &::after {
+      position: absolute;
+      content: "";
+      width: 95%;
+      height: 1px;
+      background: $color-grey-8;
+      bottom: 0;
+      left: 0;
+      z-index: 2;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+  }
+
+  .ant-menu-item {
+    height: 48px;
+    color: $color-grey-6;
+    font-weight: 500;
+    line-height: 16px;
+    font-size: 16px;
+    &:active {
+      background-color: transparent !important;
+    }
+    padding: 12px 15px !important;
+    margin-inline: 0;
+    margin-block: 0;
+    margin-bottom: 8px;
+  }
+
+  .ant-menu-item-only-child {
+    padding: 10px 15px !important;
+    width: 100% !important;
+  }
+
+  .ant-menu-submenu-title {
+    padding: 12px 15px !important;
+  }
+
+  .ant-menu-submenu {
+    .ant-menu-submenu-title {
+      height: 48px;
+      &:active {
+        background-color: transparent;
+      }
+    }
+    .ant-menu-submenu-arrow {
+      color: $color-grey-6;
+    }
+
+    .ant-menu-sub {
+      margin-left: 15px;
+      margin-right: 10px;
+      li span {
+        overflow: visible !important;
+      }
+    }
+  }
+
+  .ant-menu-item-selected {
+    padding: 10px 15px;
+    background-color: rgba($color: $color-primary, $alpha: 0.5);
+    img {
+      filter: brightness(0) saturate(100%) invert(97%) sepia(100%) saturate(11%)
+        hue-rotate(217deg) brightness(105%) contrast(104%);
+    }
+    span {
+      color: $color-neutral-white;
+    }
+  }
+
+  .ant-menu-submenu-title {
+    margin: 0 !important;
+  }
+  .ant-menu-submenu-open {
+    border-radius: 5px;
+    background: #1c1d2f;
+    .ant-menu-submenu-title {
+      img {
+        filter: brightness(0) saturate(100%) invert(97%) sepia(100%)
+          saturate(11%) hue-rotate(217deg) brightness(105%) contrast(104%);
+      }
+      span {
+        color: $color-neutral-white;
+      }
+    }
+    .ant-menu-submenu-arrow {
+      color: $color-primary;
+    }
+  }
+}

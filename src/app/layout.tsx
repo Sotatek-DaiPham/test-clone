@@ -36,11 +36,11 @@ export default function RootLayout({
         <ReduxProviders>
           <WagmiRainbowKitProvider>
             <AntdRegistry>
-              <AppLayout>
-                <SocketProvider>
+              <SocketProvider>
+                <AppLayout>
                   <NotificationProvider>{children}</NotificationProvider>
-                </SocketProvider>
-              </AppLayout>
+                </AppLayout>
+              </SocketProvider>
             </AntdRegistry>
           </WagmiRainbowKitProvider>
         </ReduxProviders>

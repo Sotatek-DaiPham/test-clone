@@ -96,10 +96,11 @@
   --color-text-disable: #9ba0ae;
   --color-text-tertiary: #697586;
   --color-text-black-primary: #101115;
-  --color-text-neon-primary: red;
+  --color-text-neon-primary: green;
   --color-text-secondary-3: #4c4e54;
   --color-text-primary-neon: #6764ff;
   --color-text-neon-primary-1: #4c4e54;
+  --bg: #6764ff;
 }
 
 .app-container {
@@ -245,6 +246,7 @@ p {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
 body {
   margin: 0;
   overflow-x: hidden;

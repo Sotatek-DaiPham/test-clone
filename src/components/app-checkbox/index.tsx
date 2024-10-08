@@ -1,5 +1,6 @@
 import { Checkbox, CheckboxProps } from "antd";
 import "./style.scss";
+import withClient from "@/helpers/with-client";
 
 interface AppCheckboxProps extends CheckboxProps {
   className?: string;
@@ -25,4 +26,4 @@ const AppCheckbox = ({
   );
 };
 
-export default AppCheckbox;
+export default withClient(AppCheckbox);
