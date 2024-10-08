@@ -1,14 +1,20 @@
+"use client";
 import { Layout } from "antd";
-import Header from "./Header";
 import { Content } from "antd/es/layout/layout";
-import Footer from "./Footer";
+import AppHeader from "./Header";
+import useWindowSize from "@/hooks/useWindowSize";
+import AppSidebar from "./Sidebar";
+import "./styles.scss";
 
 const AppLayout = ({ children }: { children: React.ReactNode }) => {
+  const { isMobile } = useWindowSize();
   return (
     <Layout className="app-layout">
-      <Header />
-      <Content className="app-content">{children}</Content>
-      <Footer />
+      <AppHeader />
+      <Layout className="main-layout">
+        {!isMobile ? <AppSidebar /> : null}
+        <Content className="app-content">{children}</Content>
+      </Layout>
     </Layout>
   );
 };

@@ -3,5 +3,6 @@ export const PATH_ROUTER = {
   MY_PROFILE: "/my-profile",
   MY_TOKENS: "/my-tokens",
   LEADER_BOARD: "/leader-board",
-  TRADE_TOKEN: (id: any) => `/${id}`,
+  TOKEN_DETAIL: (id: any) => `/${id}`,
+  CREATE_TOKEN: "/create-token",
 };

@@ -1,4 +1,6 @@
-@import "@/scss/responsive.scss";
+@import "@/assets/scss/_colors.scss";
+@import "@/assets/scss/variables.scss";
+@import "@/assets/scss/responsive.scss";
 
 @mixin container {
   width: 100%;
