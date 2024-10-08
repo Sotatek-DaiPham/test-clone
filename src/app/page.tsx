@@ -4,7 +4,7 @@ import { useAppDispatch, useAppSelector } from "@/libs/hooks";
 import { setUser } from "@/libs/slices/userSlice";
 import dynamic from "next/dynamic";
 
-const TradingView = dynamic(() => import("@/components/TradingView"), {
+const TradingView = dynamic(() => import("@/components/app-trading-view"), {
   ssr: false,
 });
 
@@ -13,8 +13,9 @@ export default function Home() {
   const dispatch = useAppDispatch();
   console.log("accessToken", accessToken);
   return (
-    <>
+    <div className="h-full">
       <h1>RainMakr Meme Coin</h1>
+      <h1 className="text-26px-bold text-primary-white">sy</h1>
       <p>{process.env.NEXT_PUBLIC_ENDPOINT_URL}</p>
       <Button
         onClick={() => {
@@ -29,6 +30,6 @@ export default function Home() {
         Test Redux
       </Button>
       <TradingView />
-    </>
+    </div>
   );
 }

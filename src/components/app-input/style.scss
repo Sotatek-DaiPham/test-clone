@@ -1,0 +1,186 @@
+.ant-input {
+  border: none !important;
+  outline: none !important;
+}
+.app-input {
+  input::placeholder {
+    color: var(--color-text-disable) !important;
+  }
+  input {
+    height: 40px !important;
+    outline: none !important;
+    box-shadow: none !important;
+    color: var(--color-text-primary-2) !important;
+    border: 1px solid var(--color-border-primary-1) !important;
+    background: var(--color-container-primary) !important;
+    &:not(:hover) {
+      background-color: unset !important;
+    }
+    &:hover {
+      border-color: var(--color-border-primary-1) !important;
+    }
+    &:focus-within {
+      border-color: var(--color-primary-default) !important;
+    }
+    &:disabled {
+      color: var(--color-stroke-secondary-1) !important;
+      background-color: var(--color-disable-input) !important;
+    }
+  }
+  input:hover {
+    background-color: transparent !important;
+  }
+
+  // .ant-input-outlined,
+  // .ant-input-outlined:focus,
+  // .ant-input-outlined:focus-within,
+  // .ant-input-outlined:hover {
+  //   border: 1px solid var(--color-stroke-primary-2) !important;
+  //   outline: none !important;
+  //   box-shadow: none !important;
+  // }
+  .ant-input-affix-wrapper {
+    background-color: transparent !important;
+    input {
+      border: none !important;
+    }
+    outline: none !important;
+    box-shadow: none !important;
+    color: var(--color-text-primary-2) !important;
+    border: 1px solid var(--color-border-primary-1) !important;
+    // background: var(--color-container-primary) !important;
+    padding-left: 12px !important;
+    border-radius: 8px !important;
+    &:not(:hover) {
+      background-color: unset !important;
+    }
+    &:hover {
+      border-color: var(--color-border-primary-1) !important;
+    }
+    &:focus-within {
+      border-color: var(--color-primary-default) !important;
+    }
+  }
+  .ant-input-prefix {
+    padding-right: 4px;
+  }
+
+  input.ant-input-status-error {
+    border: 1px solid var(--color-fill-error) !important;
+  }
+}
+
+.input-amount {
+  input {
+    padding: 0 !important;
+    font-size: 15px !important;
+  }
+  .ant-input-outlined,
+  .ant-input-outlined:focus,
+  .ant-input-outlined:focus-within,
+  .ant-input-outlined:hover {
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+  }
+}
+.input-close-position {
+  text-align: center !important;
+  background: var(--color-alternative-pressed) !important;
+  padding: 0 !important;
+  font-size: 14px !important;
+  font-weight: 700 !important;
+  padding: 0px 4px !important;
+}
+
+.input-search-list-markets {
+  padding: 8px 12px !important;
+  input:hover {
+    background: transparent !important;
+  }
+  input {
+    height: 24px !important;
+    font-size: 16px !important;
+  }
+}
+.app-input.input-denomination:disabled {
+  &:disabled {
+    background-color: transparent !important;
+  }
+}
+
+.app-input-fund {
+  .ant-input-outlined {
+    height: 40px !important;
+  }
+  input::placeholder {
+    color: var(--color-text-disable) !important;
+  }
+  input {
+    height: 100% !important;
+    outline: none !important;
+    box-shadow: none !important;
+    color: var(--color-text-primary-2) !important;
+    border: 1px solid var(--color-border-primary-1) !important;
+    // background: var(--color-container-primary) !important;
+    &:not(:hover) {
+      background-color: unset !important;
+    }
+    &:hover {
+      border-color: var(--color-border-primary-1) !important;
+    }
+    &:focus-within {
+      border-color: var(--color-primary-default) !important;
+    }
+    &:disabled {
+      color: var(--color-stroke-secondary-1) !important;
+      // background-color: var(--color-disable-input) !important;
+    }
+  }
+  input:hover {
+    background-color: transparent !important;
+  }
+
+  .ant-input-affix-wrapper {
+    padding-top: 0 !important;
+    padding-bottom: 0 !important;
+    background-color: transparent !important;
+    input {
+      border: none !important;
+    }
+    outline: none !important;
+    box-shadow: none !important;
+    color: var(--color-text-primary-2) !important;
+    border: 1px solid var(--color-border-primary-1) !important;
+    // background: var(--color-container-primary) !important;
+    &:not(:hover) {
+      background-color: unset !important;
+    }
+    &:hover {
+      border-color: var(--color-border-primary-1) !important;
+    }
+    &:focus-within {
+      border-color: var(--color-primary-default) !important;
+    }
+  }
+  .ant-input-prefix {
+    padding-right: 4px;
+  }
+
+  input.ant-input-status-error {
+    border: 1px solid var(--color-fill-error) !important;
+  }
+}
+.ant-form-item-has-error {
+  .ant-input-affix-wrapper {
+    border: 1px solid var(--color-fill-error) !important;
+  }
+}
+
+.ant-input-group-addon {
+  border: 1px solid var(--color-stroke-primary-2) !important;
+  border-left: none !important;
+}
+.ant-input-group-addon {
+  color: var(--color-text-primary-2) !important;
+}

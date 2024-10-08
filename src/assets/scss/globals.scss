@@ -1,0 +1,266 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  @font-face {
+    font-family: "SF Pro";
+    font-style: normal;
+    font-weight: 900;
+    font-display: swap;
+    src: url(../fonts/SFProText-Heavy.ttf) format("woff2");
+  }
+  @font-face {
+    font-family: "SF Pro";
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url(../fonts/SFProText-Bold.ttf) format("woff2");
+  }
+  @font-face {
+    font-family: "SF Pro";
+    font-style: normal;
+    font-weight: 500;
+    font-display: swap;
+    src: url(../fonts/SFProText-Medium.ttf) format("woff2");
+  }
+  @font-face {
+    font-family: "SF Pro";
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url(../fonts/SFProText-Regular.ttf) format("woff2");
+  }
+  @font-face {
+    font-family: "SF Pro";
+    font-style: normal;
+    font-weight: 300;
+    font-display: swap;
+    src: url(../fonts/SFProText-Light.ttf) format("woff2");
+  }
+}
+
+::-webkit-scrollbar {
+  width: 0px;
+  height: 0px;
+  background-color: var(--color-alternative-pressed);
+  border-radius: 6px;
+}
+
+::-webkit-scrollbar:hover {
+  width: 0px;
+  height: 0px;
+  background-color: rgba(0, 0, 0, 0.06);
+  border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  border: 0px solid transparent;
+  background-color: rgba(72, 67, 91, 1);
+  border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:active,
+::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(72, 67, 91, 0.6);
+}
+::-webkit-scrollbar-track {
+  background: var(--color-neutral-2);
+}
+
+:root {
+  --font-urbansit: Urbanist;
+  --font-sf-pro: "SF Pro";
+
+  // --width-height-border: 1px;
+  // --width-trading-panel: 380px;
+  // --height-header: 64px;
+  // --height-footer: 80px;
+  // --height-footer-mobile: 120px;
+
+  --color-linear-gradient-primary: linear-gradient(
+    180deg,
+    #a9a7ff 0%,
+    #6764ff 100%
+  );
+
+  --color-text-primary-1: #6764ff;
+  --color-text-primary-semi: #77a2f9;
+  --color-text-primary-2: #101115;
+  --color-text-counter-primary-2: #fff;
+  --color-text-secondary: #4c4e54;
+  --color-text-secondary-1: #60677a;
+  --color-text-secondary-2: #6f7081;
+  --color-text-primary-4: #2c2f38;
+  --color-text-white: red;
+  --color-text-disable: #9ba0ae;
+  --color-text-tertiary: #697586;
+  --color-text-black-primary: #101115;
+  --color-text-neon-primary: red;
+  --color-text-secondary-3: #4c4e54;
+  --color-text-primary-neon: #6764ff;
+  --color-text-neon-primary-1: #4c4e54;
+}
+
+.app-container {
+  @apply flex justify-center w-full;
+  @media only screen and (min-width: 320px) {
+    > * {
+      @apply w-full;
+    }
+  }
+  @media only screen and (min-width: 1440px) {
+    > * {
+      @apply w-container;
+    }
+  }
+}
+
+.min-h-body {
+  @apply min-h-[calc(100vh-54px-513px)] sm:min-h-[calc(100vh-103px-288px)] lg:min-h-[calc(100vh-103px-270px)];
+}
+
+.ant-notification-notice {
+  padding: 14.5px 16px !important;
+
+  &.toast-error::after {
+    background-color: var(--color-fill-error) !important;
+    content: "";
+    position: absolute;
+    width: 8px;
+    height: 100%;
+    top: 0;
+    left: 0;
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+  }
+  &.toast-success::after {
+    background-color: var(--color-fill-success) !important;
+    content: "";
+    position: absolute;
+    width: 8px;
+    height: 100%;
+    top: 0;
+    left: 0;
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+  }
+
+  .ant-notification-notice-message {
+    margin-bottom: 0px !important;
+    margin-inline-start: 55px !important;
+  }
+  .ant-notification-notice-description {
+    margin-inline-start: 55px !important;
+  }
+  .ant-notification-notice-close {
+    top: 24px !important;
+  }
+  .ant-notification-notice-icon {
+    top: 24px !important;
+    left: 24px !important;
+  }
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+/* Firefox */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+@keyframes progress-notification {
+  from {
+    left: 0px;
+  }
+  to {
+    left: 100%;
+  }
+}
+.ant-btn {
+  span {
+    margin-inline-end: 0 !important;
+    letter-spacing: 0 !important;
+  }
+}
+
+.rc-virtual-list-holder > div {
+  overflow: scroll !important;
+}
+
+// HIDDEN SCROLLBAR TABLE ANTD
+.ant-table-body {
+  scrollbar-width: auto !important;
+  scrollbar-color: auto !important;
+}
+
+.ant-table-body::-webkit-scrollbar {
+  width: 0px !important;
+}
+
+.ant-table-body::-webkit-scrollbar-track {
+  background-color: transparent !important;
+}
+
+.ant-table-body::-webkit-scrollbar-thumb {
+  border-radius: 6px !important;
+  background-color: transparent !important;
+}
+
+// HIDDEN SCROLLBAR TABLE ANTD
+.ant-table-container {
+  scrollbar-width: auto !important;
+  scrollbar-color: auto !important;
+}
+
+.ant-table-container::-webkit-scrollbar {
+  width: 0px !important;
+}
+
+.ant-table-container::-webkit-scrollbar-track {
+  background-color: transparent !important;
+}
+
+.ant-table-container::-webkit-scrollbar-thumb {
+  border-radius: 6px !important;
+  background-color: transparent !important;
+}
+
+// CSS Z-INDEX FOR BADGE ANTD IN NOTIFICATION
+.ant-scroll-number {
+  z-index: 9999 !important;
+}
+
+p {
+  margin-bottom: 0 !important;
+}
+
+.truncate-2-line {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+body {
+  margin: 0;
+  overflow-x: hidden;
+}
+
+* {
+  font-family: var(--font-dmsans);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  margin: 0;
+  padding: 0;
+}
