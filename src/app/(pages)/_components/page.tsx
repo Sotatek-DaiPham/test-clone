@@ -67,18 +67,6 @@ const ComponentPage = () => {
         <AppDropdown />
       </div> */}
 
-      <Button
-        onClick={() => {
-          dispatch(
-            setUser({
-              accessToken: "accessToken",
-              address: "address",
-            })
-          );
-        }}
-      >
-        Test Redux
-      </Button>
       <TradingView />
     </div>
   );
