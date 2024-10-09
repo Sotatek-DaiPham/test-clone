@@ -1,8 +1,8 @@
-import { Input, InputProps } from "antd";
-import { ChangeEvent } from "react";
-import "./style.scss";
-import Image from "next/image";
 import { SearchIcon } from "@public/assets";
+import { Input, InputProps } from "antd";
+import Image from "next/image";
+import "./style.scss";
+import withClient from "@/helpers/with-client";
 
 interface IAppInputProps extends InputProps {
   className?: string;
@@ -29,4 +29,4 @@ const AppInput = ({
   );
 };
 
-export default AppInput;
+export default withClient(AppInput);

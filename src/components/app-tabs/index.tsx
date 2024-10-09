@@ -1,16 +1,17 @@
 import withClient from "@/helpers/with-client";
 import { Tabs, TabsProps } from "antd";
+import clsx from "clsx";
 import "./style.scss";
 
 interface ITabsProps extends TabsProps {
-  customClassName?: string;
+  className?: string;
   operations?: React.ReactNode;
 }
 
-const AppTabs = ({ customClassName, operations, ...props }: ITabsProps) => {
+const AppTabs = ({ className, operations, ...props }: ITabsProps) => {
   return (
     <Tabs
-      className={`app-tabs ${customClassName}`}
+      className={clsx("app-tabs", className)}
       {...props}
       tabBarExtraContent={operations}
     />

@@ -31,6 +31,13 @@ const config: Config = {
         "custom-inset": "inset 0px -2px 0px 0px rgba(255, 255, 255, 0.2)",
       },
       fontSize: {
+        "36px-bold": [
+          "36px",
+          {
+            lineHeight: "32px",
+            fontWeight: "700",
+          },
+        ],
         "26px-bold": [
           "26px",
           {
@@ -99,6 +106,13 @@ const config: Config = {
           {
             lineHeight: "32px",
             fontWeight: "500",
+          },
+        ],
+        "24px-normal": [
+          "24px",
+          {
+            lineHeight: "30px",
+            fontWeight: "400",
           },
         ],
         "18px-normal": [
