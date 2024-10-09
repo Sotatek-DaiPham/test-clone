@@ -1,24 +1,14 @@
+@import "@/assets/scss/_colors.scss";
+@import "@/assets/scss/variables.scss";
+@import "@/assets/scss/responsive.scss";
+
 .app-modal {
   .ant-modal-content {
-    background-color: var(--color-container-primary) !important;
-    padding: 24px !important;
-    border-radius: 8px !important;
-    border: 0.67px solid var(--color-container-primary) !important;
-    .ant-modal-footer {
-      margin-top: 0;
-    }
-    .ant-modal-body {
-      color: var(--color-text-primary-2) !important;
-    }
-    @media only screen and (max-width: 640px) {
-      padding: 16px !important;
-    }
-  }
-}
-.modal-edit-proposal {
-  .ant-modal-title {
-    font-size: 22px !important;
-    font-weight: 700 !important;
-    color: var(--color-text-primary-2) !important;
+    background: $color-grey-8;
+
+    border-radius: 16px;
+    border: 1px solid $color-grey-7;
+    background: $color-grey-8;
+    box-shadow: 0px 40px 32px -24px rgba(15, 15, 15, 0.12);
   }
 }

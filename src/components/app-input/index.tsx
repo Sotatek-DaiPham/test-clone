@@ -1,8 +1,8 @@
-import { SearchIcon } from "@public/assets";
 import { Input, InputProps } from "antd";
 import Image from "next/image";
+import { SearchIcon } from "@public/assets";
+import { TextAreaProps } from "antd/es/input";
 import "./style.scss";
-import withClient from "@/helpers/with-client";
 
 interface IAppInputProps extends InputProps {
   className?: string;
@@ -21,7 +21,6 @@ const AppInput = ({
   return (
     <Input
       className={`app-input ${className || ""}`}
-      allowClear={true}
       suffix={isSearch && iconPosition === "right" ? searchIcon : null}
       prefix={isSearch && iconPosition === "left" ? searchIcon : null}
       {...restProps}
@@ -29,4 +28,8 @@ const AppInput = ({
   );
 };
 
-export default withClient(AppInput);
+AppInput.TextArea = (props: TextAreaProps) => (
+  <Input.TextArea className="app-input" {...props} />
+);
+
+export default AppInput;
