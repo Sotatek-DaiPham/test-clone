@@ -1,7 +1,11 @@
-import React from "react";
+import TabTitle from "../../TabTitle";
 
 const NotificationsTab = () => {
-  return <div>NotificationsTab</div>;
+  return (
+    <div>
+      <TabTitle title="Notifications" />
+    </div>
+  );
 };
 
 export default NotificationsTab;

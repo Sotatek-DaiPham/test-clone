@@ -4,6 +4,8 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "start:dev": "next start -p 8005",
+    "start:testing": "next start -p 8005",
     "dev:testing": "env-cmd -f .env.testing next dev",
     "dev:staging": "env-cmd -f .env.staging next dev",
     "build": "next build",

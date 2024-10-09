@@ -1,7 +1,11 @@
-import React from "react";
+import TabTitle from "../../TabTitle";
 
 const FollowingTab = () => {
-  return <div>FollowingTab</div>;
+  return (
+    <div>
+      <TabTitle title="Following" />
+    </div>
+  );
 };
 
 export default FollowingTab;
