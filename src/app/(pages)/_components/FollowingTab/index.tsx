@@ -1,5 +1,8 @@
-import React from "react";
+import useDebounce from "@/hooks/useDebounce";
+import { useCallback, useState } from "react";
+import FilterTerminal from "../FilterTerminal";
 import ProjectCard from "../ProjectCard";
+import { useAppSearchParams } from "@/hooks/useAppSearchParams";
 
 const data = [
   {
@@ -40,9 +43,42 @@ const data = [
   },
 ];
 
+const FILTER_TERMINAL = [
+  {
+    label: "Activity",
+    value: "activity",
+    icon: null,
+  },
+  {
+    label: "Created coins",
+    value: "created",
+    icon: null,
+  },
+];
+
 const FollowingTab = () => {
+  const [search, setSearch] = useState<string>("");
+  const debounceSearch = useDebounce(search);
+  const { searchParams, setSearchParams } = useAppSearchParams("terminal");
+
+  const handleClickFilter = useCallback(
+    (value: any, queryKey: string) => {
+      setSearchParams({
+        ...searchParams,
+        [queryKey]: value,
+      });
+    },
+    [searchParams, setSearchParams]
+  );
   return (
     <div>
+      <FilterTerminal
+        search={search}
+        onChangeSearch={setSearch}
+        filterArr={FILTER_TERMINAL}
+        searchParams={searchParams}
+        handleClickFilter={handleClickFilter}
+      />
       <div className="grid grid-cols-3 gap-6 my-9">
         {data?.map((project: any, index: number) => (
           <ProjectCard data={project} key={index} />
