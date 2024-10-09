@@ -15,7 +15,6 @@ interface AppMenuProps {
 export default function AppMenu({ className }: AppMenuProps) {
   // const selectedSegment = useSelectedLayoutSegment();
   const pathname = usePathname();
-  console.log("pathname", pathname);
   const router = useRouter();
   // Split the pathname to get segments
   const segments = pathname.split("/").filter(Boolean);
