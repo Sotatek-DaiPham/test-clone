@@ -1,4 +1,4 @@
-"use client";
+import withClient from "@/helpers/with-client";
 import { Tabs, TabsProps } from "antd";
 import "./style.scss";
 
@@ -17,4 +17,4 @@ const AppTabs = ({ customClassName, operations, ...props }: ITabsProps) => {
   );
 };
 
-export default AppTabs;
+export default withClient(AppTabs);

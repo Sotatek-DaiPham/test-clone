@@ -37,9 +37,9 @@ export default function RootLayout({
           <WagmiRainbowKitProvider>
             <AntdRegistry>
               <SocketProvider>
-                <NotificationProvider>
-                  <AppLayout>{children}</AppLayout>
-                </NotificationProvider>
+                <AppLayout>
+                  <NotificationProvider>{children}</NotificationProvider>
+                </AppLayout>
               </SocketProvider>
             </AntdRegistry>
           </WagmiRainbowKitProvider>

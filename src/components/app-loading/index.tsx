@@ -1,3 +1,4 @@
+import withClient from "@/helpers/with-client";
 import { Loading3QuartersOutlined } from "@ant-design/icons";
 
 type Props = {
@@ -20,4 +21,4 @@ const AppLoading = (props: Props) => {
   );
 };
 
-export default AppLoading;
+export default withClient(AppLoading);

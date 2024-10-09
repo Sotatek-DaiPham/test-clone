@@ -17,6 +17,9 @@ const config: Config = {
         primary: {
           white: "var(--color-text-neon-primary)",
         },
+        gray: {
+          1: "var(--bg)",
+        },
       },
       width: {
         container: "1440px",

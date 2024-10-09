@@ -5,6 +5,9 @@
 .app-layout {
   min-height: 100vh;
   overflow: hidden;
+  .app-content {
+    height: 100% !important;
+  }
 }
 
 .main-layout {
