@@ -1,0 +1,116 @@
+@import "@/assets/scss/_colors.scss";
+@import "@/assets/scss/variables.scss";
+@import "@/assets/scss/responsive.scss";
+
+.token-balance-input {
+  display: flex;
+  width: 100%;
+
+  &__token {
+    padding: 10px 16px;
+    display: flex;
+    color: $color-neutral-white;
+    align-items: center;
+    gap: 15px;
+    background-color: $color-grey-7;
+    border-radius: 12px 0px 0px 12px;
+
+    font-family: $font-family;
+    font-size: 18px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 24px;
+    /* 133.333% */
+    letter-spacing: -0.25px;
+
+    @include mobile {
+      min-width: 125px;
+      gap: 10px;
+      font-size: 14px;
+    }
+  }
+
+  .amount-info {
+    @include mobile {
+      padding: 0 10px;
+
+      .pending-amount {
+        margin-left: 0px;
+      }
+    }
+  }
+
+  &__input {
+    display: flex;
+    flex-grow: 1;
+    align-items: center;
+
+    background-color: $color-grey-8;
+    border-radius: 0px 12px 12px 0px;
+    border: 2px solid $color-grey-7;
+    padding: 4px;
+
+    .pending-amount {
+      margin-left: 10px;
+      color: $color-neutral-white;
+
+      /* Copy - Reg */
+      font-family: $font-family;
+      font-size: 18px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: 24px;
+      /* 133.333% */
+      letter-spacing: -0.25px;
+
+      @include mobile {
+        font-size: 14px;
+      }
+    }
+
+    .ant-input {
+      background-color: transparent;
+      border: none;
+      outline: none;
+      box-shadow: none;
+      color: $color-grey-6;
+
+      font-family: $font-family;
+      font-size: 18px;
+      font-style: normal;
+      font-weight: 400;
+
+      &::placeholder {
+        color: $color-grey-6 !important;
+        opacity: 1;
+        /* Firefox */
+      }
+
+      &::-ms-input-placeholder {
+        /* Edge 12 -18 */
+        color: $color-grey-6 !important;
+      }
+    }
+
+    .ant-input-status-error {
+      background-color: transparent !important;
+      border: none !important;
+      outline: none;
+      box-shadow: none !important;
+    }
+
+    .ant-btn {
+      background: rgba(255, 143, 87, 0.2);
+      border-radius: 8px;
+      color: $color-secondary;
+
+      &:hover {
+        background: rgba(255, 143, 87, 0.2) !important;
+      }
+
+      @include mobile {
+        padding: 8px 12px;
+      }
+    }
+  }
+}

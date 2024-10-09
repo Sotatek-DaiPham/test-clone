@@ -1,48 +1,32 @@
-import { TagType } from "@/constants";
-import { RequiredFieldIcon } from "@/constants/icons";
-// import withClient from "@/helpers/with-client";
-import Input, { InputProps } from "antd/es/input/Input";
-import clsx from "clsx";
-import { forwardRef, ReactNode } from "react";
-import AppTag from "../app-tag";
+import { Input, InputProps } from "antd";
+import { ChangeEvent } from "react";
 import "./style.scss";
+import Image from "next/image";
+import { SearchIcon } from "@public/assets";
 
-interface Props extends Omit<InputProps, "title"> {
-  title?: string | ReactNode;
-  tag?: string;
-  required?: boolean;
+interface IAppInputProps extends InputProps {
   className?: string;
-  rootClassName?: string;
-  typeTag?: TagType;
+  isSearch?: boolean;
+  iconPosition?: "left" | "right";
 }
 
-const AppInput = forwardRef<HTMLInputElement, Props>(function AppInput(
-  props: Props,
-  ref: any
-) {
-  const {
-    className,
-    rootClassName,
-    title,
-    required,
-    tag,
-    size = "middle",
-    typeTag,
-    ...restProps
-  } = props;
+const AppInput = ({
+  className,
+  isSearch,
+  iconPosition = "left",
+  ...restProps
+}: IAppInputProps) => {
+  const searchIcon = isSearch ? <Image src={SearchIcon} alt="search" /> : null;
+
   return (
-    <div className={clsx("app-input", rootClassName)}>
-      {title && (
-        <div className="w-full flex items-center justify-between mb-1.5">
-          <div className="text-14px-normal text-text-secondary flex flex-row items-center">
-            <span>{title}</span>
-            {required && <RequiredFieldIcon className="ml-1" />}
-          </div>
-          {tag && <AppTag type={typeTag || TagType.Primary}>{tag}</AppTag>}
-        </div>
-      )}
-      <Input ref={ref} className={className} size={size} {...restProps} />
-    </div>
+    <Input
+      className={`app-input ${className || ""}`}
+      allowClear={true}
+      suffix={isSearch && iconPosition === "right" ? searchIcon : null}
+      prefix={isSearch && iconPosition === "left" ? searchIcon : null}
+      {...restProps}
+    />
   );
-});
+};
+
 export default AppInput;
