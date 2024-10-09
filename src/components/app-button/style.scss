@@ -1,5 +1,5 @@
 .app-button {
-  border-radius: 8px !important;
+  border-radius: 8px;
 }
 
 .app-button.large {
@@ -14,76 +14,39 @@
   height: 32px !important;
 }
 
-.app-button.default {
-  color: var(--color-neon) !important;
-  background-color: var(--black-color) !important;
-  outline: none !important;
-  box-shadow: 0px -2px 0px 0px rgba(205, 254, 108, 0.2) inset !important;
-  border: 1px solid rgba(205, 254, 108, 0.2) !important;
+.app-button:hover {
+  opacity: 0.8 !important;
 }
 
 .app-button.outline {
-  color: #fff !important;
+  color: #777e90 !important;
   outline: none !important;
-  border-radius: 12px !important;
-  border: 1px solid rgba(255, 255, 255, 0.1) !important;
-  background: rgba(255, 255, 255, 0.06) !important;
-  box-shadow: 0px -2px 0px 0px rgba(255, 255, 255, 0.2) inset !important;
+  border: 1px solid #000000 !important;
+  background: transparent !important;
+}
+
+.app-button.outline-primary {
+  color: #ffffff !important;
+  background-color: transparent !important;
+  border: 2px solid #8f57ff !important;
+  outline: none !important;
 }
 
 .app-button.primary {
-  color: var(--color-neon) !important;
-  background-color: var(--black-color) !important;
+  color: #ffffff !important;
+  background-color: #8f57ff !important;
+  border: 1px solid #8f57ff !important;
   outline: none !important;
-  border: none !important;
-}
-.app-button.outline {
-  color: var(--color-text-primary-2) !important;
-  outline: none !important;
-  border-radius: 12px !important;
-  border: 1px solid var(--color-stroke-primary-2) !important;
-  background: var(--color-alternative-hover) !important;
-}
-
-.app-button.primary {
-  color: var(--black-color) !important;
-  background-color: var(--color-neon) !important;
-  outline: none !important;
-  border: none !important;
 }
 
 .app-button.secondary {
-  color: var(--color-text-white) !important;
-  border: 1px solid var(--color-fill-error) !important;
-  background-color: var(--color-fill-error) !important;
+  color: #ffffff !important;
+  border: 1px solid #353945 !important;
+  background-color: #353945 !important;
   outline: none !important;
 }
 
 .app-button:disabled {
-  opacity: 0.6 !important;
+  opacity: 0.4 !important;
   cursor: not-allowed !important;
-}
-
-.app-button.neon {
-  color: var(--color-text-black-primary) !important;
-  border: 1px solid var(--color-fill-neon) !important;
-  background-color: var(--color-fill-neon) !important;
-}
-
-.app-button.teriary {
-  color: var(--color-text-secondary-3) !important;
-  border: 1px solid var(--color-stroke-primary-2) !important;
-  background-color: var(--color-container-tertiary-1) !important;
-}
-
-.app-button.teriary-primary {
-  color: var(--color-text-primary-2) !important;
-  border: 1px solid var(--color-stroke-primary-2) !important;
-  background-color: var(--color-container-teriary-primary) !important;
-}
-
-.app-button.neon-primary {
-  color: var(--color-neon-primary) !important;
-  border: 1px solid var(--color-stroke-neon-primary) !important;
-  background-color: var(--color-container-neon-primary) !important;
 }

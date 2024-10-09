@@ -1,16 +1,24 @@
 "use client";
 import AppButton from "@/components/app-button";
 import AppCheckbox from "@/components/app-checkbox";
-import AppDropdown from "@/components/app-dropdown";
 import AppImage from "@/components/app-image";
 import AppLoading from "@/components/app-loading";
 import AppProgress from "@/components/app-progress";
 import AppTabs from "@/components/app-tabs";
 import AppTextarea from "@/components/app-textarea";
-import React, { useState } from "react";
+import { useAppDispatch } from "@/libs/hooks";
+import { setUser } from "@/libs/slices/userSlice";
+import { Button } from "antd";
+import dynamic from "next/dynamic";
+import { useState } from "react";
+
+const TradingView = dynamic(() => import("@/components/app-trading-view"), {
+  ssr: false,
+});
 
 const ComponentPage = () => {
   const [activeTab, setActiveTab] = useState<string>("1");
+  const dispatch = useAppDispatch();
   return (
     <div className="w-[50%] m-auto">
       <div className="my-5">
@@ -38,9 +46,6 @@ const ComponentPage = () => {
         <AppTextarea />
       </div>
       <div className="my-5">
-        <AppButton typeButton="default" size="large">
-          default
-        </AppButton>
         <AppButton typeButton="outline" size="middle">
           outline
         </AppButton>
@@ -61,6 +66,20 @@ const ComponentPage = () => {
       {/* <div className="my-5">
         <AppDropdown />
       </div> */}
+
+      <Button
+        onClick={() => {
+          dispatch(
+            setUser({
+              accessToken: "accessToken",
+              address: "address",
+            })
+          );
+        }}
+      >
+        Test Redux
+      </Button>
+      <TradingView />
     </div>
   );
 };

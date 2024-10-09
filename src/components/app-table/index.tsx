@@ -1,6 +1,5 @@
 "use client";
 import { Empty, Table, TableProps } from "antd";
-import { useTranslations } from "next-intl";
 import { useEffect } from "react";
 import "./style.scss";
 
@@ -10,7 +9,6 @@ interface AppTableProps extends TableProps {
 }
 
 const AppTable = (props: AppTableProps) => {
-  const t = useTranslations();
   const handleLocaleTable = () => {
     if (props.loading) {
       return null;
@@ -18,7 +16,7 @@ const AppTable = (props: AppTableProps) => {
     if (!props.loading && props.dataSource?.length === 0) {
       return (
         <Empty
-          description={props?.textEmpty || t("common.noData")}
+          description={props?.textEmpty || "No Data"}
           className="[&>.ant-empty-description]:!text-text-primary-2"
         ></Empty>
       );

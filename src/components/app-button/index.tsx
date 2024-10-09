@@ -10,7 +10,7 @@ interface AppButtonProps extends ButtonProps {
   customClass?: string;
   isActive?: boolean;
   size?: SizeType;
-  typeButton?: "default" | "outline" | "secondary" | "primary";
+  typeButton?: "primary" | "outline" | "outline-primary" | "secondary";
   widthFull?: boolean;
   classChildren?: string;
 }
@@ -20,19 +20,14 @@ const AppButton = ({
   customClass,
   isActive = false,
   size = "middle",
-  typeButton = "default",
+  typeButton = "primary",
   widthFull,
   classChildren,
   ...props
 }: AppButtonProps) => {
   return (
     <Button
-      className={clsx(
-        "app-button w-full text-text-primary-2",
-        typeButton,
-        size,
-        customClass ?? ""
-      )}
+      className={clsx("app-button w-full", typeButton, size, customClass ?? "")}
       {...props}
     >
       <span

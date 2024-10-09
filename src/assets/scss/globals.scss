@@ -71,12 +71,7 @@
 :root {
   --font-urbansit: Urbanist;
   --font-sf-pro: "SF Pro";
-
-  // --width-height-border: 1px;
-  // --width-trading-panel: 380px;
-  // --height-header: 64px;
-  // --height-footer: 80px;
-  // --height-footer-mobile: 120px;
+  --width-content-sidebar-layout: 1444px;
 
   --color-linear-gradient-primary: linear-gradient(
     180deg,
@@ -243,6 +238,13 @@ p {
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.truncate-4-line {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 4;
   overflow: hidden;
   text-overflow: ellipsis;
 }

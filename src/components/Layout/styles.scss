@@ -17,18 +17,8 @@
 .app-content {
   background: $color-background-black;
   overflow: auto;
-  padding: 20px;
+  padding: 24px;
   @include mobile {
     margin-top: 75px;
-  }
-
-  &__main {
-    max-width: 1150px;
-    margin: 0 auto;
-    padding: 25px 40px;
-
-    @include mobile {
-      padding: 15px;
-    }
   }
 }
