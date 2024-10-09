@@ -7,10 +7,15 @@ import useWindowSize from "@/hooks/useWindowSize";
 import AppSidebar from "./Sidebar";
 import useWalletAuth from "@/hooks/useWalletAuth";
 import LoginModal from "../app-modal/app-login-modal";
+import { watchAccount } from "wagmi/actions";
+import { config } from "@/wagmi";
+import { useAppDispatch } from "@/libs/hooks";
+import { clearUser } from "@/libs/slices/userSlice";
 import "./styles.scss";
 
 const AppLayout = ({ children }: { children: React.ReactNode }) => {
   const { isMobile } = useWindowSize();
+  const dispatch = useAppDispatch();
   const [isOpenWarningModal, setIsOpenWarningModal] = useState(false);
   const {
     login,
@@ -31,6 +36,23 @@ const AppLayout = ({ children }: { children: React.ReactNode }) => {
       };
     }
   }, [isConnected, isAuth]);
+
+  useEffect(() => {
+    const unwatchAccount = watchAccount(config, {
+      onChange(data, previousAccount) {
+        if (
+          data.status === "connected" &&
+          previousAccount?.address !== data?.address
+        ) {
+          dispatch(clearUser());
+        }
+      },
+    });
+    return () => {
+      unwatchAccount();
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <Layout className="app-layout">

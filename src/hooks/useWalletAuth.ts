@@ -9,7 +9,6 @@ import { useAccount, useDisconnect, useSignMessage } from "wagmi";
 type TConnectWallet = {
   signature: string;
   address: string;
-  role: "USER";
 };
 
 const useWalletAuth = () => {
@@ -41,12 +40,11 @@ const useWalletAuth = () => {
         const res = await connectWalletAPI({
           signature,
           address: userAddress,
-          role: "USER",
         });
+        const { access_token: accessToken, refresh_token: refreshToken } =
+          res?.data?.data || {};
 
-        const { access_token: accessToken } = res?.data || {};
-
-        dispatch(setUser({ accessToken, address: userAddress }));
+        dispatch(setUser({ accessToken, refreshToken, address: userAddress }));
       }
 
       onSuccess?.();
