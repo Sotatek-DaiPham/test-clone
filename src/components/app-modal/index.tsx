@@ -1,29 +1,16 @@
-"use client";
 import { Modal, ModalProps } from "antd";
+import Image from "next/image";
+import { ModalCloseIcon } from "@public/assets";
 import "./style.scss";
-import CloseModal from "@/assets/icons/close-modal.svg";
 
-interface IModalProps extends ModalProps {
-  hideClose?: boolean;
-  customClassName?: string;
-  maskClosable?: boolean;
-}
+interface IAppModal extends ModalProps {}
 
-const AppModal = ({
-  children,
-  hideClose = false,
-  customClassName,
-  maskClosable = true,
-  ...props
-}: IModalProps) => {
+const AppModal = ({ children, className, ...props }: IAppModal) => {
   return (
     <Modal
-      footer={false}
-      closeIcon={hideClose ? null : <CloseModal />}
-      maskClosable={maskClosable}
-      className={`app-modal ${customClassName}`}
-      rootClassName="app-modal"
       centered
+      closeIcon={<Image src={ModalCloseIcon} alt="close icon" />}
+      className={`app-modal ${className || ""}`}
       {...props}
     >
       {children}
