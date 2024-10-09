@@ -46,8 +46,6 @@ const useWalletAuth = () => {
 
         const { access_token: accessToken } = res?.data || {};
 
-        console.log({ res });
-
         dispatch(setUser({ accessToken, address: userAddress }));
       }
 
@@ -67,6 +65,7 @@ const useWalletAuth = () => {
     login,
     logout,
     accessToken,
+    isLoginLoading: isSignInLoading || isSignMessageLoading,
   };
 };
 

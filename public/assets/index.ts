@@ -4,3 +4,5 @@ export { default as CloseIcon } from "./icons/x-close.svg";
 export { default as Hamburgericon } from "./icons/hamburger-menu.svg";
 export { default as EthIcon } from "./icons/eth-icon.svg";
 export { default as SearchIcon } from "./icons/search-icon.svg";
+export { default as WarningModalIcon } from "./icons/warning-modal-icon.svg";
+export { default as ModalCloseIcon } from "./icons/modal-close.svg";

@@ -1,9 +1,10 @@
+import { useEffect } from "react";
 import useWalletAuth from "@/hooks/useWalletAuth";
 import { ConnectButton, useConnectModal } from "@rainbow-me/rainbowkit";
 import { Flex } from "antd";
 import ButtonContained from "../ButtonContained";
 import { shortenAddress } from "@/helpers/shorten";
-import { useEffect } from "react";
+import "./styles.scss";
 
 const ConnectWalletButton = () => {
   const { userAddress, isConnected, accessToken, logout } = useWalletAuth();
@@ -36,7 +37,8 @@ const ConnectWalletButton = () => {
           ready &&
           account &&
           chain &&
-          (!authenticationStatus || authenticationStatus === "authenticated");
+          (!authenticationStatus || authenticationStatus === "authenticated") &&
+          accessToken;
         return (
           <Flex
             align="center"
@@ -71,25 +73,52 @@ const ConnectWalletButton = () => {
               }
 
               return (
-                <Flex
-                  align="center"
-                  justify="center"
-                  gap={12}
-                  className="button-group"
-                >
-                  {/* <ButtonContained
-                    onClick={openChainModal}
+                <Flex align="center" justify="center" gap={12} className="">
+                  <ButtonContained
                     buttonType="secondary"
+                    className="pointer-events-none"
                   >
                     {chain.name}
-                  </ButtonContained> */}
-
-                  <ButtonContained
-                    onClick={openAccountModal}
-                    buttonType="secondary"
-                  >
-                    {shortenAddress(account.address, 4, -4)}
                   </ButtonContained>
+
+                  <Flex
+                    className="wallet-info"
+                    align="center"
+                    onClick={openAccountModal}
+                  >
+                    <Flex
+                      className="wallet-info__token"
+                      gap={10}
+                      align="center"
+                    >
+                      {chain.hasIcon && (
+                        <div
+                          className="wallet-info__token__icon"
+                          style={{
+                            background: chain.iconBackground,
+                          }}
+                        >
+                          {chain.iconUrl && (
+                            // eslint-disable-next-line @next/next/no-img-element
+                            <img
+                              alt={chain.name ?? "Chain icon"}
+                              src={chain.iconUrl}
+                              style={{ width: 32, height: 32 }}
+                            />
+                          )}
+                        </div>
+                      )}
+                      <div className="wallet-info__token__balance">
+                        {account.displayBalance
+                          ? ` ${account.displayBalance}`
+                          : ""}
+                      </div>
+                    </Flex>
+
+                    <div className="wallet-info__address">
+                      {shortenAddress(account.address, 6, -3)}
+                    </div>
+                  </Flex>
                 </Flex>
               );
             })()}
