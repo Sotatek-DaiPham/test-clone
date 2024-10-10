@@ -3,6 +3,7 @@ import { Flex, Tooltip, TooltipProps } from "antd";
 interface Props {
   label: string;
   isRequired?: boolean;
+  className?: string;
   tooltipInfo?: {
     title: React.ReactNode;
     tooltipIconProps?: React.SVGProps<SVGSVGElement>;
@@ -10,9 +11,18 @@ interface Props {
   };
 }
 
-const FormItemLabel = ({ label, isRequired, tooltipInfo }: Props) => {
+const FormItemLabel = ({
+  label,
+  className,
+  isRequired,
+  tooltipInfo,
+}: Props) => {
   return (
-    <Flex align="center" gap={4} className="text-white text-14px-medium">
+    <Flex
+      align="center"
+      gap={4}
+      className={`text-white text-14px-medium ${className ?? ""}`}
+    >
       {label} {isRequired ? <span>*</span> : ""}
       {tooltipInfo ? (
         <Tooltip title={tooltipInfo?.title} {...tooltipInfo.tooltipProps} />
