@@ -33,8 +33,6 @@ const AppUpload = (props: AppUploadProps) => {
     });
   };
 
-  console.log("src", props.value);
-
   return (
     <Upload
       className={`basic-upload ${className ?? ""}`}

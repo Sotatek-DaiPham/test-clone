@@ -44,6 +44,7 @@ export const makeStore = configureStore({
     getDefaultMiddleware({
       serializableCheck: false,
     }),
+  devTools: process.env.NODE_ENV !== "production",
 });
 
 // Infer the type of makeStore
