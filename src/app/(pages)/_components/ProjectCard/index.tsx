@@ -1,7 +1,6 @@
+import AppDivider from "@/components/app-divider";
 import AppImage from "@/components/app-image";
 import AppProgress from "@/components/app-progress";
-import { Divider } from "antd";
-import React from "react";
 
 interface Project {
   title: string;
@@ -28,7 +27,7 @@ const ProjectCard = ({ data }: IProjectCardProps) => {
             <span className="text-white text-18px-bold">
               {data?.title ?? "-"}
             </span>
-            <Divider style={{ borderColor: "#353945", margin: "10px 0" }} />
+            <AppDivider />
           </div>
           <div className="truncate-4-line">{data?.description ?? "-"}</div>
         </div>

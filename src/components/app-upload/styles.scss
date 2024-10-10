@@ -1,0 +1,32 @@
+@import "@/assets/scss/_colors.scss";
+
+.basic-upload {
+  span.ant-upload {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 20px;
+    min-width: 200px;
+    border: 1px dashed #e0e0e0;
+    border-radius: 10px;
+    width: fit-content;
+    background: $color-grey-10;
+  }
+
+  &__image-box {
+    position: relative;
+    img {
+      pointer-events: none;
+      width: auto !important;
+      height: 100px !important;
+      object-fit: cover;
+    }
+  }
+
+  &__remove {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    cursor: pointer;
+  }
+}
