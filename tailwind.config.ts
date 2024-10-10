@@ -45,6 +45,13 @@ const config: Config = {
             fontWeight: "700",
           },
         ],
+        "24px-bold": [
+          "24px",
+          {
+            lineHeight: "30px",
+            fontWeight: "700",
+          },
+        ],
         "22px-bold": [
           "22px",
           {

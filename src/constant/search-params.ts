@@ -1,5 +1,11 @@
 export const SEARCH_PARAMS = {
-  filter: "filter",
+  terminal: {
+    tab: "tab",
+    filter: "filter",
+  },
+  myProfile: {
+    tab: "tab",
+  },
 } as const;
 
 export type ExtractKeyType<T, K extends keyof T> = T[K][keyof T[K]];

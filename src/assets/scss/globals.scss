@@ -42,14 +42,14 @@
 
 ::-webkit-scrollbar {
   width: 0px;
-  height: 0px;
+  height: 8px;
   background-color: var(--color-alternative-pressed);
   border-radius: 6px;
 }
 
 ::-webkit-scrollbar:hover {
   width: 0px;
-  height: 0px;
+  height: 8px;
   background-color: rgba(0, 0, 0, 0.06);
   border-radius: 6px;
 }

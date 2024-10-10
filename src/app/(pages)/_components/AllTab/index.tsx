@@ -1,7 +1,8 @@
-import React, { useState } from "react";
-import ProjectCard from "../ProjectCard";
-import FilterTerminal from "../FilterTerminal";
 import useDebounce from "@/hooks/useDebounce";
+import { useCallback, useState } from "react";
+import FilterTerminal from "../FilterTerminal";
+import ProjectCard from "../ProjectCard";
+import { useAppSearchParams } from "@/hooks/useAppSearchParams";
 
 const data = [
   {
@@ -96,17 +97,71 @@ const data = [
   },
 ];
 
+const FILTER_TERMINAL = [
+  {
+    label: "Trending",
+    value: "trending",
+    icon: null,
+  },
+  {
+    label: "Top",
+    value: "top",
+    icon: null,
+  },
+  {
+    label: "Rising",
+    value: "rising",
+    icon: null,
+  },
+  {
+    label: "New",
+    value: "new",
+    icon: null,
+  },
+  {
+    label: "Finalized",
+    value: "finalized",
+    icon: null,
+  },
+  {
+    label: "Age",
+    value: "age",
+    icon: null,
+  },
+  {
+    label: "Min progress",
+    value: "min-progress",
+    icon: null,
+  },
+  {
+    label: "Max progress",
+    value: "max-progress",
+    icon: null,
+  },
+];
+
 const AllTab = () => {
   const [search, setSearch] = useState<string>("");
-  const [activeFilter, setActiveFilter] = useState<string>("1");
-  const deboundSearch = useDebounce(search);
+  const debounceSearch = useDebounce(search);
+  const { searchParams, setSearchParams } = useAppSearchParams("terminal");
 
+  const handleClickFilter = useCallback(
+    (value: any, queryKey: string) => {
+      setSearchParams({
+        ...searchParams,
+        [queryKey]: value,
+      });
+    },
+    [searchParams, setSearchParams]
+  );
   return (
     <div>
       <FilterTerminal
         search={search}
         onChangeSearch={setSearch}
-        activeFilter={activeFilter}
+        filterArr={FILTER_TERMINAL}
+        searchParams={searchParams}
+        handleClickFilter={handleClickFilter}
       />
       <div className="grid grid-cols-3 gap-6 my-9">
         {data?.map((project: any, index: number) => (

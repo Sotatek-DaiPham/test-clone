@@ -1,8 +1,6 @@
-import useDebounce from "@/hooks/useDebounce";
-import { useCallback, useState } from "react";
-import FilterTerminal from "../FilterTerminal";
-import ProjectCard from "../ProjectCard";
-import { useAppSearchParams } from "@/hooks/useAppSearchParams";
+import ProjectCard from "@/app/(pages)/_components/ProjectCard";
+import TabTitle from "../../TabTitle";
+import AppButton from "@/components/app-button";
 
 const data = [
   {
@@ -41,45 +39,25 @@ const data = [
     currentValue: 2123000,
     stage: "S1",
   },
-];
-
-const FILTER_TERMINAL = [
   {
-    label: "Activity",
-    value: "activity",
-    icon: null,
-  },
-  {
-    label: "Created coins",
-    value: "created",
-    icon: null,
+    title: "Project name",
+    percent: 70,
+    description:
+      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusamus doloribus dolorum minus vero molestias iste ullam perspiciatis, odio ipsum harum laudantium earum consequuntur nesciunt dolore sapiente error deleniti perferendis nulla!",
+    total: 500000,
+    currentValue: 200000,
+    stage: "S1",
   },
 ];
 
-const FollowingTab = () => {
-  const [search, setSearch] = useState<string>("");
-  const debounceSearch = useDebounce(search);
-  const { searchParams, setSearchParams } = useAppSearchParams("terminal");
-
-  const handleClickFilter = useCallback(
-    (value: any, queryKey: string) => {
-      setSearchParams({
-        ...searchParams,
-        [queryKey]: value,
-      });
-    },
-    [searchParams, setSearchParams]
-  );
+const PortfolioTab = () => {
   return (
     <div>
-      <FilterTerminal
-        search={search}
-        onChangeSearch={setSearch}
-        filterArr={FILTER_TERMINAL}
-        searchParams={searchParams}
-        handleClickFilter={handleClickFilter}
-      />
-      <div className="grid grid-cols-3 gap-6 my-9">
+      <TabTitle title="Portfolio" />
+      <AppButton size="small" rootClassName="!w-fit">
+        Hide dust coin
+      </AppButton>
+      <div className="grid grid-cols-2 gap-6 my-9">
         {data?.map((project: any, index: number) => (
           <ProjectCard data={project} key={index} />
         ))}
@@ -88,4 +66,4 @@ const FollowingTab = () => {
   );
 };
 
-export default FollowingTab;
+export default PortfolioTab;

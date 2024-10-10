@@ -1,79 +1,32 @@
 import AppButton from "@/components/app-button";
 import AppImage from "@/components/app-image";
 import AppInput from "@/components/app-input";
-import { useAppSearchParams } from "@/hooks/useAppSearchParams";
-import { useCallback } from "react";
 
 interface IFilterTerminal {
   search?: string;
   onChangeSearch: (search: string) => void;
-  activeFilter: string;
+  filterArr: any[];
+  searchParams: any;
+  handleClickFilter: (value: string, key: string) => void;
 }
 
-const FILTER_TERMINAL = [
-  {
-    label: "Trending",
-    value: "trending",
-    icon: null,
-  },
-  {
-    label: "Top",
-    value: "top",
-    icon: null,
-  },
-  {
-    label: "Rising",
-    value: "rising",
-    icon: null,
-  },
-  {
-    label: "New",
-    value: "new",
-    icon: null,
-  },
-  {
-    label: "Finalized",
-    value: "finalized",
-    icon: null,
-  },
-  {
-    label: "Age",
-    value: "age",
-    icon: null,
-  },
-  {
-    label: "Min progress",
-    value: "min-progress",
-    icon: null,
-  },
-  {
-    label: "Max progress",
-    value: "max-progress",
-    icon: null,
-  },
-];
-
-const FilterTerminal = ({ search, onChangeSearch }: IFilterTerminal) => {
-  const { searchParams, setSearchParams } = useAppSearchParams("filter");
-
-  const handleClickFilter = useCallback(
-    (value: any, queryKey: string) => {
-      setSearchParams({
-        ...searchParams,
-        [queryKey]: value,
-      });
-    },
-    [searchParams, setSearchParams]
-  );
-
+const FilterTerminal = ({
+  filterArr,
+  search,
+  onChangeSearch,
+  searchParams,
+  handleClickFilter,
+}: IFilterTerminal) => {
   return (
-    <div className="w-full flex flex-row items-center mt-5">
-      <div className="w-full overflow-scroll flex flex-row">
-        {FILTER_TERMINAL?.map((filter: any, index: number) => (
+    <div className="w-full flex flex-row justify-between items-center mt-5 overflow-auto">
+      <div className="mr-4 overflow-auto relative flex flex-row">
+        {filterArr?.map((filter: any, index: number) => (
           <AppButton
             key={index}
             typeButton={
-              filter?.value === searchParams?.filter ? "primary" : "secondary"
+              filter?.value === (searchParams?.filter ?? "trending")
+                ? "primary"
+                : "secondary"
             }
             customClass="w-fit mr-4"
             onClick={() => {
@@ -84,51 +37,9 @@ const FilterTerminal = ({ search, onChangeSearch }: IFilterTerminal) => {
             {filter?.label}
           </AppButton>
         ))}
-        <AppButton
-          typeButton="primary"
-          customClass="w-fit"
-          onClick={(v) => {
-            handleClickFilter("trending", "filter");
-          }}
-        >
-          Trending
-        </AppButton>
-        <AppButton
-          typeButton="secondary"
-          customClass="w-fit"
-          onClick={(v) => {
-            handleClickFilter("top", "filter");
-          }}
-        >
-          Top
-        </AppButton>
-        <AppButton
-          typeButton="secondary"
-          customClass="w-fit"
-          onClick={(v) => {
-            handleClickFilter("rising", "filter");
-          }}
-        >
-          Rising
-        </AppButton>
-        <AppButton typeButton="secondary" customClass="w-fit">
-          New
-        </AppButton>
-        <AppButton typeButton="secondary" customClass="w-fit">
-          Finalized
-        </AppButton>
-        <AppButton typeButton="outline" customClass="w-fit">
-          Age
-        </AppButton>
-        <AppButton typeButton="outline" customClass="w-fit">
-          Min progress
-        </AppButton>
-        <AppButton typeButton="outline" customClass="w-fit">
-          Max progress
-        </AppButton>
       </div>
       <AppInput
-        className="w-[200px]"
+        className="!w-[300px]"
         isSearch
         iconPosition="right"
         placeholder="Search"

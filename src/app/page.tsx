@@ -1,9 +1,10 @@
 "use client";
+import AppButton from "@/components/app-button";
 import AppTabs from "@/components/app-tabs";
-import { useState } from "react";
+import { useAppSearchParams } from "@/hooks/useAppSearchParams";
+import { useEffect, useState } from "react";
 import AllTab from "./(pages)/_components/AllTab";
 import FollowingTab from "./(pages)/_components/FollowingTab";
-import AppButton from "@/components/app-button";
 import ProjectCard from "./(pages)/_components/ProjectCard";
 
 enum ETabsTerminal {
@@ -12,8 +13,8 @@ enum ETabsTerminal {
 }
 
 export default function Home() {
+  const { searchParams, setSearchParams } = useAppSearchParams("terminal");
   const [activeTab, setActiveTab] = useState<string>(ETabsTerminal.ALL);
-
   const tabs = [
     {
       label: "All",
@@ -26,6 +27,23 @@ export default function Home() {
       children: <FollowingTab />,
     },
   ];
+
+  const handleChangeTab = (value: any) => {
+    setActiveTab(value);
+    setSearchParams({
+      tab: value,
+      filter: value === ETabsTerminal.ALL ? "trending" : "activity",
+    });
+  };
+
+  useEffect(() => {
+    if (searchParams.tab === ETabsTerminal.FOLLOWING) {
+      setActiveTab(ETabsTerminal.FOLLOWING);
+    }
+    if (searchParams.tab === ETabsTerminal.ALL) {
+      setActiveTab(ETabsTerminal.ALL);
+    }
+  }, []);
 
   return (
     <div className="h-full !m-[-24px]">
@@ -70,7 +88,11 @@ export default function Home() {
       </div>
       <div className="p-6 !pt-0 m-auto max-w-[var(--width-content-sidebar-layout)]">
         <div className="my-5">
-          <AppTabs items={tabs} activeKey={activeTab} onChange={setActiveTab} />
+          <AppTabs
+            items={tabs}
+            activeKey={activeTab}
+            onChange={handleChangeTab}
+          />
         </div>
       </div>
     </div>
