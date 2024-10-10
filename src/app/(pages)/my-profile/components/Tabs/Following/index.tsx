@@ -66,7 +66,7 @@ const FollowingTab = () => {
       <TabTitle title="Following" />
       <AppInput
         className="!w-[400px]"
-        isSearch
+        isSearch={true}
         iconPosition="right"
         placeholder="Search"
         value={search}
