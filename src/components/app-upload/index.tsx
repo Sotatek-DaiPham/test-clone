@@ -9,9 +9,12 @@ export interface AppUploadProps {
   value?: { src?: string; file?: File };
   accept?: string;
   disabled?: boolean;
+  isShowSuggest?: boolean;
+  className?: string;
 }
 
 const AppUpload = (props: AppUploadProps) => {
+  const { isShowSuggest = true, className } = props;
   const handleChange = (value: UploadChangeParam<UploadFile<any>>) => {
     const file = value.file;
     const fileUrl = URL.createObjectURL(file.originFileObj as File);
@@ -34,7 +37,7 @@ const AppUpload = (props: AppUploadProps) => {
 
   return (
     <Upload
-      className="basic-upload"
+      className={`basic-upload ${className ?? ""}`}
       multiple={false}
       showUploadList={false}
       onChange={handleChange}
@@ -56,7 +59,9 @@ const AppUpload = (props: AppUploadProps) => {
           ) : null}
         </div>
       ) : (
-        <div className="text-white text-[14px]">Drag and drop files</div>
+        isShowSuggest && (
+          <div className="text-white text-[14px]">Drag and drop files</div>
+        )
       )}
       <ButtonOutlined buttonType="secondary">Upload File</ButtonOutlined>
     </Upload>

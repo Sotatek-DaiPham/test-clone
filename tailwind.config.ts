@@ -80,15 +80,29 @@ const config: Config = {
             fontWeight: "700",
           },
         ],
-        "16px-medium": [
-          "16px",
+        "26px-medium": [
+          "26px",
           {
-            lineHeight: "24px",
+            lineHeight: "32px",
+            fontWeight: "500",
+          },
+        ],
+        "24px-medium": [
+          "24px",
+          {
+            lineHeight: "30px",
             fontWeight: "500",
           },
         ],
         "18px-medium": [
           "18px",
+          {
+            lineHeight: "24px",
+            fontWeight: "500",
+          },
+        ],
+        "16px-medium": [
+          "16px",
           {
             lineHeight: "24px",
             fontWeight: "500",
@@ -105,13 +119,6 @@ const config: Config = {
           "12px",
           {
             lineHeight: "16px",
-            fontWeight: "500",
-          },
-        ],
-        "26px-medium": [
-          "26px",
-          {
-            lineHeight: "32px",
             fontWeight: "500",
           },
         ],
