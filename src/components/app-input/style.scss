@@ -26,6 +26,10 @@
     }
   }
 
+  &.ant-input-status-error {
+    background: transparent !important;
+  }
+
   input {
     &::placeholder {
       color: $color-grey-6;
