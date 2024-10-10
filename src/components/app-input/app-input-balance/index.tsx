@@ -5,7 +5,7 @@ import "./styles.scss";
 
 interface Props extends InputProps {
   tokenSymbol: string;
-  tokenImageSrc: string;
+  tokenImageSrc?: string;
   value?: string;
   onChange?: (e: ChangeEvent<HTMLInputElement>) => void;
   regex?: RegExp;
@@ -36,7 +36,9 @@ const AppInputBalance = ({
   return (
     <div className="token-balance-input">
       <div className="token-balance-input__token">
-        <Image alt="token" width={30} height={30} src={tokenImageSrc} />
+        {tokenImageSrc && (
+          <Image alt="token" width={30} height={30} src={tokenImageSrc} />
+        )}
         <span>{tokenSymbol}</span>
       </div>
 
