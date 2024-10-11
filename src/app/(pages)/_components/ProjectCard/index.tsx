@@ -1,6 +1,7 @@
 import AppDivider from "@/components/app-divider";
 import AppImage from "@/components/app-image";
 import AppProgress from "@/components/app-progress";
+import { useRouter } from "next/navigation";
 
 interface Project {
   title: string;
@@ -16,8 +17,14 @@ interface IProjectCardProps {
 }
 
 const ProjectCard = ({ data }: IProjectCardProps) => {
+  const router = useRouter();
   return (
-    <div className="p-4 pb-6 rounded-2xl bg-[#252935CC] text-[#777E90]">
+    <div
+      className="p-4 pb-6 rounded-2xl bg-[#252935CC] text-[#777E90] cursor-pointer"
+      onClick={() => {
+        router.push(`/token-detail/${data?.title}`);
+      }}
+    >
       <div className="grid grid-cols-3">
         <div className="col-span-1">
           <AppImage className="bg-red-300" />
@@ -42,14 +49,7 @@ const ProjectCard = ({ data }: IProjectCardProps) => {
             } ${data?.stage}`}</span>
           </span>
         </div>
-        <AppProgress
-          percent={data?.percent ?? 0}
-          strokeWidth={8}
-          showInfo={false}
-          strokeColor="#55E3BE"
-          trailColor="#353945"
-          percentPosition={{ align: "end", type: "outer" }}
-        />
+        <AppProgress percent={data?.percent ?? 0} strokeColor="#55E3BE" />
       </div>
     </div>
   );

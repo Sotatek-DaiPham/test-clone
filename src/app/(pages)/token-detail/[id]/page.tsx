@@ -1,5 +1,6 @@
 "use client";
 
+import PriceSection from "../_components/PriceSection";
 import TradeSection from "../_components/TradeSection";
 
 const TokenDetailPage = () => {
@@ -24,9 +25,8 @@ const TokenDetailPage = () => {
         </div>
 
         {/* Detail information section */}
-        <div className="bg-gray-100 p-4">
-          <h2 className="text-xl font-bold mb-2">Token Detail</h2>
-          <p>Token detail content</p>
+        <div>
+          <PriceSection />
         </div>
       </div>
     </div>

@@ -1,16 +1,19 @@
+import { TooltipIcon } from "@public/assets";
 import { Tooltip } from "antd";
 import { TooltipPropsWithOverlay } from "antd/es/tooltip";
+import Image from "next/image";
 
-interface ITooltipProps extends TooltipPropsWithOverlay {}
+interface ITooltipProps extends TooltipPropsWithOverlay {
+  overlayClassName?: string;
+}
 
 const AppTooltip = ({ children, ...props }: ITooltipProps) => {
   return (
     <Tooltip
-      color={"var(--color-icon-secondary)"}
-      overlayInnerStyle={{ borderRadius: "2px" }}
+      overlayClassName={`app-tooltip ${props.overlayClassName || ""}`}
       {...props}
     >
-      {children}
+      {children || <Image src={TooltipIcon} alt="tooltip-icon" />}
     </Tooltip>
   );
 };
