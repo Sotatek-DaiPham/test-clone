@@ -52,7 +52,7 @@ export default function Home() {
       <div className="w-full bg-[#2F32414D]">
         <div className="m-auto p-6 max-w-[var(--width-content-sidebar-layout)]">
           <div className="grid grid-cols-2 gap-40">
-            <div className="h-full grid grid-cols-3 rounded-3xl how-it-work-bg">
+            <div className="h-full grid grid-cols-3 rounded-3xl how-it-work-bg !overflow-hidden">
               <div className="col-span-2 h-full flex flex-col justify-between py-[40px]">
                 <div className="h-full">
                   <span className="text-32px-bold text-white-neutral">
@@ -73,7 +73,7 @@ export default function Home() {
                   How it works?
                 </AppButton>
               </div>
-              <div className="col-span-1 relative !overflow-hidden">
+              <div className="col-span-1 relative">
                 <Image
                   src={HowItWorksIcon}
                   alt="how-it-work"
