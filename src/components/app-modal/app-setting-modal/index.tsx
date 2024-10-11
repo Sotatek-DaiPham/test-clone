@@ -6,6 +6,7 @@ import AppAmountSelect from "@/components/app-amount-select";
 import AppInputBalance from "@/components/app-input/app-input-balance";
 import { REGEX_INPUT_DECIMAL } from "@/constant/regex";
 import { useState } from "react";
+import AppCheckbox from "@/components/app-checkbox";
 import "./styles.scss";
 
 interface ITradeSettingModal extends ModalProps {
@@ -27,7 +28,18 @@ const TradeSettingModal = ({ title, onOk, ...props }: ITradeSettingModal) => {
     >
       <div className="flex flex-col gap-4">
         <div className="text-18px-medium text-white  mt-5">Trade Setting</div>
-
+        <div className="bg-[#1a1c21] p-4 rounded-lg flex items-center gap-2">
+          <AppCheckbox />
+          <div>
+            <div className="text-16px-medium text-white">
+              Front running protection
+            </div>
+            <div className="text-16px-sm text-gray-500">
+              Front-running protection prevents sandwich attacks on your swaps.
+              With this feature enabled you can safely use high slippage.
+            </div>
+          </div>
+        </div>
         <div className="bg-[#1a1c21] p-4 rounded-lg flex flex-col gap-2">
           <label className="text-16px-medium text-white">Max Slippage</label>
           <AppInputBalance

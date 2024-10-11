@@ -22,7 +22,7 @@ const ComponentPage = () => {
   return (
     <div className="w-[50%] m-auto">
       <div className="my-5">
-        <AppProgress percent={50} />
+        <AppProgress percent={50} strokeColor="#55E3BE" />
       </div>
       <div className="my-5">
         <AppTabs
