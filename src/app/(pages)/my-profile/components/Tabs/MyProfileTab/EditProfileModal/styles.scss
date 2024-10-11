@@ -1,0 +1,13 @@
+.upload-avatar {
+  .ant-upload {
+    span.ant-upload {
+      height: 125px !important;
+      background: transparent !important;
+      min-width: fit-content !important;
+      padding: 8px !important;
+      button.ant-btn {
+        margin-top: 60px !important;
+      }
+    }
+  }
+}
