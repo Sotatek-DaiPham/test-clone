@@ -10,7 +10,12 @@ interface AppButtonProps extends ButtonProps {
   customClass?: string;
   isActive?: boolean;
   size?: SizeType;
-  typeButton?: "primary" | "outline" | "outline-primary" | "secondary";
+  typeButton?:
+    | "primary"
+    | "outline"
+    | "outline-primary"
+    | "secondary"
+    | "teriary";
   widthFull?: boolean;
   classChildren?: string;
 }

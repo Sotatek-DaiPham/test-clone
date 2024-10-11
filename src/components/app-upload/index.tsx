@@ -52,13 +52,13 @@ const AppUpload = (props: AppUploadProps) => {
           <Image src={props?.value?.src} preview={false} />
           {!props?.disabled ? (
             <div onClick={handleRemoveImage} className="basic-upload__remove">
-              <CloseCircleOutlined className="text-white" />
+              <CloseCircleOutlined className="text-white-neutral" />
             </div>
           ) : null}
         </div>
       ) : (
         isShowSuggest && (
-          <div className="text-white text-[14px]">Drag and drop files</div>
+          <div className="text-white-neutral text-[14px]">Drag and drop files</div>
         )
       )}
       <ButtonOutlined buttonType="secondary">Upload File</ButtonOutlined>

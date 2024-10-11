@@ -31,7 +31,7 @@ const ProjectCard = ({ data }: IProjectCardProps) => {
         </div>
         <div className="col-span-2">
           <div>
-            <span className="text-white text-18px-bold">
+            <span className="text-white-neutral text-18px-bold">
               {data?.title ?? "-"}
             </span>
             <AppDivider />
@@ -44,7 +44,7 @@ const ProjectCard = ({ data }: IProjectCardProps) => {
           <span>Progress</span>
           <span className="text-12px-medium">
             <span className="text-[#55E3BE] mr-1">({data?.percent ?? 0})</span>
-            <span className="text-white">{`${data?.currentValue ?? 0}/${
+            <span className="text-white-neutral">{`${data?.currentValue ?? 0}/${
               data?.total ?? 0
             } ${data?.stage}`}</span>
           </span>

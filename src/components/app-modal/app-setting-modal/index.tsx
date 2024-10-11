@@ -27,11 +27,11 @@ const TradeSettingModal = ({ title, onOk, ...props }: ITradeSettingModal) => {
       {...props}
     >
       <div className="flex flex-col gap-4">
-        <div className="text-18px-medium text-white  mt-5">Trade Setting</div>
+        <div className="text-18px-medium text-white-neutral  mt-5">Trade Setting</div>
         <div className="bg-[#1a1c21] p-4 rounded-lg flex items-center gap-2">
           <AppCheckbox />
           <div>
-            <div className="text-16px-medium text-white">
+            <div className="text-16px-medium text-white-neutral">
               Front running protection
             </div>
             <div className="text-16px-sm text-gray-500">
@@ -41,7 +41,7 @@ const TradeSettingModal = ({ title, onOk, ...props }: ITradeSettingModal) => {
           </div>
         </div>
         <div className="bg-[#1a1c21] p-4 rounded-lg flex flex-col gap-2">
-          <label className="text-16px-medium text-white">Max Slippage</label>
+          <label className="text-16px-medium text-white-neutral">Max Slippage</label>
           <AppInputBalance
             tokenSymbol="Slippage (%)"
             value={slippage}
@@ -58,7 +58,7 @@ const TradeSettingModal = ({ title, onOk, ...props }: ITradeSettingModal) => {
           </div>
         </div>
         <div className="bg-[#1a1c21] p-4 rounded-lg flex flex-col gap-2">
-          <label className="text-16px-medium text-white">Priority fee</label>
+          <label className="text-16px-medium text-white-neutral">Priority fee</label>
           <AppInputBalance
             value={priorityFee}
             tokenImageSrc={EthIcon}

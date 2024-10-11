@@ -49,8 +49,8 @@ const data = [
 const NotificationItem = ({ data }: { data: any }) => {
   return (
     <div>
-      <div className="text-18px-medium text-white">{data?.time}</div>
-      <div className="text-18px-medium text-white flex flex-row gap-2 my-6">
+      <div className="text-18px-medium text-white-neutral">{data?.time}</div>
+      <div className="text-18px-medium text-white-neutral flex flex-row gap-2 my-6">
         <span>{data?.address}</span>
         <span
           className={

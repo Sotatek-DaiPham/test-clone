@@ -10,7 +10,7 @@ const AppAmountSelect = ({
       {numbers.map((num, index) => (
         <button
           key={index}
-          className="px-3 py-1 bg-gray-700 text-white rounded hover:bg-gray-600"
+          className="px-3 py-1 bg-gray-700 text-white-neutral rounded hover:bg-gray-600"
           onClick={() => onSelect(num)}
         >
           {num}

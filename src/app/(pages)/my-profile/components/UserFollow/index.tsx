@@ -20,7 +20,7 @@ const UserFollow = ({ data }: IUserFollow) => {
       </div>
       <div className="w-[80%] mr-6">
         <span className="">
-          <span className="text-16px-medium text-white mr-3">
+          <span className="text-16px-medium text-white-neutral mr-3">
             {data?.name ?? "-"}
           </span>
           <span className="text-16px-normal text-[#8D8D8D]">
