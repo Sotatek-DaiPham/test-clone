@@ -1,4 +1,4 @@
-import { TooltipIcon } from "@/assets/icons";
+import { TooltipIcon } from "@public/assets";
 import { Tooltip } from "antd";
 import { TooltipPropsWithOverlay } from "antd/es/tooltip";
 import Image from "next/image";
