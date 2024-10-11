@@ -2,7 +2,7 @@ import { useState } from "react";
 import AppInputBalance from "@/components/app-input/app-input-balance";
 import ButtonContained from "@/components/Button/ButtonContained";
 import { REGEX_INPUT_DECIMAL } from "@/constant/regex";
-import { EthIcon, SettingIcon } from "@public/assets";
+import { EthIcon, SettingIcon } from "@/assets/icons";
 import { Tabs, TabsProps } from "antd";
 import Image from "next/image";
 import AppAmountSelect from "@/components/app-amount-select";

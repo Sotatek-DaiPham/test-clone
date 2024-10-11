@@ -68,6 +68,7 @@ export default function Home() {
               <AppButton
                 typeButton="outline-primary"
                 customClass="!rounded-3xl mb-3"
+                classChildren="text-primary-main"
               >
                 King of The hill
               </AppButton>

@@ -1,7 +1,7 @@
 "use client";
-import { TopKingCoinFrame } from "@/assets/icons";
 import AppInput from "@/components/app-input";
 import useDebounce from "@/hooks/useDebounce";
+import Image from "next/image";
 import { useState } from "react";
 
 const LeaderboardPage = () => {
@@ -23,7 +23,13 @@ const LeaderboardPage = () => {
       </div>
       <div className="my-6">
         <div className="grid grid-cols-6 gap-4">
-          <div>{/* <TopKingCoinFrame /> */}</div>
+          <div>
+            {/* <Image
+              src={TopKingCoinFrame}
+              alt="menu icon"
+              className="top-king"
+            /> */}
+          </div>
           <div>
             <div></div>
             <span></span>

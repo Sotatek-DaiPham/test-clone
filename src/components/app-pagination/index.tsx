@@ -4,7 +4,7 @@ import clsx from "clsx";
 import { useEffect } from "react";
 import "./style.scss";
 import Image from "next/image";
-import { ArrowLeftIcon, ArrowRightIcon } from "@public/assets";
+import { ArrowLeftIcon, ArrowRightIcon } from "@/assets/icons";
 interface Props extends PaginationProps {
   className?: string;
   rootClassName?: string;

@@ -1,7 +1,7 @@
-import { Input, InputProps } from "antd";
-import Image from "next/image";
 import { SearchIcon } from "@public/assets";
+import { Input, InputProps } from "antd";
 import { TextAreaProps } from "antd/es/input";
+import Image from "next/image";
 import "./style.scss";
 
 interface IAppInputProps extends InputProps {

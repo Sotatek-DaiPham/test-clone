@@ -1,9 +1,9 @@
+import ButtonContained from "@/components/Button/ButtonContained";
+import ButtonOutlined from "@/components/Button/ButtonOutlined";
+import { WarningModalIcon } from "@public/assets";
 import { Flex, ModalProps } from "antd";
 import Image from "next/image";
-import { WarningModalIcon } from "../../../../public/assets";
 import AppModal from "..";
-import ButtonOutlined from "@/components/Button/ButtonOutlined";
-import ButtonContained from "@/components/Button/ButtonContained";
 import "./styles.scss";
 
 interface ILoginModal extends ModalProps {

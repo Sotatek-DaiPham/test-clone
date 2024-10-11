@@ -19,6 +19,7 @@
 }
 
 .app-button.outline {
+  border-radius: 256px;
   color: #777e90 !important;
   outline: none !important;
   border: 1px solid #000000 !important;
@@ -26,6 +27,7 @@
 }
 
 .app-button.outline-primary {
+  border-radius: 256px;
   color: #ffffff !important;
   background-color: transparent !important;
   border: 2px solid #8f57ff !important;
@@ -33,6 +35,7 @@
 }
 
 .app-button.primary {
+  border-radius: 256px;
   color: #ffffff !important;
   background-color: #8f57ff !important;
   border: 1px solid #8f57ff !important;
@@ -40,10 +43,13 @@
 }
 
 .app-button.secondary {
+  border-radius: 256px;
   color: #ffffff !important;
   border: 1px solid #353945 !important;
   background-color: #353945 !important;
   outline: none !important;
+  box-shadow: 0px -2px 0px 0px rgba(191, 195, 184, 0.15) inset;
+  backdrop-filter: blur(59.400001525878906px);
 }
 
 .app-button:disabled {
