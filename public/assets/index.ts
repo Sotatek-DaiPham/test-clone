@@ -10,3 +10,4 @@ export { default as SettingIcon } from "./icons/setting-icon.svg";
 export { default as ArrowLeftIcon } from "./icons/arrow-left.svg";
 export { default as ArrowRightIcon } from "./icons/arrow-right.svg";
 export { default as TooltipIcon } from "./icons/tooltip-icon.svg";
+export { default as HowItWorks } from "./icons/how-it-work.svg";

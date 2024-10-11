@@ -2,12 +2,12 @@ import { useState } from "react";
 import AppInputBalance from "@/components/app-input/app-input-balance";
 import ButtonContained from "@/components/Button/ButtonContained";
 import { REGEX_INPUT_DECIMAL } from "@/constant/regex";
-import { EthIcon, SettingIcon } from "@public/assets";
 import { Tabs, TabsProps } from "antd";
 import Image from "next/image";
 import AppAmountSelect from "@/components/app-amount-select";
 import "./styles.scss";
 import TradeSettingModal from "@/components/app-modal/app-setting-modal";
+import { EthIcon, SettingIcon } from "@public/assets";
 
 enum TabKey {
   BUY = "buy",

@@ -1,10 +1,9 @@
 "use client";
+import { PATH_ROUTER } from "@/constant/router";
+import { DashboardMenuIcon } from "@public/assets";
 import { Menu, MenuProps } from "antd";
 import Image from "next/image";
-import { usePathname } from "next/navigation";
-import { DashboardMenuIcon } from "../../../../public/assets";
-import { useRouter } from "next/navigation";
-import { PATH_ROUTER } from "@/constant/router";
+import { usePathname, useRouter } from "next/navigation";
 import "./styles.scss";
 
 type MenuItem = Required<MenuProps>["items"][number];

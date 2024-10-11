@@ -1,11 +1,11 @@
 "use client";
+import ConnectWalletButton from "@/components/Button/ConnectWallet";
+import useWindowSize from "@/hooks/useWindowSize";
+import { CloseIcon, Hamburgericon } from "@public/assets";
 import { Flex, Layout } from "antd";
 import Image from "next/image";
 import { useState } from "react";
-import { CloseIcon, Hamburgericon } from "../../../../public/assets";
 import AppMenu from "../Menu";
-import ConnectWalletButton from "@/components/Button/ConnectWallet";
-import useWindowSize from "@/hooks/useWindowSize";
 import "./styles.scss";
 
 const { Header } = Layout;

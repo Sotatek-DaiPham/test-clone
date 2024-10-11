@@ -1,12 +1,12 @@
-import { ModalProps } from "antd";
-import { EthIcon } from "../../../../public/assets";
-import AppModal from "..";
 import ButtonContained from "@/components/Button/ButtonContained";
 import AppAmountSelect from "@/components/app-amount-select";
+import AppCheckbox from "@/components/app-checkbox";
 import AppInputBalance from "@/components/app-input/app-input-balance";
 import { REGEX_INPUT_DECIMAL } from "@/constant/regex";
+import { EthIcon } from "@public/assets";
+import { ModalProps } from "antd";
 import { useState } from "react";
-import AppCheckbox from "@/components/app-checkbox";
+import AppModal from "..";
 import "./styles.scss";
 
 interface ITradeSettingModal extends ModalProps {
