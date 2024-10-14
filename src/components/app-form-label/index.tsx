@@ -21,7 +21,7 @@ const FormItemLabel = ({
     <Flex
       align="center"
       gap={4}
-      className={`text-white-neutral text-14px-medium ${className ?? ""}`}
+      className={`text-neutral-7 text-14px-medium ${className ?? ""}`}
     >
       {label} {isRequired ? <span>*</span> : ""}
       {tooltipInfo ? (

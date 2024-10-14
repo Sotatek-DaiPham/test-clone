@@ -1,5 +1,4 @@
 @import "@/assets/scss/_colors.scss";
-@import "@/assets/scss/variables.scss";
 
 .btn-contained {
   border-radius: 90px;
@@ -7,7 +6,6 @@
   border-color: transparent !important ;
   border-width: 2px;
   height: unset;
-  font-family: $font-family;
   font-weight: 700;
   span {
     line-height: 1;

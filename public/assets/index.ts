@@ -20,3 +20,20 @@ export { default as UsersIcon } from "./icons/users.svg";
 export { default as WarningModalIcon } from "./icons/warning-modal-icon.svg";
 export { default as CloseIcon } from "./icons/x-close.svg";
 export { default as HowItWorksBackground } from "./icons/bg-how-it-work.svg";
+export { default as HowItWorks } from "./icons/how-it-work.svg";
+export { default as RainmakrIcon } from "./icons/rainmakr-icon.svg";
+
+// Sidebar icons
+export { default as BrowseIcon } from "./icons/browse-icon.svg";
+export { default as CoinsIcon } from "./icons/coins-icon.svg";
+export { default as ProfileIcon } from "./icons/profile-icon.svg";
+export { default as LeaderboardIcon } from "./icons/leaderboard-icon.svg";
+export { default as XIcon } from "./icons/x-icon.svg";
+export { default as TelegramIcon } from "./icons/telegram-icon.svg";
+
+// Affects
+export { default as BackgounrdEffect1 } from "./effects/bg-affect-1.svg";
+export { default as BackgounrdEffect2 } from "./effects/bg-affect-2.svg";
+export { default as BackgounrdEffect3 } from "./effects/bg-affect-3.svg";
+export { default as BackgounrdEffect4 } from "./effects/bg-affect-4.svg";
+export { default as BackgounrdEffect5 } from "./effects/bg-affect-5.svg";

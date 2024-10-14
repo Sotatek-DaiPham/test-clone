@@ -1,0 +1,33 @@
+@import "@/assets/scss/_colors.scss";
+@import "@/assets/scss/responsive.scss";
+
+.app-header-primary {
+  position: fixed;
+  width: 100% !important;
+  top: 75px !important;
+  left: 0 !important;
+  height: calc(100vh - 64px);
+  padding: 20px;
+  background-color: var(--color-neutral-2);
+  z-index: 1001;
+  overflow-y: scroll !important;
+  padding-bottom: 200px;
+
+  .ant-dropdown-menu {
+    all: unset;
+    li {
+      margin-bottom: 25px !important;
+      span {
+        color: $color-grey-6;
+        font-size: 16px;
+        line-height: 32px;
+      }
+    }
+  }
+}
+
+.navbar-menu-mobile {
+  background-color: var(--color-neutral-2) !important;
+  padding: 0 !important;
+  margin-top: 16px;
+}
