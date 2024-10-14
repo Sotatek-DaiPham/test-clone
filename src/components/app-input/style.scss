@@ -1,12 +1,13 @@
-@import "@/assets/scss/_colors.scss";
-@import "@/assets/scss/variables.scss";
+textarea.app-input {
+  border-radius: 20px;
+}
 
 .app-input {
-  border-radius: 8px;
+  border-radius: var(--radius-rounded);
   padding: 8px 12px 8px 16px;
-  border: 2px solid $color-grey-7;
+  border: 1px solid var(--color-neutral-4);
   background: transparent;
-  color: $color-grey-6;
+  color: #777e90;
 
   &--secondary {
     background: rgba(35, 38, 47, 0.6);
@@ -15,7 +16,7 @@
   &:hover,
   &:focus-within,
   &:focus {
-    border-color: $color-grey-7;
+    border-color: var(--color-neutral-4);
     background: transparent;
     box-shadow: none;
     .ant-input-suffix {
@@ -30,14 +31,12 @@
     background: transparent !important;
   }
 
-  input {
-    &::placeholder {
-      color: $color-grey-6;
-      font-family: $font-family;
-      font-weight: 400;
-      font-size: 14px;
-    }
+  &::placeholder {
+    color: var(--color-neutral-5);
+    font-weight: 400;
+    font-size: 14px;
   }
+
   .ant-input-clear-icon {
     color: #23262f;
     &:hover {

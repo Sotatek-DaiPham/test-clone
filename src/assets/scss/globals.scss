@@ -41,9 +41,9 @@
 }
 
 ::-webkit-scrollbar {
-  width: 0px;
+  width: 4px;
   height: 8px;
-  // background-color: var(--color-alternative-pressed);
+  background-color: var(--color-alternative-pressed);
   border-radius: 6px;
 }
 
@@ -71,6 +71,7 @@
 :root {
   --font-sf-pro: "SF Pro";
   --width-content-sidebar-layout: 1444px;
+  --radius-rounded: 256px;
 
   --color-primary-main: #8f57ff;
   --color-primary-1: #3c256b;

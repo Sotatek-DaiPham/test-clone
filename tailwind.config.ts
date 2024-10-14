@@ -76,13 +76,6 @@ const config: Config = {
         "how-it-work": "url(/public/assets/icons/bg-how-it-work.svg)",
       },
       fontSize: {
-        "32px-bold": [
-          "32px",
-          {
-            lineHeight: "40px",
-            fontWeight: "700",
-          },
-        ],
         "26px-bold": [
           "26px",
           {
@@ -199,6 +192,27 @@ const config: Config = {
           "12px",
           {
             lineHeight: "16px",
+            fontWeight: "400",
+          },
+        ],
+        "32px-bold": [
+          "32px",
+          {
+            lineHeight: "40px",
+            fontWeight: "700",
+          },
+        ],
+        "32px-medium": [
+          "32px",
+          {
+            lineHeight: "40px",
+            fontWeight: "500",
+          },
+        ],
+        "32px-normal": [
+          "32px",
+          {
+            lineHeight: "40px",
             fontWeight: "400",
           },
         ],

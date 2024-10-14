@@ -1,4 +1,3 @@
-import AppLayout from "@/components/Layout";
 import { NotificationProvider } from "@/libs/antd/NotificationProvider";
 import SocketProvider from "@/libs/socket/SocketProvider";
 import { WagmiRainbowKitProvider } from "@/providers/WagmiProvider";
@@ -6,18 +5,12 @@ import { AntdRegistry } from "@ant-design/nextjs-registry";
 import "@rainbow-me/rainbowkit/styles.css";
 import type { Metadata } from "next";
 import dynamic from "next/dynamic";
-import { DM_Sans } from "next/font/google";
 import "@/assets/scss/globals.scss";
+import AppLayout from "@/components/app-layout";
 // import "@/app/globals.scss";
 
 const ReduxProviders = dynamic(() => import("@/providers/StoreProvider"), {
   ssr: false,
-});
-
-const DMSans = DM_Sans({
-  subsets: ["latin"],
-  weight: ["400", "500", "700"],
-  variable: "--font-dmsans",
 });
 
 export const metadata: Metadata = {
@@ -32,7 +25,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={DMSans.variable}>
+      <body suppressHydrationWarning={true}>
         <ReduxProviders>
           <WagmiRainbowKitProvider>
             <AntdRegistry>
