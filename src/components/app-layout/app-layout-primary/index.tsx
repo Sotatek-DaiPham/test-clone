@@ -24,7 +24,7 @@ export default function AppLayoutPrimary({
         <Content className="app-content relative min-h-[auto]">
           <div className="relative z-[2]">{children}</div>
           <Image
-            className="absolute left-[-10%] top-[-12%]"
+            className="absolute left-[-226px] top-[-92px]"
             src={BackgounrdEffect1}
             alt="effect"
           />
