@@ -34,7 +34,7 @@ export default function AppLayoutPrimary({
             alt="effect"
           />
           <Image
-            className="absolute top-[-9%] right-[-9%] scale-[0.8]"
+            className="absolute top-[-58px] right-[-32px] scale-[0.8]"
             src={BackgounrdEffect3}
             alt="effect"
           />
