@@ -2,6 +2,12 @@ export const SEARCH_PARAMS = {
   terminal: {
     tab: "tab",
     filter: "filter",
+    top: "top",
+    rising: "rising",
+    finalized: "finalized",
+    age: "age",
+    min: "min",
+    max: "max",
   },
   myProfile: {
     tab: "tab",
