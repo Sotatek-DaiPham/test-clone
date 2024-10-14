@@ -3,6 +3,8 @@ import Pagination, { PaginationProps } from "antd/es/pagination";
 import clsx from "clsx";
 import { useEffect } from "react";
 import "./style.scss";
+import Image from "next/image";
+import { ArrowLeftIcon, ArrowRightIcon } from "@public/assets";
 interface Props extends PaginationProps {
   className?: string;
   rootClassName?: string;
@@ -37,6 +39,16 @@ function AppPagination(props: Props) {
       <Pagination
         responsive={true}
         className={clsx("app-pagination", className)}
+        hideOnSinglePage={true}
+        nextIcon={<Image src={ArrowRightIcon} alt="next icon" />}
+        prevIcon={<Image src={ArrowLeftIcon} alt="prev icon" />}
+        showSizeChanger={false}
+        jumpPrevIcon={() => {
+          return "...";
+        }}
+        jumpNextIcon={() => {
+          return "...";
+        }}
         {...restProps}
       />
     </div>

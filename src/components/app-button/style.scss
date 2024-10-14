@@ -19,6 +19,7 @@
 }
 
 .app-button.outline {
+  border-radius: 256px;
   color: #777e90 !important;
   outline: none !important;
   border: 1px solid #000000 !important;
@@ -26,24 +27,37 @@
 }
 
 .app-button.outline-primary {
-  color: #ffffff !important;
+  border-radius: 256px;
+  color: var(--color-neutral-white) !important;
   background-color: transparent !important;
-  border: 2px solid #8f57ff !important;
+  border: 2px solid var(--color-primary-main) !important;
   outline: none !important;
 }
 
 .app-button.primary {
-  color: #ffffff !important;
-  background-color: #8f57ff !important;
-  border: 1px solid #8f57ff !important;
+  border-radius: 256px;
+  color: var(--color-neutral-white) !important;
+  background-color: var(--color-primary-main) !important;
+  border: 1px solid var(--color-primary-main) !important;
+  outline: none !important;
+}
+
+.app-button.teriary {
+  border-radius: 256px;
+  color: var(--color-neutral-1) !important;
+  background-color: var(--color-neutral-white) !important;
+  border: 1px solid var(--color-neutral-white) !important;
   outline: none !important;
 }
 
 .app-button.secondary {
-  color: #ffffff !important;
+  border-radius: 256px;
+  color: var(--color-neutral-white) !important;
   border: 1px solid #353945 !important;
   background-color: #353945 !important;
   outline: none !important;
+  box-shadow: 0px -2px 0px 0px rgba(191, 195, 184, 0.15) inset;
+  backdrop-filter: blur(59.400001525878906px);
 }
 
 .app-button:disabled {

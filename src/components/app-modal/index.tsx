@@ -1,6 +1,6 @@
+import { ModalCloseIcon } from "@public/assets";
 import { Modal, ModalProps } from "antd";
 import Image from "next/image";
-import { ModalCloseIcon } from "@public/assets";
 import "./style.scss";
 
 interface IAppModal extends ModalProps {}

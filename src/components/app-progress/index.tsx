@@ -1,16 +1,26 @@
-import withClient from "@/helpers/with-client";
-import Progress, { ProgressProps } from "antd/es/progress";
-import clsx from "clsx";
+import { CSSProperties } from "react";
 import "./style.scss";
 
-interface Props extends ProgressProps {
-  className?: string;
-}
+const AppProgress = ({
+  percent,
+  strokeColor,
+  styles,
+}: {
+  percent: number;
+  strokeColor: string;
+  styles?: CSSProperties;
+}) => {
+  return (
+    <div className="app-progress" style={{ ...styles }}>
+      <div
+        className="app-progress__bar"
+        style={{
+          backgroundColor: `${strokeColor}`,
+          width: `${percent}%`,
+        }}
+      />
+    </div>
+  );
+};
 
-function AppProcess(props: Props) {
-  const { className, rootClassName, ...restProps } = props;
-
-  return <Progress className={clsx("app-process", className)} {...restProps} />;
-}
-
-export default withClient(AppProcess);
+export default AppProgress;

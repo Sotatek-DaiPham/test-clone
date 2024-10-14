@@ -1,5 +1,4 @@
 @import "@/assets/scss/_colors.scss";
-@import "@/assets/scss/variables.scss";
 
 .btn-outlined {
   border-radius: 90px;
@@ -7,7 +6,6 @@
   border: 2px solid $color-grey-6;
   background: transparent;
   height: unset;
-  font-family: $font-family;
   font-weight: 700;
 
   span {

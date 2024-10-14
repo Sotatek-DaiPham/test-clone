@@ -8,17 +8,59 @@ const config: Config = {
   ],
   theme: {
     extend: {
-      // fontFamily: {
-      //   sfPro: ["var(--font-sf-pro)"],
-      // },
+      fontFamily: {
+        sfPro: ["var(--font-sf-pro)"],
+      },
       colors: {
-        background: "var(--background)",
-        foreground: "var(--foreground)",
         primary: {
-          white: "var(--color-text-neon-primary)",
+          main: "var(--color-primary-main)",
+          1: "var(--color-primary-1)",
+          2: "var(--color-primary-2)",
+          3: "var(--color-primary-3)",
+          4: "var(--color-primary-4)",
+          5: "var(--color-primary-5)",
+          6: "var(--color-primary-6)",
+          7: "var(--color-primary-7)",
+          8: "var(--color-primary-8)",
+          9: "var(--color-primary-9)",
         },
-        gray: {
-          1: "var(--bg)",
+        error: {
+          main: "var(--color-error-main)",
+          1: "var(--color-error-1)",
+          2: "var(--color-error-2)",
+          3: "var(--color-error-3)",
+          4: "var(--color-error-4)",
+          5: "var(--color-error-5)",
+        },
+        warning: {
+          main: "var(--color-warning-main)",
+          1: "var(--color-warning-1)",
+          2: "var(--color-warning-2)",
+          3: "var(--color-warning-3)",
+          4: "var(--color-warning-4)",
+          5: "var(--color-warning-5)",
+        },
+        success: {
+          main: "var(--color-success-main)",
+          1: "var(--color-success-1)",
+          2: "var(--color-success-2)",
+          3: "var(--color-success-3)",
+          4: "var(--color-success-4)",
+          5: "var(--color-success-5)",
+        },
+        "black-neutral": "var(--color-neutral-black)",
+        "white-neutral": "var(--color-neutral-white)",
+        neutral: {
+          1: "var(--color-neutral-1)",
+          2: "var(--color-neutral-2)",
+          3: "var(--color-neutral-3)",
+          4: "var(--color-neutral-4)",
+          5: "var(--color-neutral-5)",
+          6: "var(--color-neutral-6)",
+          7: "var(--color-neutral-7)",
+          8: "var(--color-neutral-8)",
+          9: "var(--color-neutral-9)",
+          10: "var(--color-neutral-10)",
         },
       },
       width: {
@@ -30,14 +72,10 @@ const config: Config = {
       boxShadow: {
         "custom-inset": "inset 0px -2px 0px 0px rgba(255, 255, 255, 0.2)",
       },
+      backgroundImage: {
+        "how-it-work": "url(/public/assets/icons/bg-how-it-work.svg)",
+      },
       fontSize: {
-        "36px-bold": [
-          "36px",
-          {
-            lineHeight: "32px",
-            fontWeight: "700",
-          },
-        ],
         "26px-bold": [
           "26px",
           {
@@ -66,13 +104,6 @@ const config: Config = {
             fontWeight: "700",
           },
         ],
-        "14px-bold": [
-          "14px",
-          {
-            lineHeight: "20px",
-            fontWeight: "700",
-          },
-        ],
         "16px-bold": [
           "16px",
           {
@@ -80,10 +111,24 @@ const config: Config = {
             fontWeight: "700",
           },
         ],
-        "16px-medium": [
-          "16px",
+        "14px-bold": [
+          "14px",
           {
-            lineHeight: "24px",
+            lineHeight: "21px",
+            fontWeight: "700",
+          },
+        ],
+        "26px-medium": [
+          "26px",
+          {
+            lineHeight: "32px",
+            fontWeight: "500",
+          },
+        ],
+        "24px-medium": [
+          "24px",
+          {
+            lineHeight: "30px",
             fontWeight: "500",
           },
         ],
@@ -94,10 +139,17 @@ const config: Config = {
             fontWeight: "500",
           },
         ],
+        "16px-medium": [
+          "16px",
+          {
+            lineHeight: "24px",
+            fontWeight: "500",
+          },
+        ],
         "14px-medium": [
           "14px",
           {
-            lineHeight: "20px",
+            lineHeight: "21px",
             fontWeight: "500",
           },
         ],
@@ -105,13 +157,6 @@ const config: Config = {
           "12px",
           {
             lineHeight: "16px",
-            fontWeight: "500",
-          },
-        ],
-        "26px-medium": [
-          "26px",
-          {
-            lineHeight: "32px",
             fontWeight: "500",
           },
         ],
@@ -140,6 +185,34 @@ const config: Config = {
           "14px",
           {
             lineHeight: "21px",
+            fontWeight: "400",
+          },
+        ],
+        "12px-normal": [
+          "12px",
+          {
+            lineHeight: "16px",
+            fontWeight: "400",
+          },
+        ],
+        "32px-bold": [
+          "32px",
+          {
+            lineHeight: "40px",
+            fontWeight: "700",
+          },
+        ],
+        "32px-medium": [
+          "32px",
+          {
+            lineHeight: "40px",
+            fontWeight: "500",
+          },
+        ],
+        "32px-normal": [
+          "32px",
+          {
+            lineHeight: "40px",
             fontWeight: "400",
           },
         ],

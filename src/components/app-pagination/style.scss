@@ -1,85 +1,54 @@
+@import "@/assets/scss/_colors.scss";
+
 .app-pagination {
-  padding: 0px 16px !important;
-  margin: 12px 0px !important;
-  width: 100%;
-  display: flex !important;
-  .ant-pagination-total-text {
-    color: var(--color-text-secondary) !important;
-  }
-  .ant-pagination-item {
-    font-weight: 400 !important;
-    font-size: 14px !important;
-    line-height: 21px !important;
-    line-height: unset !important;
-    align-items: center !important;
-    justify-content: center !important;
-    display: flex !important;
-    background-color: var(--color-bg-pagination-item) !important;
-    border: 1px solid var(--color-stroke-disable) !important;
-    a {
-      color: var(--color-text-secondary) !important;
+  margin-top: 30px;
+  &.ant-pagination {
+    margin-top: 30px !important;
+    li {
+      color: $color-grey-5;
     }
-  }
 
-  .ant-pagination-item-active,
-  .ant-pagination-item-active:focus,
-  .ant-pagination-item-active:focus-within,
-  .ant-pagination-item-active:hover {
-    background-color: transparent !important;
-    border-color: var(--color-text-primary-2) !important;
-    font-weight: 400 !important;
-    a {
-      color: var(--color-text-primary-2) !important;
-    }
-  }
-
-  .ant-pagination-item-link {
-    color: var(--color-text-secondary) !important;
-  }
-
-  .ant-pagination-disabled {
-    .ant-pagination-item-link {
-      color: var(--color-text-secondary) !important;
-      opacity: 0.3 !important;
-    }
-  }
-
-  .ant-pagination-options-quick-jumper {
-    color: var(--color-text-secondary) !important;
-    input {
-      text-align: center !important;
-      border: 1px solid var(--color-stroke-disable) !important;
-      background-color: var(--color-container-primary) !important;
-      color: var(--color-text-primary-2) !important;
-    }
-  }
-
-  .ant-pagination-options {
-    display: flex !important;
-    flex: 1 !important;
-    justify-content: end !important;
-    .ant-select-selector {
-      border-color: var(--color-stroke-disable) !important;
-      color: var(--color-text-primary-2) !important;
-      background-color: var(--color-container-primary) !important;
-      .ant-select-selection-item {
-        font-weight: 700 !important;
-        font-size: 14px !important;
-        line-height: 20px !important;
+    .ant-pagination-item {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 100%;
+      background-color: $color-black-1;
+      min-width: 35px;
+      height: 35px;
+      font-size: 16px;
+      border: none;
+      a {
+        color: $color-grey-11;
+        font-size: 16px;
+        font-weight: 400;
+        line-height: 16px;
       }
     }
-    .ant-select-arrow {
-      color: var(--color-text-secondary) !important;
-    }
-  }
 
-  .ant-select-single.ant-select-open .ant-select-selection-item {
-    color: var(--color-text-primary-2) !important;
-    .ant-select-arrow {
-      color: var(--color-text-secondary) !important;
+    .ant-pagination-next,
+    .ant-pagination-prev {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      img {
+        width: 20px;
+        height: 20px;
+      }
     }
-  }
-  .ant-pagination-item-ellipsis {
-    color: var(--color-pagination-ellipsis) !important;
+
+    .ant-pagination-item-active {
+      background-color: transparent;
+      border: 1px solid $color-primary;
+
+      a {
+        color: $color-primary;
+      }
+
+      &:hover {
+        border: none;
+      }
+    }
   }
 }
