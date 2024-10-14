@@ -72,11 +72,14 @@ const config: Config = {
       boxShadow: {
         "custom-inset": "inset 0px -2px 0px 0px rgba(255, 255, 255, 0.2)",
       },
+      backgroundImage: {
+        "how-it-work": "url(/public/assets/icons/bg-how-it-work.svg)",
+      },
       fontSize: {
-        "36px-bold": [
-          "36px",
+        "32px-bold": [
+          "32px",
           {
-            lineHeight: "32px",
+            lineHeight: "40px",
             fontWeight: "700",
           },
         ],

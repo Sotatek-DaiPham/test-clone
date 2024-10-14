@@ -1,6 +1,6 @@
 .app-tabs.ant-tabs {
   .ant-tabs-tab {
-    @apply text-[14px] lg:text-[18px] #{!important};
+    @apply text-16px-bold #{!important};
     line-height: 24px !important;
     font-weight: 700 !important;
     color: #777e90 !important;
@@ -26,6 +26,43 @@
   .ant-tabs-nav {
     &::before {
       border-bottom: 1px solid #23262f !important;
+    }
+  }
+}
+
+.app-tabs-primary.ant-tabs.app-tabs {
+  .ant-tabs-tab {
+    @apply text-14px-bold #{!important};
+    line-height: 24px !important;
+    font-weight: 700 !important;
+    border-radius: 256px !important;
+    background: var(--color-neutral-3) !important;
+    padding: 6px 12px !important;
+    box-shadow: 0px -2px 0px 0px rgba(191, 195, 184, 0.15) inset;
+    backdrop-filter: blur(59.400001525878906px);
+    color: var(--color-neutral-9) !important;
+  }
+  .ant-tabs-tab {
+    margin-left: 0 !important;
+    margin-right: 12px !important;
+  }
+
+  .ant-tabs-tab.ant-tabs-tab-active {
+    font-weight: 700 !important;
+    background: var(--color-primary-main) !important;
+    .ant-tabs-tab-btn {
+      color: var(--color-neutral-white) !important;
+    }
+  }
+  .ant-tabs-tab-btn:active {
+    color: var(--color-neutral-white) !important;
+  }
+  .ant-tabs-ink-bar {
+    height: 0px !important;
+  }
+  .ant-tabs-nav {
+    &::before {
+      border: none !important;
     }
   }
 }

@@ -3,6 +3,8 @@ import { useCallback, useState } from "react";
 import FilterTerminal from "../FilterTerminal";
 import ProjectCard from "../ProjectCard";
 import { useAppSearchParams } from "@/hooks/useAppSearchParams";
+import Image from "next/image";
+import { DollarCircleUpIcon, TrendUpIcon } from "@public/assets";
 
 const data = [
   {
@@ -47,12 +49,12 @@ const FILTER_TERMINAL = [
   {
     label: "Activity",
     value: "activity",
-    icon: null,
+    icon: TrendUpIcon,
   },
   {
     label: "Created coins",
     value: "created",
-    icon: null,
+    icon: DollarCircleUpIcon,
   },
 ];
 

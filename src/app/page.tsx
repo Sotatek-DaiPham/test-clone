@@ -6,6 +6,8 @@ import { useEffect, useState } from "react";
 import AllTab from "./(pages)/_components/AllTab";
 import FollowingTab from "./(pages)/_components/FollowingTab";
 import ProjectCard from "./(pages)/_components/ProjectCard";
+import Image from "next/image";
+import { HowItWorksIcon } from "@public/assets";
 
 enum ETabsTerminal {
   ALL = "all",
@@ -50,19 +52,34 @@ export default function Home() {
       <div className="w-full bg-[#2F32414D]">
         <div className="m-auto p-6 max-w-[var(--width-content-sidebar-layout)]">
           <div className="grid grid-cols-2 gap-40">
-            <div className="h-full flex flex-col justify-between">
-              <div>
-                <span className="text-36px-bold text-white">RainPum</span>
-                <div className="truncate-4-line py-6 text-[#777E90] text-24px-normal">
-                  Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-                  Beatae ea perferendis ipsum quisquam excepturi quis sit libero
-                  officia! Facere neque vitae quae deleniti in adipisci.
-                  Recusandae, eligendi animi. Eius, provident!
+            <div className="h-full grid grid-cols-3 rounded-3xl how-it-work-bg !overflow-hidden">
+              <div className="col-span-2 h-full flex flex-col justify-between py-[40px]">
+                <div className="h-full">
+                  <span className="text-32px-bold text-white-neutral">
+                    RainPump
+                  </span>
+                  <div className="truncate-4-line my-2 text-white-neutral text-16px-normal">
+                    Lorem ipsum dolor sit, amet consectetur adipisicing elit.
+                    Beatae ea perferendis ipsum quisquam excepturi quis sit
+                    libero officia! Facere neque vitae quae deleniti in
+                    adipisci. Recusandae, eligendi animi. Eius, provident!
+                  </div>
                 </div>
+                <AppButton
+                  typeButton="teriary"
+                  customClass="!rounded-3xl !w-fit !bg-white-neutral"
+                  classChildren="!text-neutral-1 !text-14px-bold px-6"
+                >
+                  How it works?
+                </AppButton>
               </div>
-              <AppButton typeButton="primary" customClass="!rounded-3xl">
-                How it works?
-              </AppButton>
+              <div className="col-span-1 relative">
+                <Image
+                  src={HowItWorksIcon}
+                  alt="how-it-work"
+                  className="absolute !max-w-[125%] left-[-50px] bottom-0"
+                />
+              </div>
             </div>
             <div className="h-full">
               <AppButton

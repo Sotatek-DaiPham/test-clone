@@ -1,6 +1,6 @@
 import AppButton from "@/components/app-button";
-import AppImage from "@/components/app-image";
 import AppInput from "@/components/app-input";
+import Image from "next/image";
 
 interface IFilterTerminal {
   search?: string;
@@ -28,20 +28,31 @@ const FilterTerminal = ({
                 ? "primary"
                 : "secondary"
             }
-            customClass="w-fit mr-4"
+            customClass="!w-fit mr-4"
             onClick={() => {
               handleClickFilter(filter?.value, "filter");
             }}
+            classChildren="!flex !flex-row"
           >
-            <AppImage src={filter?.icon} />
-            {filter?.label}
+            {filter?.icon && (
+              <Image
+                src={filter?.icon}
+                alt={searchParams?.filter ?? "trending"}
+                className={
+                  filter?.value === (searchParams?.filter ?? "trending")
+                    ? "active-filter-icon"
+                    : "filter-icon"
+                }
+              />
+            )}
+            <span className="ml-2">{filter?.label}</span>
           </AppButton>
         ))}
       </div>
       <AppInput
-        className="!w-[300px]"
+        className="!w-[300px] !rounded-full"
         isSearch
-        iconPosition="right"
+        iconPosition="left"
         placeholder="Search"
         value={search}
         onChange={(e) => onChangeSearch(e.target.value)}

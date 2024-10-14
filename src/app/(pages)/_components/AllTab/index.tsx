@@ -3,6 +3,15 @@ import { useCallback, useState } from "react";
 import FilterTerminal from "../FilterTerminal";
 import ProjectCard from "../ProjectCard";
 import { useAppSearchParams } from "@/hooks/useAppSearchParams";
+import {
+  DollarCircleUpIcon,
+  DropdownIcon,
+  FinalizedIcon,
+  NewSpaperIcon,
+  TopIcon,
+  TrendUpIcon,
+  UsersIcon,
+} from "@public/assets";
 
 const data = [
   {
@@ -101,42 +110,42 @@ const FILTER_TERMINAL = [
   {
     label: "Trending",
     value: "trending",
-    icon: null,
+    icon: TrendUpIcon,
   },
   {
     label: "Top",
     value: "top",
-    icon: null,
+    icon: TopIcon,
   },
   {
     label: "Rising",
     value: "rising",
-    icon: null,
+    icon: DollarCircleUpIcon,
   },
   {
     label: "New",
     value: "new",
-    icon: null,
+    icon: NewSpaperIcon,
   },
   {
     label: "Finalized",
     value: "finalized",
-    icon: null,
+    icon: FinalizedIcon,
   },
   {
     label: "Age",
     value: "age",
-    icon: null,
+    icon: UsersIcon,
   },
   {
     label: "Min progress",
     value: "min-progress",
-    icon: null,
+    icon: DropdownIcon,
   },
   {
     label: "Max progress",
     value: "max-progress",
-    icon: null,
+    icon: DropdownIcon,
   },
 ];
 

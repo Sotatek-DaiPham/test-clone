@@ -210,6 +210,25 @@ body {
   overflow-x: hidden;
 }
 
+img.active-filter-icon {
+  filter: brightness(0) saturate(100%) invert(97%) sepia(100%) saturate(11%)
+    hue-rotate(217deg) brightness(105%) contrast(104%) !important;
+}
+
+img.filter-icon {
+  img {
+    filter: invert(49%) sepia(6%) saturate(49%) hue-rotate(201deg)
+      brightness(95%) contrast(87%) !important;
+  }
+}
+
+.how-it-work-bg {
+  background-image: url(../../../public/assets/icons/bg-how-it-work.svg) !important;
+  background-repeat: no-repeat;
+  background-size: cover;
+  padding-left: 40px;
+}
+
 * {
   font-family: var(--font-sf-pro);
 }

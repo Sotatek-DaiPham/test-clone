@@ -30,7 +30,7 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
           {tabKey === TabKey.BUY ? "Buy Amount" : "Sell Amount"}
         </div>
         <div className="text-sm text-gray-400">
-          Minimum amount: <span className="text-white"> 0.01 ETH</span>
+          Minimum amount: <span className="text-white-neutral"> 0.01 ETH</span>
         </div>
       </div>
       <AppInputBalance
@@ -42,7 +42,7 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
       />
       <AppAmountSelect numbers={predefinedNumbers} onSelect={handleSelect} />
       <div className="text-sm text-gray-400">
-        You will receive <span className="text-white">0 ABC</span>
+        You will receive <span className="text-white-neutral">0 ABC</span>
       </div>
       <div className="flex gap-2 items-center w-full">
         <ButtonContained fullWidth>

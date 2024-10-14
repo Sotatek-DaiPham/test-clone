@@ -28,23 +28,31 @@
 
 .app-button.outline-primary {
   border-radius: 256px;
-  color: #ffffff !important;
+  color: var(--color-neutral-white) !important;
   background-color: transparent !important;
-  border: 2px solid #8f57ff !important;
+  border: 2px solid var(--color-primary-main) !important;
   outline: none !important;
 }
 
 .app-button.primary {
   border-radius: 256px;
-  color: #ffffff !important;
-  background-color: #8f57ff !important;
-  border: 1px solid #8f57ff !important;
+  color: var(--color-neutral-white) !important;
+  background-color: var(--color-primary-main) !important;
+  border: 1px solid var(--color-primary-main) !important;
+  outline: none !important;
+}
+
+.app-button.teriary {
+  border-radius: 256px;
+  color: var(--color-neutral-1) !important;
+  background-color: var(--color-neutral-white) !important;
+  border: 1px solid var(--color-neutral-white) !important;
   outline: none !important;
 }
 
 .app-button.secondary {
   border-radius: 256px;
-  color: #ffffff !important;
+  color: var(--color-neutral-white) !important;
   border: 1px solid #353945 !important;
   background-color: #353945 !important;
   outline: none !important;

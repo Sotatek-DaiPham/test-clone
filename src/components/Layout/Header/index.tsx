@@ -17,7 +17,7 @@ export default function AppHeader() {
   return (
     <Header className="app-header">
       <Flex align="center" justify="center" className="app-header__left">
-        <h1 className="text-2xl font-bold text-white">RainPump</h1>
+        <h1 className="text-2xl font-bold text-white-neutral">RainPump</h1>
       </Flex>
       <Flex className="app-header__right" align="center" justify="end" gap={24}>
         {isMobile ? (

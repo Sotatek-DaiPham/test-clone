@@ -98,7 +98,7 @@ const CreateTokenPage = () => {
 
   return (
     <div className="create-token-page w-full md:w-[60%] mr-auto">
-      <h2 className="text-white text-22px-bold mb-10">Create a new coin</h2>
+      <h2 className="text-white-neutral text-22px-bold mb-10">Create a new coin</h2>
 
       <Form<CreateTokenFormValues>
         form={form}
@@ -110,7 +110,7 @@ const CreateTokenPage = () => {
           [FIELD_NAMES.DESCRIPTION]: "",
         }}
       >
-        <h5 className="text-white text-18px-bold mb-4">Coin Information</h5>
+        <h5 className="text-white-neutral text-18px-bold mb-4">Coin Information</h5>
         <Flex gap={10} className="flex-col md:flex-row">
           <Form.Item
             name={FIELD_NAMES.COIN_NAME}
@@ -165,7 +165,7 @@ const CreateTokenPage = () => {
         >
           <AppUpload accept="image/png, image/jpeg" />
         </Form.Item>
-        <h5 className="text-white text-18px-bold mt-4 mb-4">Links</h5>
+        <h5 className="text-white-neutral text-18px-bold mt-4 mb-4">Links</h5>
         <Flex gap={10} className="flex-col md:flex-row">
           <Form.Item
             name={FIELD_NAMES.WEBSITE}
