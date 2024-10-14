@@ -2,14 +2,19 @@
 
 import PriceSection from "../_components/PriceSection";
 import TradeSection from "../_components/TradeSection";
+import dynamic from "next/dynamic";
+
+const TradingView = dynamic(() => import("@/components/app-trading-view"), {
+  ssr: false,
+});
 
 const TokenDetailPage = () => {
   return (
     <div className="flex flex-col lg:flex-row gap-4">
       <div className="w-full lg:w-[65%] order-1 lg:order-1 gap-4">
         {/* Trading view section */}
-        <div className="bg-white p-4">
-          <h1 className="text-2xl  font-bold">Trading View</h1>
+        <div>
+          <TradingView />
         </div>
 
         {/* Tab list section */}

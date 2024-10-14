@@ -16,10 +16,7 @@ const TradingViewChart = () => {
     });
   }, []);
   return (
-    <div
-      className="border-border-primary border-solid border-r-[3px] w-full h-full flex flex-col"
-      ref={tradingChartRef}
-    >
+    <div className="w-full h-full flex flex-col" ref={tradingChartRef}>
       <div className={`flex items-center justify-center w-full flex-1 `}>
         <div className="h-full flex items-center justify-center flex-1">
           <div

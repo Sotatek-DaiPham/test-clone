@@ -1,8 +1,5 @@
-import useDebounce from "@/hooks/useDebounce";
-import { useCallback, useState } from "react";
-import FilterTerminal from "../FilterTerminal";
-import ProjectCard from "../ProjectCard";
 import { useAppSearchParams } from "@/hooks/useAppSearchParams";
+import useDebounce from "@/hooks/useDebounce";
 import {
   DollarCircleUpIcon,
   DropdownIcon,
@@ -12,7 +9,9 @@ import {
   TrendUpIcon,
   UsersIcon,
 } from "@public/assets";
-import { filter } from "lodash";
+import { useCallback, useState } from "react";
+import FilterTerminal from "../FilterTerminal";
+import ProjectCard from "../ProjectCard";
 
 const data = [
   {
@@ -208,7 +207,7 @@ const AllTab = () => {
   const handleClickFilter = useCallback(
     (value: any, queryKey: string, subValue?: any, subQueryKey?: any) => {
       const newParams = {
-        tab: searchParams.tab,
+        tab: searchParams.tab ?? "all",
       };
       setSearchParams({
         ...newParams,
@@ -224,7 +223,6 @@ const AllTab = () => {
 
   const handleClickFilterOption = useCallback(
     (value: any, queryKey: string) => {
-      console.log("value", { value, queryKey });
       setSearchParams({
         ...searchParams,
         [queryKey]: value,
