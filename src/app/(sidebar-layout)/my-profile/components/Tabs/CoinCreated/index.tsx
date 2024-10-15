@@ -1,4 +1,15 @@
 import ProjectCard from "@/app/(sidebar-layout)/_components/ProjectCard";
+import AppInput from "@/components/app-input";
+import { API_PATH } from "@/constant/api-path";
+import { MyProfileResponse } from "@/entities/my-profile";
+import { BeSuccessResponse } from "@/entities/response";
+import { useAppSearchParams } from "@/hooks/useAppSearchParams";
+import useDebounce from "@/hooks/useDebounce";
+import { getAPI } from "@/service";
+import { useQuery } from "@tanstack/react-query";
+import { AxiosResponse } from "axios";
+import get from "lodash/get";
+import { useState } from "react";
 import TabTitle from "../../TabTitle";
 
 const data = [
@@ -48,12 +59,41 @@ const data = [
     stage: "S1",
   },
 ];
-const CoinCreatedTab = () => {
+const CoinCreatedTab = ({ walletAddress }: { walletAddress: string }) => {
+  const { searchParams } = useAppSearchParams("myProfile");
+  const [search, setSearch] = useState<string>("");
+  const debounceSearch = useDebounce(search);
+  const { data, isLoading, isError, refetch } = useQuery({
+    queryKey: ["coin-created"],
+    queryFn: async () => {
+      return getAPI(API_PATH.USER.COINS_CREATED, {
+        params: {
+          limit: 10,
+          pageNumber: 1,
+          walletAddress: walletAddress,
+          userId: "",
+        },
+      }) as Promise<AxiosResponse<BeSuccessResponse<MyProfileResponse>, any>>;
+    },
+    enabled: searchParams.tab === "coin-created",
+  });
+  const coinCreated = get(data, "data.data", []) as MyProfileResponse[];
+  console.log("data", coinCreated);
   return (
     <div>
-      <TabTitle title="Coin created" />
+      <div className="w-full flex flex-row items-center justify-between">
+        <TabTitle title="Coin created" />
+        <AppInput
+          className="!w-[400px]"
+          isSearch={true}
+          iconPosition="left"
+          placeholder="Search"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+      </div>
       <div className="grid grid-cols-2 gap-6 my-9">
-        {data?.map((project: any, index: number) => (
+        {coinCreated?.map((project: any, index: number) => (
           <ProjectCard data={project} key={index} />
         ))}
       </div>

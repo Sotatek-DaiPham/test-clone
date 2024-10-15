@@ -227,6 +227,11 @@ img.filter-icon {
   }
 }
 
+img.active-primary-icon {
+  filter: invert(45%) sepia(84%) saturate(4485%) hue-rotate(240deg)
+    brightness(100%) contrast(102%);
+}
+
 .how-it-work-bg {
   background-image: url(../../../public/assets/icons/bg-how-it-work.svg) !important;
   background-repeat: no-repeat;

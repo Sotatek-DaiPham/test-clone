@@ -37,3 +37,13 @@ export { default as BackgounrdEffect2 } from "./effects/bg-affect-2.svg";
 export { default as BackgounrdEffect3 } from "./effects/bg-affect-3.svg";
 export { default as BackgounrdEffect4 } from "./effects/bg-affect-4.svg";
 export { default as BackgounrdEffect5 } from "./effects/bg-affect-5.svg";
+
+// my profile
+export { default as MyProfileIcon } from "./icons/user-profile.svg";
+export { default as PortfolioIcon } from "./icons/portfolio.svg";
+export { default as FollowersIcon } from "./icons/followers.svg";
+export { default as FollowingIcon } from "./icons/following.svg";
+export { default as MyRepliesIcon } from "./icons/my-replies.svg";
+export { default as NotificationsIcon } from "./icons/notifications.svg";
+export { default as EditIcon } from "./icons/pen.svg";
+export { default as HideDustCoinIcon } from "./icons/eye-slash.svg";

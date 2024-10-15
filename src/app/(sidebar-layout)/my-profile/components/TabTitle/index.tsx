@@ -1,4 +1,3 @@
-import React from "react";
 
 const TabTitle = ({ title }: { title: string }) => {
   return (

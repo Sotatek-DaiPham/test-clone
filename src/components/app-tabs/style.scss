@@ -45,6 +45,14 @@
   .ant-tabs-tab {
     margin-left: 0 !important;
     margin-right: 12px !important;
+    .ant-tabs-tab-btn {
+      display: flex !important;
+      flex-direction: row !important;
+      align-items: center !important;
+      .ant-tabs-tab-icon {
+        margin-right: 8px !important;
+      }
+    }
   }
 
   .ant-tabs-tab.ant-tabs-tab-active {
@@ -52,6 +60,15 @@
     background: var(--color-primary-main) !important;
     .ant-tabs-tab-btn {
       color: var(--color-neutral-white) !important;
+      display: flex !important;
+      flex-direction: row !important;
+      align-items: center !important;
+      .ant-tabs-tab-icon {
+        img {
+          filter: brightness(0) saturate(100%) invert(97%) sepia(100%)
+            saturate(11%) hue-rotate(217deg) brightness(105%) contrast(104%) !important;
+        }
+      }
     }
   }
   .ant-tabs-tab-btn:active {
