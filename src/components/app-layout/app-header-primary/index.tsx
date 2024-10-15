@@ -1,14 +1,14 @@
 "use client";
-import { useState } from "react";
 import ConnectWalletButton from "@/components/Button/ConnectWallet";
+import { PATH_ROUTER } from "@/constant/router";
 import useWindowSize from "@/hooks/useWindowSize";
 import { CloseIcon, Hamburgericon } from "@public/assets";
 import { Flex, Layout } from "antd";
 import Image from "next/image";
+import { usePathname } from "next/navigation";
+import { useState } from "react";
 import AppMenu from "../app-menu";
 import "./styles.scss";
-import { usePathname } from "next/navigation";
-import { PATH_ROUTER } from "@/constant/router";
 
 const { Header } = Layout;
 
@@ -28,8 +28,10 @@ export default function AppHeaderPrimary() {
   const pageTitle = routeTitles[pathname];
   return (
     <Header
-      className={`bg-transparent flex p-6 h-auto ${
-        isMobile ? "fixed top-0 left-0 right-0 z-50 bg-neutral-2" : ""
+      className={` flex p-6 h-auto ${
+        isMobile
+          ? "fixed top-0 left-0 right-0 z-50 bg-neutral-2"
+          : "bg-transparent"
       }`}
     >
       <h5 className="text-32px-bold text-white">{pageTitle}</h5>

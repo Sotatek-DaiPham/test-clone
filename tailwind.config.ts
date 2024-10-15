@@ -1,4 +1,5 @@
 import type { Config } from "tailwindcss";
+import plugin from "tailwindcss/plugin";
 
 const config: Config = {
   content: [
@@ -229,6 +230,17 @@ const config: Config = {
       },
     },
   },
-  plugins: [],
+  plugins: [
+    plugin(function ({ addUtilities }) {
+      addUtilities({
+        ".primary-box": {
+          "border-radius": "256px",
+          background: "#171717",
+          "box-shadow": "0px 40px 32px -24px rgba(15, 15, 15, 0.12)",
+          padding: "10.5px 20px",
+        },
+      });
+    }),
+  ],
 };
 export default config;

@@ -1,11 +1,11 @@
 .ant-checkbox .ant-checkbox-inner {
-  border-color: var(--color-icon-secondary) !important;
+  border-color: var(--color-neutral-5) !important;
   background-color: var(--color-container-primary) !important ;
 }
 
 .ant-checkbox-checked .ant-checkbox-inner {
   background-color: var(--color-fill-success) !important;
-  border-color: var(--color-fill-success) !important;
+  border-color: var(--color-neutral-5) !important;
 }
 .ant-checkbox-wrapper-checked .checkbox-label {
   color: var(--color-text-primary-2) !important;

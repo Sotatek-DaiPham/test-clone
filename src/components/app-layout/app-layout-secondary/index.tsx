@@ -11,10 +11,10 @@ export default function AppLayoutSecondary({
   return (
     <>
       <AppHeaderSecondary />
-      <Content className="app-content relative">
+      <Content className="relative p-10">
         <div className="relative z-[2]">{children}</div>
         <Image
-          className="absolute left-[-2%] top-[-7%] scale-[0.8]"
+          className="absolute left-[-2%] top-[-52px] scale-[0.8]"
           src={BackgounrdEffect4}
           alt="effect"
         />

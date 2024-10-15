@@ -1,13 +1,13 @@
 import { useState } from "react";
+import AppAmountSelect from "@/components/app-amount-select";
+import AppButton from "@/components/app-button";
 import AppInputBalance from "@/components/app-input/app-input-balance";
-import ButtonContained from "@/components/Button/ButtonContained";
+import TradeSettingModal from "@/components/app-modal/app-setting-modal";
 import { REGEX_INPUT_DECIMAL } from "@/constant/regex";
+import { EthIcon, SettingIcon } from "@public/assets";
 import { Tabs, TabsProps } from "antd";
 import Image from "next/image";
-import AppAmountSelect from "@/components/app-amount-select";
 import "./styles.scss";
-import TradeSettingModal from "@/components/app-modal/app-setting-modal";
-import { EthIcon, SettingIcon } from "@public/assets";
 
 enum TabKey {
   BUY = "buy",
@@ -26,11 +26,12 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
   return (
     <div className="flex flex-col gap-4">
       <div className="flex justify-between items-center">
-        <div className="text-16px-medium text-gray-500">
+        <div className="text-14px-normal text-neutral-7">
           {tabKey === TabKey.BUY ? "Buy Amount" : "Sell Amount"}
         </div>
-        <div className="text-sm text-gray-400">
-          Minimum amount: <span className="text-white-neutral"> 0.01 ETH</span>
+        <div className="text-14px-normal text-neutral-7">
+          Minimum amount:{" "}
+          <span className="text-white-neutral text-14px-medium"> 0.01 ETH</span>
         </div>
       </div>
       <AppInputBalance
@@ -39,15 +40,17 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
         value={inputValue}
         onChange={(e) => setInputValue(e.target.value)}
         regex={REGEX_INPUT_DECIMAL()}
+        isSwap
       />
       <AppAmountSelect numbers={predefinedNumbers} onSelect={handleSelect} />
-      <div className="text-sm text-gray-400">
-        You will receive <span className="text-white-neutral">0 ABC</span>
+      <div className="text-14px-normal text-neutral-7">
+        You will receive{" "}
+        <span className="text-white-neutral text-14px-medium">0 ABC</span>
       </div>
       <div className="flex gap-2 items-center w-full">
-        <ButtonContained fullWidth>
+        <AppButton widthFull>
           {tabKey === TabKey.BUY ? "Buy" : "Sell"}
-        </ButtonContained>
+        </AppButton>
         <Image
           className="cursor-pointer"
           src={SettingIcon}
