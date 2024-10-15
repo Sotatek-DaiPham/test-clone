@@ -9,10 +9,4 @@
   min-height: 100vh !important;
   overflow: hidden !important;
   background: var(--color-neutral-1) !important;
-  .app-content {
-    padding: 24px;
-    @include mobile {
-      margin-top: 75px;
-    }
-  }
 }

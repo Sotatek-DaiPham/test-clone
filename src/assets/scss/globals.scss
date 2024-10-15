@@ -125,6 +125,10 @@ input::-webkit-inner-spin-button {
   margin: 0;
 }
 
+input::placeholder {
+  color: var(--color-neutral-5) !important;
+}
+
 /* Firefox */
 input[type="number"] {
   -moz-appearance: textfield;
@@ -221,6 +225,11 @@ img.filter-icon {
     filter: invert(49%) sepia(6%) saturate(49%) hue-rotate(201deg)
       brightness(95%) contrast(87%) !important;
   }
+}
+
+img.active-primary-icon {
+  filter: invert(45%) sepia(84%) saturate(4485%) hue-rotate(240deg)
+    brightness(100%) contrast(102%);
 }
 
 .how-it-work-bg {

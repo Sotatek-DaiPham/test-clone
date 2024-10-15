@@ -1,8 +1,5 @@
-import useDebounce from "@/hooks/useDebounce";
-import { useCallback, useState } from "react";
-import FilterTerminal from "../FilterTerminal";
-import ProjectCard from "../ProjectCard";
 import { useAppSearchParams } from "@/hooks/useAppSearchParams";
+import useDebounce from "@/hooks/useDebounce";
 import {
   DollarCircleUpIcon,
   DropdownIcon,
@@ -12,6 +9,9 @@ import {
   TrendUpIcon,
   UsersIcon,
 } from "@public/assets";
+import { useCallback, useState } from "react";
+import FilterTerminal from "../FilterTerminal";
+import ProjectCard from "../ProjectCard";
 
 const data = [
   {
@@ -116,11 +116,43 @@ const FILTER_TERMINAL = [
     label: "Top",
     value: "top",
     icon: TopIcon,
+    children: [
+      {
+        label: "Progress",
+        value: "progress",
+      },
+      {
+        label: "Volumn",
+        value: "volumn",
+      },
+      {
+        label: "Txns",
+        value: "txns",
+      },
+    ],
   },
   {
     label: "Rising",
     value: "rising",
     icon: DollarCircleUpIcon,
+    children: [
+      {
+        label: "5M",
+        value: "5m",
+      },
+      {
+        label: "1H",
+        value: "1h",
+      },
+      {
+        label: "6H",
+        value: "6h",
+      },
+      {
+        label: "24H",
+        value: "24h",
+      },
+    ],
   },
   {
     label: "New",
@@ -131,6 +163,24 @@ const FILTER_TERMINAL = [
     label: "Finalized",
     value: "finalized",
     icon: FinalizedIcon,
+    children: [
+      {
+        label: "Trending",
+        value: "treding",
+      },
+      {
+        label: "Newest",
+        value: "newest",
+      },
+      {
+        label: "Top Mcap",
+        value: "top-mcap",
+      },
+      {
+        label: "Oldest",
+        value: "oldest",
+      },
+    ],
   },
   {
     label: "Age",
@@ -155,6 +205,23 @@ const AllTab = () => {
   const { searchParams, setSearchParams } = useAppSearchParams("terminal");
 
   const handleClickFilter = useCallback(
+    (value: any, queryKey: string, subValue?: any, subQueryKey?: any) => {
+      const newParams = {
+        tab: searchParams.tab ?? "all",
+      };
+      setSearchParams({
+        ...newParams,
+        [queryKey]: value,
+        ...(subValue &&
+          subQueryKey && {
+            [subQueryKey]: subValue,
+          }),
+      });
+    },
+    [searchParams, setSearchParams]
+  );
+
+  const handleClickFilterOption = useCallback(
     (value: any, queryKey: string) => {
       setSearchParams({
         ...searchParams,
@@ -163,6 +230,7 @@ const AllTab = () => {
     },
     [searchParams, setSearchParams]
   );
+
   return (
     <div>
       <FilterTerminal
@@ -171,6 +239,7 @@ const AllTab = () => {
         filterArr={FILTER_TERMINAL}
         searchParams={searchParams}
         handleClickFilter={handleClickFilter}
+        handleClickFilterOption={handleClickFilterOption}
       />
       <div className="grid grid-cols-3 gap-6 my-9">
         {data?.map((project: any, index: number) => (

@@ -73,13 +73,18 @@ const ConnectWalletButton = () => {
               }
 
               return (
-                <Flex align="center" justify="center" gap={12} className="">
-                  <ButtonContained
+                <Flex
+                  align="center"
+                  justify="center"
+                  gap={12}
+                  className="flex-col md:flex-row flex-1 md:flex-auto"
+                >
+                  {/* <ButtonContained
                     buttonType="secondary"
                     className="pointer-events-none"
                   >
                     {chain.name}
-                  </ButtonContained>
+                  </ButtonContained> */}
 
                   <Flex
                     className="wallet-info"

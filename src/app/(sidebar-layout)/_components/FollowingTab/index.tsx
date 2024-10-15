@@ -1,10 +1,9 @@
+import { useAppSearchParams } from "@/hooks/useAppSearchParams";
 import useDebounce from "@/hooks/useDebounce";
+import { DollarCircleUpIcon, TrendUpIcon } from "@public/assets";
 import { useCallback, useState } from "react";
 import FilterTerminal from "../FilterTerminal";
 import ProjectCard from "../ProjectCard";
-import { useAppSearchParams } from "@/hooks/useAppSearchParams";
-import Image from "next/image";
-import { DollarCircleUpIcon, TrendUpIcon } from "@public/assets";
 
 const data = [
   {
@@ -80,6 +79,7 @@ const FollowingTab = () => {
         filterArr={FILTER_TERMINAL}
         searchParams={searchParams}
         handleClickFilter={handleClickFilter}
+        handleClickFilterOption={handleClickFilter}
       />
       <div className="grid grid-cols-3 gap-6 my-9">
         {data?.map((project: any, index: number) => (

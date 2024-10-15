@@ -49,47 +49,41 @@ export default function Home() {
 
   return (
     <div className="h-full !m-[-24px]">
-      <div className="w-full bg-[#2F32414D]">
-        <div className="m-auto p-6 max-w-[var(--width-content-sidebar-layout)]">
-          <div className="grid grid-cols-2 gap-40">
-            <div className="h-full grid grid-cols-3 rounded-3xl how-it-work-bg !overflow-hidden">
-              <div className="col-span-2 h-full flex flex-col justify-between py-[40px]">
-                <div className="h-full">
-                  <span className="text-32px-bold text-white-neutral">
-                    RainPump
-                  </span>
-                  <div className="truncate-4-line my-2 text-white-neutral text-16px-normal">
-                    Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-                    Beatae ea perferendis ipsum quisquam excepturi quis sit
-                    libero officia! Facere neque vitae quae deleniti in
-                    adipisci. Recusandae, eligendi animi. Eius, provident!
-                  </div>
+      <div className="m-auto p-6 max-w-[var(--width-content-sidebar-layout)]">
+        <div className="grid grid-cols-2 gap-6">
+          <div className="h-full grid grid-cols-3 rounded-3xl how-it-work-bg !overflow-hidden">
+            <div className="col-span-2 h-full flex flex-col justify-between py-[40px]">
+              <div className="h-full">
+                <span className="text-32px-bold text-white-neutral">
+                  RainPump
+                </span>
+                <div className="truncate-4-line my-2 text-white-neutral text-16px-normal">
+                  Lorem ipsum dolor sit, amet consectetur adipisicing elit.
+                  Beatae ea perferendis ipsum quisquam excepturi quis sit libero
+                  officia! Facere neque vitae quae deleniti in adipisci.
+                  Recusandae, eligendi animi. Eius, provident!
                 </div>
-                <AppButton
-                  typeButton="teriary"
-                  customClass="!rounded-3xl !w-fit !bg-white-neutral"
-                  classChildren="!text-neutral-1 !text-14px-bold px-6"
-                >
-                  How it works?
-                </AppButton>
               </div>
-              <div className="col-span-1 relative">
-                <Image
-                  src={HowItWorksIcon}
-                  alt="how-it-work"
-                  className="absolute !max-w-[125%] left-[-50px] bottom-0"
-                />
-              </div>
-            </div>
-            <div className="h-full">
               <AppButton
-                typeButton="outline-primary"
-                customClass="!rounded-3xl mb-3"
-                classChildren="text-primary-main"
+                typeButton="teriary"
+                customClass="!rounded-3xl !w-fit !bg-white-neutral"
+                classChildren="!text-neutral-1 !text-14px-bold p-6"
               >
-                King of The hill
+                How it works?
               </AppButton>
+            </div>
+            <div className="col-span-1 relative">
+              <Image
+                src={HowItWorksIcon}
+                alt="how-it-work"
+                className="absolute !max-w-[125%] left-[-50px] bottom-0"
+              />
+            </div>
+          </div>
+          <div className="h-full">
+            <div className="bg-neutral-2 rounded-3xl p-6">
               <ProjectCard
+                className="p-0"
                 data={{
                   title: "Project name",
                   percent: 55,
@@ -100,11 +94,12 @@ export default function Home() {
                   stage: "S1",
                 }}
               />
+              <AppButton typeButton="primary" customClass="!rounded-3xl mb-3">
+                King of The hill
+              </AppButton>
             </div>
           </div>
         </div>
-      </div>
-      <div className="p-6 !pt-0 m-auto max-w-[var(--width-content-sidebar-layout)]">
         <div className="my-5">
           <AppTabs
             items={tabs}

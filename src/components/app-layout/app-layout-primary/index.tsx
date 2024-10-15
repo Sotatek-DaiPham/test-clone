@@ -21,7 +21,7 @@ export default function AppLayoutPrimary({
       {!isMobile ? <AppSidebar /> : null}
       <Layout className="h-screen overflow-y-scroll overflow-x-hidden">
         <AppHeaderPrimary />
-        <Content className="app-content relative min-h-[auto]">
+        <Content className="app-content relative min-h-[auto] p-6">
           <div className="relative z-[2]">{children}</div>
           <Image
             className="absolute left-[-226px] top-[-92px]"

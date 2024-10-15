@@ -1,16 +1,20 @@
+import clsx from "clsx";
+
 const AppAmountSelect = ({
   numbers,
   onSelect,
+  customClass,
 }: {
   numbers: number[];
   onSelect: (value: number) => void;
+  customClass?: string;
 }) => {
   return (
-    <div className="flex gap-2 mt-2">
+    <div className={clsx("flex gap-3", customClass ?? "")}>
       {numbers.map((num, index) => (
         <button
           key={index}
-          className="px-3 py-1 bg-gray-700 text-white-neutral rounded hover:bg-gray-600"
+          className="px-3 py-[6px] bg-neutral-3 text-neutral-9 rounded-[6px] hover:bg-gray-600 flex-1 h-8"
           onClick={() => onSelect(num)}
         >
           {num}

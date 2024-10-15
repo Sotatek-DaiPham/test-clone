@@ -22,6 +22,10 @@ export { default as CloseIcon } from "./icons/x-close.svg";
 export { default as HowItWorksBackground } from "./icons/bg-how-it-work.svg";
 export { default as HowItWorks } from "./icons/how-it-work.svg";
 export { default as RainmakrIcon } from "./icons/rainmakr-icon.svg";
+export { default as UploadIcon } from "./icons/upload-icon.svg";
+export { default as SelectDropdownIcon } from "./icons/select-dropdown.svg";
+export { default as UsdtIcon } from "./icons/usdt-icon.svg";
+export { default as BackIcon } from "./icons/back-arrow.svg";
 
 // Sidebar icons
 export { default as BrowseIcon } from "./icons/browse-icon.svg";
@@ -37,3 +41,19 @@ export { default as BackgounrdEffect2 } from "./effects/bg-affect-2.svg";
 export { default as BackgounrdEffect3 } from "./effects/bg-affect-3.svg";
 export { default as BackgounrdEffect4 } from "./effects/bg-affect-4.svg";
 export { default as BackgounrdEffect5 } from "./effects/bg-affect-5.svg";
+
+// my profile
+export { default as MyProfileIcon } from "./icons/user-profile.svg";
+export { default as PortfolioIcon } from "./icons/portfolio.svg";
+export { default as FollowersIcon } from "./icons/followers.svg";
+export { default as FollowingIcon } from "./icons/following.svg";
+export { default as MyRepliesIcon } from "./icons/my-replies.svg";
+export { default as NotificationsIcon } from "./icons/notifications.svg";
+export { default as EditIcon } from "./icons/pen.svg";
+export { default as HideDustCoinIcon } from "./icons/eye-slash.svg";
+
+// Social links
+export { default as WebsiteLinkIcon } from "./icons/website-link.svg";
+export { default as TwitterLinkIcon } from "./icons/twitter-link.svg";
+export { default as TeleLinkIcon } from "./icons/tele-link.svg";
+export { default as DiscordLinkIcon } from "./icons/discord-link.svg";

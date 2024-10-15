@@ -7,8 +7,6 @@ import AppProgress from "@/components/app-progress";
 import AppTabs from "@/components/app-tabs";
 import AppTextarea from "@/components/app-textarea";
 import { useAppDispatch } from "@/libs/hooks";
-import { setUser } from "@/libs/slices/userSlice";
-import { Button } from "antd";
 import dynamic from "next/dynamic";
 import { useState } from "react";
 

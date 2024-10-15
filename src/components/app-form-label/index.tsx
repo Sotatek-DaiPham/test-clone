@@ -23,7 +23,7 @@ const FormItemLabel = ({
       gap={4}
       className={`text-neutral-7 text-14px-medium ${className ?? ""}`}
     >
-      {label} {isRequired ? <span>*</span> : ""}
+      {label} {isRequired ? <span className="text-error-main">*</span> : ""}
       {tooltipInfo ? (
         <Tooltip title={tooltipInfo?.title} {...tooltipInfo.tooltipProps} />
       ) : null}

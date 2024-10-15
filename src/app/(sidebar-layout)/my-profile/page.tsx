@@ -1,14 +1,25 @@
 "use client";
 import AppTabs from "@/components/app-tabs";
 import { useAppSearchParams } from "@/hooks/useAppSearchParams";
+import {
+  DollarCircleUpIcon,
+  FollowersIcon,
+  FollowingIcon,
+  MyProfileIcon,
+  MyRepliesIcon,
+  NotificationsIcon,
+  PortfolioIcon,
+} from "@public/assets";
+import Image from "next/image";
 import { useEffect, useState } from "react";
-import PortfolioTab from "./components/Tabs/PortfolioTab";
-import MyProfileTab from "./components/Tabs/MyProfileTab";
-import NotificationsTab from "./components/Tabs/NotificationsTab";
-import MyRepliesTab from "./components/Tabs/MyReplies";
-import FollowingTab from "./components/Tabs/Following";
-import FollowersTab from "./components/Tabs/Followers";
+import { useAccount } from "wagmi";
 import CoinCreatedTab from "./components/Tabs/CoinCreated";
+import FollowersTab from "./components/Tabs/Followers";
+import FollowingTab from "./components/Tabs/Following";
+import MyProfileTab from "./components/Tabs/MyProfileTab";
+import MyRepliesTab from "./components/Tabs/MyReplies";
+import NotificationsTab from "./components/Tabs/NotificationsTab";
+import PortfolioTab from "./components/Tabs/PortfolioTab";
 
 enum ETabsMyProfile {
   MY_PROFILE = "my-profile",
@@ -21,6 +32,7 @@ enum ETabsMyProfile {
 }
 
 const MyProfilePage = () => {
+  const { address: userAddress } = useAccount();
   const { searchParams, setSearchParams } = useAppSearchParams("myProfile");
   const [activeTab, setActiveTab] = useState<string>(ETabsMyProfile.MY_PROFILE);
 
@@ -28,37 +40,44 @@ const MyProfilePage = () => {
     {
       label: "My profile",
       key: ETabsMyProfile.MY_PROFILE,
-      children: <MyProfileTab />,
+      children: <MyProfileTab walletAddress={userAddress as string} />,
+      icon: <Image src={MyProfileIcon} alt="my-profile" />,
     },
     {
       label: "Portfolio",
       key: ETabsMyProfile.PORTFOLIO,
-      children: <PortfolioTab />,
+      children: <PortfolioTab walletAddress={userAddress as string} />,
+      icon: <Image src={PortfolioIcon} alt="my-portfolio" />,
     },
     {
       label: "Coin created",
       key: ETabsMyProfile.COIN_CREATED,
-      children: <CoinCreatedTab />,
+      children: <CoinCreatedTab walletAddress={userAddress as string} />,
+      icon: <Image src={DollarCircleUpIcon} alt="coin-created" />,
     },
     {
       label: "Followers",
       key: ETabsMyProfile.FOLLOWERS,
-      children: <FollowersTab />,
+      children: <FollowersTab walletAddress={userAddress as string} />,
+      icon: <Image src={FollowersIcon} alt="followers" />,
     },
     {
       label: "Following",
       key: ETabsMyProfile.FOLLOWING,
-      children: <FollowingTab />,
+      children: <FollowingTab walletAddress={userAddress as string} />,
+      icon: <Image src={FollowingIcon} alt="following" />,
     },
     {
       label: "My replies",
       key: ETabsMyProfile.MY_REPLIES,
       children: <MyRepliesTab />,
+      icon: <Image src={MyRepliesIcon} alt="my-replies" />,
     },
     {
       label: "Notifications",
       key: ETabsMyProfile.NOTIFICATIONS,
       children: <NotificationsTab />,
+      icon: <Image src={NotificationsIcon} alt="notifications" />,
     },
   ];
 

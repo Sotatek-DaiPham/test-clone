@@ -1,10 +1,10 @@
 import AppButton from "@/components/app-button";
+import FormItemLabel from "@/components/app-form-label";
 import AppInput from "@/components/app-input";
 import AppModal from "@/components/app-modal";
 import AppUpload from "@/components/app-upload";
 import { Flex, Form, ModalProps } from "antd";
 import "./styles.scss";
-import FormItemLabel from "@/components/app-form-label";
 
 interface IEditProfileModalProps extends ModalProps {
   open: boolean;

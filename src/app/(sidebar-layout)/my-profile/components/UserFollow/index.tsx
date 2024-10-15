@@ -1,5 +1,4 @@
 import AppButton from "@/components/app-button";
-import React from "react";
 
 interface IUser {
   name: string;
@@ -14,27 +13,26 @@ interface IUserFollow {
 }
 const UserFollow = ({ data }: IUserFollow) => {
   return (
-    <div className="flex flex-row w-full mb-6">
+    <div className="flex flex-row w-full bg-neutral-2 rounded-3xl p-6">
       <div className="w-[5%] mr-4">
-        <div className="border border-white w-[50px] h-[50px] rounded-full bg-[#CDB4DB]"></div>
+        <div className="border border-white-neutral w-[50px] h-[50px] rounded-xl bg-primary-7"></div>
       </div>
-      <div className="w-[80%] mr-6">
-        <span className="">
-          <span className="text-16px-medium text-white-neutral mr-3">
-            {data?.name ?? "-"}
-          </span>
-          <span className="text-16px-normal text-[#8D8D8D]">
-            {data?.follower ?? "0"} follower
-            {Number(data?.follower) > 1 ? "s" : ""}
-          </span>
+      <div className="w-[80%] ml-4 mr-6">
+        <span className="text-16px-medium text-white-neutral mr-3">
+          {data?.name ?? "-"}
         </span>
-        <div className="truncate-2-line text-[#8D8D8D] mt-1">{data?.bio}</div>
+        <div className="text-neutral-7 text-14px-normal my-1">
+          Follower
+          {Number(data?.follower) > 1 ? "s" : ""}
+          <span className="ml-2 text-neutral-9">{data?.follower ?? "0"}</span>
+        </div>
+        <div className="truncate-2-line text-neutral-7 mt-1">{data?.bio}</div>
       </div>
-      <div className="w-[15%]">
+      <div className="w-[15%] flex justify-center">
         <AppButton
           size="small"
+          typeButton={data?.isFollow ? "secondary" : "primary"}
           customClass="!w-[100px] !rounded-full"
-          classChildren="!text-black"
         >
           {data?.isFollow ? "Unfollow" : "Follow"}
         </AppButton>
