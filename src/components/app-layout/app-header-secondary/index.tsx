@@ -4,10 +4,10 @@ import useWindowSize from "@/hooks/useWindowSize";
 import { CloseIcon, Hamburgericon, RainmakrIcon } from "@public/assets";
 import { Flex, Layout } from "antd";
 import Image from "next/image";
+import Link from "next/link";
 import { useState } from "react";
 import AppMenu from "../app-menu";
 import "./styles.scss";
-import Link from "next/link";
 
 const { Header } = Layout;
 
@@ -17,7 +17,7 @@ export default function AppHeaderSecondary() {
 
   return (
     <Header
-      className={`bg-neutral-2 flex p-y-4 px-10 justify-between h-[72px] ${
+      className={`bg-neutral-2 flex p-y-4 px-10 justify-between h-[72px] border-b-[1px] border-solid border-b-neutral-4 ${
         isMobile ? "fixed top-0 left-0 right-0 z-50 bg-neutral-2" : ""
       }`}
     >

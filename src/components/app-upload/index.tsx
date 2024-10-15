@@ -1,6 +1,8 @@
 import { CloseCircleOutlined } from "@ant-design/icons";
-import { Image } from "antd";
+import { UploadIcon } from "@public/assets";
+import { Image as AntdImage } from "antd";
 import Upload, { UploadChangeParam, UploadFile } from "antd/es/upload";
+import Image from "next/image";
 import ButtonOutlined from "../Button/ButtonOutlined";
 import "./styles.scss";
 
@@ -49,7 +51,7 @@ const AppUpload = (props: AppUploadProps) => {
             e.stopPropagation();
           }}
         >
-          <Image src={props?.value?.src} preview={false} />
+          <AntdImage src={props?.value?.src} preview={false} />
           {!props?.disabled ? (
             <div onClick={handleRemoveImage} className="basic-upload__remove">
               <CloseCircleOutlined className="text-white-neutral" />
@@ -58,7 +60,17 @@ const AppUpload = (props: AppUploadProps) => {
         </div>
       ) : (
         isShowSuggest && (
-          <div className="text-white-neutral text-[14px]">Drag and drop files</div>
+          <div className="flex items-center gap-8">
+            <Image src={UploadIcon} alt="upload icon" />
+            <div className="flex items-center justify-between  flex-col">
+              <div className="text-white-neutral text-[14px]">
+                Drag and drop files
+              </div>
+              <div className="text-[#7A7F86] text-12px-medium">
+                Max size - 5Mb. Jpg, Png, Gif
+              </div>
+            </div>
+          </div>
         )
       )}
       <ButtonOutlined buttonType="secondary">Upload File</ButtonOutlined>
