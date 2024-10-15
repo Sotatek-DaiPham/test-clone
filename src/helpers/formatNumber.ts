@@ -1,5 +1,7 @@
 import BigNumber from "bignumber.js";
 
+type IBigNumberArg = string | number | BigNumber;
+
 export const formatNumberWithComma = (value: string) => {
   const parts = value?.split(".");
   const integerPart = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -55,4 +57,50 @@ export const nFormatter = (
       .replace(rx, "$1") + SI[i].symbol;
 
   return formatNumberWithComma(formatedValue);
+};
+
+export const formatRoundFloorDisplayWithCompare = (
+  value: IBigNumberArg,
+  decimalPlace = 4
+): string => {
+  const minimumNumber = BigNumber(1).div(`1e${decimalPlace}`).toNumber();
+  const data = String(
+    new BigNumber(value).toNumber().toLocaleString("en-US", {
+      maximumFractionDigits: decimalPlace,
+      minimumFractionDigits: 0,
+    })
+  ).replaceAll(",", "");
+
+  if (Number(value) !== 0 && new BigNumber(value).lt(minimumNumber)) {
+    return "<" + minimumNumber;
+  }
+  return data;
+};
+
+export const formatAmount = (
+  value: string | number | BigNumber,
+  decimalPlace = 2,
+  shiftedBy = 0
+): string => {
+  if (Number(value) !== 0 && new BigNumber(value).lt(0.01)) {
+    return "<0.01";
+  }
+  return new BigNumber(value || 0)
+    .shiftedBy(-shiftedBy)
+    .decimalPlaces(decimalPlace, BigNumber.ROUND_DOWN)
+    .toFormat();
+};
+
+export const formatAmountWithDecimal = (
+  value: string | number | BigNumber,
+  decimalPlace = 2,
+  shiftedBy = 0
+): string => {
+  if (Number(value) !== 0 && new BigNumber(value).lt(0.01)) {
+    return "<0.01";
+  }
+  return new BigNumber(value || 0)
+    .shiftedBy(-shiftedBy)
+    .decimalPlaces(decimalPlace, BigNumber.ROUND_DOWN)
+    .toFormat(decimalPlace);
 };

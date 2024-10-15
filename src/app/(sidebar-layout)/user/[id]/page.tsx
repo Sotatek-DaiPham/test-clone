@@ -1,84 +1,59 @@
 "use client";
 import AppTabs from "@/components/app-tabs";
+import isProfilePage from "@/helpers/isProfilePage";
 import { useAppSearchParams } from "@/hooks/useAppSearchParams";
 import {
   DollarCircleUpIcon,
   FollowersIcon,
   FollowingIcon,
   MyProfileIcon,
-  MyRepliesIcon,
-  NotificationsIcon,
   PortfolioIcon,
 } from "@public/assets";
 import Image from "next/image";
+import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { useAccount } from "wagmi";
-import MyProfileTab from "../_components/Tabs/MyProfileTab";
-import PortfolioTab from "../_components/Tabs/PortfolioTab";
-import CoinCreatedTab from "../_components/Tabs/CoinCreated";
-import FollowersTab from "../_components/Tabs/Followers";
-import FollowingTab from "../_components/Tabs/Following";
-import MyRepliesTab from "../_components/Tabs/MyReplies";
-import NotificationsTab from "../_components/Tabs/NotificationsTab";
-import isAuth from "@/helpers/isAuth";
+import CoinCreatedTab from "../../_components/Tabs/CoinCreated";
+import FollowersTab from "../../_components/Tabs/Followers";
+import FollowingTab from "../../_components/Tabs/Following";
+import MyProfileTab from "../../_components/Tabs/MyProfileTab";
+import PortfolioTab from "../../_components/Tabs/PortfolioTab";
+import { ETabsMyProfile } from "../../my-profile/page";
 
-export enum ETabsMyProfile {
-  MY_PROFILE = "my-profile",
-  PORTFOLIO = "portfolio",
-  COIN_CREATED = "coin-created",
-  FOLLOWERS = "followers",
-  FOLLOWING = "following",
-  MY_REPLIES = "my-replies",
-  NOTIFICATIONS = "notifications",
-}
-
-const MyProfilePage = () => {
-  const { address: userAddress } = useAccount();
+const UserProfilePage = () => {
+  const { id } = useParams();
   const { searchParams, setSearchParams } = useAppSearchParams("myProfile");
   const [activeTab, setActiveTab] = useState<string>(ETabsMyProfile.MY_PROFILE);
 
   const tabs = [
     {
-      label: "My profile",
+      label: "Profile",
       key: ETabsMyProfile.MY_PROFILE,
-      children: <MyProfileTab walletAddress={userAddress as string} />,
-      icon: <Image src={MyProfileIcon} alt="my-profile" />,
+      children: <MyProfileTab walletAddress={id as string} />,
+      icon: <Image src={MyProfileIcon} alt="profile" />,
     },
     {
       label: "Portfolio",
       key: ETabsMyProfile.PORTFOLIO,
-      children: <PortfolioTab walletAddress={userAddress as string} />,
-      icon: <Image src={PortfolioIcon} alt="my-portfolio" />,
+      children: <PortfolioTab walletAddress={id as string} />,
+      icon: <Image src={PortfolioIcon} alt="portfolio" />,
     },
     {
       label: "Coin created",
       key: ETabsMyProfile.COIN_CREATED,
-      children: <CoinCreatedTab walletAddress={userAddress as string} />,
+      children: <CoinCreatedTab walletAddress={id as string} />,
       icon: <Image src={DollarCircleUpIcon} alt="coin-created" />,
     },
     {
       label: "Followers",
       key: ETabsMyProfile.FOLLOWERS,
-      children: <FollowersTab walletAddress={userAddress as string} />,
+      children: <FollowersTab walletAddress={id as string} />,
       icon: <Image src={FollowersIcon} alt="followers" />,
     },
     {
       label: "Following",
       key: ETabsMyProfile.FOLLOWING,
-      children: <FollowingTab walletAddress={userAddress as string} />,
+      children: <FollowingTab walletAddress={id as string} />,
       icon: <Image src={FollowingIcon} alt="following" />,
-    },
-    {
-      label: "My replies",
-      key: ETabsMyProfile.MY_REPLIES,
-      children: <MyRepliesTab />,
-      icon: <Image src={MyRepliesIcon} alt="my-replies" />,
-    },
-    {
-      label: "Notifications",
-      key: ETabsMyProfile.NOTIFICATIONS,
-      children: <NotificationsTab />,
-      icon: <Image src={NotificationsIcon} alt="notifications" />,
     },
   ];
 
@@ -94,10 +69,6 @@ const MyProfilePage = () => {
         return setActiveTab(ETabsMyProfile.FOLLOWERS);
       case ETabsMyProfile.FOLLOWING:
         return setActiveTab(ETabsMyProfile.FOLLOWING);
-      case ETabsMyProfile.MY_REPLIES:
-        return setActiveTab(ETabsMyProfile.MY_REPLIES);
-      case ETabsMyProfile.NOTIFICATIONS:
-        return setActiveTab(ETabsMyProfile.NOTIFICATIONS);
 
       default:
         return;
@@ -123,4 +94,4 @@ const MyProfilePage = () => {
   );
 };
 
-export default isAuth(MyProfilePage);
+export default isProfilePage(UserProfilePage);
