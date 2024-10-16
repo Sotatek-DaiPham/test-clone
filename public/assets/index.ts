@@ -51,6 +51,7 @@ export { default as MyRepliesIcon } from "./icons/my-replies.svg";
 export { default as NotificationsIcon } from "./icons/notifications.svg";
 export { default as EditIcon } from "./icons/pen.svg";
 export { default as HideDustCoinIcon } from "./icons/eye-slash.svg";
+export { default as NoDataIcon } from "./icons/no-data.svg";
 
 // Social links
 export { default as WebsiteLinkIcon } from "./icons/website-link.svg";

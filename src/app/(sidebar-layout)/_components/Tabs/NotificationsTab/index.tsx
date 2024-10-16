@@ -12,6 +12,7 @@ import { AxiosResponse } from "axios";
 import { get } from "lodash";
 import { useState } from "react";
 import TabTitle from "../../TabTitle";
+import NoData from "@/components/no-data";
 
 const NotificationItem = ({ data }: { data: any }) => {
   return (
@@ -60,25 +61,31 @@ const NotificationsTab = () => {
   return (
     <div>
       <TabTitle title="Notifications" />
-      <div className="my-6 w-[70%]">
-        {/* {notification?.map((item: any, index: number) => (
+      {!notification?.length ? (
+        <NoData />
+      ) : (
+        <div>
+          <div className="my-6 w-[70%]">
+            {/* {notification?.map((item: any, index: number) => (
           <NotificationItem data={item} key={index} />
         ))} */}
-      </div>
-      <AppDivider />
-      <AppPagination
-        className="w-full !justify-end !mr-6"
-        hideOnSinglePage={true}
-        showTotal={(total, range) => (
-          <ShowingPage total={total} range={range} />
-        )}
-        current={params?.page}
-        pageSize={params?.limit}
-        total={total}
-        onChange={(page, size) =>
-          setParams((prev: any) => ({ ...prev, page, limit: size }))
-        }
-      />
+          </div>
+          <AppDivider />
+          <AppPagination
+            className="w-full !justify-end !mr-6"
+            hideOnSinglePage={true}
+            showTotal={(total, range) => (
+              <ShowingPage total={total} range={range} />
+            )}
+            current={params?.page}
+            pageSize={params?.limit}
+            total={total}
+            onChange={(page, size) =>
+              setParams((prev: any) => ({ ...prev, page, limit: size }))
+            }
+          />
+        </div>
+      )}
     </div>
   );
 };

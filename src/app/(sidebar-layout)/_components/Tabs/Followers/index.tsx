@@ -1,6 +1,7 @@
 import AppDivider from "@/components/app-divider";
 import AppInput from "@/components/app-input";
 import AppPagination from "@/components/app-pagination";
+import NoData from "@/components/no-data";
 import ShowingPage from "@/components/showing-page";
 import { LIMIT_ITEMS_TABLE } from "@/constant";
 import { API_PATH } from "@/constant/api-path";
@@ -9,16 +10,17 @@ import { BeSuccessResponse } from "@/entities/response";
 import { useAppSearchParams } from "@/hooks/useAppSearchParams";
 import useDebounce from "@/hooks/useDebounce";
 import useFollowUser from "@/hooks/useFollowUser";
+import { NotificationContext } from "@/libs/antd/NotificationProvider";
 import { getAPI } from "@/service";
 import { useQuery } from "@tanstack/react-query";
 import { AxiosResponse } from "axios";
 import get from "lodash/get";
-import { useState } from "react";
-import { toast } from "react-toastify";
+import { useContext, useState } from "react";
 import TabTitle from "../../TabTitle";
 import UserFollow from "../../UserFollow";
 
 const FollowersTab = ({ walletAddress }: { walletAddress: string }) => {
+  const { error, success } = useContext(NotificationContext);
   const [params, setParams] = useState<any>({
     search: "",
     page: 1,
@@ -26,6 +28,7 @@ const FollowersTab = ({ walletAddress }: { walletAddress: string }) => {
   });
   const debounceSearch = useDebounce(params.search);
   const { searchParams } = useAppSearchParams("myProfile");
+
   const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ["followers"],
     queryFn: async () => {
@@ -34,7 +37,6 @@ const FollowersTab = ({ walletAddress }: { walletAddress: string }) => {
           limit: params.limit,
           pageNumber: params.page,
           walletAddress: walletAddress,
-          userId: "",
         },
       }) as Promise<AxiosResponse<BeSuccessResponse<MyProfileResponse[]>, any>>;
     },
@@ -46,12 +48,12 @@ const FollowersTab = ({ walletAddress }: { walletAddress: string }) => {
 
   const { onFollow } = useFollowUser({
     onFollowSuccess: () => {
-      toast.success("Risk Management edited successfully");
+      success({ message: "Follow successfully" });
       refetch();
     },
     onFollowFailed: (message: string) => {
       console.log("message", message);
-      toast.error("Risk Management edited failed");
+      error({ message: "Follow failed" });
     },
   });
 
@@ -68,36 +70,42 @@ const FollowersTab = ({ walletAddress }: { walletAddress: string }) => {
           onChange={(e) => setParams({ ...params, search: e.target.value })}
         />
       </div>
-      <div className="my-6 grid grid-cols-2 gap-6">
-        {followers?.map((user: any, index: number) => (
-          <UserFollow
-            data={{
-              id: user.id,
-              username: user?.username,
-              bio: user?.bio,
-              avatar: user?.avatar,
-              isFollowing: user?.isFollowing,
-              follower: user?.follower,
-            }}
-            key={index}
-            onFollow={(payload: any) => onFollow(payload)}
+      {!followers?.length ? (
+        <NoData />
+      ) : (
+        <div>
+          <div className="my-6 grid grid-cols-2 gap-6">
+            {followers?.map((user: any, index: number) => (
+              <UserFollow
+                data={{
+                  id: user.id,
+                  username: user?.username,
+                  bio: user?.bio,
+                  avatar: user?.avatar,
+                  isFollowing: user?.isFollowing,
+                  follower: user?.follower,
+                }}
+                key={index}
+                onFollow={(payload: any) => onFollow(payload)}
+              />
+            ))}
+          </div>
+          <AppDivider />
+          <AppPagination
+            className="w-full !justify-end !mr-6"
+            hideOnSinglePage={true}
+            showTotal={(total, range) => (
+              <ShowingPage total={total} range={range} />
+            )}
+            current={params?.page}
+            pageSize={params?.limit}
+            total={total}
+            onChange={(page, size) =>
+              setParams((prev: any) => ({ ...prev, page, limit: size }))
+            }
           />
-        ))}
-      </div>
-      <AppDivider />
-      <AppPagination
-        className="w-full !justify-end !mr-6"
-        hideOnSinglePage={true}
-        showTotal={(total, range) => (
-          <ShowingPage total={total} range={range} />
-        )}
-        current={params?.page}
-        pageSize={params?.limit}
-        total={total}
-        onChange={(page, size) =>
-          setParams((prev: any) => ({ ...prev, page, limit: size }))
-        }
-      />
+        </div>
+      )}
     </div>
   );
 };

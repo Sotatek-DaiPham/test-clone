@@ -10,12 +10,13 @@ const useFollowUser = ({
   onFollowFailed: (error: string) => void;
 }) => {
   const { mutate: onFollow, isPending: isLoading } = useMutation({
-    mutationFn: async (payload: any) =>
-      await postAPI(
-        API_PATH.USER.FOLLOW_USER(
-          `${payload?.id?.toString()}?isFollow=${payload?.isFollow}`
-        )
-      ),
+    mutationFn: async (data: any) => {
+      return await postAPI(
+        API_PATH.USER.FOLLOW_USER(data?.id?.toString()),
+        data?.payload
+      );
+    },
+
     onSuccess(...params) {
       onFollowSuccess();
     },
@@ -26,6 +27,7 @@ const useFollowUser = ({
 
   return {
     onFollow,
+    isLoading,
   };
 };
 

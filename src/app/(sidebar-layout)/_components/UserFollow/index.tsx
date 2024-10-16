@@ -49,7 +49,11 @@ const UserFollow = ({ data, onFollow }: IUserFollow) => {
           onClick={() =>
             onFollow({
               id: data?.id,
-              isFollow: data?.isFollowing ? EFollow.UN_FOLLOW : EFollow.FOLLOW,
+              payload: {
+                isFollow: data?.isFollowing
+                  ? EFollow.UN_FOLLOW
+                  : EFollow.FOLLOW,
+              },
             })
           }
         >

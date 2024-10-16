@@ -43,12 +43,12 @@ const ProjectCard = ({ data, className, footer }: IProjectCardProps) => {
         <div className="col-span-2">
           <div>
             <span className="text-neutral-9 text-18px-bold capitalize">
-              {data?.title ?? "-"}
+              {data?.title || "-"}
             </span>
             <AppDivider />
           </div>
           <div className="truncate-3-line min-h-[65px]">
-            {data?.description ?? "-"}
+            {data?.description || "-"}
           </div>
         </div>
       </div>
