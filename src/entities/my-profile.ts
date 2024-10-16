@@ -10,7 +10,7 @@ export interface MyProfileResponse {
   likedReceived: number;
   mentionsReceived: number;
   numberFollower: number;
-  isFollow?: boolean;
+  isFollowing?: boolean;
 }
 
 export interface UpdateProfilePayload {

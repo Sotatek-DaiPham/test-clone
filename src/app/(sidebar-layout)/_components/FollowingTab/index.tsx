@@ -1,20 +1,20 @@
+import AppButton from "@/components/app-button";
+import NoData from "@/components/no-data";
+import { LIMIT_ITEMS_TABLE } from "@/constant";
+import { API_PATH } from "@/constant/api-path";
+import { ITokenDashboardResponse } from "@/entities/dashboard";
+import { BeSuccessResponse } from "@/entities/response";
+import { convertNumber } from "@/helpers/formatNumber";
 import { useAppSearchParams } from "@/hooks/useAppSearchParams";
 import useDebounce from "@/hooks/useDebounce";
+import { getAPI } from "@/service";
 import { DollarCircleUpIcon, TrendUpIcon } from "@public/assets";
+import { useQuery } from "@tanstack/react-query";
+import { AxiosResponse } from "axios";
+import get from "lodash/get";
 import { useCallback, useEffect, useState } from "react";
 import FilterTerminal from "../FilterTerminal";
 import ProjectCard from "../ProjectCard";
-import { AxiosResponse } from "axios";
-import { API_PATH } from "@/constant/api-path";
-import { getAPI } from "@/service";
-import { LIMIT_ITEMS_TABLE } from "@/constant";
-import { useQuery } from "@tanstack/react-query";
-import { BeSuccessResponse } from "@/entities/response";
-import { ITokenDashboardResponse } from "@/entities/dashboard";
-import get from "lodash/get";
-import AppButton from "@/components/app-button";
-import { convertNumber } from "@/helpers/formatNumber";
-import NoData from "@/components/no-data";
 
 const data = [
   {
@@ -70,27 +70,23 @@ const FILTER_TERMINAL = [
 
 const FollowingTab = () => {
   const [search, setSearch] = useState<string>("");
-
   const { searchParams, setSearchParams } = useAppSearchParams("terminal");
-
   const [baseData, setBaseData] = useState<ITokenDashboardResponse[]>([]);
-  const debounceSearch = useDebounce(search);
 
   const [params, setParams] = useState<any>({
-    search: "",
     page: 1,
     limit: LIMIT_ITEMS_TABLE,
   });
 
-  console.log("params", params);
+  const debounceSearch = useDebounce(search);
 
   const { data, isLoading, isError, refetch } = useQuery({
-    queryKey: ["all-following", params],
+    queryKey: ["all-following", params, debounceSearch],
     queryFn: async () => {
       return getAPI(API_PATH.TOKEN.LIST, {
         params: {
-          limit: params.limit,
-          pageNumber: params.page,
+          ...params,
+          keyword: debounceSearch,
         },
       }) as Promise<
         AxiosResponse<BeSuccessResponse<ITokenDashboardResponse[]>, any>
@@ -101,9 +97,6 @@ const FollowingTab = () => {
   const tokenList = get(data, "data.data", []) as ITokenDashboardResponse[];
 
   const total = get(data, "data.metadata.total", 0) as number;
-
-  console.log("tokenList", tokenList);
-  console.log("total", total);
 
   useEffect(() => {
     const base = [...baseData, ...tokenList];
@@ -124,7 +117,11 @@ const FollowingTab = () => {
     <div>
       <FilterTerminal
         search={search}
-        onChangeSearch={setSearch}
+        onChangeSearch={(e) => {
+          setSearch(e);
+          setBaseData([]);
+          setParams({ ...params, page: 1 });
+        }}
         filterArr={FILTER_TERMINAL}
         searchParams={searchParams}
         handleClickFilter={handleClickFilter}

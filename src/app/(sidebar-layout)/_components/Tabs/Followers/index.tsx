@@ -5,7 +5,7 @@ import NoData from "@/components/no-data";
 import ShowingPage from "@/components/showing-page";
 import { LIMIT_ITEMS_TABLE } from "@/constant";
 import { API_PATH } from "@/constant/api-path";
-import { IFollowerResponse, MyProfileResponse } from "@/entities/my-profile";
+import { IFollowerResponse } from "@/entities/my-profile";
 import { BeSuccessResponse } from "@/entities/response";
 import { useAppSearchParams } from "@/hooks/useAppSearchParams";
 import useDebounce from "@/hooks/useDebounce";
@@ -22,23 +22,27 @@ import { EFollow } from "../MyProfileTab";
 
 const FollowersTab = ({ walletAddress }: { walletAddress: string }) => {
   const { error, success } = useContext(NotificationContext);
+  const { searchParams } = useAppSearchParams("myProfile");
   const [params, setParams] = useState<any>({
-    search: "",
     page: 1,
     limit: LIMIT_ITEMS_TABLE,
   });
-  const debounceSearch = useDebounce(params.search);
-  const { searchParams } = useAppSearchParams("myProfile");
+  const [search, setSearch] = useState<string>("");
+
   const [followData, setFollowData] = useState<any>({});
 
+  const debounceSearch = useDebounce(search, () =>
+    setParams({ ...params, page: 1 })
+  );
+
   const { data, isLoading, isError, refetch } = useQuery({
-    queryKey: ["followers"],
+    queryKey: ["followers", params, debounceSearch],
     queryFn: async () => {
       return getAPI(API_PATH.USER.FOLLOWERS, {
         params: {
-          limit: params.limit,
-          pageNumber: params.page,
+          ...params,
           walletAddress: walletAddress,
+          keyword: debounceSearch,
         },
       }) as Promise<AxiosResponse<BeSuccessResponse<IFollowerResponse[]>, any>>;
     },
@@ -76,8 +80,8 @@ const FollowersTab = ({ walletAddress }: { walletAddress: string }) => {
           isSearch={true}
           iconPosition="left"
           placeholder="Search"
-          value={params?.search}
-          onChange={(e) => setParams({ ...params, search: e.target.value })}
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
         />
       </div>
       {!followers?.length && !isLoading ? (

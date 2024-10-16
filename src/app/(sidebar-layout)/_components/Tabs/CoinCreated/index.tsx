@@ -21,21 +21,23 @@ import TabTitle from "../../TabTitle";
 const CoinCreatedTab = ({ walletAddress }: { walletAddress: string }) => {
   const { searchParams } = useAppSearchParams("myProfile");
   const [params, setParams] = useState<any>({
-    search: "",
     page: 1,
     limit: LIMIT_ITEMS_TABLE,
   });
-  const debounceSearch = useDebounce(params?.search);
+  const [search, setSearch] = useState<string>("");
+
+  const debounceSearch = useDebounce(search, () =>
+    setParams({ ...params, page: 1 })
+  );
 
   const { data, isLoading, isError, refetch } = useQuery({
-    queryKey: ["coin-created"],
+    queryKey: ["coin-created", params, debounceSearch],
     queryFn: async () => {
       return getAPI(API_PATH.USER.COINS_CREATED, {
         params: {
-          limit: params.limit,
-          pageNumber: params.page,
+          ...params,
           walletAddress: walletAddress,
-          userId: "",
+          keyword: debounceSearch,
         },
       }) as Promise<
         AxiosResponse<BeSuccessResponse<ICoinCreatedResponse[]>, any>
@@ -56,8 +58,8 @@ const CoinCreatedTab = ({ walletAddress }: { walletAddress: string }) => {
           isSearch={true}
           iconPosition="left"
           placeholder="Search"
-          value={params?.search}
-          onChange={(e) => setParams({ ...params, search: e.target.value })}
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
         />
       </div>
       {!coinCreated?.length && !isLoading ? (

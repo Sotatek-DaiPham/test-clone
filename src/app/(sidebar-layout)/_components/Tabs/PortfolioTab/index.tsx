@@ -27,24 +27,26 @@ import TabTitle from "../../TabTitle";
 
 const PortfolioTab = ({ walletAddress }: { walletAddress: string }) => {
   const [hideDustCoin, setHideDustCoin] = useState<boolean>(false);
-  const { searchParams } = useAppSearchParams("myProfile");
+  const { searchParams, setSearchParams } = useAppSearchParams("myProfile");
   const [params, setParams] = useState<any>({
-    search: "",
     page: 1,
     limit: LIMIT_ITEMS_TABLE,
   });
 
-  const debounceSearch = useDebounce(params?.search);
+  const [search, setSearch] = useState<string>(searchParams.search || "");
+
+  const debounceSearch = useDebounce(search, () =>
+    setParams({ ...params, page: 1 })
+  );
 
   const { data, isLoading, refetch } = useQuery({
-    queryKey: ["portfolio"],
+    queryKey: ["portfolio", params, debounceSearch],
     queryFn: async () => {
       return getAPI(API_PATH.USER.PORTFOLIO, {
         params: {
-          limit: params.limit,
-          pageNumber: params.page,
+          ...params,
           walletAddress: walletAddress,
-          userId: "",
+          keyword: debounceSearch,
         },
       }) as Promise<
         AxiosResponse<BeSuccessResponse<IPortfolioResponse[]>, any>
@@ -83,8 +85,8 @@ const PortfolioTab = ({ walletAddress }: { walletAddress: string }) => {
             isSearch={true}
             iconPosition="left"
             placeholder="Search"
-            value={params?.search}
-            onChange={(e) => setParams({ ...params, search: e.target.value })}
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
           />
         </div>
       </div>
@@ -151,9 +153,9 @@ const PortfolioTab = ({ walletAddress }: { walletAddress: string }) => {
             current={params?.page}
             pageSize={params?.limit}
             total={total}
-            onChange={(page, size) =>
-              setParams((prev: any) => ({ ...prev, page, limit: size }))
-            }
+            onChange={(page, size) => {
+              setParams((prev: any) => ({ ...prev, page, limit: size }));
+            }}
           />
         </div>
       )}

@@ -21,24 +21,29 @@ import UserFollow from "../../UserFollow";
 import { EFollow } from "../MyProfileTab";
 
 const FollowingTab = ({ walletAddress }: { walletAddress: string }) => {
+  const { searchParams } = useAppSearchParams("myProfile");
   const { error, success } = useContext(NotificationContext);
   const [params, setParams] = useState<any>({
-    search: "",
     page: 1,
     limit: LIMIT_ITEMS_TABLE,
   });
-  const debounceSearch = useDebounce(params?.search);
-  const { searchParams } = useAppSearchParams("myProfile");
+
+  const [search, setSearch] = useState<string>("");
+
+  const debounceSearch = useDebounce(search, () =>
+    setParams({ ...params, page: 1 })
+  );
+
   const [followData, setFollowData] = useState<any>({});
 
   const { data, isLoading, isError, refetch } = useQuery({
-    queryKey: ["following"],
+    queryKey: ["following", params, debounceSearch],
     queryFn: async () => {
       return getAPI(API_PATH.USER.FOLLOWINGS, {
         params: {
-          limit: params?.limit,
-          pageNumber: params?.page,
+          ...params,
           walletAddress: walletAddress,
+          keyword: debounceSearch,
         },
       }) as Promise<AxiosResponse<BeSuccessResponse<IFollowerResponse[]>, any>>;
     },
@@ -76,8 +81,8 @@ const FollowingTab = ({ walletAddress }: { walletAddress: string }) => {
           isSearch={true}
           iconPosition="left"
           placeholder="Search"
-          value={params?.search}
-          onChange={(e) => setParams({ ...params, search: e.target.value })}
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
         />
       </div>
       {!followings?.length && !isLoading ? (

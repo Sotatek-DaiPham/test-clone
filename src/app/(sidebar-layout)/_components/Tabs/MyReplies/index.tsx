@@ -53,21 +53,24 @@ const ReplyItem = ({ data }: { data: IMyRepliesResponse }) => {
 };
 
 const MyRepliesTab = () => {
+  const { searchParams, setSearchParams } = useAppSearchParams("myProfile");
   const [params, setParams] = useState<any>({
-    search: "",
     page: 1,
     limit: LIMIT_ITEMS_TABLE,
   });
-  const debounceSearch = useDebounce(params?.search);
-  const { searchParams } = useAppSearchParams("myProfile");
+  const [search, setSearch] = useState<string>("");
+
+  const debounceSearch = useDebounce(search, () =>
+    setParams({ ...params, page: 1 })
+  );
+
   const { data, isLoading, isError, refetch } = useQuery({
-    queryKey: ["my-replies"],
+    queryKey: ["my-replies", params, debounceSearch],
     queryFn: async () => {
       return getAPI(API_PATH.USER.MY_REPLIES, {
         params: {
-          limit: params.limit,
-          pageNumber: params.page,
-          userId: "",
+          ...params,
+          keyword: debounceSearch,
         },
       }) as Promise<
         AxiosResponse<BeSuccessResponse<IMyRepliesResponse[]>, any>
@@ -77,8 +80,9 @@ const MyRepliesTab = () => {
   });
 
   const myReplies = get(data, "data.data", []) as IMyRepliesResponse[];
+
   const total = get(data, "data.metadata.total", 0) as number;
-  console.log("data", myReplies);
+
   return (
     <div>
       <div className="w-full flex flex-row items-center justify-between">
@@ -88,8 +92,8 @@ const MyRepliesTab = () => {
           isSearch={true}
           iconPosition="left"
           placeholder="Search"
-          value={params?.search}
-          onChange={(e) => setParams({ ...params, search: e.target.value })}
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
         />
       </div>
       {!myReplies?.length && !isLoading ? (
@@ -111,7 +115,7 @@ const MyRepliesTab = () => {
             current={params?.page}
             pageSize={params?.limit}
             total={total}
-            onChange={(page, size) =>
+            onChange={(page: any, size) =>
               setParams((prev: any) => ({ ...prev, page, limit: size }))
             }
           />

@@ -51,7 +51,7 @@ const useWalletAuth = () => {
         const {
           access_token: accessToken,
           refresh_token: refreshToken,
-          user_id: userId,
+          userId,
         } = res?.data?.data || {};
 
         dispatch(

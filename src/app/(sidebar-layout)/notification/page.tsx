@@ -7,6 +7,7 @@ import { API_PATH } from "@/constant/api-path";
 import { INotificationResponse } from "@/entities/notification";
 import { BeSuccessResponse } from "@/entities/response";
 import isAuth from "@/helpers/isAuth";
+import useDebounce from "@/hooks/useDebounce";
 import { getAPI } from "@/service";
 import { useQuery } from "@tanstack/react-query";
 import { AxiosResponse } from "axios";
@@ -44,13 +45,15 @@ const NotificationPage = () => {
     page: 1,
     limit: LIMIT_ITEMS_TABLE,
   });
+  const [search, setSearch] = useState<string>("");
+  const debounceSearch = useDebounce(search);
   const { data, isLoading, isError, refetch } = useQuery({
-    queryKey: ["notification"],
+    queryKey: ["notification", params, debounceSearch],
     queryFn: async () => {
       return getAPI(API_PATH.USER.NOTIFICATION, {
         params: {
-          limit: params?.limit,
-          pageNumber: params?.page,
+          ...params,
+          keyword: debounceSearch,
         },
       }) as Promise<
         AxiosResponse<BeSuccessResponse<INotificationResponse[]>, any>
@@ -71,8 +74,8 @@ const NotificationPage = () => {
           isSearch={true}
           iconPosition="left"
           placeholder="Search"
-          value={params?.search}
-          onChange={(e) => setParams({ ...params, search: e.target.value })}
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
         />
       </div>
       {!notification?.length && !isLoading ? (

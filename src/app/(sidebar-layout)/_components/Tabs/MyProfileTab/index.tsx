@@ -30,6 +30,7 @@ const MyProfileTab = ({ apiPath }: { apiPath: string }) => {
   const [showEdit, setShowEdit] = useState<boolean>(false);
   const { searchParams } = useAppSearchParams("myProfile");
   const { userId } = useAppSelector((state) => state.user);
+  const [followData, setFollowData] = useState<any>({});
 
   const { data, refetch } = useQuery({
     queryKey: ["my-profile"],
@@ -45,15 +46,35 @@ const MyProfileTab = ({ apiPath }: { apiPath: string }) => {
 
   const { onFollow } = useFollowUser({
     onFollowSuccess: () => {
-      success({ message: "Follow successfully" });
+      success({
+        message: `${
+          followData?.isFollowing === EFollow.FOLLOW ? "Follow" : "Unfollow"
+        } successfully`,
+      });
       refetch();
     },
     onFollowFailed: (message: string) => {
       console.log("message", message);
-      error({ message: "Follow failed" });
+      error({
+        message: `${
+          followData?.isFollowing === EFollow.FOLLOW ? "Follow" : "Unfollow"
+        } failed`,
+      });
     },
   });
 
+  const handleFollow = () => {
+    onFollow({
+      id: myProfile?.id,
+      payload: {
+        isFollow: myProfile?.isFollowing ? EFollow.UN_FOLLOW : EFollow.FOLLOW,
+      },
+    });
+    setFollowData({
+      isFollowing: myProfile?.isFollowing ? EFollow.UN_FOLLOW : EFollow.FOLLOW,
+    });
+  };
+  console.log("myProfile", myProfile);
   return (
     <div>
       <div className="w-full flex flex-row items-center justify-between">
@@ -61,23 +82,11 @@ const MyProfileTab = ({ apiPath }: { apiPath: string }) => {
         {id ? (
           <AppButton
             size="small"
-            typeButton={myProfile?.isFollow ? "secondary" : "primary"}
+            typeButton={myProfile?.isFollowing ? "secondary" : "primary"}
             customClass="!w-[100px] !rounded-full"
-            onClick={
-              !!userId
-                ? () =>
-                    onFollow({
-                      id: myProfile?.id,
-                      payload: {
-                        isFollow: myProfile?.isFollow
-                          ? EFollow.UN_FOLLOW
-                          : EFollow.FOLLOW,
-                      },
-                    })
-                : openConnectModal
-            }
+            onClick={!!userId ? handleFollow : openConnectModal}
           >
-            {myProfile?.isFollow ? "Unfollow" : "Follow"}
+            {myProfile?.isFollowing ? "Unfollow" : "Follow"}
           </AppButton>
         ) : (
           <AppButton
