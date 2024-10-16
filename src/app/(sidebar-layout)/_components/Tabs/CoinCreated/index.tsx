@@ -15,6 +15,8 @@ import { AxiosResponse } from "axios";
 import get from "lodash/get";
 import { useState } from "react";
 import TabTitle from "../../TabTitle";
+import NoData from "@/components/no-data";
+import { convertNumber } from "@/helpers/formatNumber";
 
 const CoinCreatedTab = ({ walletAddress }: { walletAddress: string }) => {
   const { searchParams } = useAppSearchParams("myProfile");
@@ -55,41 +57,50 @@ const CoinCreatedTab = ({ walletAddress }: { walletAddress: string }) => {
           value={params?.search}
           onChange={(e) => setParams({ ...params, search: e.target.value })}
         />
-      </div>
-      <div className="grid grid-cols-3 gap-6 my-9">
-        {coinCreated?.map((project: any, index: number) => (
-          <ProjectCard
-            data={{
-              address: project?.contract_address,
-              title: project?.title,
-              total: project?.total_supply,
-              description: project?.description,
-              currentValue: project?.amount,
-              percent:
-                (Number(project?.amount) / Number(project?.total_supply)) * 100,
-              stage:
-                Number(project?.total_supply) === Number(project?.amount)
-                  ? "Listed"
-                  : "",
-            }}
-            key={index}
+      </div>{" "}
+      {!coinCreated?.length ? (
+        <NoData />
+      ) : (
+        <div>
+          <div className="grid grid-cols-3 gap-6 my-9">
+            {coinCreated?.map((project: any, index: number) => (
+              <ProjectCard
+                data={{
+                  title: project?.name,
+                  address: project?.contract_address,
+                  total: convertNumber(project?.total_supply),
+                  description: project?.description,
+                  currentValue: convertNumber(project?.number_replies),
+                  percent:
+                    (Number(convertNumber(project?.number_replies)) /
+                      Number(convertNumber(project?.total_supply))) *
+                    100,
+                  stage:
+                    Number(project?.total_supply) ===
+                    Number(project?.number_replies)
+                      ? "Listed"
+                      : "",
+                }}
+                key={index}
+              />
+            ))}
+          </div>
+          <AppDivider />
+          <AppPagination
+            className="w-full !justify-end !mr-6"
+            hideOnSinglePage={true}
+            showTotal={(total, range) => (
+              <ShowingPage total={total} range={range} />
+            )}
+            current={params?.page}
+            pageSize={params?.limit}
+            total={total}
+            onChange={(page, size) =>
+              setParams((prev: any) => ({ ...prev, page, limit: size }))
+            }
           />
-        ))}
-      </div>
-      <AppDivider />
-      <AppPagination
-        className="w-full !justify-end !mr-6"
-        hideOnSinglePage={true}
-        showTotal={(total, range) => (
-          <ShowingPage total={total} range={range} />
-        )}
-        current={params?.page}
-        pageSize={params?.limit}
-        total={total}
-        onChange={(page, size) =>
-          setParams((prev: any) => ({ ...prev, page, limit: size }))
-        }
-      />
+        </div>
+      )}
     </div>
   );
 };

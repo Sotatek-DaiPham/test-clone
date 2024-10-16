@@ -104,3 +104,15 @@ export const formatAmountWithDecimal = (
     .decimalPlaces(decimalPlace, BigNumber.ROUND_DOWN)
     .toFormat(decimalPlace);
 };
+
+export const convertNumber = (
+  value: string | number,
+  decimalPlace = 18
+): string => {
+  if (Number(value) === 0) {
+    return "0";
+  }
+  return new BigNumber(value)
+    .div(new BigNumber(10).pow(decimalPlace))
+    ?.toString();
+};

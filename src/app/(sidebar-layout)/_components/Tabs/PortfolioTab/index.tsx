@@ -8,7 +8,11 @@ import { LIMIT_ITEMS_TABLE } from "@/constant";
 import { API_PATH } from "@/constant/api-path";
 import { PortfolioResponse } from "@/entities/my-profile";
 import { BeSuccessResponse } from "@/entities/response";
-import { formatAmount, nFormatter } from "@/helpers/formatNumber";
+import {
+  convertNumber,
+  formatAmount,
+  nFormatter,
+} from "@/helpers/formatNumber";
 import { useAppSearchParams } from "@/hooks/useAppSearchParams";
 import useDebounce from "@/hooks/useDebounce";
 import { getAPI } from "@/service";
@@ -19,6 +23,7 @@ import get from "lodash/get";
 import Image from "next/image";
 import { useState } from "react";
 import TabTitle from "../../TabTitle";
+import NoData from "@/components/no-data";
 
 const PortfolioTab = ({ walletAddress }: { walletAddress: string }) => {
   const [hideDustCoin, setHideDustCoin] = useState<boolean>(false);
@@ -81,65 +86,75 @@ const PortfolioTab = ({ walletAddress }: { walletAddress: string }) => {
           />
         </div>
       </div>
-      <div className="grid grid-cols-3 gap-6 my-9">
-        {myPortfolio?.map((project: any, index: number) => (
-          <ProjectCard
-            className="pb-4"
-            data={{
-              address: project?.contract_address,
-              title: project?.title,
-              total: project?.total_supply,
-              description: project?.description,
-              currentValue: project?.amount,
-              percent:
-                (Number(project?.amount) / Number(project?.total_supply)) * 100,
-              stage:
-                Number(project?.total_supply) === Number(project?.amount)
-                  ? "Listed"
-                  : "",
-            }}
-            key={index}
-            footer={
-              <div className="mt-3 text-14px-normal text-neutral-7">
-                <div className="mt-2 flex justify-between">
-                  <span>Total hold</span>
-                  <span>
-                    <span className="text-primary-main mr-2">
-                      {formatAmount(project?.amount || 0)}
-                    </span>
-                    <span className="text-white-neutral capitalize">
-                      {project?.title || "-"}
-                    </span>
-                  </span>
-                </div>
-                <div className="my-2 flex justify-between">
-                  <span>Value</span>
-                  <span>
-                    <span className="text-primary-main mr-2">
-                      {nFormatter("12")}
-                    </span>
-                    <span className="text-white-neutral uppercase">USDT</span>
-                  </span>
-                </div>
-              </div>
+      {!myPortfolio?.length ? (
+        <NoData />
+      ) : (
+        <div>
+          <div className="grid grid-cols-3 gap-6 my-9">
+            {myPortfolio?.map((project: any, index: number) => (
+              <ProjectCard
+                className="pb-4"
+                data={{
+                  title: project?.name,
+                  address: project?.contract_address,
+                  total: convertNumber(project?.total_supply),
+                  description: project?.description,
+                  currentValue: convertNumber(project?.amount),
+                  percent:
+                    (Number(convertNumber(project?.amount)) /
+                      Number(convertNumber(project?.total_supply))) *
+                    100,
+                  stage:
+                    Number(project?.total_supply) === Number(project?.amount)
+                      ? "Listed"
+                      : "",
+                }}
+                key={index}
+                footer={
+                  <div className="mt-3 text-14px-normal text-neutral-7">
+                    <div className="mt-2 flex justify-between">
+                      <span>Total hold</span>
+                      <span>
+                        <span className="text-primary-main mr-2">
+                          {formatAmount(convertNumber(project?.amount) || 0)}
+                        </span>
+                        <span className="text-white-neutral capitalize">
+                          {project?.name || "-"}
+                        </span>
+                      </span>
+                    </div>
+                    <div className="my-2 flex justify-between">
+                      <span>Value</span>
+                      <span>
+                        <span className="text-primary-main mr-2">
+                          {nFormatter("12")}
+                        </span>
+                        <span className="text-white-neutral uppercase">
+                          USDT
+                        </span>
+                      </span>
+                    </div>
+                  </div>
+                }
+              />
+            ))}
+          </div>
+          <AppDivider />
+          <AppPagination
+            className="w-full !justify-end !mr-6"
+            hideOnSinglePage={true}
+            showTotal={(total, range) => (
+              <ShowingPage total={total} range={range} />
+            )}
+            current={params?.page}
+            pageSize={params?.limit}
+            total={total}
+            onChange={(page, size) =>
+              setParams((prev: any) => ({ ...prev, page, limit: size }))
             }
           />
-        ))}
-      </div>
-      <AppDivider />
-      <AppPagination
-        className="w-full !justify-end !mr-6"
-        hideOnSinglePage={true}
-        showTotal={(total, range) => (
-          <ShowingPage total={total} range={range} />
-        )}
-        current={params?.page}
-        pageSize={params?.limit}
-        total={total}
-        onChange={(page, size) =>
-          setParams((prev: any) => ({ ...prev, page, limit: size }))
-        }
-      />
+        </div>
+      )}
     </div>
   );
 };

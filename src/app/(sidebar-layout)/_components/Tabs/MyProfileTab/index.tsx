@@ -6,15 +6,16 @@ import { MyProfileResponse } from "@/entities/my-profile";
 import { BeSuccessResponse } from "@/entities/response";
 import { useAppSearchParams } from "@/hooks/useAppSearchParams";
 import useFollowUser from "@/hooks/useFollowUser";
+import { NotificationContext } from "@/libs/antd/NotificationProvider";
 import { getAPI } from "@/service";
 import { ArrowExport, EditIcon } from "@public/assets";
 import { useQuery } from "@tanstack/react-query";
+import { message } from "antd";
 import { AxiosResponse } from "axios";
 import get from "lodash/get";
 import Image from "next/image";
 import { useParams } from "next/navigation";
-import { useState } from "react";
-import { toast } from "react-toastify";
+import { useContext, useState } from "react";
 import TabTitle from "../../TabTitle";
 import EditProfileModal from "./EditProfileModal";
 
@@ -23,6 +24,7 @@ export enum EFollow {
   UN_FOLLOW = "UN_FOLLOW",
 }
 const MyProfileTab = ({ walletAddress }: { walletAddress: string }) => {
+  const { error, success } = useContext(NotificationContext);
   const { id } = useParams();
   const [showEdit, setShowEdit] = useState<boolean>(false);
   const { searchParams } = useAppSearchParams("myProfile");
@@ -41,12 +43,12 @@ const MyProfileTab = ({ walletAddress }: { walletAddress: string }) => {
 
   const { onFollow } = useFollowUser({
     onFollowSuccess: () => {
-      toast.success("Risk Management edited successfully");
+      success({ message: "Follow successfully" });
       refetch();
     },
     onFollowFailed: (message: string) => {
       console.log("message", message);
-      toast.error("Risk Management edited failed");
+      error({ message: "Follow failed" });
     },
   });
 
@@ -62,9 +64,11 @@ const MyProfileTab = ({ walletAddress }: { walletAddress: string }) => {
             onClick={() =>
               onFollow({
                 id: myProfile?.id,
-                isFollow: myProfile?.isFollow
-                  ? EFollow.UN_FOLLOW
-                  : EFollow.FOLLOW,
+                payload: {
+                  isFollow: myProfile?.isFollow
+                    ? EFollow.UN_FOLLOW
+                    : EFollow.FOLLOW,
+                },
               })
             }
           >

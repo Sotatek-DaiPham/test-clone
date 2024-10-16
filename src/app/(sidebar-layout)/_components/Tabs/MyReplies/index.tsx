@@ -17,6 +17,7 @@ import get from "lodash/get";
 import Image from "next/image";
 import { useState } from "react";
 import TabTitle from "../../TabTitle";
+import NoData from "@/components/no-data";
 const data1 = [
   {
     name: "Jenny Wilson",
@@ -154,26 +155,31 @@ const MyRepliesTab = () => {
           onChange={(e) => setParams({ ...params, search: e.target.value })}
         />
       </div>
-
-      <div className="my-6 grid grid-cols-2 gap-6">
-        {myReplies?.map((item: any, index: number) => (
-          <ReplyItem data={item} key={index} />
-        ))}
-      </div>
-      <AppDivider />
-      <AppPagination
-        className="w-full !justify-end !mr-6"
-        hideOnSinglePage={true}
-        showTotal={(total, range) => (
-          <ShowingPage total={total} range={range} />
-        )}
-        current={params?.page}
-        pageSize={params?.limit}
-        total={total}
-        onChange={(page, size) =>
-          setParams((prev: any) => ({ ...prev, page, limit: size }))
-        }
-      />
+      {!myReplies?.length ? (
+        <NoData />
+      ) : (
+        <div>
+          <div className="my-6 grid grid-cols-2 gap-6">
+            {myReplies?.map((item: any, index: number) => (
+              <ReplyItem data={item} key={index} />
+            ))}
+          </div>
+          <AppDivider />
+          <AppPagination
+            className="w-full !justify-end !mr-6"
+            hideOnSinglePage={true}
+            showTotal={(total, range) => (
+              <ShowingPage total={total} range={range} />
+            )}
+            current={params?.page}
+            pageSize={params?.limit}
+            total={total}
+            onChange={(page, size) =>
+              setParams((prev: any) => ({ ...prev, page, limit: size }))
+            }
+          />
+        </div>
+      )}
     </div>
   );
 };
