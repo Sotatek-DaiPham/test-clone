@@ -12,7 +12,7 @@ export const API_PATH = {
     FOLLOWINGS: "/user/followings",
     FOLLOWERS: "/user/followers",
     NOTIFICATION: "/user/notification",
-    FOLLOW_USER: "/user/follow-user",
+    FOLLOW_USER: (id: string) => `/user/follow-user/${id}`,
     POST_COMMENT: "/user/post-comment",
     LIKE_COMMENT: "/user/like-comment",
   },

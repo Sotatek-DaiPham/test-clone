@@ -1,5 +1,7 @@
 import AppDivider from "@/components/app-divider";
 import AppPagination from "@/components/app-pagination";
+import ShowingPage from "@/components/showing-page";
+import { LIMIT_ITEMS_TABLE } from "@/constant";
 import { API_PATH } from "@/constant/api-path";
 import { MyProfileResponse } from "@/entities/my-profile";
 import { BeSuccessResponse } from "@/entities/response";
@@ -8,52 +10,9 @@ import { getAPI } from "@/service";
 import { useQuery } from "@tanstack/react-query";
 import { AxiosResponse } from "axios";
 import { get } from "lodash";
+import { useState } from "react";
 import TabTitle from "../../TabTitle";
 
-const data = [
-  {
-    time: "14/04/2014 20:00",
-    type: "Bought",
-    address: "ABC...XYZ",
-    balance: 123456,
-    coin: "POG",
-  },
-  {
-    time: "14/04/2014 20:00",
-    type: "Sold",
-    address: "ABC...XYZ",
-    balance: 123456,
-    coin: "POG",
-  },
-  {
-    time: "14/04/2014 20:00",
-    type: "Bought",
-    address: "ABC...XYZ",
-    balance: 123456,
-    coin: "POG",
-  },
-  {
-    time: "14/04/2014 20:00",
-    type: "Sold",
-    address: "ABC...XYZ",
-    balance: 123456,
-    coin: "POG",
-  },
-  {
-    time: "14/04/2014 20:00",
-    type: "Bought",
-    address: "ABC...XYZ",
-    balance: 123456,
-    coin: "POG",
-  },
-  {
-    time: "14/04/2014 20:00",
-    type: "Sold",
-    address: "ABC...XYZ",
-    balance: 123456,
-    coin: "POG",
-  },
-];
 const NotificationItem = ({ data }: { data: any }) => {
   return (
     <div>
@@ -76,13 +35,17 @@ const NotificationItem = ({ data }: { data: any }) => {
 };
 const NotificationsTab = () => {
   const { searchParams } = useAppSearchParams("myProfile");
+  const [params, setParams] = useState<any>({
+    page: 1,
+    limit: LIMIT_ITEMS_TABLE,
+  });
   const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ["notifications"],
     queryFn: async () => {
       return getAPI(API_PATH.USER.NOTIFICATION, {
         params: {
-          limit: 10,
-          pageNumber: 1,
+          limit: params?.limit,
+          pageNumber: params?.page,
           userId: "",
         },
       }) as Promise<AxiosResponse<BeSuccessResponse<MyProfileResponse[]>, any>>;
@@ -91,17 +54,31 @@ const NotificationsTab = () => {
   });
 
   const notification = get(data, "data.data", []) as MyProfileResponse[];
+  const total = get(data, "data.metadata.total", 0) as number;
 
   console.log("data", notification);
   return (
     <div>
       <TabTitle title="Notifications" />
       <div className="my-6 w-[70%]">
-        {notification?.map((item: any, index: number) => (
+        {/* {notification?.map((item: any, index: number) => (
           <NotificationItem data={item} key={index} />
-        ))}
+        ))} */}
       </div>
-      <AppPagination />
+      <AppDivider />
+      <AppPagination
+        className="w-full !justify-end !mr-6"
+        hideOnSinglePage={true}
+        showTotal={(total, range) => (
+          <ShowingPage total={total} range={range} />
+        )}
+        current={params?.page}
+        pageSize={params?.limit}
+        total={total}
+        onChange={(page, size) =>
+          setParams((prev: any) => ({ ...prev, page, limit: size }))
+        }
+      />
     </div>
   );
 };

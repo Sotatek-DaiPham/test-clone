@@ -5,4 +5,5 @@ export const PATH_ROUTER = {
   LEADER_BOARD: "/leader-board",
   TOKEN_DETAIL: (id: any) => `/${id}`,
   CREATE_TOKEN: "/create-token",
+  USER_PROFILE: (address: any) => `/user/${address}`,
 };

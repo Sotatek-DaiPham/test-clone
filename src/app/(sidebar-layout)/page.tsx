@@ -2,9 +2,9 @@
 import AppButton from "@/components/app-button";
 import AppTabs from "@/components/app-tabs";
 import { useAppSearchParams } from "@/hooks/useAppSearchParams";
-import { useEffect, useState } from "react";
-import Image from "next/image";
 import { HowItWorksIcon } from "@public/assets";
+import Image from "next/image";
+import { useEffect, useState } from "react";
 import AllTab from "./_components/AllTab";
 import FollowingTab from "./_components/FollowingTab";
 import ProjectCard from "./_components/ProjectCard";
@@ -82,21 +82,23 @@ export default function Home() {
           </div>
           <div className="h-full">
             <div className="bg-neutral-2 rounded-3xl p-6">
+              <span className="text-primary-main italic text-32px-bold flex w-full justify-center">
+                King of The hill
+              </span>
               <ProjectCard
                 className="p-0"
                 data={{
+                  address: "",
+                  avatar: "",
                   title: "Project name",
                   percent: 55,
                   description:
                     "Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusamus doloribus dolorum minus vero molestias iste ullam perspiciatis, odio ipsum harum laudantium earum consequuntur nesciunt dolore sapiente error deleniti perferendis nulla!",
-                  total: 5900000,
-                  currentValue: 2123000,
+                  total: "5900000",
+                  currentValue: "2123000",
                   stage: "S1",
                 }}
               />
-              <AppButton typeButton="primary" customClass="!rounded-3xl mb-3">
-                King of The hill
-              </AppButton>
             </div>
           </div>
         </div>

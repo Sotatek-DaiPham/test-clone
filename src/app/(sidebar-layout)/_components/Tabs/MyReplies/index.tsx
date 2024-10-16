@@ -1,6 +1,9 @@
 import AppButton from "@/components/app-button";
+import AppDivider from "@/components/app-divider";
 import AppInput from "@/components/app-input";
 import AppPagination from "@/components/app-pagination";
+import ShowingPage from "@/components/showing-page";
+import { LIMIT_ITEMS_TABLE } from "@/constant";
 import { API_PATH } from "@/constant/api-path";
 import { MyProfileResponse } from "@/entities/my-profile";
 import { BeSuccessResponse } from "@/entities/response";
@@ -114,16 +117,20 @@ const ReplyItem = ({ data }: { data: any }) => {
 };
 
 const MyRepliesTab = () => {
-  const [search, setSearch] = useState<string>("");
-  const debounceSearch = useDebounce(search);
+  const [params, setParams] = useState<any>({
+    search: "",
+    page: 1,
+    limit: LIMIT_ITEMS_TABLE,
+  });
+  const debounceSearch = useDebounce(params?.search);
   const { searchParams } = useAppSearchParams("myProfile");
   const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ["my-replies"],
     queryFn: async () => {
       return getAPI(API_PATH.USER.MY_REPLIES, {
         params: {
-          limit: 10,
-          pageNumber: 1,
+          limit: params.limit,
+          pageNumber: params.page,
           userId: "",
         },
       }) as Promise<AxiosResponse<BeSuccessResponse<MyProfileResponse[]>, any>>;
@@ -132,7 +139,7 @@ const MyRepliesTab = () => {
   });
 
   const myReplies = get(data, "data.data", []) as MyProfileResponse[];
-
+  const total = get(data, "data.metadata.total", 0) as number;
   console.log("data", myReplies);
   return (
     <div>
@@ -143,17 +150,30 @@ const MyRepliesTab = () => {
           isSearch={true}
           iconPosition="left"
           placeholder="Search"
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
+          value={params?.search}
+          onChange={(e) => setParams({ ...params, search: e.target.value })}
         />
       </div>
 
       <div className="my-6 grid grid-cols-2 gap-6">
-        {data1?.map((item: any, index: number) => (
+        {myReplies?.map((item: any, index: number) => (
           <ReplyItem data={item} key={index} />
         ))}
       </div>
-      <AppPagination />
+      <AppDivider />
+      <AppPagination
+        className="w-full !justify-end !mr-6"
+        hideOnSinglePage={true}
+        showTotal={(total, range) => (
+          <ShowingPage total={total} range={range} />
+        )}
+        current={params?.page}
+        pageSize={params?.limit}
+        total={total}
+        onChange={(page, size) =>
+          setParams((prev: any) => ({ ...prev, page, limit: size }))
+        }
+      />
     </div>
   );
 };
