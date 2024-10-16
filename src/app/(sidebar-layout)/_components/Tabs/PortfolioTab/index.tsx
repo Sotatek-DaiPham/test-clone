@@ -36,7 +36,7 @@ const PortfolioTab = ({ walletAddress }: { walletAddress: string }) => {
 
   const debounceSearch = useDebounce(params?.search);
 
-  const { data, refetch } = useQuery({
+  const { data, isLoading, refetch } = useQuery({
     queryKey: ["portfolio"],
     queryFn: async () => {
       return getAPI(API_PATH.USER.PORTFOLIO, {
@@ -86,7 +86,7 @@ const PortfolioTab = ({ walletAddress }: { walletAddress: string }) => {
           />
         </div>
       </div>
-      {!myPortfolio?.length ? (
+      {!myPortfolio?.length && !isLoading ? (
         <NoData />
       ) : (
         <div>

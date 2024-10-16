@@ -1,5 +1,3 @@
-import { TDefaultGetParams } from "./response";
-
 export interface MyProfileResponse {
   id: number;
   createdAt: Date;

@@ -1,16 +1,16 @@
 import AppButton from "@/components/app-button";
 import AppDivider from "@/components/app-divider";
 import AppImage from "@/components/app-image";
-import { API_PATH } from "@/constant/api-path";
 import { MyProfileResponse } from "@/entities/my-profile";
 import { BeSuccessResponse } from "@/entities/response";
 import { useAppSearchParams } from "@/hooks/useAppSearchParams";
 import useFollowUser from "@/hooks/useFollowUser";
 import { NotificationContext } from "@/libs/antd/NotificationProvider";
+import { useAppSelector } from "@/libs/hooks";
 import { getAPI } from "@/service";
 import { ArrowExport, EditIcon } from "@public/assets";
+import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { useQuery } from "@tanstack/react-query";
-import { message } from "antd";
 import { AxiosResponse } from "axios";
 import get from "lodash/get";
 import Image from "next/image";
@@ -23,16 +23,18 @@ export enum EFollow {
   FOLLOW = "FOLLOW",
   UN_FOLLOW = "UN_FOLLOW",
 }
-const MyProfileTab = ({ walletAddress }: { walletAddress: string }) => {
+const MyProfileTab = ({ apiPath }: { apiPath: string }) => {
   const { error, success } = useContext(NotificationContext);
+  const { openConnectModal, connectModalOpen } = useConnectModal();
   const { id } = useParams();
   const [showEdit, setShowEdit] = useState<boolean>(false);
   const { searchParams } = useAppSearchParams("myProfile");
+  const { userId } = useAppSelector((state) => state.user);
 
   const { data, refetch } = useQuery({
     queryKey: ["my-profile"],
     queryFn: async () => {
-      return getAPI(API_PATH.USER.PROFILE(walletAddress)) as Promise<
+      return getAPI(apiPath) as Promise<
         AxiosResponse<BeSuccessResponse<MyProfileResponse>, any>
       >;
     },
@@ -61,15 +63,18 @@ const MyProfileTab = ({ walletAddress }: { walletAddress: string }) => {
             size="small"
             typeButton={myProfile?.isFollow ? "secondary" : "primary"}
             customClass="!w-[100px] !rounded-full"
-            onClick={() =>
-              onFollow({
-                id: myProfile?.id,
-                payload: {
-                  isFollow: myProfile?.isFollow
-                    ? EFollow.UN_FOLLOW
-                    : EFollow.FOLLOW,
-                },
-              })
+            onClick={
+              !!userId
+                ? () =>
+                    onFollow({
+                      id: myProfile?.id,
+                      payload: {
+                        isFollow: myProfile?.isFollow
+                          ? EFollow.UN_FOLLOW
+                          : EFollow.FOLLOW,
+                      },
+                    })
+                : openConnectModal
             }
           >
             {myProfile?.isFollow ? "Unfollow" : "Follow"}

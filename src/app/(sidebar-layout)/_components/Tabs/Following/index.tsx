@@ -18,6 +18,7 @@ import get from "lodash/get";
 import { useContext, useState } from "react";
 import TabTitle from "../../TabTitle";
 import UserFollow from "../../UserFollow";
+import { EFollow } from "../MyProfileTab";
 
 const FollowingTab = ({ walletAddress }: { walletAddress: string }) => {
   const { error, success } = useContext(NotificationContext);
@@ -28,6 +29,7 @@ const FollowingTab = ({ walletAddress }: { walletAddress: string }) => {
   });
   const debounceSearch = useDebounce(params?.search);
   const { searchParams } = useAppSearchParams("myProfile");
+  const [followData, setFollowData] = useState<any>({});
 
   const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ["following"],
@@ -48,12 +50,20 @@ const FollowingTab = ({ walletAddress }: { walletAddress: string }) => {
 
   const { onFollow } = useFollowUser({
     onFollowSuccess: () => {
-      success({ message: "Follow successfully" });
+      success({
+        message: `${
+          followData?.isFollow === EFollow.FOLLOW ? "Follow" : "Unfollow"
+        } successfully`,
+      });
       refetch();
     },
     onFollowFailed: (message: string) => {
       console.log("message", message);
-      error({ message: "Follow failed" });
+      error({
+        message: `${
+          followData?.isFollow === EFollow.FOLLOW ? "Follow" : "Unfollow"
+        } failed`,
+      });
     },
   });
 
@@ -64,13 +74,13 @@ const FollowingTab = ({ walletAddress }: { walletAddress: string }) => {
         <AppInput
           className="!w-[400px]"
           isSearch={true}
-          iconPosition="right"
+          iconPosition="left"
           placeholder="Search"
           value={params?.search}
           onChange={(e) => setParams({ ...params, search: e.target.value })}
         />
       </div>
-      {!followings?.length ? (
+      {!followings?.length && !isLoading ? (
         <NoData />
       ) : (
         <div>
@@ -86,7 +96,10 @@ const FollowingTab = ({ walletAddress }: { walletAddress: string }) => {
                   follower: user?.follower,
                 }}
                 key={index}
-                onFollow={(payload: any) => onFollow(payload)}
+                onFollow={(data: any) => {
+                  onFollow(data);
+                  setFollowData(data?.payload);
+                }}
               />
             ))}
           </div>

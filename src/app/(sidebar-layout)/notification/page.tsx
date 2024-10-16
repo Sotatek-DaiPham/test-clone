@@ -1,25 +1,26 @@
+"use client";
 import AppDivider from "@/components/app-divider";
-import AppPagination from "@/components/app-pagination";
-import ShowingPage from "@/components/showing-page";
+import AppInput from "@/components/app-input";
+import NoData from "@/components/no-data";
 import { LIMIT_ITEMS_TABLE } from "@/constant";
 import { API_PATH } from "@/constant/api-path";
 import { MyProfileResponse } from "@/entities/my-profile";
 import { BeSuccessResponse } from "@/entities/response";
-import { useAppSearchParams } from "@/hooks/useAppSearchParams";
+import isAuth from "@/helpers/isAuth";
 import { getAPI } from "@/service";
 import { useQuery } from "@tanstack/react-query";
 import { AxiosResponse } from "axios";
+import dayjs from "dayjs";
 import { get } from "lodash";
 import { useState } from "react";
-import TabTitle from "../../TabTitle";
-import NoData from "@/components/no-data";
+import TabTitle from "../_components/TabTitle";
 
 const NotificationItem = ({ data }: { data: any }) => {
   return (
     <div>
-      <div className="text-18px-medium text-white-neutral">{data?.time}</div>
-      <div className="text-18px-medium text-white-neutral flex flex-row gap-2 my-6">
-        <span>{data?.address}</span>
+      <div className="text-16px-medium capitalize text-neutral-9 mb-1">
+        {data?.title}
+        {/* <span>{data?.address}</span>
         <span
           className={
             data?.type === "Bought" ? "text-[#64e06c]" : "text-[#da302c]"
@@ -28,30 +29,31 @@ const NotificationItem = ({ data }: { data: any }) => {
           {data?.type}
         </span>
         <span>{data?.balance} of</span>
-        <span className="text-[#FFFF53]">{data?.coin}</span>
+        <span className="text-[#FFFF53]">{data?.coin}</span> */}
+      </div>
+      <div className="text-12px-medium text-neutral-7">
+        {dayjs(data?.createdAt)?.format("DD/MM/YYYY HH:mm")}
       </div>
       <AppDivider />
     </div>
   );
 };
-const NotificationsTab = () => {
-  const { searchParams } = useAppSearchParams("myProfile");
+
+const NotificationPage = () => {
   const [params, setParams] = useState<any>({
     page: 1,
     limit: LIMIT_ITEMS_TABLE,
   });
   const { data, isLoading, isError, refetch } = useQuery({
-    queryKey: ["notifications"],
+    queryKey: ["notification"],
     queryFn: async () => {
       return getAPI(API_PATH.USER.NOTIFICATION, {
         params: {
           limit: params?.limit,
           pageNumber: params?.page,
-          userId: "",
         },
       }) as Promise<AxiosResponse<BeSuccessResponse<MyProfileResponse[]>, any>>;
     },
-    enabled: searchParams.tab === "notifications",
   });
 
   const notification = get(data, "data.data", []) as MyProfileResponse[];
@@ -59,18 +61,28 @@ const NotificationsTab = () => {
 
   console.log("data", notification);
   return (
-    <div>
-      <TabTitle title="Notifications" />
-      {!notification?.length ? (
+    <div className="m-auto max-w-[var(--width-content-sidebar-layout)]">
+      <div className="w-full flex flex-row items-center justify-between">
+        <TabTitle title="Notification" />
+        <AppInput
+          className="!w-[400px]"
+          isSearch={true}
+          iconPosition="left"
+          placeholder="Search"
+          value={params?.search}
+          onChange={(e) => setParams({ ...params, search: e.target.value })}
+        />
+      </div>
+      {!notification?.length && !isLoading ? (
         <NoData />
       ) : (
         <div>
-          <div className="my-6 w-[70%]">
-            {/* {notification?.map((item: any, index: number) => (
-          <NotificationItem data={item} key={index} />
-        ))} */}
+          <div className="my-6 w-[70%] bg-neutral-2 p-6 rounded-3xl">
+            {notification?.map((item: any, index: number) => (
+              <NotificationItem data={item} key={index} />
+            ))}
           </div>
-          <AppDivider />
+          {/* <AppDivider />
           <AppPagination
             className="w-full !justify-end !mr-6"
             hideOnSinglePage={true}
@@ -83,11 +95,11 @@ const NotificationsTab = () => {
             onChange={(page, size) =>
               setParams((prev: any) => ({ ...prev, page, limit: size }))
             }
-          />
+          /> */}
         </div>
       )}
     </div>
   );
 };
 
-export default NotificationsTab;
+export default isAuth(NotificationPage);

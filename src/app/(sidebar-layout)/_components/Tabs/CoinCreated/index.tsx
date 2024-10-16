@@ -57,8 +57,8 @@ const CoinCreatedTab = ({ walletAddress }: { walletAddress: string }) => {
           value={params?.search}
           onChange={(e) => setParams({ ...params, search: e.target.value })}
         />
-      </div>{" "}
-      {!coinCreated?.length ? (
+      </div>
+      {!coinCreated?.length && !isLoading ? (
         <NoData />
       ) : (
         <div>

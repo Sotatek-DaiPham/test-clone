@@ -155,7 +155,7 @@ const MyRepliesTab = () => {
           onChange={(e) => setParams({ ...params, search: e.target.value })}
         />
       </div>
-      {!myReplies?.length ? (
+      {!myReplies?.length && !isLoading ? (
         <NoData />
       ) : (
         <div>

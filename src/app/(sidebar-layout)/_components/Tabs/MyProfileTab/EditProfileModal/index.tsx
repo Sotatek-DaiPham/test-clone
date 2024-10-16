@@ -13,6 +13,8 @@ import { useMutation } from "@tanstack/react-query";
 import { Flex, Form, ModalProps } from "antd";
 import { toast } from "react-toastify";
 import "./styles.scss";
+import { useContext } from "react";
+import { NotificationContext } from "@/libs/antd/NotificationProvider";
 
 interface IEditProfileModalProps extends ModalProps {
   data: any;
@@ -20,17 +22,19 @@ interface IEditProfileModalProps extends ModalProps {
   onOk: () => void;
 }
 const EditProfileModal = ({ data, onOk, ...props }: IEditProfileModalProps) => {
+  const { error, success } = useContext(NotificationContext);
   const { mutate: updateProfile, isPending: isLoading } = useMutation({
     mutationFn: async (payload: TUpdateProfilePayload) => {
-      console.log("payload update", payload);
       return await postAPI(API_PATH.USER.UPDATE_PROFILE, payload);
     },
     onSuccess() {
       onOk?.();
-      toast.success("Update Profile Successfully!");
+      success({
+        message: "Update successfully",
+      });
     },
     onError() {
-      toast.error("Update Failed!");
+      error({ message: "Update failed" });
     },
   });
 
@@ -85,7 +89,7 @@ const EditProfileModal = ({ data, onOk, ...props }: IEditProfileModalProps) => {
                 rules={[
                   {
                     required: true,
-                    message: "This field is required",
+                    message: "Name is required",
                   },
                 ]}
               >
