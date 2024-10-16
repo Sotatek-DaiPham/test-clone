@@ -12,18 +12,6 @@ export interface MyProfileResponse {
   numberFollower: number;
   isFollow?: boolean;
 }
-export interface PortfolioResponse {
-  contract_address: string;
-  amount: string;
-  title: string;
-  description: string;
-  avatar: string;
-  decimal: number;
-  total_supply: string;
-  timestamp_created: number;
-  created_at: string;
-  updated_at: string;
-}
 
 export interface UpdateProfilePayload {
   username: string;
@@ -36,4 +24,52 @@ export type TUpdateProfilePayload = {
   bio?: string;
   avatar?: any;
 };
-// & TDefaultGetParams;
+
+export interface IMyRepliesResponse {
+  tokenId: number;
+  replyId: number;
+  replyUserId: number;
+  content: string;
+  image: string;
+  createdAt: string;
+  updatedAt: string;
+  userName: string;
+  avatar: string;
+  walletAddress: string;
+}
+
+export interface IFollowerResponse {
+  id: number;
+  wallet_address: string;
+  username: string;
+  bio: string;
+  avatar: string;
+  numberFollower: number;
+  isFollowing: boolean;
+}
+
+export interface IPortfolioResponse {
+  amount: string;
+  created_at: string;
+  updated_at: string;
+  contract_address: string;
+  name: string;
+  description: any;
+  avatar: any;
+  decimal: number;
+  total_supply: string;
+  timestamp_created: number;
+}
+
+export interface ICoinCreatedResponse {
+  owner: any;
+  name: any;
+  description: any;
+  avatar: any;
+  decimal: number;
+  total_supply: string;
+  timestamp_created: any;
+  created_at: string;
+  updated_at: string;
+  number_replies: string;
+}

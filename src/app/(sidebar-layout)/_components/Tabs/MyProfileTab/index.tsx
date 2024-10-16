@@ -25,7 +25,7 @@ export enum EFollow {
 }
 const MyProfileTab = ({ apiPath }: { apiPath: string }) => {
   const { error, success } = useContext(NotificationContext);
-  const { openConnectModal, connectModalOpen } = useConnectModal();
+  const { openConnectModal } = useConnectModal();
   const { id } = useParams();
   const [showEdit, setShowEdit] = useState<boolean>(false);
   const { searchParams } = useAppSearchParams("myProfile");

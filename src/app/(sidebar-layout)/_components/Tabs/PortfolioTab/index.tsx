@@ -3,10 +3,11 @@ import AppButton from "@/components/app-button";
 import AppDivider from "@/components/app-divider";
 import AppInput from "@/components/app-input";
 import AppPagination from "@/components/app-pagination";
+import NoData from "@/components/no-data";
 import ShowingPage from "@/components/showing-page";
 import { LIMIT_ITEMS_TABLE } from "@/constant";
 import { API_PATH } from "@/constant/api-path";
-import { PortfolioResponse } from "@/entities/my-profile";
+import { IPortfolioResponse } from "@/entities/my-profile";
 import { BeSuccessResponse } from "@/entities/response";
 import {
   convertNumber,
@@ -23,7 +24,6 @@ import get from "lodash/get";
 import Image from "next/image";
 import { useState } from "react";
 import TabTitle from "../../TabTitle";
-import NoData from "@/components/no-data";
 
 const PortfolioTab = ({ walletAddress }: { walletAddress: string }) => {
   const [hideDustCoin, setHideDustCoin] = useState<boolean>(false);
@@ -46,12 +46,14 @@ const PortfolioTab = ({ walletAddress }: { walletAddress: string }) => {
           walletAddress: walletAddress,
           userId: "",
         },
-      }) as Promise<AxiosResponse<BeSuccessResponse<PortfolioResponse[]>, any>>;
+      }) as Promise<
+        AxiosResponse<BeSuccessResponse<IPortfolioResponse[]>, any>
+      >;
     },
     enabled: searchParams.tab === "portfolio",
   });
 
-  const myPortfolio = get(data, "data.data", []) as PortfolioResponse[];
+  const myPortfolio = get(data, "data.data", []) as IPortfolioResponse[];
   const total = get(data, "data.metadata.total", 0) as number;
 
   console.log("data", myPortfolio);
@@ -91,7 +93,7 @@ const PortfolioTab = ({ walletAddress }: { walletAddress: string }) => {
       ) : (
         <div>
           <div className="grid grid-cols-3 gap-6 my-9">
-            {myPortfolio?.map((project: any, index: number) => (
+            {myPortfolio?.map((project: IPortfolioResponse, index: number) => (
               <ProjectCard
                 className="pb-4"
                 data={{

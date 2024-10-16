@@ -4,7 +4,7 @@ import AppInput from "@/components/app-input";
 import NoData from "@/components/no-data";
 import { LIMIT_ITEMS_TABLE } from "@/constant";
 import { API_PATH } from "@/constant/api-path";
-import { MyProfileResponse } from "@/entities/my-profile";
+import { INotificationResponse } from "@/entities/notification";
 import { BeSuccessResponse } from "@/entities/response";
 import isAuth from "@/helpers/isAuth";
 import { getAPI } from "@/service";
@@ -15,7 +15,7 @@ import { get } from "lodash";
 import { useState } from "react";
 import TabTitle from "../_components/TabTitle";
 
-const NotificationItem = ({ data }: { data: any }) => {
+const NotificationItem = ({ data }: { data: INotificationResponse }) => {
   return (
     <div>
       <div className="text-16px-medium capitalize text-neutral-9 mb-1">
@@ -52,11 +52,13 @@ const NotificationPage = () => {
           limit: params?.limit,
           pageNumber: params?.page,
         },
-      }) as Promise<AxiosResponse<BeSuccessResponse<MyProfileResponse[]>, any>>;
+      }) as Promise<
+        AxiosResponse<BeSuccessResponse<INotificationResponse[]>, any>
+      >;
     },
   });
 
-  const notification = get(data, "data.data", []) as MyProfileResponse[];
+  const notification = get(data, "data.data", []) as INotificationResponse[];
   const total = get(data, "data.metadata.total", 0) as number;
 
   console.log("data", notification);
@@ -78,7 +80,7 @@ const NotificationPage = () => {
       ) : (
         <div>
           <div className="my-6 w-[70%] bg-neutral-2 p-6 rounded-3xl">
-            {notification?.map((item: any, index: number) => (
+            {notification?.map((item: INotificationResponse, index: number) => (
               <NotificationItem data={item} key={index} />
             ))}
           </div>

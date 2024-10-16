@@ -8,13 +8,12 @@ import {
   TUpdateProfilePayload,
   UpdateProfilePayload,
 } from "@/entities/my-profile";
+import { NotificationContext } from "@/libs/antd/NotificationProvider";
 import { postAPI } from "@/service";
 import { useMutation } from "@tanstack/react-query";
 import { Flex, Form, ModalProps } from "antd";
-import { toast } from "react-toastify";
-import "./styles.scss";
 import { useContext } from "react";
-import { NotificationContext } from "@/libs/antd/NotificationProvider";
+import "./styles.scss";
 
 interface IEditProfileModalProps extends ModalProps {
   data: any;
@@ -93,10 +92,10 @@ const EditProfileModal = ({ data, onOk, ...props }: IEditProfileModalProps) => {
                   },
                 ]}
               >
-                <AppInput placeholder="Enter name" />
+                <AppInput maxLength={150} placeholder="Enter name" />
               </Form.Item>
             </Flex>
-            <Flex className="flex-col md:flex-row w-full mt-4">
+            <Flex className="flex-col md:flex-row w-full">
               <Form.Item
                 className="w-full"
                 name="bio"
@@ -107,7 +106,11 @@ const EditProfileModal = ({ data, onOk, ...props }: IEditProfileModalProps) => {
                   />
                 }
               >
-                <AppInput.TextArea rows={5} placeholder="Enter bio" />
+                <AppInput.TextArea
+                  maxLength={1200}
+                  rows={5}
+                  placeholder="Enter bio"
+                />
               </Form.Item>
             </Flex>
           </div>

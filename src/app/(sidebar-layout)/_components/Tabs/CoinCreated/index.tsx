@@ -2,11 +2,13 @@ import ProjectCard from "@/app/(sidebar-layout)/_components/ProjectCard";
 import AppDivider from "@/components/app-divider";
 import AppInput from "@/components/app-input";
 import AppPagination from "@/components/app-pagination";
+import NoData from "@/components/no-data";
 import ShowingPage from "@/components/showing-page";
 import { LIMIT_ITEMS_TABLE } from "@/constant";
 import { API_PATH } from "@/constant/api-path";
-import { MyProfileResponse } from "@/entities/my-profile";
+import { ICoinCreatedResponse } from "@/entities/my-profile";
 import { BeSuccessResponse } from "@/entities/response";
+import { convertNumber } from "@/helpers/formatNumber";
 import { useAppSearchParams } from "@/hooks/useAppSearchParams";
 import useDebounce from "@/hooks/useDebounce";
 import { getAPI } from "@/service";
@@ -15,8 +17,6 @@ import { AxiosResponse } from "axios";
 import get from "lodash/get";
 import { useState } from "react";
 import TabTitle from "../../TabTitle";
-import NoData from "@/components/no-data";
-import { convertNumber } from "@/helpers/formatNumber";
 
 const CoinCreatedTab = ({ walletAddress }: { walletAddress: string }) => {
   const { searchParams } = useAppSearchParams("myProfile");
@@ -37,12 +37,14 @@ const CoinCreatedTab = ({ walletAddress }: { walletAddress: string }) => {
           walletAddress: walletAddress,
           userId: "",
         },
-      }) as Promise<AxiosResponse<BeSuccessResponse<MyProfileResponse>, any>>;
+      }) as Promise<
+        AxiosResponse<BeSuccessResponse<ICoinCreatedResponse[]>, any>
+      >;
     },
     enabled: searchParams.tab === "coin-created",
   });
 
-  const coinCreated = get(data, "data.data", []) as MyProfileResponse[];
+  const coinCreated = get(data, "data.data", []) as ICoinCreatedResponse[];
   const total = get(data, "data.metadata.total", 0) as number;
 
   return (
@@ -63,27 +65,29 @@ const CoinCreatedTab = ({ walletAddress }: { walletAddress: string }) => {
       ) : (
         <div>
           <div className="grid grid-cols-3 gap-6 my-9">
-            {coinCreated?.map((project: any, index: number) => (
-              <ProjectCard
-                data={{
-                  title: project?.name,
-                  address: project?.contract_address,
-                  total: convertNumber(project?.total_supply),
-                  description: project?.description,
-                  currentValue: convertNumber(project?.number_replies),
-                  percent:
-                    (Number(convertNumber(project?.number_replies)) /
-                      Number(convertNumber(project?.total_supply))) *
-                    100,
-                  stage:
-                    Number(project?.total_supply) ===
-                    Number(project?.number_replies)
-                      ? "Listed"
-                      : "",
-                }}
-                key={index}
-              />
-            ))}
+            {coinCreated?.map(
+              (project: ICoinCreatedResponse, index: number) => (
+                <ProjectCard
+                  data={{
+                    title: project?.name,
+                    address: project?.owner,
+                    total: convertNumber(project?.total_supply),
+                    description: project?.description,
+                    currentValue: convertNumber(project?.number_replies),
+                    percent:
+                      (Number(convertNumber(project?.number_replies)) /
+                        Number(convertNumber(project?.total_supply))) *
+                      100,
+                    stage:
+                      Number(project?.total_supply) ===
+                      Number(project?.number_replies)
+                        ? "Listed"
+                        : "",
+                  }}
+                  key={index}
+                />
+              )
+            )}
           </div>
           <AppDivider />
           <AppPagination

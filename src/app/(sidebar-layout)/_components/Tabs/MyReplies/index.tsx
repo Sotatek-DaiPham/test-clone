@@ -2,10 +2,11 @@ import AppButton from "@/components/app-button";
 import AppDivider from "@/components/app-divider";
 import AppInput from "@/components/app-input";
 import AppPagination from "@/components/app-pagination";
+import NoData from "@/components/no-data";
 import ShowingPage from "@/components/showing-page";
 import { LIMIT_ITEMS_TABLE } from "@/constant";
 import { API_PATH } from "@/constant/api-path";
-import { MyProfileResponse } from "@/entities/my-profile";
+import { IMyRepliesResponse } from "@/entities/my-profile";
 import { BeSuccessResponse } from "@/entities/response";
 import { useAppSearchParams } from "@/hooks/useAppSearchParams";
 import useDebounce from "@/hooks/useDebounce";
@@ -17,83 +18,17 @@ import get from "lodash/get";
 import Image from "next/image";
 import { useState } from "react";
 import TabTitle from "../../TabTitle";
-import NoData from "@/components/no-data";
-const data1 = [
-  {
-    name: "Jenny Wilson",
-    time: "24/04/2014 20:00",
-    id: "#11625369",
-    content:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Non fugit omnis et officia, vel reiciendis impedit ipsam ullam explicabo maiores accusamus alias esse totam dolorum, quos voluptatibus cupiditate quae corrupti?",
-  },
-  {
-    name: "Jenny Wilson",
-    time: "24/04/2014 20:00",
-    id: "#11625369",
-    content:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Non fugit omnis et officia, vel reiciendis impedit ipsam ullam explicabo maiores accusamus alias esse totam dolorum, quos voluptatibus cupiditate quae corrupti?",
-  },
-  {
-    name: "Jenny Wilson",
-    time: "24/04/2014 20:00",
-    id: "#11625369",
-    content:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Non fugit omnis et officia, vel reiciendis impedit ipsam ullam explicabo maiores accusamus alias esse totam dolorum, quos voluptatibus cupiditate quae corrupti?",
-  },
-  {
-    name: "Jenny Wilson",
-    time: "24/04/2014 20:00",
-    id: "#11625369",
-    content:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Non fugit omnis et officia, vel reiciendis impedit ipsam ullam explicabo maiores accusamus alias esse totam dolorum, quos voluptatibus cupiditate quae corrupti?",
-  },
-  {
-    name: "Jenny Wilson",
-    time: "24/04/2014 20:00",
-    id: "#11625369",
-    content:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Non fugit omnis et officia, vel reiciendis impedit ipsam ullam explicabo maiores accusamus alias esse totam dolorum, quos voluptatibus cupiditate quae corrupti?",
-  },
-  {
-    name: "Jenny Wilson",
-    time: "24/04/2014 20:00",
-    id: "#11625369",
-    content:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Non fugit omnis et officia, vel reiciendis impedit ipsam ullam explicabo maiores accusamus alias esse totam dolorum, quos voluptatibus cupiditate quae corrupti?",
-  },
-  {
-    name: "Jenny Wilson",
-    time: "24/04/2014 20:00",
-    id: "#11625369",
-    content:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Non fugit omnis et officia, vel reiciendis impedit ipsam ullam explicabo maiores accusamus alias esse totam dolorum, quos voluptatibus cupiditate quae corrupti?",
-  },
-  {
-    name: "Jenny Wilson",
-    time: "24/04/2014 20:00",
-    id: "#11625369",
-    content:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Non fugit omnis et officia, vel reiciendis impedit ipsam ullam explicabo maiores accusamus alias esse totam dolorum, quos voluptatibus cupiditate quae corrupti?",
-  },
-  {
-    name: "Jenny Wilson",
-    time: "24/04/2014 20:00",
-    id: "#11625369",
-    content:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Non fugit omnis et officia, vel reiciendis impedit ipsam ullam explicabo maiores accusamus alias esse totam dolorum, quos voluptatibus cupiditate quae corrupti?",
-  },
-];
 
-const ReplyItem = ({ data }: { data: any }) => {
+const ReplyItem = ({ data }: { data: IMyRepliesResponse }) => {
   return (
     <div className="flex flex-col w-full bg-neutral-2 rounded-3xl px-6 py-4 text-neutral-9">
       <div className="flex flex-row gap-3">
         <div className="w-[40px] h-[40px] rounded-full bg-primary-7"></div>
         <div className="flex flex-col">
-          <div className="text-16px-bold">{data?.name}</div>
+          <div className="text-16px-bold">{data?.userName}</div>
           <span className="text-14px-normal text-neutral-7">
-            {data?.id}
-            <span className="ml-10">{data?.time}</span>
+            {data?.tokenId}
+            <span className="ml-10">{data?.createdAt}</span>
           </span>
         </div>
       </div>
@@ -134,12 +69,14 @@ const MyRepliesTab = () => {
           pageNumber: params.page,
           userId: "",
         },
-      }) as Promise<AxiosResponse<BeSuccessResponse<MyProfileResponse[]>, any>>;
+      }) as Promise<
+        AxiosResponse<BeSuccessResponse<IMyRepliesResponse[]>, any>
+      >;
     },
     enabled: searchParams.tab === "my-replies",
   });
 
-  const myReplies = get(data, "data.data", []) as MyProfileResponse[];
+  const myReplies = get(data, "data.data", []) as IMyRepliesResponse[];
   const total = get(data, "data.metadata.total", 0) as number;
   console.log("data", myReplies);
   return (
@@ -160,7 +97,7 @@ const MyRepliesTab = () => {
       ) : (
         <div>
           <div className="my-6 grid grid-cols-2 gap-6">
-            {myReplies?.map((item: any, index: number) => (
+            {myReplies?.map((item: IMyRepliesResponse, index: number) => (
               <ReplyItem data={item} key={index} />
             ))}
           </div>

@@ -5,7 +5,7 @@ import NoData from "@/components/no-data";
 import ShowingPage from "@/components/showing-page";
 import { LIMIT_ITEMS_TABLE } from "@/constant";
 import { API_PATH } from "@/constant/api-path";
-import { MyProfileResponse } from "@/entities/my-profile";
+import { IFollowerResponse, MyProfileResponse } from "@/entities/my-profile";
 import { BeSuccessResponse } from "@/entities/response";
 import { useAppSearchParams } from "@/hooks/useAppSearchParams";
 import useDebounce from "@/hooks/useDebounce";
@@ -40,12 +40,12 @@ const FollowersTab = ({ walletAddress }: { walletAddress: string }) => {
           pageNumber: params.page,
           walletAddress: walletAddress,
         },
-      }) as Promise<AxiosResponse<BeSuccessResponse<MyProfileResponse[]>, any>>;
+      }) as Promise<AxiosResponse<BeSuccessResponse<IFollowerResponse[]>, any>>;
     },
     enabled: searchParams.tab === "followers",
   });
 
-  const followers = get(data, "data.data", []) as MyProfileResponse[];
+  const followers = get(data, "data.data", []) as IFollowerResponse[];
   const total = get(data, "data.metadata.total", 0) as number;
 
   const { onFollow } = useFollowUser({
@@ -85,16 +85,9 @@ const FollowersTab = ({ walletAddress }: { walletAddress: string }) => {
       ) : (
         <div>
           <div className="my-6 grid grid-cols-2 gap-6">
-            {followers?.map((user: any, index: number) => (
+            {followers?.map((user: IFollowerResponse, index: number) => (
               <UserFollow
-                data={{
-                  id: user.id,
-                  username: user?.username,
-                  bio: user?.bio,
-                  avatar: user?.avatar,
-                  isFollowing: user?.isFollowing,
-                  follower: user?.follower,
-                }}
+                data={user}
                 key={index}
                 onFollow={(data: any) => {
                   onFollow(data);

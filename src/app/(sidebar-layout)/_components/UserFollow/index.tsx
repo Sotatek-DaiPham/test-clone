@@ -1,19 +1,11 @@
 import AppButton from "@/components/app-button";
 import AppImage from "@/components/app-image";
+import { IFollowerResponse } from "@/entities/my-profile";
 import { formatAmount } from "@/helpers/formatNumber";
 import { EFollow } from "../Tabs/MyProfileTab";
 
-interface IUser {
-  id: number | string;
-  username: string;
-  avatar: any;
-  follower: number;
-  bio: string;
-  isFollowing: boolean;
-}
-
 interface IUserFollow {
-  data: IUser;
+  data: IFollowerResponse;
   onFollow: (data: any) => void;
 }
 const UserFollow = ({ data, onFollow }: IUserFollow) => {
@@ -32,9 +24,9 @@ const UserFollow = ({ data, onFollow }: IUserFollow) => {
         </span>
         <div className="text-neutral-7 text-14px-normal my-1">
           Follower
-          {Number(data?.follower) > 1 ? "s" : ""}
+          {Number(data?.numberFollower) > 1 ? "s" : ""}
           <span className="ml-2 text-neutral-9">
-            {formatAmount(data?.follower || "0")}
+            {formatAmount(data?.numberFollower || "0")}
           </span>
         </div>
         <div className="truncate-2-line text-neutral-7 mt-1">
