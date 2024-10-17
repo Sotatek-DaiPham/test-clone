@@ -8,10 +8,11 @@ import {
   TUpdateProfilePayload,
   UpdateProfilePayload,
 } from "@/entities/my-profile";
+import { NotificationContext } from "@/libs/antd/NotificationProvider";
 import { postAPI } from "@/service";
 import { useMutation } from "@tanstack/react-query";
 import { Flex, Form, ModalProps } from "antd";
-import { toast } from "react-toastify";
+import { useContext } from "react";
 import "./styles.scss";
 
 interface IEditProfileModalProps extends ModalProps {
@@ -20,17 +21,19 @@ interface IEditProfileModalProps extends ModalProps {
   onOk: () => void;
 }
 const EditProfileModal = ({ data, onOk, ...props }: IEditProfileModalProps) => {
+  const { error, success } = useContext(NotificationContext);
   const { mutate: updateProfile, isPending: isLoading } = useMutation({
     mutationFn: async (payload: TUpdateProfilePayload) => {
-      console.log("payload update", payload);
       return await postAPI(API_PATH.USER.UPDATE_PROFILE, payload);
     },
     onSuccess() {
       onOk?.();
-      toast.success("Update Profile Successfully!");
+      success({
+        message: "Update successfully",
+      });
     },
     onError() {
-      toast.error("Update Failed!");
+      error({ message: "Update failed" });
     },
   });
 
@@ -85,14 +88,14 @@ const EditProfileModal = ({ data, onOk, ...props }: IEditProfileModalProps) => {
                 rules={[
                   {
                     required: true,
-                    message: "This field is required",
+                    message: "Name is required",
                   },
                 ]}
               >
-                <AppInput placeholder="Enter name" />
+                <AppInput maxLength={150} placeholder="Enter name" />
               </Form.Item>
             </Flex>
-            <Flex className="flex-col md:flex-row w-full mt-4">
+            <Flex className="flex-col md:flex-row w-full">
               <Form.Item
                 className="w-full"
                 name="bio"
@@ -103,7 +106,11 @@ const EditProfileModal = ({ data, onOk, ...props }: IEditProfileModalProps) => {
                   />
                 }
               >
-                <AppInput.TextArea rows={5} placeholder="Enter bio" />
+                <AppInput.TextArea
+                  maxLength={1200}
+                  rows={5}
+                  placeholder="Enter bio"
+                />
               </Form.Item>
             </Flex>
           </div>

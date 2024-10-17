@@ -5,6 +5,7 @@ import {
   BrowseIcon,
   CoinsIcon,
   LeaderboardIcon,
+  NotificationsIcon,
   ProfileIcon,
   TelegramIcon,
   XIcon,
@@ -52,6 +53,16 @@ export default function AppMenu({ className }: AppMenuProps) {
           icon: <Image src={ProfileIcon} alt="menu icon" />,
           onClick: () => {
             router.push(PATH_ROUTER.MY_PROFILE);
+          },
+        }
+      : null,
+    accessToken
+      ? {
+          label: "Notification",
+          key: PATH_ROUTER.NOTIFICATION,
+          icon: <Image src={NotificationsIcon} alt="menu icon" />,
+          onClick: () => {
+            router.push(PATH_ROUTER.NOTIFICATION);
           },
         }
       : null,

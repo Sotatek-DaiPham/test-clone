@@ -3,7 +3,7 @@ import AppImage from "@/components/app-image";
 import AppProgress from "@/components/app-progress";
 import { formatAmount } from "@/helpers/formatNumber";
 import { useRouter } from "next/navigation";
-
+import "./styles.scss";
 interface Project {
   address: string;
   title: string;
@@ -25,7 +25,7 @@ const ProjectCard = ({ data, className, footer }: IProjectCardProps) => {
   const router = useRouter();
   return (
     <div
-      className={`p-4 pb-6 rounded-3xl bg-neutral-2 text-neutral-7 cursor-pointer ${
+      className={`animate-bg-opacity p-4 pb-6 rounded-3xl bg-neutral-2 text-neutral-7 cursor-pointer ${
         className ?? ""
       }`}
       onClick={() => {
@@ -42,9 +42,9 @@ const ProjectCard = ({ data, className, footer }: IProjectCardProps) => {
         </div>
         <div className="col-span-2">
           <div>
-            <span className="text-neutral-9 text-18px-bold capitalize">
+            <div className="text-neutral-9 text-18px-bold capitalize truncate-1-line">
               {data?.title || "-"}
-            </span>
+            </div>
             <AppDivider />
           </div>
           <div className="truncate-3-line min-h-[65px]">

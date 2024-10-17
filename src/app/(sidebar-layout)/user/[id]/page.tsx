@@ -1,7 +1,9 @@
 "use client";
 import AppTabs from "@/components/app-tabs";
+import { API_PATH } from "@/constant/api-path";
 import isProfilePage from "@/helpers/isProfilePage";
 import { useAppSearchParams } from "@/hooks/useAppSearchParams";
+import { useAppSelector } from "@/libs/hooks";
 import {
   DollarCircleUpIcon,
   FollowersIcon,
@@ -23,12 +25,17 @@ const UserProfilePage = () => {
   const { id } = useParams();
   const { searchParams, setSearchParams } = useAppSearchParams("myProfile");
   const [activeTab, setActiveTab] = useState<string>(ETabsMyProfile.MY_PROFILE);
+  const { userId } = useAppSelector((state) => state.user);
 
   const tabs = [
     {
       label: "Profile",
       key: ETabsMyProfile.MY_PROFILE,
-      children: <MyProfileTab walletAddress={id as string} />,
+      children: (
+        <MyProfileTab
+          apiPath={API_PATH.USER.OTHER_PROFILE(id as string, userId)}
+        />
+      ),
       icon: <Image src={MyProfileIcon} alt="profile" />,
     },
     {
@@ -89,6 +96,7 @@ const UserProfilePage = () => {
         className="app-tabs-primary"
         activeKey={activeTab}
         onChange={handleChangeTab}
+        destroyInactiveTabPane={true}
       />
     </div>
   );

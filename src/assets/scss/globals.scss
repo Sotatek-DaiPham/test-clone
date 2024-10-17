@@ -186,6 +186,13 @@ input[type="number"] {
   z-index: 9999 !important;
 }
 
+.truncate-1-line {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 .truncate-2-line {
   display: -webkit-box;
   -webkit-box-orient: vertical;

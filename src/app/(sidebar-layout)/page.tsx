@@ -83,7 +83,7 @@ export default function Home() {
           <div className="h-full">
             <div className="bg-neutral-2 rounded-3xl p-6">
               <span className="text-primary-main italic text-32px-bold flex w-full justify-center">
-                King of The hill
+                King of The Sky
               </span>
               <ProjectCard
                 className="p-0"

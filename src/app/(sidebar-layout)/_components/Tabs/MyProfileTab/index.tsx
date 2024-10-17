@@ -1,16 +1,16 @@
 import AppButton from "@/components/app-button";
 import AppDivider from "@/components/app-divider";
 import AppImage from "@/components/app-image";
-import { API_PATH } from "@/constant/api-path";
 import { MyProfileResponse } from "@/entities/my-profile";
 import { BeSuccessResponse } from "@/entities/response";
 import { useAppSearchParams } from "@/hooks/useAppSearchParams";
 import useFollowUser from "@/hooks/useFollowUser";
 import { NotificationContext } from "@/libs/antd/NotificationProvider";
+import { useAppSelector } from "@/libs/hooks";
 import { getAPI } from "@/service";
 import { ArrowExport, EditIcon } from "@public/assets";
+import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { useQuery } from "@tanstack/react-query";
-import { message } from "antd";
 import { AxiosResponse } from "axios";
 import get from "lodash/get";
 import Image from "next/image";
@@ -23,16 +23,19 @@ export enum EFollow {
   FOLLOW = "FOLLOW",
   UN_FOLLOW = "UN_FOLLOW",
 }
-const MyProfileTab = ({ walletAddress }: { walletAddress: string }) => {
+const MyProfileTab = ({ apiPath }: { apiPath: string }) => {
   const { error, success } = useContext(NotificationContext);
+  const { openConnectModal } = useConnectModal();
   const { id } = useParams();
   const [showEdit, setShowEdit] = useState<boolean>(false);
   const { searchParams } = useAppSearchParams("myProfile");
+  const { userId } = useAppSelector((state) => state.user);
+  const [followData, setFollowData] = useState<any>({});
 
   const { data, refetch } = useQuery({
     queryKey: ["my-profile"],
     queryFn: async () => {
-      return getAPI(API_PATH.USER.PROFILE(walletAddress)) as Promise<
+      return getAPI(apiPath) as Promise<
         AxiosResponse<BeSuccessResponse<MyProfileResponse>, any>
       >;
     },
@@ -43,15 +46,35 @@ const MyProfileTab = ({ walletAddress }: { walletAddress: string }) => {
 
   const { onFollow } = useFollowUser({
     onFollowSuccess: () => {
-      success({ message: "Follow successfully" });
+      success({
+        message: `${
+          followData?.isFollowing === EFollow.FOLLOW ? "Follow" : "Unfollow"
+        } successfully`,
+      });
       refetch();
     },
     onFollowFailed: (message: string) => {
       console.log("message", message);
-      error({ message: "Follow failed" });
+      error({
+        message: `${
+          followData?.isFollowing === EFollow.FOLLOW ? "Follow" : "Unfollow"
+        } failed`,
+      });
     },
   });
 
+  const handleFollow = () => {
+    onFollow({
+      id: myProfile?.id,
+      payload: {
+        isFollow: myProfile?.isFollowing ? EFollow.UN_FOLLOW : EFollow.FOLLOW,
+      },
+    });
+    setFollowData({
+      isFollowing: myProfile?.isFollowing ? EFollow.UN_FOLLOW : EFollow.FOLLOW,
+    });
+  };
+  console.log("myProfile", myProfile);
   return (
     <div>
       <div className="w-full flex flex-row items-center justify-between">
@@ -59,20 +82,11 @@ const MyProfileTab = ({ walletAddress }: { walletAddress: string }) => {
         {id ? (
           <AppButton
             size="small"
-            typeButton={myProfile?.isFollow ? "secondary" : "primary"}
+            typeButton={myProfile?.isFollowing ? "secondary" : "primary"}
             customClass="!w-[100px] !rounded-full"
-            onClick={() =>
-              onFollow({
-                id: myProfile?.id,
-                payload: {
-                  isFollow: myProfile?.isFollow
-                    ? EFollow.UN_FOLLOW
-                    : EFollow.FOLLOW,
-                },
-              })
-            }
+            onClick={!!userId ? handleFollow : openConnectModal}
           >
-            {myProfile?.isFollow ? "Unfollow" : "Follow"}
+            {myProfile?.isFollowing ? "Unfollow" : "Follow"}
           </AppButton>
         ) : (
           <AppButton

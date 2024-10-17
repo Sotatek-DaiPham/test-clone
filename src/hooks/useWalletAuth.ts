@@ -48,10 +48,15 @@ const useWalletAuth = () => {
           signature,
           address: userAddress,
         });
-        const { access_token: accessToken, refresh_token: refreshToken } =
-          res?.data?.data || {};
+        const {
+          access_token: accessToken,
+          refresh_token: refreshToken,
+          userId,
+        } = res?.data?.data || {};
 
-        dispatch(setUser({ accessToken, refreshToken, address: userAddress }));
+        dispatch(
+          setUser({ accessToken, refreshToken, address: userAddress, userId })
+        );
       }
 
       onSuccess?.();

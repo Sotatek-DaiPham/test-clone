@@ -11,6 +11,7 @@ export const SEARCH_PARAMS = {
   },
   myProfile: {
     tab: "tab",
+    search: "search",
   },
 } as const;
 

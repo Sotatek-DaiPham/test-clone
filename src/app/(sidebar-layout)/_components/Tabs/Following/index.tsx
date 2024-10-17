@@ -5,7 +5,7 @@ import NoData from "@/components/no-data";
 import ShowingPage from "@/components/showing-page";
 import { LIMIT_ITEMS_TABLE } from "@/constant";
 import { API_PATH } from "@/constant/api-path";
-import { MyProfileResponse } from "@/entities/my-profile";
+import { IFollowerResponse } from "@/entities/my-profile";
 import { BeSuccessResponse } from "@/entities/response";
 import { useAppSearchParams } from "@/hooks/useAppSearchParams";
 import useDebounce from "@/hooks/useDebounce";
@@ -18,42 +18,57 @@ import get from "lodash/get";
 import { useContext, useState } from "react";
 import TabTitle from "../../TabTitle";
 import UserFollow from "../../UserFollow";
+import { EFollow } from "../MyProfileTab";
 
 const FollowingTab = ({ walletAddress }: { walletAddress: string }) => {
+  const { searchParams } = useAppSearchParams("myProfile");
   const { error, success } = useContext(NotificationContext);
   const [params, setParams] = useState<any>({
-    search: "",
     page: 1,
     limit: LIMIT_ITEMS_TABLE,
   });
-  const debounceSearch = useDebounce(params?.search);
-  const { searchParams } = useAppSearchParams("myProfile");
+
+  const [search, setSearch] = useState<string>("");
+
+  const debounceSearch = useDebounce(search, () =>
+    setParams({ ...params, page: 1 })
+  );
+
+  const [followData, setFollowData] = useState<any>({});
 
   const { data, isLoading, isError, refetch } = useQuery({
-    queryKey: ["following"],
+    queryKey: ["following", params, debounceSearch],
     queryFn: async () => {
       return getAPI(API_PATH.USER.FOLLOWINGS, {
         params: {
-          limit: params?.limit,
-          pageNumber: params?.page,
+          ...params,
           walletAddress: walletAddress,
+          keyword: debounceSearch,
         },
-      }) as Promise<AxiosResponse<BeSuccessResponse<MyProfileResponse[]>, any>>;
+      }) as Promise<AxiosResponse<BeSuccessResponse<IFollowerResponse[]>, any>>;
     },
     enabled: searchParams.tab === "following",
   });
 
-  const followings = get(data, "data.data", []) as MyProfileResponse[];
+  const followings = get(data, "data.data", []) as IFollowerResponse[];
   const total = get(data, "data.metadata.total", 0) as number;
 
   const { onFollow } = useFollowUser({
     onFollowSuccess: () => {
-      success({ message: "Follow successfully" });
+      success({
+        message: `${
+          followData?.isFollow === EFollow.FOLLOW ? "Follow" : "Unfollow"
+        } successfully`,
+      });
       refetch();
     },
     onFollowFailed: (message: string) => {
       console.log("message", message);
-      error({ message: "Follow failed" });
+      error({
+        message: `${
+          followData?.isFollow === EFollow.FOLLOW ? "Follow" : "Unfollow"
+        } failed`,
+      });
     },
   });
 
@@ -64,29 +79,25 @@ const FollowingTab = ({ walletAddress }: { walletAddress: string }) => {
         <AppInput
           className="!w-[400px]"
           isSearch={true}
-          iconPosition="right"
+          iconPosition="left"
           placeholder="Search"
-          value={params?.search}
-          onChange={(e) => setParams({ ...params, search: e.target.value })}
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
         />
       </div>
-      {!followings?.length ? (
+      {!followings?.length && !isLoading ? (
         <NoData />
       ) : (
         <div>
           <div className="my-6 grid grid-cols-2 gap-6">
-            {followings?.map((user: any, index: number) => (
+            {followings?.map((user: IFollowerResponse, index: number) => (
               <UserFollow
-                data={{
-                  id: user.id,
-                  username: user?.username,
-                  bio: user?.bio,
-                  avatar: user?.avatar,
-                  isFollowing: user?.isFollowing,
-                  follower: user?.follower,
-                }}
+                data={user}
                 key={index}
-                onFollow={(payload: any) => onFollow(payload)}
+                onFollow={(data: any) => {
+                  onFollow(data);
+                  setFollowData(data?.payload);
+                }}
               />
             ))}
           </div>
