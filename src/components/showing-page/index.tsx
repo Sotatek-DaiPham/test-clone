@@ -4,7 +4,7 @@ import withClient from "@/helpers/with-client";
 
 const ShowingPage = ({ total, range }: any) => {
   return (
-    <span>
+    <span className="!text-neutral-7">
       Showing {range[0]}-{range[1]} of {total}
     </span>
   );

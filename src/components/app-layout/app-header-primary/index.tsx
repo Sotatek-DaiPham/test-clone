@@ -14,8 +14,9 @@ const { Header } = Layout;
 
 const routeTitles: { [key: string]: string } = {
   [PATH_ROUTER.DASHBOARD]: "",
-  [PATH_ROUTER.MY_PROFILE]: "",
+  [PATH_ROUTER.MY_PROFILE]: "My Profile",
   [PATH_ROUTER.MY_TOKENS]: "My Tokens",
+  [PATH_ROUTER.NOTIFICATION]: "Notification",
   [PATH_ROUTER.LEADER_BOARD]: "RainPump Leaderboard",
   [PATH_ROUTER.CREATE_TOKEN]: "Create A New Coin",
 };

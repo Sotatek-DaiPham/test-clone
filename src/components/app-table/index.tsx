@@ -17,7 +17,7 @@ const AppTable = (props: AppTableProps) => {
       return (
         <Empty
           description={props?.textEmpty || "No Data"}
-          className="[&>.ant-empty-description]:!text-text-primary-2"
+          className="[&>.ant-empty-description]:!text-neutral-7 !rounded-xl !bg-transparent"
         ></Empty>
       );
     }
