@@ -6,8 +6,8 @@ export const API_PATH = {
   USER: {
     UPDATE_PROFILE: "/user/update-profile",
     PROFILE: (walletAddress: string) => `/user/profile/${walletAddress}`,
-    OTHER_PROFILE: (walletAddress: string, userId: any) =>
-      `/user/other-profile/${walletAddress}/${userId}`,
+    OTHER_PROFILE: (walletAddress: string) =>
+      `/user/other-profile/${walletAddress}`,
     PORTFOLIO: "/user/coins-held",
     MY_REPLIES: "/user/my-replies",
     COINS_CREATED: "/user/coins-created",

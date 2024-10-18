@@ -25,16 +25,13 @@ const UserProfilePage = () => {
   const { id } = useParams();
   const { searchParams, setSearchParams } = useAppSearchParams("myProfile");
   const [activeTab, setActiveTab] = useState<string>(ETabsMyProfile.MY_PROFILE);
-  const { userId } = useAppSelector((state) => state.user);
 
   const tabs = [
     {
       label: "Profile",
       key: ETabsMyProfile.MY_PROFILE,
       children: (
-        <MyProfileTab
-          apiPath={API_PATH.USER.OTHER_PROFILE(id as string, userId)}
-        />
+        <MyProfileTab apiPath={API_PATH.USER.OTHER_PROFILE(id as string)} />
       ),
       icon: <Image src={MyProfileIcon} alt="profile" />,
     },

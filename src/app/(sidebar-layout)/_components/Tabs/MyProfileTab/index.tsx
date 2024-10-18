@@ -35,9 +35,11 @@ const MyProfileTab = ({ apiPath }: { apiPath: string }) => {
   const { data, refetch } = useQuery({
     queryKey: ["my-profile"],
     queryFn: async () => {
-      return getAPI(apiPath) as Promise<
-        AxiosResponse<BeSuccessResponse<MyProfileResponse>, any>
-      >;
+      return getAPI(apiPath, {
+        params: {
+          userId,
+        },
+      }) as Promise<AxiosResponse<BeSuccessResponse<MyProfileResponse>, any>>;
     },
     enabled: !searchParams.tab ? true : searchParams.tab === "my-profile",
   });
@@ -74,7 +76,7 @@ const MyProfileTab = ({ apiPath }: { apiPath: string }) => {
       isFollowing: myProfile?.isFollowing ? EFollow.UN_FOLLOW : EFollow.FOLLOW,
     });
   };
-  console.log("myProfile", myProfile);
+
   return (
     <div>
       <div className="w-full flex flex-row items-center justify-between">

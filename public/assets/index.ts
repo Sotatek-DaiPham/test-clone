@@ -58,3 +58,6 @@ export { default as WebsiteLinkIcon } from "./icons/website-link.svg";
 export { default as TwitterLinkIcon } from "./icons/twitter-link.svg";
 export { default as TeleLinkIcon } from "./icons/tele-link.svg";
 export { default as DiscordLinkIcon } from "./icons/discord-link.svg";
+
+//leaderboard
+export { default as TopLeaderBoardIcon } from "./icons/top-leaderboard.svg";
