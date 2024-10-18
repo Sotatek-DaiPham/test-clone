@@ -11,7 +11,7 @@ export const formatNumberWithComma = (value: string) => {
 };
 
 export const nFormatter = (
-  number: string,
+  number: string | number,
   digits = 2,
   roundingMode?: BigNumber.RoundingMode
 ) => {
@@ -32,7 +32,7 @@ export const nFormatter = (
   ];
   // |(\.[0-9]*[1-9])0+$
   const rx = /\.0+$|(\.[0-9]*[1-9])0+$/;
-  const num = parseFloat(number);
+  const num = parseFloat(number?.toString());
 
   let i;
   for (i = SI.length - 1; i > 0; i--) {

@@ -8,11 +8,14 @@ import {
   TUpdateProfilePayload,
   UpdateProfilePayload,
 } from "@/entities/my-profile";
+import { BeSuccessResponse } from "@/entities/response";
+import { ImageValidator } from "@/helpers/upload";
 import { NotificationContext } from "@/libs/antd/NotificationProvider";
-import { postAPI } from "@/service";
+import { postAPI, postFormDataAPI } from "@/service";
 import { useMutation } from "@tanstack/react-query";
 import { Flex, Form, ModalProps } from "antd";
-import { useContext } from "react";
+import { AxiosResponse } from "axios";
+import { useContext, useEffect } from "react";
 import "./styles.scss";
 
 interface IEditProfileModalProps extends ModalProps {
@@ -20,11 +23,27 @@ interface IEditProfileModalProps extends ModalProps {
   open: boolean;
   onOk: () => void;
 }
+interface IUpdateProfileValues {
+  avatar: string;
+  username: string;
+  bio: string;
+}
+
 const EditProfileModal = ({ data, onOk, ...props }: IEditProfileModalProps) => {
+  const [form] = Form.useForm<IUpdateProfileValues>();
   const { error, success } = useContext(NotificationContext);
-  const { mutate: updateProfile, isPending: isLoading } = useMutation({
-    mutationFn: async (payload: TUpdateProfilePayload) => {
-      return await postAPI(API_PATH.USER.UPDATE_PROFILE, payload);
+  const { mutateAsync: uploadImages, isPending: isUploading } = useMutation({
+    mutationFn: (payload: FormData) => {
+      return postFormDataAPI(API_PATH.UPLOAD_IMAGE, payload);
+    },
+    mutationKey: ["upload-images"],
+  });
+
+  const { mutate: updateProfile, isPending } = useMutation({
+    mutationFn: (
+      payload: TUpdateProfilePayload
+    ): Promise<AxiosResponse<BeSuccessResponse<any>>> => {
+      return postAPI(API_PATH.USER.UPDATE_PROFILE, payload);
     },
     onSuccess() {
       onOk?.();
@@ -37,9 +56,31 @@ const EditProfileModal = ({ data, onOk, ...props }: IEditProfileModalProps) => {
     },
   });
 
-  const handleUpdateProfile = (values: UpdateProfilePayload) => {
-    updateProfile(values);
+  const handleUpdateProfile = async (values: UpdateProfilePayload) => {
+    try {
+      let uploadedFile: any = null;
+      if (form.getFieldValue("avatar")?.file) {
+        uploadedFile = await handleUploadFiles(
+          form.getFieldValue("avatar")?.file
+        );
+      }
+      await updateProfile({
+        ...values,
+        avatar: uploadedFile ? uploadedFile?.data : data?.avatar,
+      });
+    } catch (error) {}
   };
+
+  const handleUploadFiles = async (file: File) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    const uploadImageRes = await uploadImages(formData);
+    return uploadImageRes.data;
+  };
+
+  useEffect(() => {
+    form.setFieldValue("avatar", { src: data?.avatar });
+  }, [data]);
 
   return (
     <AppModal
@@ -52,18 +93,27 @@ const EditProfileModal = ({ data, onOk, ...props }: IEditProfileModalProps) => {
     >
       <span className="text-26px-bold text-white-neutral">Edit Profile</span>
       <Form
+        form={form}
         onFinish={handleUpdateProfile}
         initialValues={{
           username: data?.username,
           bio: data?.bio,
-          avatar: data?.avatar,
+          avatar: { src: data?.avatar },
         }}
         layout="vertical"
       >
         <div className="mt-6">
           <div className="bg-neutral-1 p-6 rounded-xl mb-4">
             <Flex className="flex-col md:flex-row">
-              <Form.Item name="avatar" className="w-full md:flex-1">
+              <Form.Item
+                name="avatar"
+                className="w-full md:flex-1"
+                rules={[
+                  {
+                    validator: ImageValidator,
+                  },
+                ]}
+              >
                 <AppUpload
                   isShowSuggest={false}
                   className="upload-avatar w-full"
@@ -119,7 +169,7 @@ const EditProfileModal = ({ data, onOk, ...props }: IEditProfileModalProps) => {
           <AppButton
             customClass="!rounded-full"
             htmlType="submit"
-            loading={isLoading}
+            loading={isPending}
           >
             Save
           </AppButton>

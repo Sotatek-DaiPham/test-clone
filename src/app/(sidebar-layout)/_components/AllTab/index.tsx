@@ -24,99 +24,6 @@ import { useCallback, useEffect, useState } from "react";
 import FilterTerminal from "../FilterTerminal";
 import ProjectCard from "../ProjectCard";
 
-const data = [
-  {
-    title: "Project name",
-    percent: 70,
-    description:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusamus doloribus dolorum minus vero molestias iste ullam perspiciatis, odio ipsum harum laudantium earum consequuntur nesciunt dolore sapiente error deleniti perferendis nulla!",
-    total: 500000,
-    currentValue: 200000,
-    stage: "S1",
-  },
-  {
-    title: "Project name",
-    percent: 10,
-    description:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusamus doloribus dolorum minus vero molestias iste ullam perspiciatis, odio ipsum harum laudantium earum consequuntur nesciunt dolore sapiente error deleniti perferendis nulla!",
-    total: 5900000,
-    currentValue: 2123000,
-    stage: "S1",
-  },
-  {
-    title: "Project name",
-    percent: 70,
-    description:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusamus doloribus dolorum minus vero molestias iste ullam perspiciatis, odio ipsum harum laudantium earum consequuntur nesciunt dolore sapiente error deleniti perferendis nulla!",
-    total: 500000,
-    currentValue: 200000,
-    stage: "S1",
-  },
-  {
-    title: "Project name",
-    percent: 10,
-    description:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusamus doloribus dolorum minus vero molestias iste ullam perspiciatis, odio ipsum harum laudantium earum consequuntur nesciunt dolore sapiente error deleniti perferendis nulla!",
-    total: 5900000,
-    currentValue: 2123000,
-    stage: "S1",
-  },
-  {
-    title: "Project name",
-    percent: 70,
-    description:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusamus doloribus dolorum minus vero molestias iste ullam perspiciatis, odio ipsum harum laudantium earum consequuntur nesciunt dolore sapiente error deleniti perferendis nulla!",
-    total: 500000,
-    currentValue: 200000,
-    stage: "S1",
-  },
-  {
-    title: "Project name",
-    percent: 10,
-    description:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusamus doloribus dolorum minus vero molestias iste ullam perspiciatis, odio ipsum harum laudantium earum consequuntur nesciunt dolore sapiente error deleniti perferendis nulla!",
-    total: 5900000,
-    currentValue: 2123000,
-    stage: "S1",
-  },
-  {
-    title: "Project name",
-    percent: 70,
-    description:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusamus doloribus dolorum minus vero molestias iste ullam perspiciatis, odio ipsum harum laudantium earum consequuntur nesciunt dolore sapiente error deleniti perferendis nulla!",
-    total: 500000,
-    currentValue: 200000,
-    stage: "S1",
-  },
-  {
-    title: "Project name",
-    percent: 10,
-    description:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusamus doloribus dolorum minus vero molestias iste ullam perspiciatis, odio ipsum harum laudantium earum consequuntur nesciunt dolore sapiente error deleniti perferendis nulla!",
-    total: 5900000,
-    currentValue: 2123000,
-    stage: "S1",
-  },
-  {
-    title: "Project name",
-    percent: 70,
-    description:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusamus doloribus dolorum minus vero molestias iste ullam perspiciatis, odio ipsum harum laudantium earum consequuntur nesciunt dolore sapiente error deleniti perferendis nulla!",
-    total: 500000,
-    currentValue: 200000,
-    stage: "S1",
-  },
-  {
-    title: "Project name",
-    percent: 10,
-    description:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusamus doloribus dolorum minus vero molestias iste ullam perspiciatis, odio ipsum harum laudantium earum consequuntur nesciunt dolore sapiente error deleniti perferendis nulla!",
-    total: 5900000,
-    currentValue: 2123000,
-    stage: "S1",
-  },
-];
-
 const FILTER_TERMINAL = [
   {
     label: "Trending",
@@ -223,7 +130,7 @@ const AllTab = () => {
 
   const debounceSearch = useDebounce(search);
 
-  const { data, isLoading, isError, refetch } = useQuery({
+  const { data, isPending, isError, refetch } = useQuery({
     queryKey: ["all-tab", params, debounceSearch],
     queryFn: async () => {
       return getAPI(API_PATH.TOKEN.LIST, {
@@ -235,6 +142,7 @@ const AllTab = () => {
         AxiosResponse<BeSuccessResponse<ITokenDashboardResponse[]>, any>
       >;
     },
+    enabled: !searchParams.tab ? true : searchParams.tab === "all",
   });
 
   const tokenList = get(data, "data.data", []) as ITokenDashboardResponse[];
@@ -287,7 +195,7 @@ const AllTab = () => {
         handleClickFilter={handleClickFilter}
         handleClickFilterOption={handleClickFilterOption}
       />
-      {!baseData?.length && !isLoading ? (
+      {!baseData?.length && !isPending ? (
         <NoData></NoData>
       ) : (
         <div>
@@ -296,6 +204,8 @@ const AllTab = () => {
               (project: ITokenDashboardResponse, index: number) => (
                 <ProjectCard
                   data={{
+                    id: project?.id,
+                    logo: project?.avatar,
                     title: project?.name,
                     address: project?.contractAddress,
                     total: convertNumber(
@@ -333,7 +243,7 @@ const AllTab = () => {
             <div className="w-full flex justify-center mt-2">
               <AppButton
                 customClass="!w-[200px]"
-                loading={isLoading}
+                loading={isPending}
                 onClick={() => setParams({ ...params, page: params.page + 1 })}
               >
                 Load more

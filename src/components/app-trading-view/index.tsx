@@ -26,7 +26,10 @@ const TradingViewChart = () => {
           >
             <Spin size="large" />
           </div>
-          <div className={`w-full h-full`} id={ID_TRADING_VIEW} />
+          <div
+            className={`w-full h-full [&>iframe]:!h-[var(--height-trading-view)]`}
+            id={ID_TRADING_VIEW}
+          />
         </div>
       </div>
     </div>

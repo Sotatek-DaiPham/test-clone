@@ -10,15 +10,22 @@ import { PATH_ROUTER } from "@/constant/router";
 import { formatAmount } from "@/helpers/formatNumber";
 import { shortenAddress } from "@/helpers/shorten";
 import useDebounce from "@/hooks/useDebounce";
-import { TopLeaderBoardIcon } from "@public/assets";
+import { useAppSelector } from "@/libs/hooks";
+import {
+  TopLeaderBoardIcon,
+  UserTop1,
+  UserTop2,
+  UserTop3,
+} from "@public/assets";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import "./styles.scss";
+import { useAccount } from "wagmi";
+import TopUser from "./components/TopUser";
 
 const data = [
   {
-    rank: 1,
+    rank: 4,
     username: "dovansy",
     address: "0x16A18C10301132505B2a7469b8857B97B155C86A",
     pal: 3000,
@@ -27,7 +34,7 @@ const data = [
     sell: 5000,
   },
   {
-    rank: 2,
+    rank: 5,
     username: "dovansy",
     address: "0xD788549eCae5b2198822D71dA71491e6eb7c5dB7",
     pal: 3000,
@@ -36,7 +43,7 @@ const data = [
     sell: 5000,
   },
   {
-    rank: 3,
+    rank: 6,
     username: "dovansy",
     address: "0x840bA201AdBee4563AE5Bc7546D13e9582EB2D79",
     pal: 3000,
@@ -45,7 +52,7 @@ const data = [
     sell: 5000,
   },
   {
-    rank: 4,
+    rank: 7,
     username: "dovansy",
     address: "0x93BF33175F47a863e5c05ef132d9F609A91C91C5",
     pal: 3000,
@@ -54,7 +61,7 @@ const data = [
     sell: 5000,
   },
   {
-    rank: 5,
+    rank: 8,
     username: "dovansy",
     address: "0x93BF33175F47a863e5c05ef132d9F609A91C91C5",
     pal: 3000,
@@ -63,7 +70,16 @@ const data = [
     sell: 5000,
   },
   {
-    rank: 6,
+    rank: 9,
+    username: "dovansy",
+    address: "0x93BF33175F47a863e5c05ef132d9F609A91C91C5",
+    pal: 3000,
+    total: 10000,
+    buy: 1200,
+    sell: 5000,
+  },
+  {
+    rank: 10,
     username: "dovansy",
     address: "0x93BF33175F47a863e5c05ef132d9F609A91C91C5",
     pal: 3000,
@@ -73,6 +89,8 @@ const data = [
   },
 ];
 const LeaderboardPage = () => {
+  const { address: userAddress } = useAccount();
+  const { userId } = useAppSelector((state) => state.user);
   const router = useRouter();
   const [params, setParams] = useState<any>({
     page: 1,
@@ -89,7 +107,15 @@ const LeaderboardPage = () => {
       render: (value: string, data: any) => {
         return (
           <div className="relative h-fit w-fit">
-            <Image src={TopLeaderBoardIcon} alt="top-leaderboard" />
+            <Image
+              src={TopLeaderBoardIcon}
+              alt="top-leaderboard"
+              className={
+                userAddress === data?.address && userId
+                  ? "active-primary-icon"
+                  : ""
+              }
+            />
             <span className="text-primary-main text-22px-bold absolute inset-0 flex items-center justify-center">
               {value}
             </span>
@@ -114,7 +140,7 @@ const LeaderboardPage = () => {
             <AppImage
               src={data?.avatar}
               alt="avatar"
-              className="w-[40px] h-[40px] rounded-full bg-primary-7 mr-3"
+              className="w-[40px] h-[40px] rounded-full bg-primary-7 mr-3 flex overflow-hidden"
             />
             <span>{value}</span>
           </div>
@@ -171,7 +197,42 @@ const LeaderboardPage = () => {
 
   return (
     <div className="m-auto max-w-[var(--width-content-sidebar-layout)]">
-      <div></div>
+      <div className="grid grid-cols-3 gap-6 mb-6">
+        <TopUser
+          image={UserTop2}
+          className="!bg-gradient-to-b from-[var(--color-top-2-from)] to-[var(--color-top-2-to)]"
+          data={{
+            username: "Kristin Watson 2",
+            address: "0x16A18C10301132505B2a7469b8857B97B155C86A",
+            total: 30000,
+            buy: 10000,
+            sell: 20000,
+          }}
+        />
+        <TopUser
+          image={UserTop1}
+          top1={true}
+          className="!bg-gradient-to-b from-[var(--color-top-1-from)] to-[var(--color-top-1-to)]"
+          data={{
+            username: "Kristin Watson 1",
+            address: "0x16A18C10301132505B2a7469b8857B97B155C86A",
+            total: 50000,
+            buy: 30000,
+            sell: 20000,
+          }}
+        />
+        <TopUser
+          image={UserTop3}
+          className="!bg-gradient-to-b from-[var(--color-top-3-from)] to-[var(--color-top-3-to)]"
+          data={{
+            username: "Kristin Watson 3",
+            address: "0x16A18C10301132505B2a7469b8857B97B155C86A",
+            total: 10000,
+            buy: 4000,
+            sell: 6000,
+          }}
+        />
+      </div>
       <div className="w-full flex justify-end">
         <AppInput
           className="!w-[400px]"

@@ -36,8 +36,8 @@ const FollowingTab = ({ walletAddress }: { walletAddress: string }) => {
 
   const [followData, setFollowData] = useState<any>({});
 
-  const { data, isLoading, isError, refetch } = useQuery({
-    queryKey: ["following", params, debounceSearch],
+  const { data, isPending, isError, refetch } = useQuery({
+    queryKey: ["following", params, debounceSearch, searchParams],
     queryFn: async () => {
       return getAPI(API_PATH.USER.FOLLOWINGS, {
         params: {
@@ -85,7 +85,7 @@ const FollowingTab = ({ walletAddress }: { walletAddress: string }) => {
           onChange={(e) => setSearch(e.target.value)}
         />
       </div>
-      {!followings?.length && !isLoading ? (
+      {!followings?.length && !isPending ? (
         <NoData />
       ) : (
         <div>

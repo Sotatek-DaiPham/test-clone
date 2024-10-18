@@ -30,8 +30,8 @@ const CoinCreatedTab = ({ walletAddress }: { walletAddress: string }) => {
     setParams({ ...params, page: 1 })
   );
 
-  const { data, isLoading, isError, refetch } = useQuery({
-    queryKey: ["coin-created", params, debounceSearch],
+  const { data, isPending, isError, refetch } = useQuery({
+    queryKey: ["coin-created", params, debounceSearch, searchParams],
     queryFn: async () => {
       return getAPI(API_PATH.USER.COINS_CREATED, {
         params: {
@@ -62,7 +62,7 @@ const CoinCreatedTab = ({ walletAddress }: { walletAddress: string }) => {
           onChange={(e) => setSearch(e.target.value)}
         />
       </div>
-      {!coinCreated?.length && !isLoading ? (
+      {!coinCreated?.length && !isPending ? (
         <NoData />
       ) : (
         <div>
@@ -71,6 +71,9 @@ const CoinCreatedTab = ({ walletAddress }: { walletAddress: string }) => {
               (project: ICoinCreatedResponse, index: number) => (
                 <ProjectCard
                   data={{
+                    id: project?.id,
+                    owner: project?.owner,
+                    logo: project?.avatar,
                     title: project?.name,
                     address: project?.owner,
                     total: convertNumber(project?.total_supply),

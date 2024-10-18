@@ -47,7 +47,7 @@ const NotificationPage = () => {
   });
   const [search, setSearch] = useState<string>("");
   const debounceSearch = useDebounce(search);
-  const { data, isLoading, isError, refetch } = useQuery({
+  const { data, isPending, isError, refetch } = useQuery({
     queryKey: ["notification", params, debounceSearch],
     queryFn: async () => {
       return getAPI(API_PATH.USER.NOTIFICATION, {
@@ -78,7 +78,7 @@ const NotificationPage = () => {
           onChange={(e) => setSearch(e.target.value)}
         />
       </div>
-      {!notification?.length && !isLoading ? (
+      {!notification?.length && !isPending ? (
         <NoData />
       ) : (
         <div>

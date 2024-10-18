@@ -80,15 +80,20 @@ const FollowingTab = () => {
 
   const debounceSearch = useDebounce(search);
 
-  const { data, isLoading, isError, refetch } = useQuery({
+  const { data, isPending, isError, refetch } = useQuery({
     queryKey: ["all-following", params, debounceSearch],
     queryFn: async () => {
-      return getAPI(API_PATH.TOKEN.LIST, {
-        params: {
-          ...params,
-          keyword: debounceSearch,
-        },
-      }) as Promise<
+      return getAPI(
+        searchParams?.filter === "created"
+          ? API_PATH.TOKEN.FOLLOWING_TOKEN_CREATED
+          : API_PATH.TRADING.ACTIVITY,
+        {
+          params: {
+            ...params,
+            keyword: debounceSearch,
+          },
+        }
+      ) as Promise<
         AxiosResponse<BeSuccessResponse<ITokenDashboardResponse[]>, any>
       >;
     },
@@ -109,6 +114,7 @@ const FollowingTab = () => {
         ...searchParams,
         [queryKey]: value,
       });
+      refetch();
     },
     [searchParams, setSearchParams]
   );
@@ -127,7 +133,7 @@ const FollowingTab = () => {
         handleClickFilter={handleClickFilter}
         handleClickFilterOption={handleClickFilter}
       />
-      {!baseData?.length && !isLoading ? (
+      {!baseData?.length && !isPending ? (
         <NoData></NoData>
       ) : (
         <div>
@@ -136,6 +142,8 @@ const FollowingTab = () => {
               (project: ITokenDashboardResponse, index: number) => (
                 <ProjectCard
                   data={{
+                    id: project?.id,
+                    logo: project?.avatar,
                     title: project?.name,
                     address: project?.contractAddress,
                     total: convertNumber(
@@ -173,7 +181,7 @@ const FollowingTab = () => {
             <div className="w-full flex justify-center mt-2">
               <AppButton
                 customClass="!w-[200px]"
-                loading={isLoading}
+                loading={isPending}
                 onClick={() => setParams({ ...params, page: params.page + 1 })}
               >
                 Load more
