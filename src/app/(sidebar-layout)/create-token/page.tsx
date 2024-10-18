@@ -19,6 +19,10 @@ import {
 } from "@/constant/regex";
 import { PATH_ROUTER } from "@/constant/router";
 import { BeSuccessResponse } from "@/entities/response";
+import {
+  calculateTokenReceive,
+  calculateUsdtShouldPay,
+} from "@/helpers/calculate";
 import { ImageValidator } from "@/helpers/upload";
 import {
   ECoinType,
@@ -124,23 +128,22 @@ const CreateTokenPage = () => {
 
   const usdtShouldPay =
     coinType === ECoinType.MemeCoin && initialBuyAmount
-      ? BigNumber(initialBuyAmount)
-          .multipliedBy(TOKEN_INITIAL_PRICE)
-          .plus(
-            BigNumber(initialBuyAmount)
-              .multipliedBy(TOKEN_INITIAL_PRICE)
-              .multipliedBy(CREATE_TOKEN_FEE)
-          )
-          .toString()
+      ? calculateUsdtShouldPay(initialBuyAmount)
       : "";
 
   const tokenWillReceive =
     coinType === ECoinType.StableCoin && initialBuyAmount
-      ? BigNumber(initialBuyAmount)
-          .minus(BigNumber(initialBuyAmount).multipliedBy(CREATE_TOKEN_FEE))
-          .div(TOKEN_INITIAL_PRICE)
-          .toString()
+      ? calculateTokenReceive(initialBuyAmount)
       : "";
+
+  const buyAmount =
+    coinType === ECoinType.MemeCoin
+      ? BigNumber(usdtShouldPay)
+          .multipliedBy(1e6)
+          .integerValue(BigNumber.ROUND_CEIL)
+          .dividedBy(1e6)
+          .toFixed(6)
+      : initialBuyAmount;
 
   const tokenFactoryContract = useContract(
     pumpContractABI,
@@ -194,7 +197,10 @@ const CreateTokenPage = () => {
     try {
       const txn = await contract?.approve(
         envs.TOKEN_FACTORY_ADDRESS,
-        BigNumber(initialBuyAmount).multipliedBy(1e6).toFixed()
+        BigNumber(buyAmount)
+          .multipliedBy(1e6)
+          .integerValue(BigNumber.ROUND_HALF_UP)
+          .toString()
       );
 
       await txn?.wait();
@@ -216,20 +222,22 @@ const CreateTokenPage = () => {
     const values = form.getFieldsValue();
     try {
       const contract = await tokenFactoryContract;
+
       console.log(
         "create params",
         values[FIELD_NAMES.COIN_TICKER],
         values[FIELD_NAMES.COIN_NAME],
-        BigNumber(initialBuyAmount).multipliedBy(1e6).toFixed(),
+        BigNumber(buyAmount).multipliedBy(1e6).toFixed(),
         0,
         address,
         idx,
         address
       );
+
       const tx = await contract?.buyAndCreateToken(
         values[FIELD_NAMES.COIN_TICKER],
         values[FIELD_NAMES.COIN_NAME],
-        BigNumber(initialBuyAmount).multipliedBy(1e6).toFixed(),
+        BigNumber(buyAmount).multipliedBy(1e6).toFixed(),
         0,
         address,
         idx,
@@ -290,8 +298,6 @@ const CreateTokenPage = () => {
       }
 
       const allowance = await getUSDTAllowance();
-      const buyAmount =
-        coinType === ECoinType.MemeCoin ? usdtShouldPay : initialBuyAmount;
 
       const isApproved = BigNumber(buyAmount).gt(allowance ?? "0");
 
@@ -333,16 +339,8 @@ const CreateTokenPage = () => {
 
   return (
     <div className="create-token-page w-full mr-auto ml-auto">
-      <Form<CreateTokenFormValues>
-        form={form}
-        layout="vertical"
-        initialValues={{
-          [FIELD_NAMES.COIN_NAME]: "Token",
-          [FIELD_NAMES.COIN_TICKER]: "tk",
-          [FIELD_NAMES.DESCRIPTION]: "description",
-        }}
-      >
-        <h5 className="text-white-neutral text-22px-bold mb-4">
+      <Form<CreateTokenFormValues> form={form} layout="vertical">
+        <h5 className="text-22px-bold mb-4 text-primary-main">
           Coin Information
         </h5>
         <div className="rounded-[24px] bg-neutral-2 backdrop-blur-[75px] p-6 mb-8">
@@ -410,7 +408,7 @@ const CreateTokenPage = () => {
           </Form.Item>
         </div>
 
-        <h5 className="text-white-neutral text-22px-bold mt-4 mb-4">Links</h5>
+        <h5 className="text-primary-main text-22px-bold mt-4 mb-4">Links</h5>
         <div className="rounded-[24px] bg-neutral-2 backdrop-blur-[75px] p-6 mb-6">
           <Flex gap={24} className="flex-col md:flex-row">
             <Form.Item
