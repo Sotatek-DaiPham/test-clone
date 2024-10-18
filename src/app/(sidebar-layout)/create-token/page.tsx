@@ -336,11 +336,11 @@ const CreateTokenPage = () => {
       <Form<CreateTokenFormValues>
         form={form}
         layout="vertical"
-        initialValues={{
-          [FIELD_NAMES.COIN_NAME]: "Token",
-          [FIELD_NAMES.COIN_TICKER]: "tk",
-          [FIELD_NAMES.DESCRIPTION]: "description",
-        }}
+        // initialValues={{
+        //   [FIELD_NAMES.COIN_NAME]: "Token",
+        //   [FIELD_NAMES.COIN_TICKER]: "tk",
+        //   [FIELD_NAMES.DESCRIPTION]: "description",
+        // }}
       >
         <h5 className="text-white-neutral text-22px-bold mb-4">
           Coin Information
