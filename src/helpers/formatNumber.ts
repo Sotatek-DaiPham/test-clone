@@ -116,3 +116,14 @@ export const convertNumber = (
     .div(new BigNumber(10).pow(decimalPlace))
     ?.toString();
 };
+
+export const formatBytes = (bytes: number): string => {
+  if (bytes === 0) return "0 Bytes";
+
+  const units = ["Bytes", "KB", "MB", "GB", "TB"];
+  const k = 1024;
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+
+  const size = (bytes / Math.pow(k, i)).toFixed(2); // Rounded to 2 decimal places
+  return `${size} ${units[i]}`;
+};

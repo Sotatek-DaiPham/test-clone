@@ -2,7 +2,7 @@ export const API_PATH = {
   AUTH: {
     CONNECT_WALLET: "/auth/connect-wallet",
   },
-  UPLOAD_IMAGES: "/upload/images",
+  UPLOAD_IMAGE: "/medias/image",
   USER: {
     UPDATE_PROFILE: "/user/update-profile",
     PROFILE: (walletAddress: string) => `/user/profile/${walletAddress}`,
@@ -20,5 +20,7 @@ export const API_PATH = {
   },
   TOKEN: {
     LIST: "/token",
+    CREATE_TOKEN: "/token",
+    GET_TOKEN: "/token",
   },
 };

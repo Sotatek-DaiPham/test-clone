@@ -1,0 +1,181 @@
+import AppAmountSelect from "@/components/app-amount-select";
+import AppButton from "@/components/app-button";
+import AppInputBalance from "@/components/app-input/app-input-balance";
+import { MINIMUM_BUY_AMOUNT } from "@/constant";
+import { REGEX_INPUT_DECIMAL } from "@/constant/regex";
+import { nFormatter } from "@/helpers/formatNumber";
+import { ECoinType } from "@/interfaces/token";
+import { Memeicon } from "@public/assets";
+import { Form, ModalProps } from "antd";
+import BigNumber from "bignumber.js";
+import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import AppModal from "..";
+import "./styles.scss";
+
+interface IInitialBuyModal extends ModalProps {
+  onOk: (values: any) => void;
+  onSkip: (values: any) => void;
+  initialBuyAmount: string;
+  setInitalBuyAmount: Dispatch<SetStateAction<string>>;
+  tokenSymbol: string;
+  createLoading: boolean;
+  skipLoading: boolean;
+  usdtShouldPay: string;
+  tokenWillReceive: string;
+  coinType: ECoinType;
+  setCoinType: Dispatch<SetStateAction<ECoinType>>;
+  tokenImage: string;
+}
+
+const amountValidator = (value: string, usdtShouldPay: string) => {
+  const amount = Number(value);
+
+  if (
+    (value && BigNumber(amount).lt(MINIMUM_BUY_AMOUNT)) ||
+    (usdtShouldPay && BigNumber(usdtShouldPay).lt(MINIMUM_BUY_AMOUNT))
+  ) {
+    return Promise.reject(
+      new Error(`Minimum transaction amount is ${MINIMUM_BUY_AMOUNT} USDT`)
+    );
+  }
+  return Promise.resolve();
+};
+
+const InitialBuyModal = ({
+  title,
+  onOk,
+  initialBuyAmount,
+  setInitalBuyAmount,
+  createLoading,
+  skipLoading,
+  tokenSymbol,
+  usdtShouldPay,
+  tokenWillReceive,
+  coinType,
+  setCoinType,
+  onSkip,
+  tokenImage,
+  ...props
+}: IInitialBuyModal) => {
+  const [form] = Form.useForm();
+  const predefinedNumbers = ["05", "10", "20", "50", "100"];
+
+  const isDisableBuyButton =
+    !!(
+      initialBuyAmount && BigNumber(initialBuyAmount).lt(MINIMUM_BUY_AMOUNT)
+    ) || !!(usdtShouldPay && BigNumber(usdtShouldPay).lt(MINIMUM_BUY_AMOUNT));
+
+  useEffect(() => {
+    if (!props.open) {
+      form.resetFields();
+      setCoinType(ECoinType.StableCoin);
+      setInitalBuyAmount("");
+    }
+  }, [props.open]);
+
+  useEffect(() => {
+    if (initialBuyAmount) {
+      form.validateFields();
+    }
+  }, [coinType]);
+
+  return (
+    <AppModal
+      className="initial-buy-modal"
+      width={500}
+      footer={false}
+      centered
+      {...props}
+    >
+      <div className="flex flex-col gap-4">
+        <div className="text-26px-bold text-white-neutral">
+          Initial buy (Optional)
+        </div>
+        <div className="bg-[#16181C] p-6 rounded-[12px] flex flex-col ">
+          <div className="flex justify-between items-center mb-2.5">
+            <label className="text-14px-medium text-neutral-7">
+              Buy Amount
+            </label>
+            <div className="text-14px-normal text-neutral-7">
+              Minimum amount:{" "}
+              <span className="text-white-neutral text-14px-medium">
+                0.1 USDT
+              </span>
+            </div>
+          </div>
+          <Form
+            form={form}
+            initialValues={{
+              amount: "",
+            }}
+          >
+            <Form.Item
+              name="amount"
+              rules={[
+                {
+                  validator: (_: any, value: string) =>
+                    amountValidator(value, usdtShouldPay),
+                },
+              ]}
+            >
+              <AppInputBalance
+                value={initialBuyAmount}
+                tokenImageSrc={tokenImage}
+                tokenSymbol={tokenSymbol}
+                onChange={(e) => setInitalBuyAmount(e.target.value)}
+                onTokenChange={(token) => setCoinType(token)}
+                regex={REGEX_INPUT_DECIMAL(0, 2)}
+                isSwap
+              />
+            </Form.Item>
+          </Form>
+          {coinType === ECoinType.StableCoin ? (
+            <AppAmountSelect
+              numbers={predefinedNumbers}
+              onSelect={(value) => {
+                form.setFieldValue("amount", value);
+                setInitalBuyAmount(value);
+              }}
+              customClass="mb-3"
+            />
+          ) : null}
+
+          <div className="text-14px-normal text-neutral-7 mb-7">
+            {coinType === ECoinType.MemeCoin
+              ? "You must pay "
+              : "You will receive "}
+            <span className="text-white-neutral text-14px-medium">
+              {coinType === ECoinType.MemeCoin
+                ? `${nFormatter(usdtShouldPay, 10) || 0} USDT`
+                : `${nFormatter(tokenWillReceive) || 0} ${tokenSymbol}`}
+            </span>
+          </div>
+          <div className="text-14px-normal text-neutral-7">
+            Enter your initial buy amount. Leave blank if you don’t want to buy
+            any.
+          </div>
+        </div>
+        <div className="flex gap-4">
+          <AppButton
+            customClass="w-auto flex-1"
+            typeButton="secondary"
+            onClick={onSkip}
+            loading={skipLoading}
+          >
+            Skip
+          </AppButton>
+          <AppButton
+            customClass="w-auto flex-1"
+            onClick={onOk}
+            loading={createLoading}
+            disabled={isDisableBuyButton}
+          >
+            Buy
+          </AppButton>
+        </div>
+      </div>
+    </AppModal>
+  );
+};
+
+export default InitialBuyModal;

@@ -25,7 +25,6 @@ export const useContract = (
   const { connector } = useAccount();
 
   const RPC = process.env.NEXT_PUBLIC_ARBITRUM_RPC_URL;
-
   return useMemo(async () => {
     if (!ethers.isAddress(address)) {
       return null;
