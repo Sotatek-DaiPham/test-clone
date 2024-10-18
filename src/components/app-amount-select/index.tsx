@@ -5,8 +5,8 @@ const AppAmountSelect = ({
   onSelect,
   customClass,
 }: {
-  numbers: number[];
-  onSelect: (value: number) => void;
+  numbers: string[];
+  onSelect: (value: string) => void;
   customClass?: string;
 }) => {
   return (

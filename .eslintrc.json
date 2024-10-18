@@ -2,7 +2,9 @@
   "extends": ["next/core-web-vitals"],
   "plugins": ["unused-imports"],
   "rules": {
-    "unused-imports/no-unused-imports": "error",
-    "react-hooks/exhaustive-deps": "off"
+    "unused-imports/no-unused-imports": "off",
+    "react-hooks/exhaustive-deps": "off",
+    "react/display-name": "off",
+    "react/no-unescaped-entities": "off"
   }
 }

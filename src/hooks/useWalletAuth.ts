@@ -1,8 +1,10 @@
 import { API_PATH } from "@/constant/api-path";
+import { PATH_ROUTER } from "@/constant/router";
 import { useAppDispatch, useAppSelector } from "@/libs/hooks";
 import { clearUser, setUser } from "@/libs/slices/userSlice";
 import { postAPI } from "@/service";
 import { useMutation } from "@tanstack/react-query";
+import { usePathname, useRouter } from "next/navigation";
 import { UserRejectedRequestError } from "viem";
 import { useAccount, useDisconnect, useSignMessage } from "wagmi";
 
@@ -12,6 +14,8 @@ type TConnectWallet = {
 };
 
 const useWalletAuth = () => {
+  const pathname = usePathname();
+  const router = useRouter();
   const dispatch = useAppDispatch();
   const accessToken = useAppSelector((state) => state.user.accessToken);
   const { chainId, address: userAddress, isConnected } = useAccount();
@@ -28,6 +32,9 @@ const useWalletAuth = () => {
   const logout = () => {
     dispatch(clearUser());
     disconnectWallet();
+    if (pathname && pathname.includes("my-profile")) {
+      router.push(PATH_ROUTER.DASHBOARD);
+    }
   };
 
   const login = async (onSuccess?: () => void, onError?: () => void) => {
@@ -41,10 +48,15 @@ const useWalletAuth = () => {
           signature,
           address: userAddress,
         });
-        const { access_token: accessToken, refresh_token: refreshToken } =
-          res?.data?.data || {};
+        const {
+          access_token: accessToken,
+          refresh_token: refreshToken,
+          userId,
+        } = res?.data?.data || {};
 
-        dispatch(setUser({ accessToken, refreshToken, address: userAddress }));
+        dispatch(
+          setUser({ accessToken, refreshToken, address: userAddress, userId })
+        );
       }
 
       onSuccess?.();

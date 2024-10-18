@@ -26,6 +26,7 @@ export { default as UploadIcon } from "./icons/upload-icon.svg";
 export { default as SelectDropdownIcon } from "./icons/select-dropdown.svg";
 export { default as UsdtIcon } from "./icons/usdt-icon.svg";
 export { default as BackIcon } from "./icons/back-arrow.svg";
+export { default as ApproveIcon } from "./icons/approve-icon.svg";
 
 // Sidebar icons
 export { default as BrowseIcon } from "./icons/browse-icon.svg";
@@ -51,9 +52,13 @@ export { default as MyRepliesIcon } from "./icons/my-replies.svg";
 export { default as NotificationsIcon } from "./icons/notifications.svg";
 export { default as EditIcon } from "./icons/pen.svg";
 export { default as HideDustCoinIcon } from "./icons/eye-slash.svg";
+export { default as NoDataIcon } from "./icons/no-data.svg";
 
 // Social links
 export { default as WebsiteLinkIcon } from "./icons/website-link.svg";
 export { default as TwitterLinkIcon } from "./icons/twitter-link.svg";
 export { default as TeleLinkIcon } from "./icons/tele-link.svg";
 export { default as DiscordLinkIcon } from "./icons/discord-link.svg";
+
+//leaderboard
+export { default as TopLeaderBoardIcon } from "./icons/top-leaderboard.svg";

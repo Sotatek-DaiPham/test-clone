@@ -1,5 +1,7 @@
 "use client";
 import AppTabs from "@/components/app-tabs";
+import { API_PATH } from "@/constant/api-path";
+import isAuth from "@/helpers/isAuth";
 import { useAppSearchParams } from "@/hooks/useAppSearchParams";
 import {
   DollarCircleUpIcon,
@@ -7,29 +9,18 @@ import {
   FollowingIcon,
   MyProfileIcon,
   MyRepliesIcon,
-  NotificationsIcon,
   PortfolioIcon,
 } from "@public/assets";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useAccount } from "wagmi";
-import CoinCreatedTab from "./components/Tabs/CoinCreated";
-import FollowersTab from "./components/Tabs/Followers";
-import FollowingTab from "./components/Tabs/Following";
-import MyProfileTab from "./components/Tabs/MyProfileTab";
-import MyRepliesTab from "./components/Tabs/MyReplies";
-import NotificationsTab from "./components/Tabs/NotificationsTab";
-import PortfolioTab from "./components/Tabs/PortfolioTab";
-
-enum ETabsMyProfile {
-  MY_PROFILE = "my-profile",
-  PORTFOLIO = "portfolio",
-  COIN_CREATED = "coin-created",
-  FOLLOWERS = "followers",
-  FOLLOWING = "following",
-  MY_REPLIES = "my-replies",
-  NOTIFICATIONS = "notifications",
-}
+import CoinCreatedTab from "../_components/Tabs/CoinCreated";
+import FollowersTab from "../_components/Tabs/Followers";
+import FollowingTab from "../_components/Tabs/Following";
+import MyProfileTab from "../_components/Tabs/MyProfileTab";
+import MyRepliesTab from "../_components/Tabs/MyReplies";
+import PortfolioTab from "../_components/Tabs/PortfolioTab";
+import { ETabsMyProfile } from "@/entities/my-profile";
 
 const MyProfilePage = () => {
   const { address: userAddress } = useAccount();
@@ -40,7 +31,9 @@ const MyProfilePage = () => {
     {
       label: "My profile",
       key: ETabsMyProfile.MY_PROFILE,
-      children: <MyProfileTab walletAddress={userAddress as string} />,
+      children: (
+        <MyProfileTab apiPath={API_PATH.USER.PROFILE(userAddress as string)} />
+      ),
       icon: <Image src={MyProfileIcon} alt="my-profile" />,
     },
     {
@@ -73,12 +66,6 @@ const MyProfilePage = () => {
       children: <MyRepliesTab />,
       icon: <Image src={MyRepliesIcon} alt="my-replies" />,
     },
-    {
-      label: "Notifications",
-      key: ETabsMyProfile.NOTIFICATIONS,
-      children: <NotificationsTab />,
-      icon: <Image src={NotificationsIcon} alt="notifications" />,
-    },
   ];
 
   useEffect(() => {
@@ -95,8 +82,6 @@ const MyProfilePage = () => {
         return setActiveTab(ETabsMyProfile.FOLLOWING);
       case ETabsMyProfile.MY_REPLIES:
         return setActiveTab(ETabsMyProfile.MY_REPLIES);
-      case ETabsMyProfile.NOTIFICATIONS:
-        return setActiveTab(ETabsMyProfile.NOTIFICATIONS);
 
       default:
         return;
@@ -117,9 +102,10 @@ const MyProfilePage = () => {
         className="app-tabs-primary"
         activeKey={activeTab}
         onChange={handleChangeTab}
+        destroyInactiveTabPane={true}
       />
     </div>
   );
 };
 
-export default MyProfilePage;
+export default isAuth(MyProfilePage);

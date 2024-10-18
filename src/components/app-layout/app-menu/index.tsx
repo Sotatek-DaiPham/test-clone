@@ -1,9 +1,11 @@
 "use client";
 import { PATH_ROUTER } from "@/constant/router";
+import useWalletAuth from "@/hooks/useWalletAuth";
 import {
   BrowseIcon,
   CoinsIcon,
   LeaderboardIcon,
+  NotificationsIcon,
   ProfileIcon,
   TelegramIcon,
   XIcon,
@@ -19,6 +21,7 @@ interface AppMenuProps {
   className?: string;
 }
 export default function AppMenu({ className }: AppMenuProps) {
+  const { accessToken } = useWalletAuth();
   // const selectedSegment = useSelectedLayoutSegment();
   const pathname = usePathname();
   const router = useRouter();
@@ -43,14 +46,26 @@ export default function AppMenu({ className }: AppMenuProps) {
         router.push(PATH_ROUTER.CREATE_TOKEN);
       },
     },
-    {
-      label: "My Portfolio",
-      key: PATH_ROUTER.MY_PROFILE,
-      icon: <Image src={ProfileIcon} alt="menu icon" />,
-      onClick: () => {
-        router.push(PATH_ROUTER.MY_PROFILE);
-      },
-    },
+    accessToken
+      ? {
+          label: "My Portfolio",
+          key: PATH_ROUTER.MY_PROFILE,
+          icon: <Image src={ProfileIcon} alt="menu icon" />,
+          onClick: () => {
+            router.push(PATH_ROUTER.MY_PROFILE);
+          },
+        }
+      : null,
+    accessToken
+      ? {
+          label: "Notification",
+          key: PATH_ROUTER.NOTIFICATION,
+          icon: <Image src={NotificationsIcon} alt="menu icon" />,
+          onClick: () => {
+            router.push(PATH_ROUTER.NOTIFICATION);
+          },
+        }
+      : null,
     {
       label: "Leaderboard",
       key: PATH_ROUTER.LEADER_BOARD,

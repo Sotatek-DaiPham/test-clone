@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import useWalletAuth from "@/hooks/useWalletAuth";
-import { ConnectButton, useConnectModal } from "@rainbow-me/rainbowkit";
+import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { Flex } from "antd";
 import ButtonContained from "../ButtonContained";
 import { shortenAddress } from "@/helpers/shorten";

@@ -17,9 +17,9 @@ enum TabKey {
 const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
   const [openSettingModal, setOpenSettingModal] = useState(false);
   const [inputValue, setInputValue] = useState("");
-  const predefinedNumbers = [0.1, 0.5, 1, 2, 5];
+  const predefinedNumbers = ["0.1", "0.5", "1", "2", "5"];
 
-  const handleSelect = (value: number) => {
+  const handleSelect = (value: string) => {
     setInputValue(value.toString());
   };
 
