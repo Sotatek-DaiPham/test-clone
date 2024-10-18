@@ -142,6 +142,15 @@ const CreateTokenPage = () => {
           .toString()
       : "";
 
+  const buyAmount =
+    coinType === ECoinType.MemeCoin
+      ? BigNumber(usdtShouldPay)
+          .multipliedBy(1e6)
+          .integerValue(BigNumber.ROUND_CEIL)
+          .dividedBy(1e6)
+          .toFixed(6)
+      : initialBuyAmount;
+
   const tokenFactoryContract = useContract(
     pumpContractABI,
     envs.TOKEN_FACTORY_ADDRESS || ""
@@ -194,7 +203,10 @@ const CreateTokenPage = () => {
     try {
       const txn = await contract?.approve(
         envs.TOKEN_FACTORY_ADDRESS,
-        BigNumber(initialBuyAmount).multipliedBy(1e6).toFixed()
+        BigNumber(buyAmount)
+          .multipliedBy(1e6)
+          .integerValue(BigNumber.ROUND_HALF_UP)
+          .toString()
       );
 
       await txn?.wait();
@@ -216,20 +228,22 @@ const CreateTokenPage = () => {
     const values = form.getFieldsValue();
     try {
       const contract = await tokenFactoryContract;
+
       console.log(
         "create params",
         values[FIELD_NAMES.COIN_TICKER],
         values[FIELD_NAMES.COIN_NAME],
-        BigNumber(initialBuyAmount).multipliedBy(1e6).toFixed(),
+        BigNumber(buyAmount).multipliedBy(1e6).toFixed(),
         0,
         address,
         idx,
         address
       );
+
       const tx = await contract?.buyAndCreateToken(
         values[FIELD_NAMES.COIN_TICKER],
         values[FIELD_NAMES.COIN_NAME],
-        BigNumber(initialBuyAmount).multipliedBy(1e6).toFixed(),
+        BigNumber(buyAmount).multipliedBy(1e6).toFixed(),
         0,
         address,
         idx,
@@ -290,8 +304,6 @@ const CreateTokenPage = () => {
       }
 
       const allowance = await getUSDTAllowance();
-      const buyAmount =
-        coinType === ECoinType.MemeCoin ? usdtShouldPay : initialBuyAmount;
 
       const isApproved = BigNumber(buyAmount).gt(allowance ?? "0");
 
