@@ -3,7 +3,7 @@ export const ImageValidator = (
   value: { src?: string; file?: File }
 ) => {
   if (!value?.src) {
-    return Promise.reject("This field is required");
+    return Promise.reject("Coin icon is required");
   }
 
   if (value.file) {
@@ -24,4 +24,9 @@ export const checkValidUploadFileType = (file: File) => {
   return ALLOW_FILE_TYPE.includes(file.type);
 };
 
-export const ALLOW_FILE_TYPE = ["image/jpg", "image/png", "image/jpeg"];
+export const ALLOW_FILE_TYPE = [
+  "image/jpg",
+  "image/png",
+  "image/gif",
+  "image/jpeg",
+];

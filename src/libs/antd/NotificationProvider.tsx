@@ -48,11 +48,11 @@ export const NotificationProvider = ({
             {message ?? "Action Failed"}
           </p>
         ),
-        description: (
-          <div className="text-text-secondary text-[14px]">
-            {description || "Something went wrong!"}
-          </div>
-        ),
+        // description: (
+        //   <div className="text-text-secondary text-[14px]">
+        //     {description || "Something went wrong!"}
+        //   </div>
+        // ),
         duration: Notification_Duration,
         // closeIcon: <CloseIcon />,
         ...props,
