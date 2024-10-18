@@ -339,15 +339,7 @@ const CreateTokenPage = () => {
 
   return (
     <div className="create-token-page w-full mr-auto ml-auto">
-      <Form<CreateTokenFormValues>
-        form={form}
-        layout="vertical"
-        initialValues={{
-          [FIELD_NAMES.COIN_NAME]: "Token",
-          [FIELD_NAMES.COIN_TICKER]: "tk",
-          [FIELD_NAMES.DESCRIPTION]: "description",
-        }}
-      >
+      <Form<CreateTokenFormValues> form={form} layout="vertical">
         <h5 className="text-22px-bold mb-4 text-primary-main">
           Coin Information
         </h5>
