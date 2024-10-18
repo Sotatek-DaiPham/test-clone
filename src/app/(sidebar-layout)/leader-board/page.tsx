@@ -1,21 +1,20 @@
 "use client";
+import AppImage from "@/components/app-image";
 import AppInput from "@/components/app-input";
 import AppPagination from "@/components/app-pagination";
 import AppTable from "@/components/app-table";
+import AppTooltip from "@/components/app-tooltip";
 import ShowingPage from "@/components/showing-page";
 import { LIMIT_ITEMS_TABLE } from "@/constant";
-import useDebounce from "@/hooks/useDebounce";
-import { useState } from "react";
-import "./styles.scss";
-import { shortenAddress } from "@/helpers/shorten";
-import EllipsisTextWithTooltip from "@/components/app-tooltip/EllipsisTextWithTooltip";
-import AppTooltip from "@/components/app-tooltip";
-import AppImage from "@/components/app-image";
+import { PATH_ROUTER } from "@/constant/router";
 import { formatAmount } from "@/helpers/formatNumber";
+import { shortenAddress } from "@/helpers/shorten";
+import useDebounce from "@/hooks/useDebounce";
 import { TopLeaderBoardIcon } from "@public/assets";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { PATH_ROUTER } from "@/constant/router";
+import { useState } from "react";
+import "./styles.scss";
 
 const data = [
   {
