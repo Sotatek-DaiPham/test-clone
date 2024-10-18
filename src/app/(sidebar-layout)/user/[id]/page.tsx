@@ -19,7 +19,7 @@ import FollowersTab from "../../_components/Tabs/Followers";
 import FollowingTab from "../../_components/Tabs/Following";
 import MyProfileTab from "../../_components/Tabs/MyProfileTab";
 import PortfolioTab from "../../_components/Tabs/PortfolioTab";
-import { ETabsMyProfile } from "../../my-profile/page";
+import { ETabsMyProfile } from "@/entities/my-profile";
 
 const UserProfilePage = () => {
   const { id } = useParams();

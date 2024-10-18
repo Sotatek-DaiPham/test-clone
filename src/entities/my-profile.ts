@@ -73,3 +73,12 @@ export interface ICoinCreatedResponse {
   updated_at: string;
   number_replies: string;
 }
+
+export enum ETabsMyProfile {
+  MY_PROFILE = "my-profile",
+  PORTFOLIO = "portfolio",
+  COIN_CREATED = "coin-created",
+  FOLLOWERS = "followers",
+  FOLLOWING = "following",
+  MY_REPLIES = "my-replies",
+}

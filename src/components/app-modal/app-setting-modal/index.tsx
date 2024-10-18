@@ -17,7 +17,7 @@ interface ITradeSettingModal extends ModalProps {
 const TradeSettingModal = ({ title, onOk, ...props }: ITradeSettingModal) => {
   const [slippage, setSlippage] = useState("");
   const [priorityFee, setPriorityFee] = useState("");
-  const predefinedNumbers = [0.1, 0.5, 1, 2, 5];
+  const predefinedNumbers = ["0.1", "0.5", "1", "2", "5"];
 
   return (
     <AppModal

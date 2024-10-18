@@ -9,7 +9,7 @@ import {
   FollowingIcon,
   MyProfileIcon,
   MyRepliesIcon,
-  PortfolioIcon
+  PortfolioIcon,
 } from "@public/assets";
 import Image from "next/image";
 import { useEffect, useState } from "react";
@@ -20,15 +20,7 @@ import FollowingTab from "../_components/Tabs/Following";
 import MyProfileTab from "../_components/Tabs/MyProfileTab";
 import MyRepliesTab from "../_components/Tabs/MyReplies";
 import PortfolioTab from "../_components/Tabs/PortfolioTab";
-
-export enum ETabsMyProfile {
-  MY_PROFILE = "my-profile",
-  PORTFOLIO = "portfolio",
-  COIN_CREATED = "coin-created",
-  FOLLOWERS = "followers",
-  FOLLOWING = "following",
-  MY_REPLIES = "my-replies",
-}
+import { ETabsMyProfile } from "@/entities/my-profile";
 
 const MyProfilePage = () => {
   const { address: userAddress } = useAccount();
