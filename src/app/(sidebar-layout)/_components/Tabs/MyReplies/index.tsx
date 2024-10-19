@@ -64,8 +64,8 @@ const MyRepliesTab = () => {
     setParams({ ...params, page: 1 })
   );
 
-  const { data, isLoading, isError, refetch } = useQuery({
-    queryKey: ["my-replies", params, debounceSearch],
+  const { data, isPending, isError, refetch } = useQuery({
+    queryKey: ["my-replies", params, debounceSearch, searchParams],
     queryFn: async () => {
       return getAPI(API_PATH.USER.MY_REPLIES, {
         params: {
@@ -96,7 +96,7 @@ const MyRepliesTab = () => {
           onChange={(e) => setSearch(e.target.value)}
         />
       </div>
-      {!myReplies?.length && !isLoading ? (
+      {!myReplies?.length && !isPending ? (
         <NoData />
       ) : (
         <div>

@@ -35,8 +35,8 @@ const FollowersTab = ({ walletAddress }: { walletAddress: string }) => {
     setParams({ ...params, page: 1 })
   );
 
-  const { data, isLoading, isError, refetch } = useQuery({
-    queryKey: ["followers", params, debounceSearch],
+  const { data, isPending, isError, refetch } = useQuery({
+    queryKey: ["followers", params, debounceSearch, searchParams],
     queryFn: async () => {
       return getAPI(API_PATH.USER.FOLLOWERS, {
         params: {
@@ -84,7 +84,7 @@ const FollowersTab = ({ walletAddress }: { walletAddress: string }) => {
           onChange={(e) => setSearch(e.target.value)}
         />
       </div>
-      {!followers?.length && !isLoading ? (
+      {!followers?.length && !isPending ? (
         <NoData />
       ) : (
         <div>

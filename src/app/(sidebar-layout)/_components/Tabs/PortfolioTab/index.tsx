@@ -39,8 +39,8 @@ const PortfolioTab = ({ walletAddress }: { walletAddress: string }) => {
     setParams({ ...params, page: 1 })
   );
 
-  const { data, isLoading, refetch } = useQuery({
-    queryKey: ["portfolio", params, debounceSearch],
+  const { data, isPending, refetch } = useQuery({
+    queryKey: ["portfolio", params, debounceSearch, searchParams],
     queryFn: async () => {
       return getAPI(API_PATH.USER.PORTFOLIO, {
         params: {
@@ -58,7 +58,6 @@ const PortfolioTab = ({ walletAddress }: { walletAddress: string }) => {
   const myPortfolio = get(data, "data.data", []) as IPortfolioResponse[];
   const total = get(data, "data.metadata.total", 0) as number;
 
-  console.log("data", myPortfolio);
   return (
     <div>
       <div className="w-full flex flex-row items-center justify-between">
@@ -90,7 +89,7 @@ const PortfolioTab = ({ walletAddress }: { walletAddress: string }) => {
           />
         </div>
       </div>
-      {!myPortfolio?.length && !isLoading ? (
+      {!myPortfolio?.length && !isPending ? (
         <NoData />
       ) : (
         <div>
@@ -99,6 +98,8 @@ const PortfolioTab = ({ walletAddress }: { walletAddress: string }) => {
               <ProjectCard
                 className="pb-4"
                 data={{
+                  id: project?.id,
+                  logo: project?.avatar,
                   title: project?.name,
                   address: project?.contract_address,
                   total: convertNumber(project?.total_supply),
@@ -114,32 +115,7 @@ const PortfolioTab = ({ walletAddress }: { walletAddress: string }) => {
                       : "",
                 }}
                 key={index}
-                footer={
-                  <div className="mt-3 text-14px-normal text-neutral-7">
-                    <div className="mt-2 flex justify-between">
-                      <span>Total hold</span>
-                      <span>
-                        <span className="text-primary-main mr-2">
-                          {formatAmount(convertNumber(project?.amount) || 0)}
-                        </span>
-                        <span className="text-white-neutral capitalize">
-                          {project?.name || "-"}
-                        </span>
-                      </span>
-                    </div>
-                    <div className="my-2 flex justify-between">
-                      <span>Value</span>
-                      <span>
-                        <span className="text-primary-main mr-2">
-                          {nFormatter("12")}
-                        </span>
-                        <span className="text-white-neutral uppercase">
-                          USDT
-                        </span>
-                      </span>
-                    </div>
-                  </div>
-                }
+                footer={true}
               />
             ))}
           </div>

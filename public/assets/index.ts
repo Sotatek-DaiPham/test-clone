@@ -53,6 +53,8 @@ export { default as NotificationsIcon } from "./icons/notifications.svg";
 export { default as EditIcon } from "./icons/pen.svg";
 export { default as HideDustCoinIcon } from "./icons/eye-slash.svg";
 export { default as NoDataIcon } from "./icons/no-data.svg";
+export { default as CalendarIcon } from "./icons/calendar.svg";
+export { default as SwapIcon } from "./icons/arrow-left-arrow-right.svg";
 
 // Social links
 export { default as WebsiteLinkIcon } from "./icons/website-link.svg";
@@ -62,3 +64,6 @@ export { default as DiscordLinkIcon } from "./icons/discord-link.svg";
 
 //leaderboard
 export { default as TopLeaderBoardIcon } from "./icons/top-leaderboard.svg";
+export { default as UserTop1 } from "./icons/user-top-1.svg";
+export { default as UserTop2 } from "./icons/user-top-2.svg";
+export { default as UserTop3 } from "./icons/user-top-3.svg";

@@ -22,5 +22,10 @@ export const API_PATH = {
     LIST: "/token",
     CREATE_TOKEN: "/token",
     GET_TOKEN: "/token",
+    KING_OF_THE_SKY: "/token/king-of-the-hill",
+    FOLLOWING_TOKEN_CREATED: "/token/following-token-created",
+  },
+  TRADING: {
+    ACTIVITY: "/user-trading-histories/following",
   },
 };

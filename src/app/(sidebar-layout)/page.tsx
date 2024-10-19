@@ -8,6 +8,14 @@ import { useEffect, useState } from "react";
 import AllTab from "./_components/AllTab";
 import FollowingTab from "./_components/FollowingTab";
 import ProjectCard from "./_components/ProjectCard";
+import { useQuery } from "@tanstack/react-query";
+import { API_PATH } from "@/constant/api-path";
+import { getAPI } from "@/service";
+import { AxiosResponse } from "axios";
+import { BeSuccessResponse } from "@/entities/response";
+import { IKingOfTheSkyResponse } from "@/entities/dashboard";
+import get from "lodash/get";
+import { convertNumber } from "@/helpers/formatNumber";
 
 enum ETabsTerminal {
   ALL = "all",
@@ -17,6 +25,17 @@ enum ETabsTerminal {
 export default function Home() {
   const { searchParams, setSearchParams } = useAppSearchParams("terminal");
   const [activeTab, setActiveTab] = useState<string>(ETabsTerminal.ALL);
+  const { data, refetch } = useQuery({
+    queryKey: ["king-of-the-sky"],
+    queryFn: async () => {
+      return getAPI(API_PATH.TOKEN.KING_OF_THE_SKY) as Promise<
+        AxiosResponse<BeSuccessResponse<IKingOfTheSkyResponse>, any>
+      >;
+    },
+  });
+
+  const kingOfTheSky = get(data, "data.data", {}) as IKingOfTheSkyResponse;
+
   const tabs = [
     {
       label: "All",
@@ -88,15 +107,38 @@ export default function Home() {
               <ProjectCard
                 className="p-0"
                 data={{
-                  address: "",
-                  avatar: "",
-                  title: "Project name",
-                  percent: 55,
-                  description:
-                    "Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusamus doloribus dolorum minus vero molestias iste ullam perspiciatis, odio ipsum harum laudantium earum consequuntur nesciunt dolore sapiente error deleniti perferendis nulla!",
-                  total: "5900000",
-                  currentValue: "2123000",
-                  stage: "S1",
+                  id: kingOfTheSky?.id,
+                  logo: kingOfTheSky?.avatar,
+                  title: kingOfTheSky?.name,
+                  address: kingOfTheSky?.contractAddress,
+                  total: convertNumber(
+                    kingOfTheSky?.total_supply,
+                    kingOfTheSky?.decimal
+                  ),
+                  description: kingOfTheSky?.description,
+                  currentValue: convertNumber(
+                    kingOfTheSky?.initUsdtReserve,
+                    kingOfTheSky?.decimal
+                  ),
+                  percent:
+                    (Number(
+                      convertNumber(
+                        kingOfTheSky?.initUsdtReserve,
+                        kingOfTheSky?.decimal
+                      )
+                    ) /
+                      Number(
+                        convertNumber(
+                          kingOfTheSky?.total_supply,
+                          kingOfTheSky?.decimal
+                        )
+                      )) *
+                    100,
+                  stage:
+                    Number(kingOfTheSky?.total_supply) ===
+                    Number(kingOfTheSky?.initUsdtReserve)
+                      ? "Listed"
+                      : "",
                 }}
               />
             </div>
@@ -107,6 +149,7 @@ export default function Home() {
             items={tabs}
             activeKey={activeTab}
             onChange={handleChangeTab}
+            destroyInactiveTabPane={true}
           />
         </div>
       </div>

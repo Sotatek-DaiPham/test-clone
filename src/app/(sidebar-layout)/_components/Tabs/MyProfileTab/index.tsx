@@ -33,11 +33,11 @@ const MyProfileTab = ({ apiPath }: { apiPath: string }) => {
   const [followData, setFollowData] = useState<any>({});
 
   const { data, refetch } = useQuery({
-    queryKey: ["my-profile"],
+    queryKey: ["my-profile", searchParams],
     queryFn: async () => {
       return getAPI(apiPath, {
         params: {
-          userId,
+          currentUserId: userId,
         },
       }) as Promise<AxiosResponse<BeSuccessResponse<MyProfileResponse>, any>>;
     },
@@ -104,9 +104,9 @@ const MyProfileTab = ({ apiPath }: { apiPath: string }) => {
         )}
       </div>
       <div className="flex flex-row gap-6 bg-neutral-2 rounded-3xl p-6">
-        <div className="p-auto ">
+        <div className="p-auto">
           <AppImage
-            className="!bg-neutral-4 w-[130px] h-[130px] rounded-full"
+            className="!bg-neutral-4 w-[130px] h-[130px] rounded-full overflow-hidden flex"
             src={myProfile?.avatar}
             alt="avatar"
           />

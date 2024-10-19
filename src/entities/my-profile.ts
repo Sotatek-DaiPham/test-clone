@@ -49,6 +49,7 @@ export interface IFollowerResponse {
 }
 
 export interface IPortfolioResponse {
+  id: number;
   amount: string;
   created_at: string;
   updated_at: string;
@@ -62,13 +63,14 @@ export interface IPortfolioResponse {
 }
 
 export interface ICoinCreatedResponse {
-  owner: any;
-  name: any;
-  description: any;
-  avatar: any;
+  id: number;
+  owner: string;
+  name: string;
+  description: string;
+  avatar: string;
   decimal: number;
   total_supply: string;
-  timestamp_created: any;
+  timestamp_created: number;
   created_at: string;
   updated_at: string;
   number_replies: string;
