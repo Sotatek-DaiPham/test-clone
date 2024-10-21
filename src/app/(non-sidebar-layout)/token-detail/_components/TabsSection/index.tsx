@@ -25,7 +25,7 @@ const TabsSection = () => {
   ];
   return (
     <div className="mt-[26px]">
-      <AppTabs items={tabs} />
+      <AppTabs items={tabs} destroyInactiveTabPane={true} />
     </div>
   );
 };

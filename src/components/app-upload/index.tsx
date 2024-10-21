@@ -18,6 +18,7 @@ export interface AppUploadProps {
 }
 
 const AppUpload = (props: AppUploadProps) => {
+  console.log("value", props.value);
   const { isShowSuggest = true, className, variant = "primary" } = props;
   const handleChange = (value: UploadChangeParam<UploadFile<any>>) => {
     const file = value.file;

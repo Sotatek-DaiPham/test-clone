@@ -7,6 +7,7 @@ import { useAppSelector } from "@/libs/hooks";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { useRouter } from "next/navigation";
 import { EFollow } from "../Tabs/MyProfileTab";
+import { useAccount } from "wagmi";
 
 interface IUserFollow {
   data: IFollowerResponse;
@@ -16,6 +17,7 @@ const UserFollow = ({ data, onFollow }: IUserFollow) => {
   const router = useRouter();
   const { openConnectModal } = useConnectModal();
   const { userId } = useAppSelector((state) => state.user);
+  const { address: userAddress } = useAccount();
 
   return (
     <div
@@ -26,7 +28,7 @@ const UserFollow = ({ data, onFollow }: IUserFollow) => {
     >
       <div className="w-[5%] mr-4">
         <AppImage
-          className="border border-white-neutral w-[50px] h-[50px] rounded-xl bg-primary-7"
+          className="border border-white-neutral w-[50px] h-[50px] rounded-xl flex bg-primary-7 overflow-hidden"
           src={data?.avatar}
           alt="avatar"
         />
@@ -47,28 +49,30 @@ const UserFollow = ({ data, onFollow }: IUserFollow) => {
         </div>
       </div>
       <div className="w-[15%] flex justify-center">
-        <AppButton
-          size="small"
-          typeButton={data?.isFollowing ? "secondary" : "primary"}
-          customClass="!w-[100px] !rounded-full"
-          onClick={
-            !!userId
-              ? (e) => {
-                  e.stopPropagation();
-                  onFollow({
-                    id: data?.id,
-                    payload: {
-                      isFollow: data?.isFollowing
-                        ? EFollow.UN_FOLLOW
-                        : EFollow.FOLLOW,
-                    },
-                  });
-                }
-              : openConnectModal
-          }
-        >
-          {data?.isFollowing ? "Unfollow" : "Follow"}
-        </AppButton>
+        {userAddress !== data?.wallet_address && (
+          <AppButton
+            size="small"
+            typeButton={data?.isFollowing ? "secondary" : "primary"}
+            customClass="!w-[100px] !rounded-full"
+            onClick={
+              !!userId
+                ? (e) => {
+                    e.stopPropagation();
+                    onFollow({
+                      id: data?.id,
+                      payload: {
+                        isFollow: data?.isFollowing
+                          ? EFollow.UN_FOLLOW
+                          : EFollow.FOLLOW,
+                      },
+                    });
+                  }
+                : openConnectModal
+            }
+          >
+            {data?.isFollowing ? "Unfollow" : "Follow"}
+          </AppButton>
+        )}
       </div>
     </div>
   );
