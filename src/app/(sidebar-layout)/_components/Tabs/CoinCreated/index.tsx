@@ -6,9 +6,10 @@ import NoData from "@/components/no-data";
 import ShowingPage from "@/components/showing-page";
 import { LIMIT_ITEMS_TABLE } from "@/constant";
 import { API_PATH } from "@/constant/api-path";
-import { ICoinCreatedResponse } from "@/entities/my-profile";
+import {
+  IProjectCardResponse
+} from "@/entities/my-profile";
 import { BeSuccessResponse } from "@/entities/response";
-import { convertNumber } from "@/helpers/formatNumber";
 import { useAppSearchParams } from "@/hooks/useAppSearchParams";
 import useDebounce from "@/hooks/useDebounce";
 import { getAPI } from "@/service";
@@ -33,20 +34,20 @@ const CoinCreatedTab = ({ walletAddress }: { walletAddress: string }) => {
   const { data, isPending, isError, refetch } = useQuery({
     queryKey: ["coin-created", params, debounceSearch, searchParams],
     queryFn: async () => {
-      return getAPI(API_PATH.USER.COINS_CREATED, {
+      return getAPI(API_PATH.TOKEN.COINS_CREATED, {
         params: {
           ...params,
           walletAddress: walletAddress,
           keyword: debounceSearch,
         },
       }) as Promise<
-        AxiosResponse<BeSuccessResponse<ICoinCreatedResponse[]>, any>
+        AxiosResponse<BeSuccessResponse<IProjectCardResponse[]>, any>
       >;
     },
     enabled: searchParams.tab === "coin-created",
   });
 
-  const coinCreated = get(data, "data.data", []) as ICoinCreatedResponse[];
+  const coinCreated = get(data, "data.data", []) as IProjectCardResponse[];
   const total = get(data, "data.metadata.total", 0) as number;
 
   return (
@@ -68,29 +69,8 @@ const CoinCreatedTab = ({ walletAddress }: { walletAddress: string }) => {
         <div>
           <div className="grid grid-cols-3 gap-6 my-9">
             {coinCreated?.map(
-              (project: ICoinCreatedResponse, index: number) => (
-                <ProjectCard
-                  data={{
-                    id: project?.id,
-                    owner: project?.owner,
-                    logo: project?.avatar,
-                    title: project?.name,
-                    address: project?.owner,
-                    total: convertNumber(project?.total_supply),
-                    description: project?.description,
-                    currentValue: convertNumber(project?.number_replies),
-                    percent:
-                      (Number(convertNumber(project?.number_replies)) /
-                        Number(convertNumber(project?.total_supply))) *
-                      100,
-                    stage:
-                      Number(project?.total_supply) ===
-                      Number(project?.number_replies)
-                        ? "Listed"
-                        : "",
-                  }}
-                  key={index}
-                />
+              (project: IProjectCardResponse, index: number) => (
+                <ProjectCard data={project} key={index} />
               )
             )}
           </div>

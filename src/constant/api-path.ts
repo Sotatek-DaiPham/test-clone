@@ -8,9 +8,7 @@ export const API_PATH = {
     PROFILE: (walletAddress: string) => `/user/profile/${walletAddress}`,
     OTHER_PROFILE: (walletAddress: string) =>
       `/user/other-profile/${walletAddress}`,
-    PORTFOLIO: "/user/coins-held",
     MY_REPLIES: "/user/my-replies",
-    COINS_CREATED: "/user/coins-created",
     FOLLOWINGS: "/user/followings",
     FOLLOWERS: "/user/followers",
     NOTIFICATION: "/user/notification",
@@ -24,6 +22,8 @@ export const API_PATH = {
     GET_TOKEN: "/token",
     KING_OF_THE_SKY: "/token/king-of-the-hill",
     FOLLOWING_TOKEN_CREATED: "/token/following-token-created",
+    PORTFOLIO: "/token/token-held",
+    COINS_CREATED: "/token/token-created",
   },
   TRADING: {
     ACTIVITY: "/user-trading-histories/following",

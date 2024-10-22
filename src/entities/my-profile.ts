@@ -48,32 +48,26 @@ export interface IFollowerResponse {
   isFollowing: boolean;
 }
 
-export interface IPortfolioResponse {
+export interface IProjectCardResponse {
   id: number;
-  amount: string;
-  created_at: string;
-  updated_at: string;
-  contract_address: string;
-  name: string;
-  description: any;
-  avatar: any;
-  decimal: number;
-  total_supply: string;
-  timestamp_created: number;
-}
-
-export interface ICoinCreatedResponse {
-  id: number;
-  owner: string;
+  contractAddress: string;
   name: string;
   description: string;
   avatar: string;
   decimal: number;
   total_supply: string;
-  timestamp_created: number;
-  created_at: string;
-  updated_at: string;
-  number_replies: string;
+  userAvatar: null;
+  username: string;
+  userWalletAddress: string;
+  progressToListDex: number;
+  amount: string;
+  price: string;
+  symbol: string;
+  numberTransaction: number;
+  numberView: number;
+  timeToListDex: number;
+  volume: number;
+  createAt: string;
 }
 
 export enum ETabsMyProfile {

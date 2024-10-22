@@ -7,13 +7,8 @@ import NoData from "@/components/no-data";
 import ShowingPage from "@/components/showing-page";
 import { LIMIT_ITEMS_TABLE } from "@/constant";
 import { API_PATH } from "@/constant/api-path";
-import { IPortfolioResponse } from "@/entities/my-profile";
+import { IProjectCardResponse } from "@/entities/my-profile";
 import { BeSuccessResponse } from "@/entities/response";
-import {
-  convertNumber,
-  formatAmount,
-  nFormatter,
-} from "@/helpers/formatNumber";
 import { useAppSearchParams } from "@/hooks/useAppSearchParams";
 import useDebounce from "@/hooks/useDebounce";
 import { getAPI } from "@/service";
@@ -42,20 +37,20 @@ const PortfolioTab = ({ walletAddress }: { walletAddress: string }) => {
   const { data, isPending, refetch } = useQuery({
     queryKey: ["portfolio", params, debounceSearch, searchParams],
     queryFn: async () => {
-      return getAPI(API_PATH.USER.PORTFOLIO, {
+      return getAPI(API_PATH.TOKEN.PORTFOLIO, {
         params: {
           ...params,
           walletAddress: walletAddress,
           keyword: debounceSearch,
         },
       }) as Promise<
-        AxiosResponse<BeSuccessResponse<IPortfolioResponse[]>, any>
+        AxiosResponse<BeSuccessResponse<IProjectCardResponse[]>, any>
       >;
     },
     enabled: searchParams.tab === "portfolio",
   });
 
-  const myPortfolio = get(data, "data.data", []) as IPortfolioResponse[];
+  const myPortfolio = get(data, "data.data", []) as IProjectCardResponse[];
   const total = get(data, "data.metadata.total", 0) as number;
 
   return (
@@ -94,30 +89,16 @@ const PortfolioTab = ({ walletAddress }: { walletAddress: string }) => {
       ) : (
         <div>
           <div className="grid grid-cols-3 gap-6 my-9">
-            {myPortfolio?.map((project: IPortfolioResponse, index: number) => (
-              <ProjectCard
-                className="pb-4"
-                data={{
-                  id: project?.id,
-                  logo: project?.avatar,
-                  title: project?.name,
-                  address: project?.contract_address,
-                  total: convertNumber(project?.total_supply),
-                  description: project?.description,
-                  currentValue: convertNumber(project?.amount),
-                  percent:
-                    (Number(convertNumber(project?.amount)) /
-                      Number(convertNumber(project?.total_supply))) *
-                    100,
-                  stage:
-                    Number(project?.total_supply) === Number(project?.amount)
-                      ? "Listed"
-                      : "",
-                }}
-                key={index}
-                footer={true}
-              />
-            ))}
+            {myPortfolio?.map(
+              (project: IProjectCardResponse, index: number) => (
+                <ProjectCard
+                  className="pb-4"
+                  data={project}
+                  key={index}
+                  footer={true}
+                />
+              )
+            )}
           </div>
           <AppDivider />
           <AppPagination

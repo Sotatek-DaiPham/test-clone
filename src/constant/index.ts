@@ -10,3 +10,5 @@ export const TOKEN_INITIAL_PRICE = 0.00000345;
 export const CREATE_TOKEN_FEE = 0.01;
 
 export const MINIMUM_BUY_AMOUNT = 0.1;
+
+export const DECIMAL_USDT = 6;
