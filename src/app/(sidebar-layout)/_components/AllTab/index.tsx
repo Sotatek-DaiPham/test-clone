@@ -1,6 +1,5 @@
-import AppButton from "@/components/app-button";
+import AppPaginationCustom from "@/components/app-pagination/app-pagination-custom";
 import NoData from "@/components/no-data";
-import { LIMIT_ITEMS_TABLE } from "@/constant";
 import { API_PATH } from "@/constant/api-path";
 import { ITokenDashboardResponse } from "@/entities/dashboard";
 import { BeSuccessResponse } from "@/entities/response";
@@ -17,15 +16,10 @@ import {
   UsersIcon,
 } from "@public/assets";
 import { useQuery } from "@tanstack/react-query";
+import { Spin } from "antd";
 import { AxiosResponse } from "axios";
 import { get } from "lodash";
-import {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useMemo,
-  useState,
-} from "react";
+import { useCallback, useState } from "react";
 import FilterTerminal from "../FilterTerminal";
 import ProjectCard from "../ProjectCard";
 
@@ -56,7 +50,7 @@ const FILTER_TERMINAL = [
   },
   {
     label: "Rising",
-    value: "rising",
+    value: "rasing",
     icon: DollarCircleUpIcon,
     // children: [
     //   {
@@ -84,7 +78,7 @@ const FILTER_TERMINAL = [
   },
   {
     label: "Finalized",
-    value: "finalized",
+    value: "finalize",
     icon: FinalizedIcon,
     // children: [
     //   {
@@ -110,7 +104,7 @@ const FILTER_TERMINAL = [
     value: "age",
     icon: UsersIcon,
     children: [
-      { key: "", label: "any" },
+      { key: "", label: "Any" },
       { key: "less15m", label: "≤15m" },
       { key: "less30m", label: "≤30m" },
       { key: "less1h", label: "≤1h" },
@@ -163,22 +157,38 @@ const AllTab = () => {
   const [search, setSearch] = useState<string>("");
   const { searchParams, setSearchParams } = useAppSearchParams("terminal");
 
-  const [baseData, setBaseData] = useState<ITokenDashboardResponse[]>([]);
-
   const [params, setParams] = useState<any>({
     page: 1,
-    limit: LIMIT_ITEMS_TABLE,
+    limit: 100,
   });
 
   const debounceSearch = useDebounce(search);
 
   const { data, isPending, isError, refetch } = useQuery({
-    queryKey: ["all-tab", params, debounceSearch],
+    queryKey: [
+      "all-tab",
+      params,
+      debounceSearch,
+      searchParams.filter,
+      searchParams.top,
+      searchParams.age,
+      searchParams.minProgress,
+      searchParams.maxProgress,
+    ],
     queryFn: async () => {
       return getAPI(API_PATH.TOKEN.LIST, {
         params: {
           ...params,
           keyword: debounceSearch,
+          age: searchParams?.age,
+          minProgress: searchParams?.minProgress,
+          maxProgress: searchParams?.maxProgress,
+          mainFilterToken:
+            searchParams?.filter === "top" && searchParams?.top === "volume"
+              ? "TOP_VOLUME"
+              : searchParams.top === "txns"
+              ? "TOP_TRANSACTION"
+              : searchParams.filter?.toUpperCase() || "TRENDING",
         },
       }) as Promise<
         AxiosResponse<BeSuccessResponse<ITokenDashboardResponse[]>, any>
@@ -187,16 +197,9 @@ const AllTab = () => {
     enabled: !searchParams.tab ? true : searchParams.tab === "all",
   });
 
-  const tokenList = useMemo(() => {
-    return get(data, "data.data", []) as ITokenDashboardResponse[];
-  }, [data]);
+  const tokenList = get(data, "data.data", []) as ITokenDashboardResponse[];
 
   const total = get(data, "data.metadata.total", 0) as number;
-
-  useLayoutEffect(() => {
-    const base = [...baseData, ...tokenList];
-    setBaseData(base);
-  }, [tokenList]);
 
   const handleClickFilter = useCallback(
     (value: any, queryKey: string, subValue?: any, subQueryKey?: any) => {
@@ -227,11 +230,11 @@ const AllTab = () => {
 
   return (
     <div>
+      {isPending && <Spin />}
       <FilterTerminal
         search={search}
         onChangeSearch={(e) => {
           setSearch(e);
-          setBaseData([]);
           setParams({ ...params, page: 1 });
         }}
         filterArr={FILTER_TERMINAL}
@@ -239,18 +242,26 @@ const AllTab = () => {
         handleClickFilter={handleClickFilter}
         handleClickFilterOption={handleClickFilterOption}
       />
-      {!baseData?.length && !isPending ? (
+      {!tokenList?.length && !isPending ? (
         <NoData></NoData>
       ) : (
         <div>
           <div className="grid grid-cols-3 gap-6 my-9">
-            {baseData?.map(
+            {tokenList?.map(
               (project: ITokenDashboardResponse, index: number) => (
                 <ProjectCard data={project} key={index} />
               )
             )}
           </div>
-          {baseData?.length < total && (
+          <AppPaginationCustom
+            label="tokens"
+            total={total}
+            page={params?.page}
+            limit={params?.limit}
+            onChange={(page) => setParams({ ...params, page })}
+            hideOnSinglePage={true}
+          />
+          {/* {baseData?.length < total && (
             <div className="w-full flex justify-center mt-2">
               <AppButton
                 customClass="!w-[200px]"
@@ -260,7 +271,7 @@ const AllTab = () => {
                 Load more
               </AppButton>
             </div>
-          )}
+          )} */}
         </div>
       )}
     </div>

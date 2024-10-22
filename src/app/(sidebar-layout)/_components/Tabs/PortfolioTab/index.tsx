@@ -14,11 +14,13 @@ import useDebounce from "@/hooks/useDebounce";
 import { getAPI } from "@/service";
 import { HideDustCoinIcon } from "@public/assets";
 import { useQuery } from "@tanstack/react-query";
+import { Spin } from "antd";
 import { AxiosResponse } from "axios";
 import get from "lodash/get";
 import Image from "next/image";
 import { useState } from "react";
 import TabTitle from "../../TabTitle";
+import AppPaginationCustom from "@/components/app-pagination/app-pagination-custom";
 
 const PortfolioTab = ({ walletAddress }: { walletAddress: string }) => {
   const [hideDustCoin, setHideDustCoin] = useState<boolean>(false);
@@ -59,9 +61,9 @@ const PortfolioTab = ({ walletAddress }: { walletAddress: string }) => {
         <TabTitle title="Portfolio" />
         <div className="flex flex-row items-center">
           <AppButton
-            size="small"
+            size="middle"
             typeButton="outline"
-            rootClassName="!w-fit"
+            rootClassName="!w-fit !border-none"
             classChildren={`!flex !flex-row !items-center ${
               hideDustCoin ? "!text-primary-main" : ""
             }`}
@@ -75,7 +77,7 @@ const PortfolioTab = ({ walletAddress }: { walletAddress: string }) => {
             <span className="ml-2">Hide dust coin</span>
           </AppButton>
           <AppInput
-            className="!w-[400px]"
+            className="!w-[400px] ml-4"
             isSearch={true}
             iconPosition="left"
             placeholder="Search"
@@ -84,7 +86,9 @@ const PortfolioTab = ({ walletAddress }: { walletAddress: string }) => {
           />
         </div>
       </div>
-      {!myPortfolio?.length && !isPending ? (
+      {isPending ? (
+        <Spin />
+      ) : !myPortfolio?.length && !isPending ? (
         <NoData />
       ) : (
         <div>
@@ -101,7 +105,15 @@ const PortfolioTab = ({ walletAddress }: { walletAddress: string }) => {
             )}
           </div>
           <AppDivider />
-          <AppPagination
+          <AppPaginationCustom
+            label="tokens"
+            total={total}
+            page={params?.page}
+            limit={params?.limit}
+            onChange={(page) => setParams({ ...params, page })}
+            hideOnSinglePage={true}
+          />
+          {/* <AppPagination
             className="w-full !justify-end !mr-6"
             hideOnSinglePage={true}
             showTotal={(total, range) => (
@@ -113,7 +125,7 @@ const PortfolioTab = ({ walletAddress }: { walletAddress: string }) => {
             onChange={(page, size) => {
               setParams((prev: any) => ({ ...prev, page, limit: size }));
             }}
-          />
+          /> */}
         </div>
       )}
     </div>

@@ -20,9 +20,9 @@
 
 .app-button.outline {
   border-radius: 256px;
-  color: #777e90 !important;
+  color: var(--color-neutral-7) !important;
   outline: none !important;
-  border: 1px solid var(--color-neutral-black) !important;
+  border: 1px solid var(--color-neutral-5);
   background: transparent !important;
 }
 
@@ -36,7 +36,7 @@
 
 .app-button.primary {
   border-radius: 256px;
-  color: var(--color-neutral-white) !important;
+  color: var(--color-neutral-1) !important;
   background-color: var(--color-primary-main) !important;
   border: 1px solid var(--color-primary-main) !important;
   outline: none !important;

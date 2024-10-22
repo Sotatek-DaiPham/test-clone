@@ -35,3 +35,18 @@ export interface IKingOfTheSkyResponse {
   numberTransaction: string;
   createdAt: string;
 }
+export interface ITradeHistoryResponse {
+  action: string;
+  amount: string;
+  created_at: string;
+  decimal: number;
+  symbol: string;
+  token_address: string;
+  token_avatar: string;
+  token_name: string;
+  updated_at: string;
+  usdt_amount: string;
+  user_address: string;
+  user_avatar: any;
+  username: string;
+}

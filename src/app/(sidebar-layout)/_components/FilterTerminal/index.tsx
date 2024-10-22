@@ -120,7 +120,11 @@ const FilterTerminal = ({
               trigger={["click"]}
               className="!mr-4"
             >
-              <div className="app-button min-w-fit mr-4 secondary middle text-14px-bold flex flex-row items-center px-[15px] py-3 cursor-pointer">
+              <div
+                className={`app-button min-w-fit mr-4 middle text-14px-bold flex flex-row items-center px-[15px] py-3 cursor-pointer ${
+                  searchParams[filter?.value] ? "outline" : "secondary"
+                }`}
+              >
                 <Image
                   src={DropdownIcon}
                   alt="drop-down"
@@ -130,9 +134,10 @@ const FilterTerminal = ({
                 />
                 <span className="ml-2">
                   {child?.find((x) => x?.key === searchParams[filter?.value])
-                    ? child?.find((x) => x?.key === searchParams[filter?.value])
-                        ?.label
-                    : filter?.label}
+                    ?.label === "Any" || !searchParams[filter?.value]
+                    ? filter?.label
+                    : child?.find((x) => x?.key === searchParams[filter?.value])
+                        ?.label}
                 </span>
               </div>
             </AppDropdown>
