@@ -10,8 +10,8 @@ import React, {
 import { Socket, io } from "socket.io-client";
 import { useAppSelector } from "../hooks";
 
-const domain = process.env.NEXT_PUBLIC_API_ENDPOINT;
-
+const domain = process.env.NEXT_PUBLIC_SOCKET_URL;
+console.log("domain", domain);
 interface Props {
   children: React.ReactNode;
 }

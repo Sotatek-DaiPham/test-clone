@@ -1,11 +1,10 @@
+import { formatBytes } from "@/helpers/formatNumber";
 import { CloseCircleOutlined } from "@ant-design/icons";
 import { CloseIcon, UploadIcon } from "@public/assets";
-import { Image as AntdImage } from "antd";
 import Upload, { UploadChangeParam, UploadFile } from "antd/es/upload";
 import Image from "next/image";
 import ButtonOutlined from "../Button/ButtonOutlined";
 import "./styles.scss";
-import { formatBytes } from "@/helpers/formatNumber";
 
 export interface AppUploadProps {
   onChange?: (values: { src?: string; file?: File }) => void;
@@ -18,7 +17,6 @@ export interface AppUploadProps {
 }
 
 const AppUpload = (props: AppUploadProps) => {
-  console.log("value", props.value);
   const { isShowSuggest = true, className, variant = "primary" } = props;
   const handleChange = (value: UploadChangeParam<UploadFile<any>>) => {
     const file = value.file;

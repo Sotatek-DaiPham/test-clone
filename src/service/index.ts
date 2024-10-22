@@ -55,8 +55,8 @@ axiosInstance.interceptors.response.use(
     const originalConfig = err.config;
     // logout user's session if refresh token api responds 401 UNAUTHORIZED
     const httpStatus = err.response?.status;
-
-    if (httpStatus === 401) {
+    const message = err.response?.data?.message;
+    if (httpStatus === 401 || message === "Unauthorized") {
       makeStore.dispatch(clearUser());
     }
     // if request fails with 401 UNAUTHORIZED status

@@ -8,6 +8,10 @@ export const REGEX_INPUT_DECIMAL = (min?: number, max?: number) => {
   return RegExp(String.raw`^([0-9]+\.?[0-9]{${min},${max}}|)$`);
 };
 
+export const isNumberGreaterThanOrEqualTo25 = (input: string) => {
+  return RegExp(/^(2[5-9]|[3-9][0-9]|[1-9][0-9]{2,})$/).test(input);
+};
+
 export const TwitterUrlRegex =
   /^http(?:s)?:\/\/(?:www\.)?(twitter|x)\.com(\/\S*)*$/;
 
