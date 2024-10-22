@@ -4,6 +4,7 @@ import { Form, Input, InputProps, Select } from "antd";
 import Image, { StaticImageData } from "next/image";
 import { ChangeEvent } from "react";
 import "./styles.scss";
+import BigNumber from "bignumber.js";
 
 interface Props extends InputProps {
   tokenSymbol: string;
@@ -13,6 +14,7 @@ interface Props extends InputProps {
   onTokenChange?: (token: ECoinType) => void;
   regex?: RegExp;
   isSwap?: boolean;
+  maxValue?: number;
 }
 
 const AppInputBalance = ({
@@ -23,6 +25,7 @@ const AppInputBalance = ({
   regex,
   isSwap,
   onTokenChange,
+  maxValue,
   ...restProps
 }: Props) => {
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -32,7 +35,10 @@ const AppInputBalance = ({
       return;
     }
 
-    if (regex && !regex.test(value)) {
+    if (
+      (regex && !regex.test(value)) ||
+      (maxValue && BigNumber(value).gt(maxValue))
+    ) {
       return;
     }
 

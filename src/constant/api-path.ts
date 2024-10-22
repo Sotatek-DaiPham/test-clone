@@ -19,7 +19,7 @@ export const API_PATH = {
   TOKEN: {
     LIST: "/token",
     CREATE_TOKEN: "/token",
-    GET_TOKEN: "/token",
+    TOKEN_DETAIL: "/token/token-detail",
     KING_OF_THE_SKY: "/token/king-of-the-hill",
     FOLLOWING_TOKEN_CREATED: "/token/following-token-created",
     PORTFOLIO: "/token/token-held",
