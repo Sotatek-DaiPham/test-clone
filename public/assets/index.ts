@@ -27,6 +27,8 @@ export { default as SelectDropdownIcon } from "./icons/select-dropdown.svg";
 export { default as UsdtIcon } from "./icons/usdt-icon.svg";
 export { default as BackIcon } from "./icons/back-arrow.svg";
 export { default as ApproveIcon } from "./icons/approve-icon.svg";
+export { default as ArrowTurnDownRightIcon } from "./icons/arrow-turn-down-right.svg";
+export { default as LinkHorizontalIcon } from "./icons/link-horizontal-alt.svg";
 
 // Sidebar icons
 export { default as BrowseIcon } from "./icons/browse-icon.svg";

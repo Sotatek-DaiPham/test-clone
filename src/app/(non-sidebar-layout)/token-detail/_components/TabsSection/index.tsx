@@ -1,4 +1,5 @@
 import AppTabs from "@/components/app-tabs";
+import DiscussionThread from "../DiscussionThreadSection";
 
 enum ETokenDetalTabs {
   DICUSSION = "DICUSSION",
@@ -8,9 +9,9 @@ enum ETokenDetalTabs {
 const TabsSection = () => {
   const tabs = [
     {
-      label: "My profile",
+      label: "Discussion Thread",
       key: ETokenDetalTabs.DICUSSION,
-      children: <h1 className="text-white">Discussion Thread</h1>,
+      children: <DiscussionThread />
     },
     {
       label: "Holder Distribution",
