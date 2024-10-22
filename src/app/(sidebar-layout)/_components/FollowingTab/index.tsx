@@ -4,7 +4,6 @@ import { LIMIT_ITEMS_TABLE } from "@/constant";
 import { API_PATH } from "@/constant/api-path";
 import { ITokenDashboardResponse } from "@/entities/dashboard";
 import { BeSuccessResponse } from "@/entities/response";
-import { convertNumber } from "@/helpers/formatNumber";
 import { useAppSearchParams } from "@/hooks/useAppSearchParams";
 import useDebounce from "@/hooks/useDebounce";
 import { getAPI } from "@/service";
@@ -16,44 +15,7 @@ import { useCallback, useEffect, useState } from "react";
 import FilterTerminal from "../FilterTerminal";
 import ProjectCard from "../ProjectCard";
 
-const data = [
-  {
-    title: "Project name",
-    percent: 70,
-    description:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusamus doloribus dolorum minus vero molestias iste ullam perspiciatis, odio ipsum harum laudantium earum consequuntur nesciunt dolore sapiente error deleniti perferendis nulla!",
-    total: 500000,
-    currentValue: 200000,
-    stage: "S1",
-  },
-  {
-    title: "Project name",
-    percent: 10,
-    description:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusamus doloribus dolorum minus vero molestias iste ullam perspiciatis, odio ipsum harum laudantium earum consequuntur nesciunt dolore sapiente error deleniti perferendis nulla!",
-    total: 5900000,
-    currentValue: 2123000,
-    stage: "S1",
-  },
-  {
-    title: "Project name",
-    percent: 70,
-    description:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusamus doloribus dolorum minus vero molestias iste ullam perspiciatis, odio ipsum harum laudantium earum consequuntur nesciunt dolore sapiente error deleniti perferendis nulla!",
-    total: 500000,
-    currentValue: 200000,
-    stage: "S1",
-  },
-  {
-    title: "Project name",
-    percent: 10,
-    description:
-      "Lorem ipsum dolor sit amet consectetur adipisicing elit. Accusamus doloribus dolorum minus vero molestias iste ullam perspiciatis, odio ipsum harum laudantium earum consequuntur nesciunt dolore sapiente error deleniti perferendis nulla!",
-    total: 5900000,
-    currentValue: 2123000,
-    stage: "S1",
-  },
-];
+
 
 const FILTER_TERMINAL = [
   {
@@ -140,40 +102,7 @@ const FollowingTab = () => {
           <div className="grid grid-cols-3 gap-6 my-9">
             {baseData?.map(
               (project: ITokenDashboardResponse, index: number) => (
-                <ProjectCard
-                  data={{
-                    id: project?.id,
-                    logo: project?.avatar,
-                    title: project?.name,
-                    address: project?.contractAddress,
-                    total: convertNumber(
-                      project?.total_supply,
-                      project?.decimal
-                    ),
-                    description: project?.description,
-                    currentValue: convertNumber(
-                      project?.initUsdtReserve,
-                      project?.decimal
-                    ),
-                    percent:
-                      (Number(
-                        convertNumber(
-                          project?.initUsdtReserve,
-                          project?.decimal
-                        )
-                      ) /
-                        Number(
-                          convertNumber(project?.total_supply, project?.decimal)
-                        )) *
-                      100,
-                    stage:
-                      Number(project?.total_supply) ===
-                      Number(project?.initUsdtReserve)
-                        ? "Listed"
-                        : "",
-                  }}
-                  key={index}
-                />
+                <ProjectCard data={project} key={index} />
               )
             )}
           </div>

@@ -6,7 +6,7 @@ import ButtonContained from "../ButtonContained";
 import { shortenAddress } from "@/helpers/shorten";
 import "./styles.scss";
 
-const ConnectWalletButton = () => {
+const ConnectWalletButton = ({ customClass }: { customClass?: string }) => {
   const { userAddress, isConnected, accessToken, logout } = useWalletAuth();
 
   useEffect(() => {
@@ -50,6 +50,7 @@ const ConnectWalletButton = () => {
                 userSelect: "none",
               },
             })}
+            className={customClass || ""}
           >
             {(() => {
               if (!connected) {

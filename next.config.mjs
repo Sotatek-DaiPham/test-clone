@@ -4,6 +4,14 @@ const nextConfig = {
     config.externals.push("pino-pretty", "lokijs", "encoding");
     return config;
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "nft-ticket-the-bucket.s3.ap-southeast-1.amazonaws.com",
+      },
+    ],
+  },
 };
 
 export default nextConfig;

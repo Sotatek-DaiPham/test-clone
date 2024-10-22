@@ -37,4 +37,16 @@
       }
     }
   }
+
+  // overwrite  antd styles
+  .ant-form-item-has-error {
+    .ant-select-selector {
+      background: transparent !important;
+      border: none !important;
+    }
+  }
+
+  .ant-form-item {
+    margin-bottom: 0;
+  }
 }

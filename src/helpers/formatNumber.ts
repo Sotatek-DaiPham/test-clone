@@ -1,4 +1,5 @@
 import BigNumber from "bignumber.js";
+import { isNaN } from "lodash";
 
 type IBigNumberArg = string | number | BigNumber;
 
@@ -15,13 +16,13 @@ export const nFormatter = (
   digits = 2,
   roundingMode?: BigNumber.RoundingMode
 ) => {
-  if (!number) {
-    return "";
+  if (Number(number) === 0 || isNaN(Number(number))) {
+    return 0;
   }
 
   const SI = [
     { value: 1, symbol: "" },
-    // { value: 1e3, symbol: 'K' }, // Follow common rule CMR-01.5
+    { value: 1e3, symbol: "K" },
     { value: 1e6, symbol: "M" },
     { value: 1e9, symbol: "B" },
     { value: 1e12, symbol: "T" },
@@ -61,15 +62,18 @@ export const nFormatter = (
 
 export const formatRoundFloorDisplayWithCompare = (
   value: IBigNumberArg,
-  decimalPlace = 4
+  decimalPlace = 2
 ): string => {
+  if (!Number(value)) {
+    return "";
+  }
   const minimumNumber = BigNumber(1).div(`1e${decimalPlace}`).toNumber();
   const data = String(
     new BigNumber(value).toNumber().toLocaleString("en-US", {
       maximumFractionDigits: decimalPlace,
       minimumFractionDigits: 0,
     })
-  ).replaceAll(",", "");
+  );
 
   if (Number(value) !== 0 && new BigNumber(value).lt(minimumNumber)) {
     return "<" + minimumNumber;

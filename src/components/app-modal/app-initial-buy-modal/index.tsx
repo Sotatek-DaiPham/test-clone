@@ -1,14 +1,13 @@
 import AppAmountSelect from "@/components/app-amount-select";
 import AppButton from "@/components/app-button";
 import AppInputBalance from "@/components/app-input/app-input-balance";
-import { MINIMUM_BUY_AMOUNT } from "@/constant";
+import { AMOUNT_FIELD_NAME, MINIMUM_BUY_AMOUNT } from "@/constant";
 import { REGEX_INPUT_DECIMAL } from "@/constant/regex";
-import { nFormatter } from "@/helpers/formatNumber";
+import { formatRoundFloorDisplayWithCompare } from "@/helpers/formatNumber";
 import { ECoinType } from "@/interfaces/token";
-import { Memeicon } from "@public/assets";
-import { Form, ModalProps } from "antd";
+import { Form, FormInstance, ModalProps } from "antd";
 import BigNumber from "bignumber.js";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect } from "react";
 import AppModal from "..";
 import "./styles.scss";
 
@@ -16,7 +15,6 @@ interface IInitialBuyModal extends ModalProps {
   onOk: (values: any) => void;
   onSkip: (values: any) => void;
   initialBuyAmount: string;
-  setInitalBuyAmount: Dispatch<SetStateAction<string>>;
   tokenSymbol: string;
   createLoading: boolean;
   skipLoading: boolean;
@@ -25,6 +23,9 @@ interface IInitialBuyModal extends ModalProps {
   coinType: ECoinType;
   setCoinType: Dispatch<SetStateAction<ECoinType>>;
   tokenImage: string;
+  form: FormInstance<{
+    amount: string;
+  }>;
 }
 
 const amountValidator = (value: string, usdtShouldPay: string) => {
@@ -45,7 +46,6 @@ const InitialBuyModal = ({
   title,
   onOk,
   initialBuyAmount,
-  setInitalBuyAmount,
   createLoading,
   skipLoading,
   tokenSymbol,
@@ -55,9 +55,9 @@ const InitialBuyModal = ({
   setCoinType,
   onSkip,
   tokenImage,
+  form,
   ...props
 }: IInitialBuyModal) => {
-  const [form] = Form.useForm();
   const predefinedNumbers = ["05", "10", "20", "50", "100"];
 
   const isDisableBuyButton =
@@ -69,7 +69,6 @@ const InitialBuyModal = ({
     if (!props.open) {
       form.resetFields();
       setCoinType(ECoinType.StableCoin);
-      setInitalBuyAmount("");
     }
   }, [props.open]);
 
@@ -99,7 +98,7 @@ const InitialBuyModal = ({
             <div className="text-14px-normal text-neutral-7">
               Minimum amount:{" "}
               <span className="text-white-neutral text-14px-medium">
-                0.1 USDT
+                {MINIMUM_BUY_AMOUNT} USDT
               </span>
             </div>
           </div>
@@ -110,7 +109,7 @@ const InitialBuyModal = ({
             }}
           >
             <Form.Item
-              name="amount"
+              name={AMOUNT_FIELD_NAME}
               rules={[
                 {
                   validator: (_: any, value: string) =>
@@ -122,7 +121,6 @@ const InitialBuyModal = ({
                 value={initialBuyAmount}
                 tokenImageSrc={tokenImage}
                 tokenSymbol={tokenSymbol}
-                onChange={(e) => setInitalBuyAmount(e.target.value)}
                 onTokenChange={(token) => setCoinType(token)}
                 regex={REGEX_INPUT_DECIMAL(0, 2)}
                 isSwap
@@ -134,7 +132,6 @@ const InitialBuyModal = ({
               numbers={predefinedNumbers}
               onSelect={(value) => {
                 form.setFieldValue("amount", value);
-                setInitalBuyAmount(value);
               }}
               customClass="mb-3"
             />
@@ -146,8 +143,12 @@ const InitialBuyModal = ({
               : "You will receive "}
             <span className="text-white-neutral text-14px-medium">
               {coinType === ECoinType.MemeCoin
-                ? `${nFormatter(usdtShouldPay, 10) || 0} USDT`
-                : `${nFormatter(tokenWillReceive) || 0} ${tokenSymbol}`}
+                ? `${
+                    formatRoundFloorDisplayWithCompare(usdtShouldPay) || 0
+                  } USDT`
+                : `${
+                    formatRoundFloorDisplayWithCompare(tokenWillReceive) || 0
+                  } ${tokenSymbol}`}
             </span>
           </div>
           <div className="text-14px-normal text-neutral-7">

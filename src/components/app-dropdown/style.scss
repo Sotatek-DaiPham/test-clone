@@ -1,14 +1,13 @@
 .app-dropdown {
-  color: var(--color-text-primary-2) !important;
   .ant-dropdown-menu {
-    background-color: var(--color-container-primary) !important;
+    background-color: var(--color-neutral-2) !important;
   }
   .ant-dropdown-menu-item {
     padding: 8px 10px !important;
-    color: var(--color-text-secondary) !important;
+    color: var(--color-neutral-9) !important;
   }
   .ant-dropdown-menu-item:hover {
-    background-color: var(--color-container-tertiary) !important;
+    background-color: var(--color-neutral-3) !important;
   }
   .ant-dropdown-menu {
     padding: 6px !important;
@@ -21,9 +20,9 @@
   }
 }
 .ant-dropdown-menu-item.ant-dropdown-menu-item-selected.ant-dropdown-menu-item-only-child {
-  background-color: var(--color-surface-container-tertiary) !important;
+  background-color: var(--color-neutral-3) !important;
   .ant-dropdown-menu-title-content {
-    color: var(--color-text-primary-2);
+    color: var(--color-primary-main) !important;
   }
 }
 
@@ -32,6 +31,6 @@
     min-width: 180px !important;
   }
   .ant-dropdown-menu-item:hover {
-    background-color: var(--color-surface-container-tertiary) !important;
+    background-color: var(--color-neutral-1) !important;
   }
 }
