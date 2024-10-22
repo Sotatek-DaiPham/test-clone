@@ -1,4 +1,5 @@
 import BigNumber from "bignumber.js";
+import { isNaN } from "lodash";
 
 type IBigNumberArg = string | number | BigNumber;
 
@@ -15,13 +16,16 @@ export const nFormatter = (
   digits = 2,
   roundingMode?: BigNumber.RoundingMode
 ) => {
+  if (Number(number) === 0 || isNaN(Number(number))) {
+    return 0;
+  }
   if (!number) {
     return "";
   }
 
   const SI = [
     { value: 1, symbol: "" },
-    // { value: 1e3, symbol: 'K' }, // Follow common rule CMR-01.5
+    { value: 1e3, symbol: "K" },
     { value: 1e6, symbol: "M" },
     { value: 1e9, symbol: "B" },
     { value: 1e12, symbol: "T" },

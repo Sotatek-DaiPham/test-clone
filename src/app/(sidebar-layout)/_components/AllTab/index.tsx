@@ -4,7 +4,6 @@ import { LIMIT_ITEMS_TABLE } from "@/constant";
 import { API_PATH } from "@/constant/api-path";
 import { ITokenDashboardResponse } from "@/entities/dashboard";
 import { BeSuccessResponse } from "@/entities/response";
-import { convertNumber } from "@/helpers/formatNumber";
 import { useAppSearchParams } from "@/hooks/useAppSearchParams";
 import useDebounce from "@/hooks/useDebounce";
 import { getAPI } from "@/service";
@@ -20,7 +19,13 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import { AxiosResponse } from "axios";
 import { get } from "lodash";
-import { useCallback, useEffect, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useState,
+} from "react";
 import FilterTerminal from "../FilterTerminal";
 import ProjectCard from "../ProjectCard";
 
@@ -35,13 +40,13 @@ const FILTER_TERMINAL = [
     value: "top",
     icon: TopIcon,
     children: [
+      // {
+      //   label: "Progress",
+      //   value: "progress",
+      // },
       {
-        label: "Progress",
-        value: "progress",
-      },
-      {
-        label: "Volumn",
-        value: "volumn",
+        label: "Volume",
+        value: "volume",
       },
       {
         label: "Txns",
@@ -53,24 +58,24 @@ const FILTER_TERMINAL = [
     label: "Rising",
     value: "rising",
     icon: DollarCircleUpIcon,
-    children: [
-      {
-        label: "5M",
-        value: "5m",
-      },
-      {
-        label: "1H",
-        value: "1h",
-      },
-      {
-        label: "6H",
-        value: "6h",
-      },
-      {
-        label: "24H",
-        value: "24h",
-      },
-    ],
+    // children: [
+    //   {
+    //     label: "5M",
+    //     value: "5m",
+    //   },
+    //   {
+    //     label: "1H",
+    //     value: "1h",
+    //   },
+    //   {
+    //     label: "6H",
+    //     value: "6h",
+    //   },
+    //   {
+    //     label: "24H",
+    //     value: "24h",
+    //   },
+    // ],
   },
   {
     label: "New",
@@ -81,39 +86,76 @@ const FILTER_TERMINAL = [
     label: "Finalized",
     value: "finalized",
     icon: FinalizedIcon,
-    children: [
-      {
-        label: "Trending",
-        value: "treding",
-      },
-      {
-        label: "Newest",
-        value: "newest",
-      },
-      {
-        label: "Top Mcap",
-        value: "top-mcap",
-      },
-      {
-        label: "Oldest",
-        value: "oldest",
-      },
-    ],
+    // children: [
+    //   {
+    //     label: "Trending",
+    //     value: "treding",
+    //   },
+    //   {
+    //     label: "Newest",
+    //     value: "newest",
+    //   },
+    //   {
+    //     label: "Top Mcap",
+    //     value: "top-mcap",
+    //   },
+    //   {
+    //     label: "Oldest",
+    //     value: "oldest",
+    //   },
+    // ],
   },
   {
     label: "Age",
     value: "age",
     icon: UsersIcon,
+    children: [
+      { key: "", label: "any" },
+      { key: "less15m", label: "≤15m" },
+      { key: "less30m", label: "≤30m" },
+      { key: "less1h", label: "≤1h" },
+      { key: "less3h", label: "≤3h" },
+      { key: "less6h", label: "≤6h" },
+      { key: "less12h", label: "≤12h" },
+      { key: "less124h", label: "≤24h" },
+      { key: "less3d", label: "≤3d" },
+    ],
+    children1: [
+      { key: "bigger15m", label: "≥15m" },
+      { key: "bigger30m", label: "≥30m" },
+      { key: "bigger1h", label: "≥1h" },
+      { key: "bigger3h", label: "≥3h" },
+      { key: "bigger6h", label: "≥6h" },
+      { key: "bigger12h", label: "≥12h" },
+      { key: "bigger25h", label: "≥24h" },
+      { key: "bigger3d", label: "≥3d" },
+    ],
   },
   {
     label: "Min progress",
-    value: "min-progress",
+    value: "minProgress",
     icon: DropdownIcon,
+    children: [
+      { key: "", label: "Any" },
+      { key: "10", label: "10%" },
+      { key: "25", label: "25%" },
+      { key: "50", label: "50%" },
+      { key: "75", label: "75%" },
+      { key: "90", label: "90%" },
+    ],
   },
   {
     label: "Max progress",
-    value: "max-progress",
+    value: "maxProgress",
     icon: DropdownIcon,
+    children: [
+      { key: "", label: "Any" },
+      { key: "10", label: "10%" },
+      { key: "25", label: "25%" },
+      { key: "50", label: "50%" },
+      { key: "75", label: "75%" },
+      { key: "90", label: "90%" },
+    ],
   },
 ];
 
@@ -145,11 +187,13 @@ const AllTab = () => {
     enabled: !searchParams.tab ? true : searchParams.tab === "all",
   });
 
-  const tokenList = get(data, "data.data", []) as ITokenDashboardResponse[];
+  const tokenList = useMemo(() => {
+    return get(data, "data.data", []) as ITokenDashboardResponse[];
+  }, [data]);
 
   const total = get(data, "data.metadata.total", 0) as number;
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const base = [...baseData, ...tokenList];
     setBaseData(base);
   }, [tokenList]);
@@ -202,40 +246,7 @@ const AllTab = () => {
           <div className="grid grid-cols-3 gap-6 my-9">
             {baseData?.map(
               (project: ITokenDashboardResponse, index: number) => (
-                <ProjectCard
-                  data={{
-                    id: project?.id,
-                    logo: project?.avatar,
-                    title: project?.name,
-                    address: project?.contractAddress,
-                    total: convertNumber(
-                      project?.total_supply,
-                      project?.decimal
-                    ),
-                    description: project?.description,
-                    currentValue: convertNumber(
-                      project?.initUsdtReserve,
-                      project?.decimal
-                    ),
-                    percent:
-                      (Number(
-                        convertNumber(
-                          project?.initUsdtReserve,
-                          project?.decimal
-                        )
-                      ) /
-                        Number(
-                          convertNumber(project?.total_supply, project?.decimal)
-                        )) *
-                      100,
-                    stage:
-                      Number(project?.total_supply) ===
-                      Number(project?.initUsdtReserve)
-                        ? "Listed"
-                        : "",
-                  }}
-                  key={index}
-                />
+                <ProjectCard data={project} key={index} />
               )
             )}
           </div>

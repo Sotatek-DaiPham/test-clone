@@ -104,43 +104,7 @@ export default function Home() {
               <span className="text-primary-main italic text-32px-bold flex w-full justify-center">
                 King of The Sky
               </span>
-              <ProjectCard
-                className="p-0"
-                data={{
-                  id: kingOfTheSky?.id,
-                  logo: kingOfTheSky?.avatar,
-                  title: kingOfTheSky?.name,
-                  address: kingOfTheSky?.contractAddress,
-                  total: convertNumber(
-                    kingOfTheSky?.total_supply,
-                    kingOfTheSky?.decimal
-                  ),
-                  description: kingOfTheSky?.description,
-                  currentValue: convertNumber(
-                    kingOfTheSky?.initUsdtReserve,
-                    kingOfTheSky?.decimal
-                  ),
-                  percent:
-                    (Number(
-                      convertNumber(
-                        kingOfTheSky?.initUsdtReserve,
-                        kingOfTheSky?.decimal
-                      )
-                    ) /
-                      Number(
-                        convertNumber(
-                          kingOfTheSky?.total_supply,
-                          kingOfTheSky?.decimal
-                        )
-                      )) *
-                    100,
-                  stage:
-                    Number(kingOfTheSky?.total_supply) ===
-                    Number(kingOfTheSky?.initUsdtReserve)
-                      ? "Listed"
-                      : "",
-                }}
-              />
+              <ProjectCard className="p-0" data={kingOfTheSky} />
             </div>
           </div>
         </div>
