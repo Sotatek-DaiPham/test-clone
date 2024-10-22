@@ -1,4 +1,7 @@
 "use client";
+import AppButton from "@/components/app-button";
+import { useTokenDetail } from "@/context/TokenDetailContext";
+import { getTimeDDMMMYYYYHHMM } from "@/helpers/date-time";
 import { BackIcon } from "@public/assets";
 import dynamic from "next/dynamic";
 import Image from "next/image";
@@ -14,6 +17,8 @@ const TradingView = dynamic(() => import("@/components/app-trading-view"), {
 
 const TokenDetailPage = () => {
   const router = useRouter();
+  const { tokenDetail } = useTokenDetail();
+
   return (
     <>
       <div
@@ -30,6 +35,18 @@ const TokenDetailPage = () => {
             <TradingView />
           </div>
 
+          {tokenDetail?.timeToListDex ? (
+            <div className="flex gap-6 mt-6 items-center">
+              <div className="text-neutral-9 text-16px-normal">
+                This token is successfully listed on Uniswap at{" "}
+                {getTimeDDMMMYYYYHHMM(tokenDetail?.timeToListDex)}
+              </div>
+              <AppButton size="small" customClass="!w-fit">
+                View On Uniswap
+              </AppButton>
+            </div>
+          ) : null}
+
           {/* Tab list section */}
           <TabsSection />
         </div>
@@ -42,8 +59,9 @@ const TokenDetailPage = () => {
 
           {/* Detail information section */}
           <PriceSection />
-          <div
-            className="
+          {tokenDetail?.kingOfTheHillDate ? (
+            <div
+              className="
             mt-4
             px-[10px]
             py-3
@@ -56,10 +74,13 @@ const TokenDetailPage = () => {
             shadow-[inset_0px_-2px_0px_0px_rgba(191,195,184,0.15)] 
             backdrop-blur-[59.4px]
           "
-          >
-            Crowned king of the hill at 7/10/2024 14:04
-          </div>
-          <TokenInfoSection />
+            >
+              Crowned king of the hill at{" "}
+              {getTimeDDMMMYYYYHHMM(tokenDetail?.kingOfTheHillDate)}
+            </div>
+          ) : null}
+
+          <TokenInfoSection tokenDetail={tokenDetail} />
         </div>
       </div>
     </>

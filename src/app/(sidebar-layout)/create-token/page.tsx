@@ -8,7 +8,7 @@ import ConfirmModal from "@/components/app-modal/app-confirm-modal";
 import InitialBuyModal from "@/components/app-modal/app-initial-buy-modal";
 import AppUpload from "@/components/app-upload";
 import ConnectWalletButton from "@/components/Button/ConnectWallet";
-import { TOKEN_INITIAL_PRICE, CREATE_TOKEN_FEE, ErrorCode } from "@/constant";
+import { AMOUNT_FIELD_NAME, ErrorCode, USDT_DECIMAL } from "@/constant";
 import { API_PATH } from "@/constant/api-path";
 import { envs } from "@/constant/envs";
 import {
@@ -84,6 +84,7 @@ const urlValidator = (props: any, value: string) => {
 const CreateTokenPage = () => {
   const router = useRouter();
   const [form] = Form.useForm<CreateTokenFormValues>();
+  const [amountForm] = Form.useForm<{ amount: string }>();
   const { accessToken: isAuthenticated, address } = useAppSelector(
     (state) => state.user
   );
@@ -95,36 +96,31 @@ const CreateTokenPage = () => {
   });
   const [isOpenInitialBuyModal, setIsOpenInitialBuyModal] = useState(false);
   const [isOpenApproveModal, setIsOpenApproveModal] = useState(false);
-  const [initialBuyAmount, setInitialBuyAmount] = useState("");
   const [tokenCreatedIdx, setTokenCreatedIdx] = useState("");
   const [tokenCreatedId, setTokenCreatedId] = useState("");
-  const {
-    mutateAsync: uploadImages,
-    isPending: isUploading,
-    data,
-  } = useMutation({
+  const { mutateAsync: uploadImages, isPending: isUploading } = useMutation({
     mutationFn: (payload: FormData) => {
       return postFormDataAPI(API_PATH.UPLOAD_IMAGE, payload);
     },
     mutationKey: ["upload-images"],
   });
 
-  const { mutateAsync: createToken, isPending: isCreateTokenLoading } =
-    useMutation({
-      mutationFn: (
-        payload: ICreateTokenReq
-      ): Promise<AxiosResponse<BeSuccessResponse<ICreateTokenRes>>> => {
-        return postFormDataAPI(API_PATH.TOKEN.CREATE_TOKEN, payload);
-      },
-      onError: (err) => {
-        error({ message: "Create Failed" });
-      },
-      mutationKey: ["create-token"],
-    });
+  const { mutateAsync: createToken } = useMutation({
+    mutationFn: (
+      payload: ICreateTokenReq
+    ): Promise<AxiosResponse<BeSuccessResponse<ICreateTokenRes>>> => {
+      return postFormDataAPI(API_PATH.TOKEN.CREATE_TOKEN, payload);
+    },
+    onError: (err) => {
+      error({ message: "Create Failed" });
+    },
+    mutationKey: ["create-token"],
+  });
 
   const [coinType, setCoinType] = useState(ECoinType.StableCoin);
 
   const uploadImage = useWatch(FIELD_NAMES.LOGO_UPLOAD, form);
+  const initialBuyAmount = useWatch(AMOUNT_FIELD_NAME, amountForm);
 
   const usdtShouldPay =
     coinType === ECoinType.MemeCoin && initialBuyAmount
@@ -139,9 +135,9 @@ const CreateTokenPage = () => {
   const buyAmount =
     coinType === ECoinType.MemeCoin
       ? BigNumber(usdtShouldPay)
-          .multipliedBy(1e6)
+          .multipliedBy(USDT_DECIMAL)
           .integerValue(BigNumber.ROUND_CEIL)
-          .dividedBy(1e6)
+          .dividedBy(USDT_DECIMAL)
           .toFixed(6)
       : initialBuyAmount;
 
@@ -183,7 +179,7 @@ const CreateTokenPage = () => {
         address,
         envs.TOKEN_FACTORY_ADDRESS
       );
-      const allowance = BigNumber(res).div(1e6).toString();
+      const allowance = BigNumber(res).div(USDT_DECIMAL).toString();
       return allowance;
     } catch (e) {
       console.log({ e });
@@ -198,7 +194,7 @@ const CreateTokenPage = () => {
       const txn = await contract?.approve(
         envs.TOKEN_FACTORY_ADDRESS,
         BigNumber(buyAmount)
-          .multipliedBy(1e6)
+          .multipliedBy(USDT_DECIMAL)
           .integerValue(BigNumber.ROUND_HALF_UP)
           .toString()
       );
@@ -227,7 +223,7 @@ const CreateTokenPage = () => {
         "create params",
         values[FIELD_NAMES.COIN_TICKER],
         values[FIELD_NAMES.COIN_NAME],
-        BigNumber(buyAmount).multipliedBy(1e6).toFixed(),
+        BigNumber(buyAmount).multipliedBy(USDT_DECIMAL).toFixed(),
         0,
         address,
         idx,
@@ -237,7 +233,7 @@ const CreateTokenPage = () => {
       const tx = await contract?.buyAndCreateToken(
         values[FIELD_NAMES.COIN_TICKER],
         values[FIELD_NAMES.COIN_NAME],
-        BigNumber(buyAmount).multipliedBy(1e6).toFixed(),
+        BigNumber(buyAmount).multipliedBy(USDT_DECIMAL).toFixed(),
         0,
         address,
         idx,
@@ -339,12 +335,20 @@ const CreateTokenPage = () => {
 
   return (
     <div className="create-token-page w-full mr-auto ml-auto">
-      <Form<CreateTokenFormValues> form={form} layout="vertical">
+      <Form<CreateTokenFormValues>
+        form={form}
+        layout="vertical"
+        initialValues={{
+          [FIELD_NAMES.COIN_NAME]: "Token",
+          [FIELD_NAMES.COIN_TICKER]: "tk",
+          [FIELD_NAMES.DESCRIPTION]: "description",
+        }}
+      >
         <h5 className="text-22px-bold mb-4 text-primary-main">
           Coin Information
         </h5>
         <div className="rounded-[24px] bg-neutral-2 backdrop-blur-[75px] p-6 mb-8">
-          <Flex gap={24} className="flex-col md:flex-row  ">
+          <Flex gap={24} className="flex-col md:flex-row">
             <Form.Item
               name={FIELD_NAMES.COIN_NAME}
               required={false}
@@ -377,17 +381,11 @@ const CreateTokenPage = () => {
           <Form.Item
             name={FIELD_NAMES.DESCRIPTION}
             required={false}
-            label={<FormItemLabel label="Description" isRequired />}
-            rules={[
-              {
-                required: true,
-                message: "Enter token description",
-              },
-            ]}
+            label={<FormItemLabel label="Description" />}
           >
             <AppInput.TextArea
               rows={3}
-              placeholder="Enter description"
+              placeholder="Enter token description"
               maxLength={1200}
             />
           </Form.Item>
@@ -493,12 +491,12 @@ const CreateTokenPage = () => {
         onSkip={() => {
           handleCreateToken(true);
         }}
+        form={amountForm}
         onOk={() => handleCreateToken(false)}
         open={isOpenInitialBuyModal}
         createLoading={loadingStatus.createToken || loadingStatus.approve}
         skipLoading={loadingStatus.createTokenWithoutBuy}
         initialBuyAmount={initialBuyAmount}
-        setInitalBuyAmount={setInitialBuyAmount}
         tokenSymbol={coinTickerValue}
         usdtShouldPay={usdtShouldPay}
         tokenWillReceive={tokenWillReceive}

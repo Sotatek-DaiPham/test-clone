@@ -19,9 +19,6 @@ export const nFormatter = (
   if (Number(number) === 0 || isNaN(Number(number))) {
     return 0;
   }
-  if (!number) {
-    return "";
-  }
 
   const SI = [
     { value: 1, symbol: "" },
@@ -65,15 +62,18 @@ export const nFormatter = (
 
 export const formatRoundFloorDisplayWithCompare = (
   value: IBigNumberArg,
-  decimalPlace = 4
+  decimalPlace = 2
 ): string => {
+  if (!Number(value)) {
+    return "";
+  }
   const minimumNumber = BigNumber(1).div(`1e${decimalPlace}`).toNumber();
   const data = String(
     new BigNumber(value).toNumber().toLocaleString("en-US", {
       maximumFractionDigits: decimalPlace,
       minimumFractionDigits: 0,
     })
-  ).replaceAll(",", "");
+  );
 
   if (Number(value) !== 0 && new BigNumber(value).lt(minimumNumber)) {
     return "<" + minimumNumber;
