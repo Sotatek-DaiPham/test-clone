@@ -339,9 +339,9 @@ const CreateTokenPage = () => {
         form={form}
         layout="vertical"
         initialValues={{
-          [FIELD_NAMES.COIN_NAME]: "Token",
-          [FIELD_NAMES.COIN_TICKER]: "tk",
-          [FIELD_NAMES.DESCRIPTION]: "description",
+          [FIELD_NAMES.COIN_NAME]: "",
+          [FIELD_NAMES.COIN_TICKER]: "",
+          [FIELD_NAMES.DESCRIPTION]: "",
         }}
       >
         <h5 className="text-22px-bold mb-4 text-primary-main">

@@ -3,7 +3,7 @@ import NoData from "@/components/no-data";
 import { API_PATH } from "@/constant/api-path";
 import { ITokenDashboardResponse } from "@/entities/dashboard";
 import { BeSuccessResponse } from "@/entities/response";
-import { getAge } from "@/helpers/date-time";
+import { getAge, getAgeType } from "@/helpers/date-time";
 import { useAppSearchParams } from "@/hooks/useAppSearchParams";
 import useDebounce from "@/hooks/useDebounce";
 import useSocket from "@/hooks/useSocket";
@@ -184,8 +184,8 @@ const AllTab = () => {
         params: {
           ...params,
           keyword: debounceSearch,
-          minAge: getAge(searchParams?.age, "bigger"),
-          maxAge: getAge(searchParams?.age, "less"),
+          typeFilterAge: getAgeType(searchParams?.age),
+          age: getAge(searchParams?.age),
           minProgress: searchParams?.minProgress,
           maxProgress: searchParams?.maxProgress,
           mainFilterToken:

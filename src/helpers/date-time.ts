@@ -34,12 +34,17 @@ const getAgeMilliseconds = (interval: string): number => {
   }
 };
 
-export const getAge = (age: string | undefined, type: string) => {
-  console.log("age", age);
+export const getAge = (age: string | undefined) => {
   if (!age) return "";
-  if (age.includes(type)) {
-    const newAge = age?.replace(type, "");
-    return getAgeMilliseconds(newAge)?.toString();
+  const newAge = age?.replace("less", "")?.replace("bigger", "");
+  return getAgeMilliseconds(newAge)?.toString();
+};
+
+export const getAgeType = (age: string | undefined) => {
+  if (!age) return "";
+  if (age.includes("less")) {
+    return "LESS_THAN_EQUAL";
+  } else if (age.includes("bigger")) {
+    return "GREATER_THAN_EQUAL";
   }
-  return "";
 };
