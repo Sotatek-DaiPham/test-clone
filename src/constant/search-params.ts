@@ -6,8 +6,8 @@ export const SEARCH_PARAMS = {
     rising: "rising",
     finalized: "finalized",
     age: "age",
-    min: "min",
-    max: "max",
+    minProgress: "minProgress",
+    maxProgress: "maxProgress",
   },
   myProfile: {
     tab: "tab",

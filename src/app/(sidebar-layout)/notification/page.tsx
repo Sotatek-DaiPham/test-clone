@@ -10,6 +10,7 @@ import isAuth from "@/helpers/isAuth";
 import useDebounce from "@/hooks/useDebounce";
 import { getAPI } from "@/service";
 import { useQuery } from "@tanstack/react-query";
+import { Spin } from "antd";
 import { AxiosResponse } from "axios";
 import dayjs from "dayjs";
 import { get } from "lodash";
@@ -78,7 +79,9 @@ const NotificationPage = () => {
           onChange={(e) => setSearch(e.target.value)}
         />
       </div>
-      {!notification?.length && !isPending ? (
+      {isPending ? (
+        <Spin />
+      ) : !notification?.length && !isPending ? (
         <NoData />
       ) : (
         <div>

@@ -1,3 +1,5 @@
+import "@/assets/scss/globals.scss";
+import AppLayout from "@/components/app-layout";
 import { NotificationProvider } from "@/libs/antd/NotificationProvider";
 import SocketProvider from "@/libs/socket/SocketProvider";
 import { WagmiRainbowKitProvider } from "@/providers/WagmiProvider";
@@ -5,8 +7,6 @@ import { AntdRegistry } from "@ant-design/nextjs-registry";
 import "@rainbow-me/rainbowkit/styles.css";
 import type { Metadata } from "next";
 import dynamic from "next/dynamic";
-import "@/assets/scss/globals.scss";
-import AppLayout from "@/components/app-layout";
 // import "@/app/globals.scss";
 
 const ReduxProviders = dynamic(() => import("@/providers/StoreProvider"), {
@@ -29,11 +29,11 @@ export default function RootLayout({
         <ReduxProviders>
           <WagmiRainbowKitProvider>
             <AntdRegistry>
-              <SocketProvider>
-                <AppLayout>
-                  <NotificationProvider>{children}</NotificationProvider>
-                </AppLayout>
-              </SocketProvider>
+              <AppLayout>
+                <NotificationProvider>
+                  <SocketProvider>{children}</SocketProvider>
+                </NotificationProvider>
+              </AppLayout>
             </AntdRegistry>
           </WagmiRainbowKitProvider>
         </ReduxProviders>

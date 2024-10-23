@@ -231,8 +231,8 @@ body {
 }
 
 img.active-filter-icon {
-  filter: brightness(0) saturate(100%) invert(97%) sepia(100%) saturate(11%)
-    hue-rotate(217deg) brightness(105%) contrast(104%) !important;
+  filter: invert(0%) sepia(0%) saturate(0%) hue-rotate(322deg) brightness(40%)
+    contrast(102%) !important;
 }
 
 img.filter-icon {
@@ -243,8 +243,8 @@ img.filter-icon {
 }
 
 img.active-primary-icon {
-  filter: invert(45%) sepia(84%) saturate(4485%) hue-rotate(240deg)
-    brightness(100%) contrast(102%);
+  filter: invert(64%) sepia(69%) saturate(4980%) hue-rotate(297deg)
+    brightness(108%) contrast(104%);
 }
 
 .how-it-work-bg {
@@ -256,4 +256,34 @@ img.active-primary-icon {
 
 * {
   font-family: var(--font-sf-pro);
+}
+
+@keyframes slide {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.loop-slide {
+  display: flex;
+  width: 200%; // Double the width to accommodate duplicated content
+  animation: slide 30s linear infinite;
+
+  &:hover {
+    animation-play-state: paused;
+  }
+}
+
+.ant-spin.ant-spin-spinning {
+  margin-top: 50px !important;
+  display: flex !important;
+  justify-content: center !important;
+  .ant-spin-dot {
+    .ant-spin-dot-item {
+      color: var(--color-primary-main) !important;
+    }
+  }
 }

@@ -13,11 +13,13 @@ import useDebounce from "@/hooks/useDebounce";
 import { getAPI } from "@/service";
 import { ArrowExport } from "@public/assets";
 import { useQuery } from "@tanstack/react-query";
+import { Spin } from "antd";
 import { AxiosResponse } from "axios";
 import get from "lodash/get";
 import Image from "next/image";
 import { useState } from "react";
 import TabTitle from "../../TabTitle";
+import AppPaginationCustom from "@/components/app-pagination/app-pagination-custom";
 
 const ReplyItem = ({ data }: { data: IMyRepliesResponse }) => {
   return (
@@ -96,7 +98,9 @@ const MyRepliesTab = () => {
           onChange={(e) => setSearch(e.target.value)}
         />
       </div>
-      {!myReplies?.length && !isPending ? (
+      {isPending ? (
+        <Spin />
+      ) : !myReplies?.length && !isPending ? (
         <NoData />
       ) : (
         <div>
@@ -106,7 +110,15 @@ const MyRepliesTab = () => {
             ))}
           </div>
           <AppDivider />
-          <AppPagination
+          <AppPaginationCustom
+            label="my replies"
+            total={total}
+            page={params?.page}
+            limit={params?.limit}
+            onChange={(page) => setParams({ ...params, page })}
+            hideOnSinglePage={true}
+          />
+          {/* <AppPagination
             className="w-full !justify-end !mr-6"
             hideOnSinglePage={true}
             showTotal={(total, range) => (
@@ -118,7 +130,7 @@ const MyRepliesTab = () => {
             onChange={(page: any, size) =>
               setParams((prev: any) => ({ ...prev, page, limit: size }))
             }
-          />
+          /> */}
         </div>
       )}
     </div>

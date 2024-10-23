@@ -2,6 +2,7 @@
 import { Empty, Table, TableProps } from "antd";
 import { useEffect } from "react";
 import "./style.scss";
+import NoData from "../no-data";
 
 interface AppTableProps extends TableProps {
   customClassName?: string;
@@ -14,12 +15,7 @@ const AppTable = (props: AppTableProps) => {
       return null;
     }
     if (!props.loading && props.dataSource?.length === 0) {
-      return (
-        <Empty
-          description={props?.textEmpty || "No Data"}
-          className="[&>.ant-empty-description]:!text-neutral-7 !rounded-xl !bg-transparent"
-        ></Empty>
-      );
+      return <NoData />;
     }
   };
 
