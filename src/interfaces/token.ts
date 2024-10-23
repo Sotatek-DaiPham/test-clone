@@ -48,7 +48,7 @@ export interface ITokenDetailRes {
   name: string;
   numberTransaction: string;
   pairListDex: string | null;
-  price: string | null;
+  price: string;
   progressToListDex: number;
   symbol: string;
   telegram: string | null;
@@ -71,4 +71,27 @@ export interface TokenDetailSC {
   usdtRaised: string;
   id: string;
   devWallet: string;
+}
+
+export interface ITradeHistoryRes {
+  user_address: string;
+  token_address: string;
+  amount: string;
+  usdt_amount: string;
+  action: string;
+  created_at: string;
+  updated_at: string;
+  username: string;
+  user_avatar: string | null;
+}
+
+export interface IGetTradeHistoryParams {
+  orderBy?: string;
+  direction?: string;
+  page?: number;
+  limit?: number;
+  tokenAddress?: string;
+  action?: string;
+  startDate?: string;
+  endDate?: string;
 }

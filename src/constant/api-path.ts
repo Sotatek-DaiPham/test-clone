@@ -25,6 +25,7 @@ export const API_PATH = {
     PORTFOLIO: "/token/token-held",
     COINS_CREATED: "/token/token-created",
     TRADE_HISTORY_SLIDER: "/token/token-trading-histories",
+    TRADING_HISTORIES: "/token/token-trading-histories",
   },
   TRADING: {
     ACTIVITY: "/user-trading-histories/following",

@@ -30,7 +30,6 @@ const TradeSettingModal = ({
   const { success } = useContext(NotificationContext);
   const fontRunningValue = useWatch(SETTINGS_FIELD_NAMES.FONT_RUNNING, form);
 
-  console.log("fontRunningValue", fontRunningValue);
   return (
     <AppModal
       className="trade-setting-modal"
