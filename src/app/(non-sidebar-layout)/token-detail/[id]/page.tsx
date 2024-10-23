@@ -12,7 +12,7 @@ import TokenInfoSection from "../_components/TokenInfoSection";
 import TradeSection from "../_components/TradeSection";
 import { useEffect } from "react";
 import useSocket from "@/hooks/useSocket";
-import { ESocketEvent } from "@/libs/socket/contants";
+import { ESocketEvent } from "@/libs/socket/constants";
 
 const TradingView = dynamic(() => import("@/components/app-trading-view"), {
   ssr: false,

@@ -9,7 +9,7 @@ import useFollowUser from "@/hooks/useFollowUser";
 import { NotificationContext } from "@/libs/antd/NotificationProvider";
 import { useAppSelector } from "@/libs/hooks";
 import { getAPI } from "@/service";
-import { ArrowExport, EditIcon } from "@public/assets";
+import { ArrowExport, EditIcon, ImageDefaultIcon } from "@public/assets";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import { useQuery } from "@tanstack/react-query";
 import { AxiosResponse } from "axios";
@@ -107,19 +107,31 @@ const MyProfileTab = ({ apiPath }: { apiPath: string }) => {
           </AppButton>
         )}
       </div>
-      <div className="flex flex-row gap-6 bg-neutral-2 rounded-3xl p-6">
-        <div className="p-auto">
-          <AppImage
-            className="!bg-neutral-4 w-[130px] h-[130px] rounded-full overflow-hidden flex"
-            src={myProfile?.avatar}
-            alt="avatar"
-          />
+      <div className="flex sm:flex-row flex-col gap-6 bg-neutral-2 rounded-3xl p-6">
+        <div className="flex justify-center">
+          {myProfile?.avatar ? (
+            <AppImage
+              className="!bg-neutral-4 w-[130px] h-[130px] rounded-full overflow-hidden flex [&>img]:!object-cover"
+              src={myProfile?.avatar}
+              alt="logo"
+            />
+          ) : (
+            <div className="!w-[130px] !h-[130px] !rounded-full overflow-hidden">
+              <Image
+                className="!bg-neutral-4 [&>img]:!object-contain"
+                alt="logo"
+                src={ImageDefaultIcon}
+              />
+            </div>
+          )}
         </div>
         <div className="w-full text-14px-normal">
           <div className="grid grid-cols-6 mb-4">
-            <span className="col-span-1 text-neutral-7">Wallet address</span>
-            <div className="col-span-5 flex flex-row">
-              <span className="text-14px-medium text-white-neutral mr-2">
+            <span className="sm:col-span-1 col-span-2 text-neutral-7">
+              Wallet address
+            </span>
+            <div className="sm:col-span-5 col-span-4 flex flex-row">
+              <span className="text-14px-medium text-white-neutral mr-2 break-all">
                 {myProfile?.walletAddress || "-"}
               </span>
               <Image
@@ -137,15 +149,15 @@ const MyProfileTab = ({ apiPath }: { apiPath: string }) => {
           </div>
           <AppDivider />
           <div className="grid grid-cols-6 my-4">
-            <span className="col-span-1 text-neutral-7">User name</span>
-            <span className="col-span-5 text-14px-medium text-white-neutral">
+            <span className="sm:col-span-1 col-span-2 text-neutral-7">User name</span>
+            <span className="sm:col-span-5 col-span-4 text-14px-medium text-white-neutral">
               {myProfile?.username || "-"}
             </span>
           </div>
           <AppDivider />
           <div className="grid grid-cols-6 my-4">
-            <span className="col-span-1 text-neutral-7">Bio</span>
-            <span className="col-span-5 text-14px-medium text-white-neutral">
+            <span className="sm:col-span-1 col-span-2 text-neutral-7">Bio</span>
+            <span className="sm:col-span-5 col-span-4 text-14px-medium text-white-neutral">
               {myProfile?.bio || "-"}
             </span>
           </div>

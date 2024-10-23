@@ -4,10 +4,12 @@ import { PATH_ROUTER } from "@/constant/router";
 import { IFollowerResponse } from "@/entities/my-profile";
 import { formatAmount } from "@/helpers/formatNumber";
 import { useAppSelector } from "@/libs/hooks";
+import { ImageDefaultIcon } from "@public/assets";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { EFollow } from "../Tabs/MyProfileTab";
 import { useAccount } from "wagmi";
+import { EFollow } from "../Tabs/MyProfileTab";
 
 interface IUserFollow {
   data: IFollowerResponse;
@@ -27,11 +29,21 @@ const UserFollow = ({ data, onFollow }: IUserFollow) => {
       }
     >
       <div className="w-[5%] mr-4">
-        <AppImage
-          className="border border-white-neutral w-[50px] h-[50px] rounded-xl flex bg-primary-7 overflow-hidden"
-          src={data?.avatar}
-          alt="avatar"
-        />
+        {data?.avatar ? (
+          <AppImage
+            className="!bg-neutral-4 w-full h-full rounded-3xl overflow-hidden flex [&>img]:!object-cover"
+            alt="logo"
+            src={data?.avatar}
+          />
+        ) : (
+          <div className="border border-white-neutral !w-[50px] !h-[50px] !rounded-full overflow-hidden">
+            <Image
+              className="flex bg-primary-7 [&>img]:!object-cover"
+              alt="logo"
+              src={ImageDefaultIcon}
+            />
+          </div>
+        )}
       </div>
       <div className="w-[80%] ml-4 mr-6">
         <span className="text-16px-medium text-white-neutral mr-3">

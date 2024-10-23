@@ -5,16 +5,21 @@ import { useEffect, useRef } from "react";
 import withClient from "@/helpers/with-client";
 import onInitTradingView from "@/libs/trading-view";
 import { Spin } from "antd";
+import { useTokenDetail } from "@/context/TokenDetailContext";
 
 const TradingViewChart = () => {
   const tradingChartRef = useRef<HTMLDivElement>(null);
+  const { tokenDetail } = useTokenDetail();
 
   useEffect(() => {
-    onInitTradingView({
-      marketId: "1",
-      symbol: "ETH",
-    });
-  }, []);
+    if (tradingChartRef.current) {
+      onInitTradingView({
+        tokenAddress: tokenDetail?.contractAddress,
+        symbol: tokenDetail?.symbol,
+      });
+    }
+  }, [tokenDetail]);
+
   return (
     <div className="w-full h-full flex flex-col" ref={tradingChartRef}>
       <div className={`flex items-center justify-center w-full flex-1 `}>
