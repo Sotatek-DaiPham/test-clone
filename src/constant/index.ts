@@ -35,3 +35,8 @@ export enum ETradeAction {
   BUY = "BUY",
   SELL = "SELL",
 }
+
+export enum EDirection {
+  ASC = "ASC",
+  DESC = "DESC",
+}

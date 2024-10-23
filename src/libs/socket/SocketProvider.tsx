@@ -11,7 +11,7 @@ import { Socket, io } from "socket.io-client";
 import { useAppSelector } from "../hooks";
 
 const domain = process.env.NEXT_PUBLIC_SOCKET_URL;
-console.log("domain", domain);
+
 interface Props {
   children: React.ReactNode;
 }
@@ -25,6 +25,7 @@ interface SocketInterface {
   removeEvent: (eventName: string, listener?: (data: any) => void) => void;
   connect: () => void;
   disconnect: () => void;
+  socket: Socket | null;
 }
 
 export const SocketContext = createContext<SocketInterface>({
@@ -33,6 +34,7 @@ export const SocketContext = createContext<SocketInterface>({
   removeEvent: () => {},
   connect: () => {},
   disconnect: () => {},
+  socket: null,
 });
 
 const SocketProvider = ({ children }: Props) => {
@@ -126,7 +128,14 @@ const SocketProvider = ({ children }: Props) => {
 
   return (
     <SocketContext.Provider
-      value={{ isConnected, addEvent, removeEvent, connect, disconnect }}
+      value={{
+        isConnected,
+        addEvent,
+        removeEvent,
+        connect,
+        disconnect,
+        socket: socket?.current,
+      }}
     >
       {children}
     </SocketContext.Provider>

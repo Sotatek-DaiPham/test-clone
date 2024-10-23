@@ -23,6 +23,9 @@ import AllTab from "./_components/AllTab";
 import FollowingTab from "./_components/FollowingTab";
 import ProjectCard from "./_components/ProjectCard";
 import AppTooltip from "@/components/app-tooltip";
+import { EDirection } from "@/constant";
+import useSocket from "@/hooks/useSocket";
+import { ESocketEvent } from "@/libs/socket/contants";
 
 enum ETabsTerminal {
   ALL = "all",
@@ -30,6 +33,7 @@ enum ETabsTerminal {
 }
 
 export default function Home() {
+  const { addEvent, isConnected, removeEvent } = useSocket();
   const { accessToken } = useWalletAuth();
   const { searchParams, setSearchParams } = useAppSearchParams("terminal");
   const [activeTab, setActiveTab] = useState<string>(ETabsTerminal.ALL);
@@ -54,6 +58,8 @@ export default function Home() {
     queryFn: async () => {
       return getAPI(API_PATH.TOKEN.TRADE_HISTORY_SLIDER, {
         params: {
+          orderBy: "created_at",
+          direction: EDirection.ASC,
           page: 1,
           limit: 14,
         },
@@ -100,6 +106,31 @@ export default function Home() {
       setActiveTab(ETabsTerminal.ALL);
     }
   }, []);
+
+  useEffect(() => {
+    if (isConnected) {
+      addEvent(ESocketEvent.BUY, (data) => {
+        if (data) {
+          refetchTrade();
+        }
+      });
+      addEvent(ESocketEvent.SELL, (data) => {
+        if (data) {
+          refetchTrade();
+        }
+      });
+      addEvent(ESocketEvent.CHANGE_KING_OF_THE_HILL, (data) => {
+        if (data) {
+          refetch();
+        }
+      });
+    }
+    return () => {
+      removeEvent(ESocketEvent.BUY);
+      removeEvent(ESocketEvent.SELL);
+      removeEvent(ESocketEvent.CHANGE_KING_OF_THE_HILL);
+    };
+  }, [isConnected]);
 
   return (
     <div className="h-full !m-[-24px]">

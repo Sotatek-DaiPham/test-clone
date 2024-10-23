@@ -1,3 +1,4 @@
+"use client";
 import AppButton from "@/components/app-button";
 import AppDivider from "@/components/app-divider";
 import AppImage from "@/components/app-image";
@@ -23,6 +24,9 @@ export enum EFollow {
   FOLLOW = "FOLLOW",
   UN_FOLLOW = "UN_FOLLOW",
 }
+
+const SCAN = process.env.NEXT_PUBLIC_ARBITRUM_SCAN_URL;
+
 const MyProfileTab = ({ apiPath }: { apiPath: string }) => {
   const { error, success } = useContext(NotificationContext);
   const { openConnectModal } = useConnectModal();
@@ -119,6 +123,12 @@ const MyProfileTab = ({ apiPath }: { apiPath: string }) => {
                 {myProfile?.walletAddress || "-"}
               </span>
               <Image
+                onClick={() =>
+                  window.open(
+                    `${SCAN}/address/${myProfile.walletAddress}`,
+                    "_blank"
+                  )
+                }
                 src={ArrowExport}
                 alt="arrow-export"
                 className="cursor-pointer"

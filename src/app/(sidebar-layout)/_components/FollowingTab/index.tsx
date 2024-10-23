@@ -75,7 +75,6 @@ const FollowingTab = () => {
 
   return (
     <div>
-      {isPending && <Spin />}
       <FilterTerminal
         search={search}
         onChangeSearch={(e) => {
@@ -87,7 +86,9 @@ const FollowingTab = () => {
         handleClickFilter={handleClickFilter}
         handleClickFilterOption={handleClickFilter}
       />
-      {!tokenList?.length && !isPending ? (
+      {isPending ? (
+        <Spin />
+      ) : !tokenList?.length && !isPending ? (
         <NoData></NoData>
       ) : (
         <div>

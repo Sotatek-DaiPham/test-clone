@@ -5,6 +5,8 @@ import { ITokenDashboardResponse } from "@/entities/dashboard";
 import { BeSuccessResponse } from "@/entities/response";
 import { useAppSearchParams } from "@/hooks/useAppSearchParams";
 import useDebounce from "@/hooks/useDebounce";
+import useSocket from "@/hooks/useSocket";
+import { ESocketEvent } from "@/libs/socket/contants";
 import { getAPI } from "@/service";
 import {
   DollarCircleUpIcon,
@@ -19,7 +21,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Spin } from "antd";
 import { AxiosResponse } from "axios";
 import { get } from "lodash";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import FilterTerminal from "../FilterTerminal";
 import ProjectCard from "../ProjectCard";
 
@@ -154,6 +156,7 @@ const FILTER_TERMINAL = [
 ];
 
 const AllTab = () => {
+  const { isConnected, socket } = useSocket();
   const [search, setSearch] = useState<string>("");
   const { searchParams, setSearchParams } = useAppSearchParams("terminal");
 
@@ -228,9 +231,19 @@ const AllTab = () => {
     [searchParams, setSearchParams]
   );
 
+  useEffect(() => {
+    if (isConnected) {
+      socket?.on(ESocketEvent.BUY, () => {
+        console.log("buy on all tab");
+      });
+      socket?.on(ESocketEvent.SELL, () => {
+        console.log("sell on all tab");
+      });
+    }
+  }, [isConnected]);
+
   return (
     <div>
-      {isPending && <Spin />}
       <FilterTerminal
         search={search}
         onChangeSearch={(e) => {
@@ -242,7 +255,9 @@ const AllTab = () => {
         handleClickFilter={handleClickFilter}
         handleClickFilterOption={handleClickFilterOption}
       />
-      {!tokenList?.length && !isPending ? (
+      {isPending ? (
+        <Spin />
+      ) : !tokenList?.length && !isPending ? (
         <NoData></NoData>
       ) : (
         <div>

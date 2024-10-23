@@ -15,11 +15,14 @@ import { useQuery } from "@tanstack/react-query";
 import { Spin } from "antd";
 import { AxiosResponse } from "axios";
 import get from "lodash/get";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import TabTitle from "../../TabTitle";
 import AppPaginationCustom from "@/components/app-pagination/app-pagination-custom";
+import useSocket from "@/hooks/useSocket";
+import { ESocketEvent } from "@/libs/socket/contants";
 
 const CoinCreatedTab = ({ walletAddress }: { walletAddress: string }) => {
+  const { addEvent, isConnected, removeEvent } = useSocket();
   const { searchParams } = useAppSearchParams("myProfile");
   const [params, setParams] = useState<any>({
     page: 1,
@@ -49,6 +52,23 @@ const CoinCreatedTab = ({ walletAddress }: { walletAddress: string }) => {
 
   const coinCreated = get(data, "data.data", []) as IProjectCardResponse[];
   const total = get(data, "data.metadata.total", 0) as number;
+
+  useEffect(() => {
+    if (isConnected) {
+      addEvent(ESocketEvent.BUY, (data) => {
+        if (data) {
+        }
+      });
+      addEvent(ESocketEvent.SELL, (data) => {
+        if (data) {
+        }
+      });
+    }
+    return () => {
+      removeEvent(ESocketEvent.BUY);
+      removeEvent(ESocketEvent.SELL);
+    };
+  }, [isConnected]);
 
   return (
     <div>
