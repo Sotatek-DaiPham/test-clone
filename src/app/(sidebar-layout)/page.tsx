@@ -1,21 +1,28 @@
 "use client";
 import AppButton from "@/components/app-button";
+import AppImage from "@/components/app-image";
 import AppTabs from "@/components/app-tabs";
+import { API_PATH } from "@/constant/api-path";
+import {
+  IKingOfTheSkyResponse,
+  ITradeHistoryResponse,
+} from "@/entities/dashboard";
+import { BeSuccessResponse } from "@/entities/response";
+import { convertNumber, formatAmount } from "@/helpers/formatNumber";
+import { shortenAddress } from "@/helpers/shorten";
 import { useAppSearchParams } from "@/hooks/useAppSearchParams";
+import useWalletAuth from "@/hooks/useWalletAuth";
+import { getAPI } from "@/service";
 import { HowItWorksIcon } from "@public/assets";
+import { useQuery } from "@tanstack/react-query";
+import { AxiosResponse } from "axios";
+import get from "lodash/get";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import AllTab from "./_components/AllTab";
 import FollowingTab from "./_components/FollowingTab";
 import ProjectCard from "./_components/ProjectCard";
-import { useQuery } from "@tanstack/react-query";
-import { API_PATH } from "@/constant/api-path";
-import { getAPI } from "@/service";
-import { AxiosResponse } from "axios";
-import { BeSuccessResponse } from "@/entities/response";
-import { IKingOfTheSkyResponse } from "@/entities/dashboard";
-import get from "lodash/get";
-import { convertNumber } from "@/helpers/formatNumber";
+import AppTooltip from "@/components/app-tooltip";
 
 enum ETabsTerminal {
   ALL = "all",
@@ -23,8 +30,10 @@ enum ETabsTerminal {
 }
 
 export default function Home() {
+  const { accessToken } = useWalletAuth();
   const { searchParams, setSearchParams } = useAppSearchParams("terminal");
   const [activeTab, setActiveTab] = useState<string>(ETabsTerminal.ALL);
+
   const { data, refetch } = useQuery({
     queryKey: ["king-of-the-sky"],
     queryFn: async () => {
@@ -36,17 +45,43 @@ export default function Home() {
 
   const kingOfTheSky = get(data, "data.data", {}) as IKingOfTheSkyResponse;
 
-  const tabs = [
+  const {
+    data: dataTrade,
+    isPending,
+    refetch: refetchTrade,
+  } = useQuery({
+    queryKey: ["trade-history"],
+    queryFn: async () => {
+      return getAPI(API_PATH.TOKEN.TRADE_HISTORY_SLIDER, {
+        params: {
+          page: 1,
+          limit: 14,
+        },
+      }) as Promise<
+        AxiosResponse<BeSuccessResponse<ITradeHistoryResponse[]>, any>
+      >;
+    },
+  });
+
+  const tradeHistory = get(
+    dataTrade,
+    "data.data",
+    []
+  ) as ITradeHistoryResponse[];
+
+  const tabs: any = [
     {
       label: "All",
       key: ETabsTerminal.ALL,
       children: <AllTab />,
     },
-    {
-      label: "Following",
-      key: ETabsTerminal.FOLLOWING,
-      children: <FollowingTab />,
-    },
+    accessToken
+      ? {
+          label: "Following",
+          key: ETabsTerminal.FOLLOWING,
+          children: <FollowingTab />,
+        }
+      : {},
   ];
 
   const handleChangeTab = (value: any) => {
@@ -108,6 +143,48 @@ export default function Home() {
             </div>
           </div>
         </div>
+        {tradeHistory?.length && !isPending && (
+          <div className="mt-7 mb-5 border overflow-hidden border-neutral-4 flex bg-neutral-3 rounded-lg py-1">
+            <div className="loop-slide">
+              {tradeHistory?.map(
+                (item: ITradeHistoryResponse, index: number) => (
+                  <div
+                    key={index}
+                    className="slide-item flex flex-row items-center text-14px-normal text-neutral-9 border-r border-neutral-4 px-3"
+                  >
+                    <AppTooltip className="mr-2" title={item?.user_address}>
+                      {shortenAddress(item?.user_address)}
+                    </AppTooltip>
+
+                    <span
+                      className={
+                        item?.action === "BUY"
+                          ? "text-success-main"
+                          : "text-error-main"
+                      }
+                    >
+                      {item?.action}
+                    </span>
+                    <span className="mx-1 ml-2">
+                      {formatAmount(
+                        convertNumber(item?.amount, item?.decimal)
+                      ) || "-"}
+                    </span>
+                    <span className="text-14px-normal">of</span>
+                    <AppImage
+                      src={item?.token_avatar}
+                      alt="logo"
+                      className="w-[24px] h-[24px] rounded-full mx-3"
+                    />
+                    <span className="text-14px-bold text-primary-6">
+                      {item?.token_name}
+                    </span>
+                  </div>
+                )
+              )}
+            </div>
+          </div>
+        )}
         <div className="my-5">
           <AppTabs
             items={tabs}
