@@ -82,7 +82,7 @@ const TokenInfoSection = ({ tokenDetail }: ITokenInfoSectionProps) => {
         <div className="primary-box flex justify-between">
           <div className="text-16px-normal text-neutral-7">Created on</div>
           <div className="text-16px-medium text-white-neutral">
-            {getTimeDDMMMYYYYHHMM(tokenDetail?.kingOfTheHillDate)}
+            {getTimeDDMMMYYYYHHMM(tokenDetail?.createdAt)}
           </div>
         </div>
         <div className="primary-box flex justify-between">

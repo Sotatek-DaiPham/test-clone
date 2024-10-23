@@ -13,6 +13,7 @@ import { IGetTradeHistoryParams, ITradeHistoryRes } from "@/interfaces/token";
 import { getAPI } from "@/service";
 import { ArrowExport } from "@public/assets";
 import { useQuery } from "@tanstack/react-query";
+import { Checkbox } from "antd";
 import { ColumnType } from "antd/es/table";
 import BigNumber from "bignumber.js";
 import { get } from "lodash";
@@ -38,18 +39,23 @@ const TradeHistory = () => {
     queryFn: () => {
       return getAPI(API_PATH.TOKEN.TRADING_HISTORIES, {
         params: cleanParamObject({
+          tokenAddress: tokenDetail?.contractAddress,
           page: searchParams.page,
           limit: 100,
           startDate: searchParams.startDate,
           endDate: searchParams.endDate,
-          tokenAddress: tokenDetail?.contractAddress,
         } as IGetTradeHistoryParams),
       });
     },
     select(data) {
       return data;
     },
-    queryKey: [API_PATH.TOKEN.TRADING_HISTORIES, searchParams],
+    queryKey: [
+      API_PATH.TOKEN.TRADING_HISTORIES,
+      searchParams,
+      tokenDetail?.contractAddress,
+    ],
+    enabled: !!tokenDetail?.contractAddress,
   });
 
   const metadata = get(data, "data.metadata") as IMetaData;
