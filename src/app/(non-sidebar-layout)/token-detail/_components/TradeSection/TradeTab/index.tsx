@@ -24,7 +24,10 @@ import {
   decreaseByPercent,
   increaseByPercent,
 } from "@/helpers/calculate";
-import { formatRoundFloorDisplayWithCompare } from "@/helpers/formatNumber";
+import {
+  formatRoundFloorDisplayWithCompare,
+  nFormatter,
+} from "@/helpers/formatNumber";
 import useCalculateAmount from "@/hooks/useCalculateAmount";
 import useTokenBalance from "@/hooks/useTokenBalance";
 import useUsdtAllowance from "@/hooks/useUsdtAllowance";
@@ -346,7 +349,7 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
         BigNumber(minUSDTOut).multipliedBy(USDT_DECIMAL).toFixed(0),
         address
       );
-      const tx = await contract?.sell(
+      const tx = await contract?.sellExactIn(
         tokenDetail?.contractAddress,
         BigNumber(amountValue).multipliedBy(TOKEN_DECIMAL).toFixed(),
         BigNumber(minUSDTOut).multipliedBy(USDT_DECIMAL).toFixed(0),
@@ -405,13 +408,17 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
       setLoadingStatus((prev) => ({ ...prev, approve: false }));
     } catch (e: any) {
       console.log({ e });
+      setLoadingStatus((prev) => ({
+        ...prev,
+        approve: false,
+        buyToken: false,
+      }));
       if (e?.code === ErrorCode.MetamaskDeniedTx) {
         error({
           message: "Transaction denied",
         });
       }
     } finally {
-      setLoadingStatus((prev) => ({ ...prev, approve: false }));
       setIsOpenApproveModal(false);
     }
   };
@@ -445,10 +452,8 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
           <span className="text-white-neutral text-14px-medium">
             {" "}
             {coinType === ECoinType.MemeCoin
-              ? `${formatRoundFloorDisplayWithCompare(usdtShouldPay) || 0} USDT`
-              : `${formatRoundFloorDisplayWithCompare(tokenWillReceive) || 0} ${
-                  tokenDetail?.symbol
-                }`}
+              ? `${nFormatter(usdtShouldPay, 6) || 0} USDT`
+              : `${nFormatter(tokenWillReceive) || 0} ${tokenDetail?.symbol}`}
           </span>
         </div>
       );
