@@ -78,3 +78,46 @@ export enum ETabsMyProfile {
   FOLLOWING = "following",
   MY_REPLIES = "my-replies",
 }
+
+export interface  DiscussionThreadItem {
+  comment_id: number;
+  user_id: number;
+  token_id: number;
+  reply_id: number | null;
+  reply_user_id: number | null;
+  image: string;
+  content: string;
+  created_at: string;
+  updated_at: string;
+  wallet_address: string;
+  username: string;
+  avatar: string | null;
+  number_replies: number;
+  mostRecentUserComments: IMostRecentUserComment[];
+  
+}
+
+export interface IMostRecentUserComment {
+  id: number;
+  reply_id: number;
+  user_id: number;
+  wallet_address: string;
+  avatar: string;
+}
+
+export interface IReplyThreadItem {
+  avatar: string;
+  comment_id: number;
+  content: string;
+  created_at: string;
+  image: string;
+  number_replies: number;
+  reply_id: number;
+  reply_user_id: number;
+  token_id: number;
+  updated_at: string;
+  user_id: number;
+  username: string;
+  wallet_address: string;
+
+}

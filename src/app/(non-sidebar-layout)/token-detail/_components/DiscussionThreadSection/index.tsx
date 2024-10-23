@@ -1,111 +1,230 @@
-import AppImage from '@/components/app-image';
-import {
-  ArrowTurnDownRightIcon
-} from "@public/assets";
-import Image from 'next/image';
-import { useState } from 'react';
-import AppRoundedInfo from "@/components/app-rounded-info";
+"use client";
+
 import AppInputComment from '@/components/app-input/app-input-comment';
+import AppRoundedInfo from "@/components/app-rounded-info";
+import { API_PATH } from '@/constant/api-path';
+import { useAppSelector } from '@/libs/hooks';
+import { getAPI, postFormDataAPI } from '@/service';
+import { useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { Form, message } from 'antd';
+import { useParams } from 'next/navigation';
+import { useCallback, useEffect, useState } from 'react';
+import InfiniteScroll from 'react-infinite-scroll-component';
+import DiscussionItem from './component/DiscussionItem';
+import ReplySection from './component/ReplySection';
+import { DiscussionThreadItem } from '@/entities/my-profile';
 
-const fakeData = [
-  {
-    id: 1,
-    username: 'Người dùng 1',
-    avatar: 'https://example.com/avatar1.jpg',
-    date: '2023-06-15T10:30:00Z',
-    comment: 'Đây là một bình luận mẫu.',
-    replies: [
-      {
-        id: 2,
-        username: 'Người dùng 2',
-        avatar: 'https://example.com/avatar2.jpg',
-        date: '2023-06-15T11:00:00Z',
-        comment: 'Đây là một phản hồi mẫu.'
-      }
-    ]
-  },
-  {
-    id: 3,
-    username: 'Người dùng 3',
-    avatar: 'https://example.com/avatar3.jpg',
-    date: '2023-06-15T12:00:00Z',
-    comment: 'Một bình luận mẫu khác.',
-    replies: []
-  }
-]
-
-const DiscussionItem = ({ data, onShowReplies }: any) => {
-  return (
-    <div className='flex flex-col gap-1'>
-      <div className='px-6 py-4 rounded-2xl bg-neutral-2 flex flex-col gap-4'>
-        <div className='flex items-center gap-3'>
-          <AppImage src={data.avatar} alt='avatar' className='w-10 h-10 rounded-full' />
-          <div className='flex flex-col'>
-            <span className='text-neutral-9 text-16px-bold"'>
-              {data.username || "-"}
-            </span>
-            <span className='text-neutral-7 text-14px-medium'>
-              {new Date(data.date).toLocaleString()}
-            </span>
-          </div>
-        </div>
-        <p className='text-neutral-9 text-14px-normal'>{data.comment}</p>
-      </div>
-
-      <div className='flex flex-col ml-6 gap-2'>
-        <span className='text-neutral-7 text-14px-normal'>{`day ago`}</span>
-        <div className='flex items-center gap-2 cursor-pointer' onClick={() => onShowReplies(data.replies)}>
-          <Image src={ArrowTurnDownRightIcon} alt="my-portfolio" />
-          <span className='text-white text-14px-medium'>{`Reply (${data.replies.length})`}</span>
-        </div>
-      </div>
-    </div>
-  )
-}
 
 const DiscussionThread = () => {
+  const [form] = Form.useForm();
+  const params = useParams();
+  const { id: tokenId } = params;
+  const queryClient = useQueryClient();
+  
+  const { accessToken: isAuthenticated, address } = useAppSelector(
+    (state) => state.user
+  );
+  const { userId } = useAppSelector((state) => state.user);
+
   const [selectedReplies, setSelectedReplies] = useState([]);
   const [showInputComment, setShowInputComment] = useState(false);
+  const [isShowReplySection, setIsShowReplySection] = useState(false);
+  const [replyTo, setReplyTo] = useState<{ commentId: number | null, replyUserId: number | null }>({ commentId: null, replyUserId: null });
 
-  const handleShowReplies = (replies: any) => {
-    setSelectedReplies(replies);
+  const fetchDiscussionThreads = async ({ pageParam = 1 }) => {
+    const response = await getAPI(API_PATH.TOKEN.DISCUSSION_THREADS, {
+      params: {
+        direction: 'DESC',
+        page: pageParam,
+        limit: 4,
+        tokenId: Number(tokenId),
+      }
+    });
+    return response.data;
+  };
+
+  const fetchRepliesDiscussion = async ({ pageParam = 1 }) => {
+    const response = await getAPI(API_PATH.TOKEN.DISCUSSION_THREADS, {
+      params: {
+        direction: 'DESC',
+        page: pageParam,
+        limit: 4,
+        tokenId: Number(tokenId),
+        replyId: replyTo.commentId,
+      }
+    });
+    return response.data;
+  };
+
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isLoading,
+  } = useInfiniteQuery({
+    queryKey: ['discussionThreads', tokenId],
+    queryFn: fetchDiscussionThreads,
+    getNextPageParam: (lastPage, pages) => {
+      if (lastPage.data.length < 4) return undefined;
+      return pages.length + 1;
+    },
+    initialPageParam: 1
+  });
+
+  const {
+    data: repliesData,
+    fetchNextPage: fetchNextRepliesPage,
+    hasNextPage: hasNextRepliesPage,
+    refetch: refetchReplies,
+  } = useInfiniteQuery({
+    queryKey: ['repliesDiscussion', replyTo.commentId],
+    queryFn: fetchRepliesDiscussion,
+    getNextPageParam: (lastPage, pages) => {
+      if (lastPage.data.length < 4) return undefined;
+      return pages.length + 1;
+    },
+    initialPageParam: 1,
+    enabled: !!replyTo.commentId,
+  });
+
+  useEffect(() => {
+    if (repliesData) {
+      const replies = repliesData.pages.flatMap(page => page.data) || [];
+      setSelectedReplies(replies as any);
+    }
+  }, [repliesData]);
+
+  const handleShowReplies = useCallback(async (commentId: number, replyUserId: number) => {
+    setReplyTo({ commentId, replyUserId });
+    await refetchReplies();
+    setIsShowReplySection(true);
+  }, [refetchReplies]);
+
+  const uploadImagesMutation = useMutation({
+    mutationFn: (payload: FormData) => postFormDataAPI(API_PATH.UPLOAD_IMAGE, payload),
+    onError: () => {
+      message.error('Upload image failed');
+    }
+  });
+
+  const postCommentMutation = useMutation({
+    mutationFn: (payload: {
+      userId: number;
+      tokenId: number;
+      replyId: number | null;
+      replyUserId: number | null;
+      content: string;
+      image: string;
+    }) => postFormDataAPI(API_PATH.USER.POST_COMMENT, payload),
+    onSuccess: () => {
+      message.success('Comment has been posted');
+      form.resetFields();
+      setShowInputComment(false);
+      queryClient.invalidateQueries({ queryKey: ['discussionThreads'] });
+      refetchReplies();
+    },
+    onError: () => {
+      message.error('Post comment failed');
+    }
+  });
+
+  const handleUpload = async (file: File) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    try {
+      const { data } = await uploadImagesMutation.mutateAsync(formData);
+      if (data.success) {
+        return data.data;
+      } else {
+        return '';
+      }
+    } catch (error) {
+      return '';
+    }
+  };
+
+  const onFinish = async (values: any) => {
+    try {
+      let imageUrl = '';
+      if (values?.image && values?.image instanceof File) {
+        imageUrl = await handleUpload(values.image);
+      }
+
+      const payload = {
+        userId: Number(userId),
+        tokenId: Number(tokenId),
+        replyId: null,
+        replyUserId: null,
+        content: values.comment,
+        image: imageUrl
+      }
+
+      await postCommentMutation.mutateAsync(payload);
+    } catch (error: any) {
+      console.log('error submit comment', error);
+    }
+  };
+
+  if (isLoading) return <div>Loading...</div>;
+
+  const handleCloseReplySection = () => {
+    setIsShowReplySection(false);
+    setReplyTo({ commentId: null, replyUserId: null });
   }
 
   return (
     <div className='flex gap-6 w-full'>
-      <div className='flex flex-col gap-6 flex-1'>
-        {fakeData.map(item => (
-          <DiscussionItem key={item.id} data={item} onShowReplies={handleShowReplies} />
-        ))}
-
-        {!showInputComment && <AppRoundedInfo text="Post a Reply" onClick={() => {setShowInputComment(true)}} />}
-
-        {showInputComment && <AppInputComment onCancel={() => setShowInputComment(false)} />}
-      </div>
-
-      {selectedReplies.length > 0 && (
-        <div className='flex flex-col gap-4 bg-neutral-2 px-6 py-4 rounded-tr-2xl rounded-bl-2xl rounded-br-2xl flex-1'>
-          <span className='text-neutral-9 text-16px-bold'>{`View replies (${selectedReplies.length})`}</span>
-          {selectedReplies.map((reply: any) => (
-            <div key={reply?.id} className='flex flex-col gap-2'>
-              <div className=' flex flex-col gap-4'>
-                <div className='flex items-center gap-3'>
-                  <AppImage src={reply.avatar} alt='avatar' className='w-10 h-10 rounded-full' />
-                  <div className='flex flex-col'>
-                    <span className='text-neutral-9 text-16px-bold"'>
-                      {reply.username || "-"}
-                    </span>
-                    <span className='text-neutral-7 text-14px-medium'>
-                      {new Date(reply.date).toLocaleString()}
-                    </span>
-                  </div>
+      <div className='flex gap-6 w-full'>
+        <div className='flex flex-col gap-6 flex-1 w-1/2'>
+          <InfiniteScroll
+            dataLength={data?.pages.flatMap(page => page.data).length || 0}
+            next={fetchNextPage}
+            hasMore={!!hasNextPage}
+            loader={<div>Loading...</div>}
+            style={{ maxHeight: '750px', overflow: 'auto' }}
+            endMessage={<p>No more comments to load</p>}
+          >
+            {data?.pages.flatMap((page) =>
+              page.data.map((item: DiscussionThreadItem, index: number) => (
+                <div key={index}>
+                  <DiscussionItem data={item} onShowReplies={handleShowReplies} selectedReplies={selectedReplies} />
                 </div>
-                <p className='text-neutral-9 text-14px-normal'>{reply.comment}</p>
-              </div>
-            </div>
-          ))}
+              ))
+            )}
+          </InfiniteScroll>
+          {isAuthenticated && !showInputComment && <AppRoundedInfo text="Post a Reply" onClick={() => { setShowInputComment(true); }} />}
+
+          {isAuthenticated && showInputComment && (
+            <Form form={form} onFinish={onFinish}>
+              <AppInputComment onCancel={() => { setShowInputComment(false) }} onSubmit={onFinish} />
+            </Form>
+          )}
         </div>
-      )}
+        {/* reply section */}
+        <div className='flex-1 w-1/2'>
+          {isShowReplySection && (
+            <InfiniteScroll
+              dataLength={selectedReplies?.flatMap(page => page).length || 0}
+              next={fetchNextRepliesPage}
+              hasMore={!!hasNextRepliesPage}
+              loader={<div>Loading...</div>}
+            >
+              <ReplySection
+                onClose={handleCloseReplySection}
+                refetchReplies={refetchReplies}
+                selectedReplies={selectedReplies}
+                isAuthenticated={isAuthenticated}
+                onAddReply={onFinish}
+                userId={userId}
+                tokenId={tokenId}
+                replyTo={replyTo}
+                handleUpload={handleUpload}
+                postCommentMutation={postCommentMutation}
+              />
+            </InfiniteScroll>
+          )}
+        </div>
+      </div>
     </div>
   )
 }

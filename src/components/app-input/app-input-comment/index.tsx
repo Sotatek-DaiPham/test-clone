@@ -1,5 +1,5 @@
 import React, { ChangeEvent, useState, useRef } from 'react';
-import { Input, message } from 'antd';
+import { Input, message, Form } from 'antd';
 import { LinkHorizontalIcon, CloseIcon } from '@public/assets';
 import Image from 'next/image';
 import AppRoundedInfo from '@/components/app-rounded-info';
@@ -15,19 +15,15 @@ interface FileItem {
 
 interface AppInputCommentProps {
     onCancel: () => void;
+    onSubmit: (values: any) => void;
+    showCancelButton?: boolean;
 }
 
-const AppInputComment: React.FC<AppInputCommentProps> = ({ onCancel }) => {
-    const [comment, setComment] = useState('');
+const AppInputComment: React.FC<AppInputCommentProps> = ({ onCancel, onSubmit, showCancelButton = true }) => {
     const [fileList, setFileList] = useState<FileItem[]>([]);
     const [canUpload, setCanUpload] = useState(true);
     const fileInputRef = useRef<HTMLInputElement>(null);
-
-    const handleCommentChange = (e: ChangeEvent<HTMLTextAreaElement>) => {
-        setComment(e.target.value);
-    };
-
-    console.log('fileList', fileList)
+    const [form] = Form.useForm();
 
     const handleUpload = (e: ChangeEvent<HTMLInputElement>) => {
         if (!canUpload) return;
@@ -48,7 +44,6 @@ const AppInputComment: React.FC<AppInputCommentProps> = ({ onCancel }) => {
                 }
             };
             reader.readAsDataURL(file);
-            message.success(`${file.name} tệp đã được tải lên thành công.`);
         }
     };
 
@@ -66,15 +61,35 @@ const AppInputComment: React.FC<AppInputCommentProps> = ({ onCancel }) => {
         }
     };
 
+    const handleSubmit = () => {
+        form.validateFields().then(values => {
+            const file = fileInputRef.current?.files?.[0] || null;
+            onSubmit({ ...values, image: file });
+            form.resetFields();
+            removeImage();
+        }).catch(info => {
+            console.log('Validate Failed:', info);
+        });
+    };
+
     return (
-        <div className="app-input-comment border border-neutral-5 rounded-[8px] p-3">
-            <TextArea
-                rows={1}
-                placeholder="Describe ..."
-                value={comment}
-                onChange={handleCommentChange}
-                className="comment-textarea border-none focus:shadow-none !bg-transparent text-neutral-9 !resize-none"
-            />
+        <Form form={form} onFinish={handleSubmit} className="app-input-comment border border-neutral-5 rounded-[8px] p-3">
+            <Form.Item name="comment" rules={[{ required: true, message: 'Please enter your comment' }]}>
+                <TextArea
+                    rows={1}
+                    placeholder="Mô tả ..."
+                    className="comment-textarea border-none focus:shadow-none !bg-transparent text-neutral-9 !resize-none placeholder-neutral-5"
+                    maxLength={1200}
+                    showCount
+                    autoSize={{ minRows: 1, maxRows: 6 }}
+                    onKeyDown={(e) => {
+                        const value = e.currentTarget.value;
+                        if (value.length >= 1200 && e.key !== 'Backspace' && e.key !== 'Delete') {
+                            e.preventDefault();
+                        }
+                    }}
+                />
+            </Form.Item>
             <div className="upload-section flex items-end justify-between mt-2">
                 <div className="flex items-center">
                     <input
@@ -106,19 +121,21 @@ const AppInputComment: React.FC<AppInputCommentProps> = ({ onCancel }) => {
                         onClick={triggerFileInput}
                         className={`upload-icon cursor-pointer ${!canUpload ? 'opacity-50' : ''}`}
                     />
-                    <AppRoundedInfo
-                        text="Cancel"
-                        onClick={onCancel}
-                        customClassName='w-fit'
-                    />
+                    {showCancelButton && (
+                        <AppRoundedInfo
+                            text="Cancel"
+                            onClick={onCancel}
+                            customClassName='w-fit'
+                        />
+                    )}
                     <AppRoundedInfo
                         text="Post"
-                        onClick={() => {/* Xử lý đăng bài */ }}
+                        onClick={handleSubmit}
                         customClassName='w-fit'
                     />
                 </div>
             </div>
-        </div>
+        </Form>
     );
 };
 
