@@ -2,25 +2,28 @@ import ProjectCard from "@/app/(sidebar-layout)/_components/ProjectCard";
 import AppButton from "@/components/app-button";
 import AppDivider from "@/components/app-divider";
 import AppInput from "@/components/app-input";
-import AppPagination from "@/components/app-pagination";
+import AppPaginationCustom from "@/components/app-pagination/app-pagination-custom";
 import NoData from "@/components/no-data";
-import ShowingPage from "@/components/showing-page";
 import { LIMIT_ITEMS_TABLE } from "@/constant";
 import { API_PATH } from "@/constant/api-path";
 import { IProjectCardResponse } from "@/entities/my-profile";
 import { BeSuccessResponse } from "@/entities/response";
 import { useAppSearchParams } from "@/hooks/useAppSearchParams";
 import useDebounce from "@/hooks/useDebounce";
+import useSocket from "@/hooks/useSocket";
 import { getAPI } from "@/service";
 import { HideDustCoinIcon } from "@public/assets";
 import { useQuery } from "@tanstack/react-query";
+import { Spin } from "antd";
 import { AxiosResponse } from "axios";
 import get from "lodash/get";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import TabTitle from "../../TabTitle";
+import { ESocketEvent } from "@/libs/socket/contants";
 
 const PortfolioTab = ({ walletAddress }: { walletAddress: string }) => {
+  const { addEvent, isConnected, removeEvent } = useSocket();
   const [hideDustCoin, setHideDustCoin] = useState<boolean>(false);
   const { searchParams, setSearchParams } = useAppSearchParams("myProfile");
   const [params, setParams] = useState<any>({
@@ -53,15 +56,33 @@ const PortfolioTab = ({ walletAddress }: { walletAddress: string }) => {
   const myPortfolio = get(data, "data.data", []) as IProjectCardResponse[];
   const total = get(data, "data.metadata.total", 0) as number;
 
+  useEffect(() => {
+    if (isConnected) {
+      addEvent(ESocketEvent.BUY, (data) => {
+        if (data) {
+        }
+      });
+      addEvent(ESocketEvent.SELL, (data) => {
+        if (data) {
+        }
+      });
+    }
+    return () => {
+      removeEvent(ESocketEvent.BUY);
+      removeEvent(ESocketEvent.SELL);
+      removeEvent(ESocketEvent.CHANGE_KING_OF_THE_HILL);
+    };
+  }, [isConnected]);
+
   return (
     <div>
       <div className="w-full flex flex-row items-center justify-between">
         <TabTitle title="Portfolio" />
         <div className="flex flex-row items-center">
           <AppButton
-            size="small"
+            size="middle"
             typeButton="outline"
-            rootClassName="!w-fit"
+            rootClassName="!w-fit !border-none"
             classChildren={`!flex !flex-row !items-center ${
               hideDustCoin ? "!text-primary-main" : ""
             }`}
@@ -75,7 +96,7 @@ const PortfolioTab = ({ walletAddress }: { walletAddress: string }) => {
             <span className="ml-2">Hide dust coin</span>
           </AppButton>
           <AppInput
-            className="!w-[400px]"
+            className="!w-[400px] ml-4"
             isSearch={true}
             iconPosition="left"
             placeholder="Search"
@@ -84,7 +105,9 @@ const PortfolioTab = ({ walletAddress }: { walletAddress: string }) => {
           />
         </div>
       </div>
-      {!myPortfolio?.length && !isPending ? (
+      {isPending ? (
+        <Spin />
+      ) : !myPortfolio?.length && !isPending ? (
         <NoData />
       ) : (
         <div>
@@ -101,7 +124,15 @@ const PortfolioTab = ({ walletAddress }: { walletAddress: string }) => {
             )}
           </div>
           <AppDivider />
-          <AppPagination
+          <AppPaginationCustom
+            label="tokens"
+            total={total}
+            page={params?.page}
+            limit={params?.limit}
+            onChange={(page) => setParams({ ...params, page })}
+            hideOnSinglePage={true}
+          />
+          {/* <AppPagination
             className="w-full !justify-end !mr-6"
             hideOnSinglePage={true}
             showTotal={(total, range) => (
@@ -113,7 +144,7 @@ const PortfolioTab = ({ walletAddress }: { walletAddress: string }) => {
             onChange={(page, size) => {
               setParams((prev: any) => ({ ...prev, page, limit: size }));
             }}
-          />
+          /> */}
         </div>
       )}
     </div>

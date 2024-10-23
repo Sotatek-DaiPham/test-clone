@@ -13,12 +13,14 @@ import useFollowUser from "@/hooks/useFollowUser";
 import { NotificationContext } from "@/libs/antd/NotificationProvider";
 import { getAPI } from "@/service";
 import { useQuery } from "@tanstack/react-query";
+import { Spin } from "antd";
 import { AxiosResponse } from "axios";
 import get from "lodash/get";
 import { useContext, useState } from "react";
 import TabTitle from "../../TabTitle";
 import UserFollow from "../../UserFollow";
 import { EFollow } from "../MyProfileTab";
+import AppPaginationCustom from "@/components/app-pagination/app-pagination-custom";
 
 const FollowersTab = ({ walletAddress }: { walletAddress: string }) => {
   const { error, success } = useContext(NotificationContext);
@@ -84,7 +86,9 @@ const FollowersTab = ({ walletAddress }: { walletAddress: string }) => {
           onChange={(e) => setSearch(e.target.value)}
         />
       </div>
-      {!followers?.length && !isPending ? (
+      {isPending ? (
+        <Spin />
+      ) : !followers?.length && !isPending ? (
         <NoData />
       ) : (
         <div>
@@ -101,7 +105,15 @@ const FollowersTab = ({ walletAddress }: { walletAddress: string }) => {
             ))}
           </div>
           <AppDivider />
-          <AppPagination
+          <AppPaginationCustom
+            label="followers"
+            total={total}
+            page={params?.page}
+            limit={params?.limit}
+            onChange={(page) => setParams({ ...params, page })}
+            hideOnSinglePage={true}
+          />
+          {/* <AppPagination
             className="w-full !justify-end !mr-6"
             hideOnSinglePage={true}
             showTotal={(total, range) => (
@@ -113,7 +125,7 @@ const FollowersTab = ({ walletAddress }: { walletAddress: string }) => {
             onChange={(page, size) =>
               setParams((prev: any) => ({ ...prev, page, limit: size }))
             }
-          />
+          /> */}
         </div>
       )}
     </div>

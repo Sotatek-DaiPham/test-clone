@@ -1,10 +1,10 @@
 "use client";
+import { ArrowLeftIcon, ArrowRightIcon } from "@public/assets";
 import Pagination, { PaginationProps } from "antd/es/pagination";
 import clsx from "clsx";
+import Image from "next/image";
 import { useEffect } from "react";
 import "./style.scss";
-import Image from "next/image";
-import { ArrowLeftIcon, ArrowRightIcon } from "@public/assets";
 interface Props extends PaginationProps {
   className?: string;
   rootClassName?: string;

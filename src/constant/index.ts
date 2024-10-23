@@ -19,7 +19,7 @@ export const PREDEFINE_AMOUNT = ["05", "10", "20", "50", "100"];
 
 export const PREDEFINE_SELL_PERCENT = ["10%", "25%", "50%", "75%", "100%"];
 
-export const PREDEFINE_SLIPPAGE = ["05", "10", "15", "15", "25"];
+export const PREDEFINE_SLIPPAGE = ["05", "10", "15", "20", "25"];
 
 export const PREDEFINE_PRIORITY_FEE = [
   "0.001",
@@ -30,3 +30,13 @@ export const PREDEFINE_PRIORITY_FEE = [
 ];
 
 export const AMOUNT_FIELD_NAME = "amount";
+
+export enum ETradeAction {
+  BUY = "BUY",
+  SELL = "SELL",
+}
+
+export enum EDirection {
+  ASC = "ASC",
+  DESC = "DESC",
+}

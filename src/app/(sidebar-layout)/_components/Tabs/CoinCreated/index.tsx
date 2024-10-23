@@ -6,20 +6,23 @@ import NoData from "@/components/no-data";
 import ShowingPage from "@/components/showing-page";
 import { LIMIT_ITEMS_TABLE } from "@/constant";
 import { API_PATH } from "@/constant/api-path";
-import {
-  IProjectCardResponse
-} from "@/entities/my-profile";
+import { IProjectCardResponse } from "@/entities/my-profile";
 import { BeSuccessResponse } from "@/entities/response";
 import { useAppSearchParams } from "@/hooks/useAppSearchParams";
 import useDebounce from "@/hooks/useDebounce";
 import { getAPI } from "@/service";
 import { useQuery } from "@tanstack/react-query";
+import { Spin } from "antd";
 import { AxiosResponse } from "axios";
 import get from "lodash/get";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import TabTitle from "../../TabTitle";
+import AppPaginationCustom from "@/components/app-pagination/app-pagination-custom";
+import useSocket from "@/hooks/useSocket";
+import { ESocketEvent } from "@/libs/socket/contants";
 
 const CoinCreatedTab = ({ walletAddress }: { walletAddress: string }) => {
+  const { addEvent, isConnected, removeEvent } = useSocket();
   const { searchParams } = useAppSearchParams("myProfile");
   const [params, setParams] = useState<any>({
     page: 1,
@@ -50,6 +53,23 @@ const CoinCreatedTab = ({ walletAddress }: { walletAddress: string }) => {
   const coinCreated = get(data, "data.data", []) as IProjectCardResponse[];
   const total = get(data, "data.metadata.total", 0) as number;
 
+  useEffect(() => {
+    if (isConnected) {
+      addEvent(ESocketEvent.BUY, (data) => {
+        if (data) {
+        }
+      });
+      addEvent(ESocketEvent.SELL, (data) => {
+        if (data) {
+        }
+      });
+    }
+    return () => {
+      removeEvent(ESocketEvent.BUY);
+      removeEvent(ESocketEvent.SELL);
+    };
+  }, [isConnected]);
+
   return (
     <div>
       <div className="w-full flex flex-row items-center justify-between">
@@ -63,7 +83,9 @@ const CoinCreatedTab = ({ walletAddress }: { walletAddress: string }) => {
           onChange={(e) => setSearch(e.target.value)}
         />
       </div>
-      {!coinCreated?.length && !isPending ? (
+      {isPending ? (
+        <Spin />
+      ) : !coinCreated?.length && !isPending ? (
         <NoData />
       ) : (
         <div>
@@ -75,7 +97,15 @@ const CoinCreatedTab = ({ walletAddress }: { walletAddress: string }) => {
             )}
           </div>
           <AppDivider />
-          <AppPagination
+          <AppPaginationCustom
+            label="tokens"
+            total={total}
+            page={params?.page}
+            limit={params?.limit}
+            onChange={(page) => setParams({ ...params, page })}
+            hideOnSinglePage={true}
+          />
+          {/* <AppPagination
             className="w-full !justify-end !mr-6"
             hideOnSinglePage={true}
             showTotal={(total, range) => (
@@ -87,7 +117,7 @@ const CoinCreatedTab = ({ walletAddress }: { walletAddress: string }) => {
             onChange={(page, size) =>
               setParams((prev: any) => ({ ...prev, page, limit: size }))
             }
-          />
+          /> */}
         </div>
       )}
     </div>

@@ -68,7 +68,13 @@ const PriceSection = () => {
       <div className="flex justify-between items-center">
         <div className="text-14px-normal text-neutral-7">Price</div>
         <div className="text-14px-medium text-white-neutral">
-          $ <AppTextLoading text={tokenDetail?.price} loading={textLoading} />
+          ${" "}
+          <AppTextLoading
+            text={
+              BigNumber(tokenDetail?.price).div(USDT_DECIMAL).toString() || "-"
+            }
+            loading={textLoading}
+          />
         </div>
       </div>
       <div className="flex justify-between items-center">
@@ -86,7 +92,11 @@ const PriceSection = () => {
         <div className="text-14px-medium text-white-neutral">
           ${" "}
           <AppTextLoading
-            text={nFormatter(tokenDetail?.volume) || "-"}
+            text={
+              nFormatter(
+                BigNumber(tokenDetail?.volume).div(USDT_DECIMAL).toString()
+              ) || "-"
+            }
             loading={textLoading}
           />
         </div>

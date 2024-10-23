@@ -1,5 +1,7 @@
 .app-dropdown {
   .ant-dropdown-menu {
+    overflow-y: scroll !important;
+    max-height: 300px !important;
     background-color: var(--color-neutral-2) !important;
   }
   .ant-dropdown-menu-item {

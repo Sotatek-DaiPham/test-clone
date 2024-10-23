@@ -24,7 +24,10 @@ import {
   decreaseByPercent,
   increaseByPercent,
 } from "@/helpers/calculate";
-import { formatRoundFloorDisplayWithCompare } from "@/helpers/formatNumber";
+import {
+  formatRoundFloorDisplayWithCompare,
+  nFormatter,
+} from "@/helpers/formatNumber";
 import useCalculateAmount from "@/hooks/useCalculateAmount";
 import useTokenBalance from "@/hooks/useTokenBalance";
 import useUsdtAllowance from "@/hooks/useUsdtAllowance";
@@ -130,7 +133,6 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
     tokenDetail?.contractAddress
   );
 
-  console.log("balance", balance);
   const usdtShouldPay: any = useMemo(() => {
     if (amountValue && coinType === ECoinType.MemeCoin) {
       if (isTokenMint) {
@@ -347,7 +349,7 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
         BigNumber(minUSDTOut).multipliedBy(USDT_DECIMAL).toFixed(0),
         address
       );
-      const tx = await contract?.sell(
+      const tx = await contract?.sellExactIn(
         tokenDetail?.contractAddress,
         BigNumber(amountValue).multipliedBy(TOKEN_DECIMAL).toFixed(),
         BigNumber(minUSDTOut).multipliedBy(USDT_DECIMAL).toFixed(0),
@@ -406,13 +408,17 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
       setLoadingStatus((prev) => ({ ...prev, approve: false }));
     } catch (e: any) {
       console.log({ e });
+      setLoadingStatus((prev) => ({
+        ...prev,
+        approve: false,
+        buyToken: false,
+      }));
       if (e?.code === ErrorCode.MetamaskDeniedTx) {
         error({
           message: "Transaction denied",
         });
       }
     } finally {
-      setLoadingStatus((prev) => ({ ...prev, approve: false }));
       setIsOpenApproveModal(false);
     }
   };
@@ -446,10 +452,8 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
           <span className="text-white-neutral text-14px-medium">
             {" "}
             {coinType === ECoinType.MemeCoin
-              ? `${formatRoundFloorDisplayWithCompare(usdtShouldPay) || 0} USDT`
-              : `${formatRoundFloorDisplayWithCompare(tokenWillReceive) || 0} ${
-                  tokenDetail?.symbol
-                }`}
+              ? `${nFormatter(usdtShouldPay, 6) || 0} USDT`
+              : `${nFormatter(tokenWillReceive) || 0} ${tokenDetail?.symbol}`}
           </span>
         </div>
       );
@@ -508,7 +512,7 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
           {tabKey === TabKey.BUY ? (
             <AppInputBalance
               tokenImageSrc={tokenDetail?.avatar}
-              tokenSymbol="ETH"
+              tokenSymbol={tokenDetail?.symbol}
               onTokenChange={(token) => setCoinType(token)}
               regex={REGEX_INPUT_DECIMAL(0, 2)}
               isSwap
@@ -516,14 +520,16 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
           ) : (
             <AppInputBalance
               tokenImageSrc={tokenDetail?.avatar}
-              tokenSymbol="ETH"
+              tokenSymbol={tokenDetail?.symbol}
               regex={REGEX_INPUT_DECIMAL(0, 2)}
             />
           )}
         </Form.Item>
       </Form>
       {tabKey === TabKey.BUY ? (
-        <AppAmountSelect numbers={PREDEFINE_AMOUNT} onSelect={handleSelect} />
+        coinType === ECoinType.StableCoin ? (
+          <AppAmountSelect numbers={PREDEFINE_AMOUNT} onSelect={handleSelect} />
+        ) : null
       ) : (
         <AppAmountSelect
           numbers={PREDEFINE_SELL_PERCENT}
