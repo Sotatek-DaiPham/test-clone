@@ -130,7 +130,6 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
     tokenDetail?.contractAddress
   );
 
-  console.log("balance", balance);
   const usdtShouldPay: any = useMemo(() => {
     if (amountValue && coinType === ECoinType.MemeCoin) {
       if (isTokenMint) {
@@ -508,7 +507,7 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
           {tabKey === TabKey.BUY ? (
             <AppInputBalance
               tokenImageSrc={tokenDetail?.avatar}
-              tokenSymbol="ETH"
+              tokenSymbol={tokenDetail?.symbol}
               onTokenChange={(token) => setCoinType(token)}
               regex={REGEX_INPUT_DECIMAL(0, 2)}
               isSwap
@@ -516,14 +515,16 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
           ) : (
             <AppInputBalance
               tokenImageSrc={tokenDetail?.avatar}
-              tokenSymbol="ETH"
+              tokenSymbol={tokenDetail?.symbol}
               regex={REGEX_INPUT_DECIMAL(0, 2)}
             />
           )}
         </Form.Item>
       </Form>
       {tabKey === TabKey.BUY ? (
-        <AppAmountSelect numbers={PREDEFINE_AMOUNT} onSelect={handleSelect} />
+        coinType === ECoinType.StableCoin ? (
+          <AppAmountSelect numbers={PREDEFINE_AMOUNT} onSelect={handleSelect} />
+        ) : null
       ) : (
         <AppAmountSelect
           numbers={PREDEFINE_SELL_PERCENT}

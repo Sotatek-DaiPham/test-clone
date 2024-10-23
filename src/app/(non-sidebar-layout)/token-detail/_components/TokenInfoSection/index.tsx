@@ -29,14 +29,17 @@ const TokenInfoSection = ({ tokenDetail }: ITokenInfoSectionProps) => {
   ];
   return (
     <>
-      <div className="px-14 md:py-6 py-6 bg-neutral-2 rounded-[16px] shadow-[0px_40px_32px_-24px_rgba(15,15,15,0.12)] mt-6 flex flex-col items-center">
-        <div className="md:max-w-[400px] flex flex-col items-center">
-          <AppImage
-            className="h-auto max-w-[278px] object-cover"
-            src={tokenDetail?.avatar}
-            alt="token image"
-          />
-          <div className="text-22px-bold text-white-neutral mt-6">
+      <div className="px-14 py-6 bg-neutral-2 rounded-[16px] shadow-[0px_40px_32px_-24px_rgba(15,15,15,0.12)] mt-6">
+        <div className="flex flex-col">
+          <div className="flex justify-center">
+            <AppImage
+              className="h-auto max-w-[278px] object-cover"
+              src={tokenDetail?.avatar}
+              alt="token image"
+            />
+          </div>
+
+          <div className="text-22px-bold text-white-neutral mt-6 text-center">
             {tokenDetail?.name}
           </div>
           <div className="text-12px-normal text-neutral-7 mt-3">
