@@ -10,14 +10,36 @@ import PriceSection from "../_components/PriceSection";
 import TabsSection from "../_components/TabsSection";
 import TokenInfoSection from "../_components/TokenInfoSection";
 import TradeSection from "../_components/TradeSection";
+import { useEffect } from "react";
+import useSocket from "@/hooks/useSocket";
+import { ESocketEvent } from "@/libs/socket/contants";
 
 const TradingView = dynamic(() => import("@/components/app-trading-view"), {
   ssr: false,
 });
 
 const TokenDetailPage = () => {
+  const { addEvent, isConnected, removeEvent } = useSocket();
   const router = useRouter();
   const { tokenDetail } = useTokenDetail();
+
+  useEffect(() => {
+    if (isConnected) {
+      addEvent(ESocketEvent.BUY, (data) => {
+        if (data) {
+        }
+      });
+      addEvent(ESocketEvent.SELL, (data) => {
+        if (data) {
+          alert("SELL");
+        }
+      });
+    }
+    return () => {
+      removeEvent(ESocketEvent.BUY);
+      removeEvent(ESocketEvent.SELL);
+    };
+  }, [isConnected]);
 
   return (
     <>
