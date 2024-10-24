@@ -1,5 +1,7 @@
 import AppTabs from "@/components/app-tabs";
+import DiscussionThread from "../DiscussionThreadSection";
 import TradeHistory from "./TradeHistory";
+import HolderDistribute from "./HolderDistribute";
 
 enum ETokenDetalTabs {
   DICUSSION = "DICUSSION",
@@ -9,17 +11,17 @@ enum ETokenDetalTabs {
 const TabsSection = () => {
   const tabs = [
     {
-      label: "My profile",
+      label: "Discussion Thread",
       key: ETokenDetalTabs.DICUSSION,
-      children: <h1 className="text-white">Discussion Thread</h1>,
+      children: <DiscussionThread />,
     },
     {
       label: "Holder Distribution",
       key: ETokenDetalTabs.HOLDER,
-      children: <h1 className="text-white">Holder Distribution</h1>,
+      children: <HolderDistribute />,
     },
     {
-      label: "Transaction",
+      label: "Transactions",
       key: ETokenDetalTabs.TRANSACTION,
       children: <TradeHistory />,
     },

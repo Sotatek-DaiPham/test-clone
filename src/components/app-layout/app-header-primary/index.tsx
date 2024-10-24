@@ -22,22 +22,22 @@ const routeTitles: { [key: string]: string } = {
 };
 
 export default function AppHeaderPrimary() {
-  const { isMobile } = useWindowSize();
+  const { isDesktop } = useWindowSize();
   const [isOpenMenuMobile, setIsOpenMenuMobile] = useState<boolean>(false);
   const pathname = usePathname();
 
   const pageTitle = routeTitles[pathname];
   return (
     <Header
-      className={` flex p-6 h-auto ${
-        isMobile
+      className={`flex p-6 h-auto ${
+        !isDesktop
           ? "fixed top-0 left-0 right-0 z-50 bg-neutral-2"
           : "bg-transparent"
       }`}
     >
       <h5 className="text-32px-bold text-white">{pageTitle}</h5>
       <div className="ml-auto flex items-center">
-        {isMobile ? (
+        {!isDesktop ? (
           <>
             <a
               className="flex items-center"

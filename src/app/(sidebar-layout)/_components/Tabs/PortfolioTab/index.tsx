@@ -20,7 +20,7 @@ import get from "lodash/get";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import TabTitle from "../../TabTitle";
-import { ESocketEvent } from "@/libs/socket/contants";
+import { ESocketEvent } from "@/libs/socket/constants";
 
 const PortfolioTab = ({ walletAddress }: { walletAddress: string }) => {
   const { addEvent, isConnected, removeEvent } = useSocket();
@@ -111,7 +111,7 @@ const PortfolioTab = ({ walletAddress }: { walletAddress: string }) => {
         <NoData />
       ) : (
         <div>
-          <div className="grid grid-cols-3 gap-6 my-9">
+          <div className="grid xl:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-6 my-9">
             {myPortfolio?.map(
               (project: IProjectCardResponse, index: number) => (
                 <ProjectCard

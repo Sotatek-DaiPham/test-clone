@@ -1,14 +1,14 @@
 import AppDivider from "@/components/app-divider";
 import AppImage from "@/components/app-image";
 import AppProgress from "@/components/app-progress";
-import { DECIMAL_USDT } from "@/constant";
+import { DECIMAL_USDT, DEFAULT_AVATAR } from "@/constant";
 import { countAgeToken } from "@/helpers/calculate";
 import {
   convertNumber,
   formatAmount,
   nFormatter,
 } from "@/helpers/formatNumber";
-import { CalendarIcon, SwapIcon } from "@public/assets";
+import { CalendarIcon, ImageDefaultIcon, SwapIcon } from "@public/assets";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import "./styles.scss";
@@ -32,11 +32,21 @@ const ProjectCard = ({ data, className, footer }: IProjectCardProps) => {
     >
       <div className="grid grid-cols-3 gap-4">
         <div className="col-span-1">
-          <AppImage
-            className="!bg-neutral-4 w-full h-full rounded-3xl overflow-hidden flex"
-            src={data?.avatar}
-            alt="logo"
-          />
+          {data?.avatar ? (
+            <AppImage
+              className="!bg-neutral-4 w-full h-full rounded-3xl overflow-hidden flex [&>img]:!object-cover"
+              src={data?.avatar || DEFAULT_AVATAR}
+              alt="logo"
+            />
+          ) : (
+            <div className="!w-full !h-full !bg-neutral-4 !rounded-3xl flex justify-center overflow-hidden">
+              <Image
+                className="!bg-neutral-4 [&>img]:!object-cover"
+                alt="logo"
+                src={ImageDefaultIcon}
+              />
+            </div>
+          )}
         </div>
         <div className="col-span-2">
           <div>

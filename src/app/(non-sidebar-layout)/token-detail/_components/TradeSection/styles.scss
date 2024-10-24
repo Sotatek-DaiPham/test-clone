@@ -30,9 +30,9 @@
       }
 
       .ant-tabs-tab-active {
-        background-color: $color-primary;
+        background-color: var(--color-primary-main);
         .ant-tabs-tab-btn {
-          color: var(--color-neutral-white) !important;
+          color: var(--color-neutral-1) !important;
         }
       }
     }

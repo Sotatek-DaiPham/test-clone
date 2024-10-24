@@ -140,6 +140,8 @@
           border: none !important;
           .ant-table-expanded-row-fixed {
             background: var(--color-neutral-2) !important;
+            border-bottom-left-radius: 12px !important;
+            border-bottom-right-radius: 12px !important;
           }
         }
       }

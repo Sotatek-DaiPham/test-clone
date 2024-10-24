@@ -27,6 +27,8 @@ export { default as SelectDropdownIcon } from "./icons/select-dropdown.svg";
 export { default as UsdtIcon } from "./icons/usdt-icon.svg";
 export { default as BackIcon } from "./icons/back-arrow.svg";
 export { default as ApproveIcon } from "./icons/approve-icon.svg";
+export { default as ArrowTurnDownRightIcon } from "./icons/arrow-turn-down-right.svg";
+export { default as LinkHorizontalIcon } from "./icons/link-horizontal-alt.svg";
 
 // Sidebar icons
 export { default as BrowseIcon } from "./icons/browse-icon.svg";
@@ -55,6 +57,7 @@ export { default as HideDustCoinIcon } from "./icons/eye-slash.svg";
 export { default as NoDataIcon } from "./icons/no-data.svg";
 export { default as CalendarIcon } from "./icons/calendar.svg";
 export { default as SwapIcon } from "./icons/arrow-left-arrow-right.svg";
+export { default as ImageDefaultIcon } from "./icons/logo-default.svg";
 
 // Social links
 export { default as WebsiteLinkIcon } from "./icons/website-link.svg";
@@ -67,3 +70,5 @@ export { default as TopLeaderBoardIcon } from "./icons/top-leaderboard.svg";
 export { default as UserTop1 } from "./icons/user-top-1.svg";
 export { default as UserTop2 } from "./icons/user-top-2.svg";
 export { default as UserTop3 } from "./icons/user-top-3.svg";
+
+export { default as TableFilterIcon } from "./icons/table-filter.svg";

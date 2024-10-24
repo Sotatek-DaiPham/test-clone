@@ -83,6 +83,7 @@ export interface ITradeHistoryRes {
   updated_at: string;
   username: string;
   user_avatar: string | null;
+  txh: string;
 }
 
 export interface IGetTradeHistoryParams {
@@ -94,4 +95,42 @@ export interface IGetTradeHistoryParams {
   action?: string;
   startDate?: string;
   endDate?: string;
+}
+
+export interface IGetHolderDistributeParams {
+  orderBy?: string;
+  direction?: string;
+  page?: number;
+  limit?: number;
+  tokenAddress: string;
+}
+
+export interface IGetHolderRes {
+  user_address: string;
+  amount: string;
+  total_supply: string;
+  percent: string;
+}
+
+export interface ISocketData {
+  data: {
+    action: string;
+    amount: string;
+    createdAt: string;
+    deletedAt: string | null;
+    fee: string;
+    id: number;
+    price: string;
+    timestampCreated: number;
+    tokenAddress: string;
+    tokenAvatar: string;
+    tokenName: string;
+    txh: string;
+    updatedAt: string;
+    usdtAmount: string;
+    userAddress: string;
+    userAvatar: string | null;
+    username: string;
+  };
+  event: string;
 }

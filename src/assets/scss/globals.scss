@@ -287,3 +287,34 @@ img.active-primary-icon {
     }
   }
 }
+
+.ant-table-filter-dropdown {
+  min-width: unset !important;
+  background-color: var(--color-neutral-2) !important;
+  border-radius: 9px;
+  border: 0.5px solid var(--color-neutral-4);
+  background: var(--color-neutral-2);
+  box-shadow: 0px -1px 12px -2px #101828, 0px 4px 4px -2px #101828;
+}
+
+.custom-filter-checkbox {
+  display: flex;
+  flex-direction: column;
+  padding: 6px;
+  width: fit-content;
+
+  .ant-checkbox-wrapper {
+    span {
+      color: var(--color-neutral-white);
+    }
+  }
+  .ant-checkbox-wrapper-checked {
+    .ant-checkbox-inner {
+      border: none;
+      background-color: #0fbe5a !important;
+      &:after {
+        border-color: var(--color-neutral-white) !important;
+      }
+    }
+  }
+}

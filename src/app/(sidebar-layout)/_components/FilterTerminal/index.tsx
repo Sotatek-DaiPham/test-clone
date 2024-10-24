@@ -34,125 +34,139 @@ const FilterTerminal = ({
   });
 
   return (
-    <div className="w-full flex flex-row justify-between items-center mt-5 overflow-auto">
-      <div className="mr-4 overflow-auto relative flex flex-row">
-        {[...filterArr?.slice(0, 5)]?.map((filter: any, index: number) => (
-          <AppButton
-            key={index}
-            typeButton={
-              filter?.value === (searchParams?.filter ?? "trending")
-                ? "primary"
-                : "secondary"
-            }
-            customClass={`!w-fit mr-4 ${
-              filter?.value === (searchParams?.filter ?? "trending")
-                ? "hover:!opacity-100"
-                : ""
-            }`}
-            onClick={() => {
-              handleClickFilter(
-                filter?.value,
-                "filter",
-                filter?.children ? filter?.children?.[0]?.value : "",
-                filter?.children ? filter?.value : ""
-              );
-            }}
-            classChildren="!flex !flex-row !items-center !pr-2"
-          >
-            {filter?.icon && (
-              <Image
-                src={filter?.icon}
-                alt={searchParams?.filter ?? "trending"}
-                className={
-                  filter?.value === (searchParams?.filter ?? "trending")
-                    ? "active-filter-icon"
-                    : "filter-icon"
-                }
-              />
-            )}
-            <span className="mx-2 ">{filter?.label}</span>
-            {filter?.children &&
-              filter?.value === (searchParams?.filter ?? "trending") && (
-                <div className="flex flex-row gap-1">
-                  {filter?.children?.map((children: any, index: number) => (
-                    <span
-                      key={index}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleClickFilterOption(children?.value, filter?.value);
-                      }}
-                      className={`px-2 text-neutral-2 !text-14px-normal py-[3px] rounded-3xl bg-primary-7 hover:!bg-primary-2 hover:!text-neutral-9 ${
-                        children?.value === searchParams?.[filter.value]
-                          ? "!bg-primary-2 !text-neutral-9"
-                          : ""
-                      }`}
-                    >
-                      {children?.label}
-                    </span>
-                  ))}
-                </div>
-              )}
-          </AppButton>
-        ))}
-        {[...filterArr?.slice(5)]?.map((filter: any, index: number) => {
-          const child1 = filter?.children;
-          const child2 = filter?.children1 ? filter?.children1 : [];
-          let child = [...child1, ...child2];
-          return (
-            <AppDropdown
-              key={index}
-              menu={{
-                items: child?.map((x) => ({
-                  ...x,
-                  onClick: () => {
-                    handleClickFilterOption(x?.key, filter.value);
-                  },
-                })),
-                selectable: true,
-              }}
-              open={openDropdownStatus[filter?.value]}
-              onOpenChange={(open: any) =>
-                setOpenDropdownStatus({
-                  ...openDropdownStatus,
-                  [filter?.value]: open,
-                })
-              }
-              trigger={["click"]}
-              className="!mr-4"
-            >
-              <div
-                className={`app-button min-w-fit mr-4 middle text-14px-bold flex flex-row items-center px-[15px] py-3 cursor-pointer ${
-                  searchParams[filter?.value] ? "outline" : "secondary"
-                }`}
-              >
-                <Image
-                  src={DropdownIcon}
-                  alt="drop-down"
-                  className={
-                    openDropdownStatus[filter?.value] ? "rotate-180" : ""
-                  }
-                />
-                <span className="ml-2">
-                  {child?.find((x) => x?.key === searchParams[filter?.value])
-                    ?.label === "Any" || !searchParams[filter?.value]
-                    ? filter?.label
-                    : child?.find((x) => x?.key === searchParams[filter?.value])
-                        ?.label}
-                </span>
-              </div>
-            </AppDropdown>
-          );
-        })}
-      </div>
+    <>
       <AppInput
-        className="!w-[300px] !rounded-full"
+        className="!w-full !rounded-full flex mt-5 !h-[40px] sm:hidden"
         isSearch
         iconPosition="left"
         placeholder="Search"
         value={search}
         onChange={(e) => onChangeSearch(e.target.value)}
       />
-    </div>
+      <div className="w-full flex flex-row justify-between items-center mt-5 overflow-auto">
+        <div className="sm:mr-4 overflow-auto relative flex flex-row mr-0">
+          {[...filterArr?.slice(0, 5)]?.map((filter: any, index: number) => (
+            <AppButton
+              key={index}
+              typeButton={
+                filter?.value === (searchParams?.filter ?? "trending")
+                  ? "primary"
+                  : "secondary"
+              }
+              customClass={`!w-fit mr-4 ${
+                filter?.value === (searchParams?.filter ?? "trending")
+                  ? "hover:!opacity-100"
+                  : ""
+              }`}
+              onClick={() => {
+                handleClickFilter(
+                  filter?.value,
+                  "filter",
+                  filter?.children ? filter?.children?.[0]?.value : "",
+                  filter?.children ? filter?.value : ""
+                );
+              }}
+              classChildren="!flex !flex-row !items-center !pr-2"
+            >
+              {filter?.icon && (
+                <Image
+                  src={filter?.icon}
+                  alt={searchParams?.filter ?? "trending"}
+                  className={
+                    filter?.value === (searchParams?.filter ?? "trending")
+                      ? "active-filter-icon"
+                      : "filter-icon"
+                  }
+                />
+              )}
+              <span className="mx-2 ">{filter?.label}</span>
+              {filter?.children &&
+                filter?.value === (searchParams?.filter ?? "trending") && (
+                  <div className="flex flex-row gap-1">
+                    {filter?.children?.map((children: any, index: number) => (
+                      <span
+                        key={index}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleClickFilterOption(
+                            children?.value,
+                            filter?.value
+                          );
+                        }}
+                        className={`px-2 text-neutral-2 !text-14px-normal py-[3px] rounded-3xl bg-primary-7 hover:!bg-primary-2 hover:!text-neutral-9 ${
+                          children?.value === searchParams?.[filter.value]
+                            ? "!bg-primary-2 !text-neutral-9"
+                            : ""
+                        }`}
+                      >
+                        {children?.label}
+                      </span>
+                    ))}
+                  </div>
+                )}
+            </AppButton>
+          ))}
+          {[...filterArr?.slice(5)]?.map((filter: any, index: number) => {
+            const child1 = filter?.children;
+            const child2 = filter?.children1 ? filter?.children1 : [];
+            let child = [...child1, ...child2];
+            return (
+              <AppDropdown
+                key={index}
+                menu={{
+                  items: child?.map((x) => ({
+                    ...x,
+                    onClick: () => {
+                      handleClickFilterOption(x?.key, filter.value);
+                    },
+                  })),
+                  selectable: true,
+                }}
+                open={openDropdownStatus[filter?.value]}
+                onOpenChange={(open: any) =>
+                  setOpenDropdownStatus({
+                    ...openDropdownStatus,
+                    [filter?.value]: open,
+                  })
+                }
+                trigger={["click"]}
+                className="!mr-4"
+              >
+                <div
+                  className={`app-button min-w-fit mr-4 middle text-14px-bold flex flex-row items-center px-[15px] py-3 cursor-pointer ${
+                    searchParams[filter?.value] ? "outline" : "secondary"
+                  }`}
+                >
+                  <Image
+                    src={DropdownIcon}
+                    alt="drop-down"
+                    className={
+                      openDropdownStatus[filter?.value] ? "rotate-180" : ""
+                    }
+                  />
+                  <span className="ml-2">
+                    {child?.find((x) => x?.key === searchParams[filter?.value])
+                      ?.label === "Any" || !searchParams[filter?.value]
+                      ? filter?.label
+                      : child?.find(
+                          (x) => x?.key === searchParams[filter?.value]
+                        )?.label}
+                  </span>
+                </div>
+              </AppDropdown>
+            );
+          })}
+        </div>
+        <AppInput
+          className="!w-[300px] !rounded-full sm:flex hidden"
+          isSearch
+          iconPosition="left"
+          placeholder="Search"
+          value={search}
+          onChange={(e) => onChangeSearch(e.target.value)}
+        />
+      </div>
+    </>
   );
 };
 
