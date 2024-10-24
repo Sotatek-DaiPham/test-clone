@@ -23,6 +23,7 @@ import { useState } from "react";
 import { useAccount } from "wagmi";
 import TopUser from "./components/TopUser";
 import useWindowSize from "@/hooks/useWindowSize";
+import MyTopLine from "./components/MyTopLine";
 
 const data = [
   {
@@ -90,7 +91,7 @@ const data = [
   },
 ];
 const LeaderboardPage = () => {
-  const { isMobile } = useWindowSize();
+  const { isDesktop, isMobile } = useWindowSize();
   const { address: userAddress } = useAccount();
   const { userId } = useAppSelector((state) => state.user);
   const router = useRouter();
@@ -105,22 +106,30 @@ const LeaderboardPage = () => {
       title: "Rank",
       dataIndex: "rank",
       key: "rank",
+      // width: !isDesktop ? "470px" : "10%",
       width: "10%",
       render: (value: string, data: any) => {
         return (
-          <div className="relative h-fit w-fit">
-            <Image
-              src={TopLeaderBoardIcon}
-              alt="top-leaderboard"
-              className={
-                userAddress === data?.address && userId
-                  ? "active-primary-icon"
-                  : ""
-              }
-            />
-            <span className="text-primary-main text-22px-bold absolute inset-0 flex items-center justify-center">
-              {value}
-            </span>
+          <div className="relative h-fit w-full">
+            <div className="relative h-fit w-fit">
+              <Image
+                src={TopLeaderBoardIcon}
+                alt="top-leaderboard"
+                className={
+                  userAddress === data?.address && userId
+                    ? "active-primary-icon"
+                    : ""
+                }
+              />
+              <span className="text-primary-main text-22px-bold absolute inset-0 flex items-center justify-center">
+                {value}
+              </span>
+            </div>
+            {/* {userAddress !== data?.address && userId && (
+              <div className="absolute rounded-2xl px-[6px] right-0 top-0 leading-4 bg-[var(--color-primary-10)] text-primary-main text-[10px] font-bold">
+                My Rank
+              </div>
+            )} */}
           </div>
         );
       },
@@ -251,9 +260,10 @@ const LeaderboardPage = () => {
           }}
         />
       </div>
-      <div className="w-full flex justify-end">
+      <div className="w-full flex justify-between sm:flex-row flex-col items-center">
+        <MyTopLine top={8} total={10} />
         <AppInput
-          className="!w-[400px]"
+          className="sm:!w-[400px] w-full h-[40px]"
           isSearch={true}
           iconPosition="left"
           placeholder="Search"

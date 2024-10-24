@@ -23,6 +23,7 @@ interface IProjectCardProps {
 
 const ProjectCard = ({ data, className, footer }: IProjectCardProps) => {
   const router = useRouter();
+  console.log(data);
   return (
     <div
       className={`animate-bg-opacity p-4 pb-6 rounded-3xl bg-neutral-2 text-neutral-7 cursor-pointer ${
@@ -56,8 +57,17 @@ const ProjectCard = ({ data, className, footer }: IProjectCardProps) => {
               <div className="text-primary-7 flex w-full items-center flex-row !text-12px-normal">
                 <span className="mr-1">Create by</span>
                 <EllipsisTextWithTooltip
+                  onClick={(e: any) => {
+                    e.stopPropagation();
+                    router.push(
+                      PATH_ROUTER.USER_PROFILE(data?.userWalletAddress)
+                    );
+                  }}
                   className="text-primary-7 flex-1 !text-12px-normal"
                   value={data?.username}
+                  style={{
+                    display: "flex",
+                  }}
                   width="100%"
                 />
               </div>
