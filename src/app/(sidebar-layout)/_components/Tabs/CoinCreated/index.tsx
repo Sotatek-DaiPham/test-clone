@@ -19,7 +19,7 @@ import { useEffect, useState } from "react";
 import TabTitle from "../../TabTitle";
 import AppPaginationCustom from "@/components/app-pagination/app-pagination-custom";
 import useSocket from "@/hooks/useSocket";
-import { ESocketEvent } from "@/libs/socket/contants";
+import { ESocketEvent } from "@/libs/socket/constants";
 
 const CoinCreatedTab = ({ walletAddress }: { walletAddress: string }) => {
   const { addEvent, isConnected, removeEvent } = useSocket();
@@ -89,7 +89,7 @@ const CoinCreatedTab = ({ walletAddress }: { walletAddress: string }) => {
         <NoData />
       ) : (
         <div>
-          <div className="grid grid-cols-3 gap-6 my-9">
+          <div className="grid xl:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-6 my-9">
             {coinCreated?.map(
               (project: IProjectCardResponse, index: number) => (
                 <ProjectCard data={project} key={index} />

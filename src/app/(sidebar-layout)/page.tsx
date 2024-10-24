@@ -25,7 +25,7 @@ import ProjectCard from "./_components/ProjectCard";
 import AppTooltip from "@/components/app-tooltip";
 import { EDirection } from "@/constant";
 import useSocket from "@/hooks/useSocket";
-import { ESocketEvent } from "@/libs/socket/contants";
+import { ESocketEvent } from "@/libs/socket/constants";
 
 enum ETabsTerminal {
   ALL = "all",
@@ -135,7 +135,7 @@ export default function Home() {
   return (
     <div className="h-full !m-[-24px]">
       <div className="m-auto p-6 max-w-[var(--width-content-sidebar-layout)]">
-        <div className="grid grid-cols-2 gap-6">
+        <div className="grid sm:grid-cols-2 grid-cols-1 gap-6">
           <div className="h-full grid grid-cols-3 rounded-3xl how-it-work-bg !overflow-hidden">
             <div className="col-span-2 h-full flex flex-col justify-between py-[40px]">
               <div className="h-full">
@@ -166,7 +166,7 @@ export default function Home() {
             </div>
           </div>
           <div className="h-full">
-            <div className="bg-neutral-2 rounded-3xl p-6">
+            <div className="bg-neutral-2 rounded-3xl sm:p-6 px-2 pt-6 pb-2">
               <span className="text-primary-main italic text-32px-bold flex w-full justify-center">
                 King of The Sky
               </span>

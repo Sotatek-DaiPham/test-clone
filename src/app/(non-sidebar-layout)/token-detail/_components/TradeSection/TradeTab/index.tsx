@@ -95,8 +95,6 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
   );
   const formSettingValues = useWatch([], formSetting);
 
-  console.log("formSettingValues", formSettingValues);
-
   const isTokenListed = tokenDetailSC?.isListed;
   const isTokenMint = !!tokenDetail?.contractAddress;
 

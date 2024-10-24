@@ -55,6 +55,7 @@ export { default as HideDustCoinIcon } from "./icons/eye-slash.svg";
 export { default as NoDataIcon } from "./icons/no-data.svg";
 export { default as CalendarIcon } from "./icons/calendar.svg";
 export { default as SwapIcon } from "./icons/arrow-left-arrow-right.svg";
+export { default as ImageDefaultIcon } from "./icons/logo-default.svg";
 
 // Social links
 export { default as WebsiteLinkIcon } from "./icons/website-link.svg";

@@ -15,13 +15,17 @@ export default function AppLayoutPrimary({
 }: {
   children: React.ReactNode;
 }) {
-  const { isMobile } = useWindowSize();
+  const { isDesktop } = useWindowSize();
   return (
     <>
-      {!isMobile ? <AppSidebar /> : null}
+      {isDesktop ? <AppSidebar /> : null}
       <Layout className="h-screen overflow-y-scroll overflow-x-hidden">
         <AppHeaderPrimary />
-        <Content className="app-content relative min-h-[auto] p-6">
+        <Content
+          className={`app-content relative min-h-[auto] p-6 ${
+            !isDesktop ? "mt-20" : ""
+          }`}
+        >
           <div className="relative z-[2]">{children}</div>
           <Image
             className="absolute left-[-226px] top-[-92px]"
