@@ -1,7 +1,7 @@
 import AppDivider from "@/components/app-divider";
 import AppImage from "@/components/app-image";
 import AppProgress from "@/components/app-progress";
-import { DECIMAL_USDT } from "@/constant";
+import { DECIMAL_USDT, DEFAULT_AVATAR } from "@/constant";
 import { countAgeToken } from "@/helpers/calculate";
 import {
   convertNumber,
@@ -35,7 +35,7 @@ const ProjectCard = ({ data, className, footer }: IProjectCardProps) => {
           {data?.avatar ? (
             <AppImage
               className="!bg-neutral-4 w-full h-full rounded-3xl overflow-hidden flex [&>img]:!object-cover"
-              src={data?.avatar}
+              src={data?.avatar || DEFAULT_AVATAR}
               alt="logo"
             />
           ) : (
