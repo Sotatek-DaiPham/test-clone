@@ -70,5 +70,6 @@ export { default as TopLeaderBoardIcon } from "./icons/top-leaderboard.svg";
 export { default as UserTop1 } from "./icons/user-top-1.svg";
 export { default as UserTop2 } from "./icons/user-top-2.svg";
 export { default as UserTop3 } from "./icons/user-top-3.svg";
+export { default as StarTopIcon } from "./icons/star.svg";
 
 export { default as TableFilterIcon } from "./icons/table-filter.svg";

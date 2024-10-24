@@ -11,7 +11,7 @@ export interface IEllipsisTextWithTooltipProps
   className?: string;
   tooltipProps?: TooltipProps;
   style?: React.CSSProperties;
-  onClick?: () => void;
+  onClick?: (e: any) => void;
 }
 
 function TextWithLineBreaks({ text }: any) {
