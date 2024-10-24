@@ -35,7 +35,7 @@ const EllipsisTextWithTooltip: React.FC<IEllipsisTextWithTooltipProps> = ({
   return (
     <Typography.Text
       onClick={onClick}
-      className={`${className ?? ""}`}
+      className={`font-sfPro ${className ?? ""}`}
       ellipsis={{
         tooltip: {
           color: "var(--color-icon-secondary)",

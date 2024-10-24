@@ -3,7 +3,7 @@ import AppInput from "@/components/app-input";
 import AppPagination from "@/components/app-pagination";
 import NoData from "@/components/no-data";
 import ShowingPage from "@/components/showing-page";
-import { LIMIT_ITEMS_TABLE } from "@/constant";
+import { EDirection, LIMIT_ITEMS_TABLE } from "@/constant";
 import { API_PATH } from "@/constant/api-path";
 import { IFollowerResponse } from "@/entities/my-profile";
 import { BeSuccessResponse } from "@/entities/response";
@@ -44,6 +44,8 @@ const FollowingTab = ({ walletAddress }: { walletAddress: string }) => {
       return getAPI(API_PATH.USER.FOLLOWINGS, {
         params: {
           ...params,
+          orderBy: "id",
+          direction: EDirection.DESC,
           walletAddress: walletAddress,
           keyword: debounceSearch,
         },
@@ -76,10 +78,10 @@ const FollowingTab = ({ walletAddress }: { walletAddress: string }) => {
 
   return (
     <div>
-      <div className="w-full flex flex-row items-center justify-between">
+      <div className="w-full flex sm:flex-row flex-col sm:items-center justify-between">
         <TabTitle title="Following" />
         <AppInput
-          className="!w-[400px]"
+          className="sm:!w-[400px] w-full h-[40px]"
           isSearch={true}
           iconPosition="left"
           placeholder="Search"
@@ -93,7 +95,7 @@ const FollowingTab = ({ walletAddress }: { walletAddress: string }) => {
         <NoData />
       ) : (
         <div>
-          <div className="my-6 grid grid-cols-2 gap-6">
+          <div className="my-6 grid sm:grid-cols-2 grid-cols-1 gap-6">
             {followings?.map((user: IFollowerResponse, index: number) => (
               <UserFollow
                 data={user}

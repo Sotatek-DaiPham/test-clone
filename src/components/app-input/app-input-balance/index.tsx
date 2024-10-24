@@ -64,7 +64,7 @@ const AppInputBalance = ({
                     alt="token"
                     width={20}
                     height={20}
-                    className="rounded-full object-cover h-5"
+                    className="rounded-full object-contain h-5"
                     src={tokenImageSrc}
                   />
                 )}

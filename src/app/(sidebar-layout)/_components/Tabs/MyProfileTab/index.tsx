@@ -111,7 +111,7 @@ const MyProfileTab = ({ apiPath }: { apiPath: string }) => {
         <div className="flex justify-center">
           {myProfile?.avatar ? (
             <AppImage
-              className="!bg-neutral-4 w-[130px] h-[130px] rounded-full overflow-hidden flex [&>img]:!object-cover"
+              className="!bg-neutral-4 w-[130px] h-[130px] rounded-full overflow-hidden flex [&>img]:!object-contain"
               src={myProfile?.avatar}
               alt="logo"
             />

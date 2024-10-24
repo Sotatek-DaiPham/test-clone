@@ -9,7 +9,7 @@ import {
   UpdateProfilePayload,
 } from "@/entities/my-profile";
 import { BeSuccessResponse } from "@/entities/response";
-import { ImageValidator } from "@/helpers/upload";
+import { ImageLogoValidator } from "@/helpers/upload";
 import { NotificationContext } from "@/libs/antd/NotificationProvider";
 import { postAPI, postFormDataAPI } from "@/service";
 import { useMutation } from "@tanstack/react-query";
@@ -110,7 +110,7 @@ const EditProfileModal = ({ data, onOk, ...props }: IEditProfileModalProps) => {
                 className="w-full md:flex-1"
                 rules={[
                   {
-                    validator: ImageValidator,
+                    validator: ImageLogoValidator,
                   },
                 ]}
               >

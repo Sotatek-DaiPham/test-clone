@@ -82,7 +82,7 @@ const AppUpload = (props: AppUploadProps) => {
           <div className="flex gap-3 items-center">
             <img
               src={props?.value?.src}
-              className="rounded-[10px] object-cover  w-9 h-9"
+              className="rounded-[10px] object-contain  w-9 h-9"
             />
             <div className="flex flex-col gap-1">
               <div className="text-14px-normal text-neutral-9">

@@ -1,8 +1,10 @@
 import AppImage from "@/components/app-image";
 import { DEFAULT_AVATAR } from "@/constant";
+import { PATH_ROUTER } from "@/constant/router";
 import { DiscussionThreadItem, IReplyThreadItem } from "@/entities/my-profile";
 import { ArrowTurnDownRightIcon } from "@public/assets";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 interface DiscussionItemProps {
   data: DiscussionThreadItem;
@@ -15,6 +17,8 @@ const DiscussionItem: React.FC<DiscussionItemProps> = ({
   onShowReplies,
   selectedReplies,
 }) => {
+  const router = useRouter();
+  console.log("data", data);
   return (
     <div className="flex flex-col gap-1 mb-6">
       <div className="px-6 py-4 rounded-2xl bg-neutral-2 flex flex-col gap-4">
@@ -27,7 +31,12 @@ const DiscussionItem: React.FC<DiscussionItemProps> = ({
             />
           </div>
           <div className="flex flex-col">
-            <span className='text-neutral-9 text-16px-bold"'>
+            <span
+              className="text-neutral-9 text-16px-bold cursor-pointer"
+              onClick={() =>
+                router.push(PATH_ROUTER.USER_PROFILE(data?.wallet_address))
+              }
+            >
               {data.username || "-"}
             </span>
             <span className="text-neutral-7 text-14px-medium">
