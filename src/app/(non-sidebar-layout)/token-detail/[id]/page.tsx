@@ -44,7 +44,7 @@ const TokenDetailPage = () => {
   }, [isConnected]);
 
   return (
-    <>
+    <div className="m-auto p-6 max-w-[var(--width-content-sidebar-layout)]">
       <div
         className="flex gap-[9px] items-center mb-[26px] cursor-pointer"
         onClick={() => router.back()}
@@ -95,7 +95,7 @@ const TokenDetailPage = () => {
           <TokenInfoSection tokenDetail={tokenDetail} />
         </div>
       </div>
-    </>
+    </div>
   );
 };
 
