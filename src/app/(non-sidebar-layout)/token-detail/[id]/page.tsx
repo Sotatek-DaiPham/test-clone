@@ -33,7 +33,7 @@ const TokenDetailPage = () => {
       });
       addEvent(ESocketEvent.SELL, (data) => {
         if (data) {
-          alert("SELL");
+          console.log("data", data);
         }
       });
     }
@@ -84,8 +84,11 @@ const TokenDetailPage = () => {
           {/* Detail information section */}
           <PriceSection />
           {tokenDetail?.kingOfTheHillDate && (
-            <AppRoundedInfo customClassName="mt-4"
-              text={`Crowned king of the hill at ${getTimeDDMMMYYYYHHMM(tokenDetail.kingOfTheHillDate)}`}
+            <AppRoundedInfo
+              customClassName="mt-4"
+              text={`Crowned king of the hill at ${getTimeDDMMMYYYYHHMM(
+                tokenDetail.kingOfTheHillDate
+              )}`}
             />
           )}
 
