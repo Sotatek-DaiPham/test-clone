@@ -1,19 +1,15 @@
-import { pumpContractABI } from "@/abi/pumpContractAbi";
 import AppProgress from "@/components/app-progress";
 import AppTextLoading from "@/components/app-text-loading";
 import AppTooltip from "@/components/app-tooltip";
 import { TOKEN_DECIMAL, USDT_DECIMAL, USDT_THRESHOLD } from "@/constant";
-import { envs } from "@/constant/envs";
 import { useTokenDetail } from "@/context/TokenDetailContext";
 import { calculateUsdtShouldPay } from "@/helpers/calculate";
-import {
-  formatRoundFloorDisplayWithCompare,
-  nFormatter,
-} from "@/helpers/formatNumber";
-import { ITokenDetailRes, TokenDetailSC } from "@/interfaces/token";
+import { nFormatter } from "@/helpers/formatNumber";
+import useSocket from "@/hooks/useSocket";
+import { ISocketData, ITokenDetailRes } from "@/interfaces/token";
+import { ESocketEvent } from "@/libs/socket/constants";
 import BigNumber from "bignumber.js";
-import { useMemo } from "react";
-import { useReadContract } from "wagmi";
+import { useEffect, useMemo } from "react";
 
 interface IPriceSectionProps {
   tokenDetail: ITokenDetailRes;
@@ -21,11 +17,14 @@ interface IPriceSectionProps {
 }
 
 const PriceSection = () => {
+  const { isConnected, socket } = useSocket();
+
   const {
     tokenDetail,
     tokenDetailSC,
     isTokenDetailLoading,
     isTokenDetailScLoading,
+    refetch: refetchDetail,
   } = useTokenDetail();
 
   const tokenInfo = useMemo(() => {
@@ -63,6 +62,16 @@ const PriceSection = () => {
 
   const textLoading = isTokenDetailScLoading || isTokenDetailLoading;
 
+  useEffect(() => {
+    if (isConnected) {
+      socket?.on(ESocketEvent.CREATE_TOKEN, (data: ISocketData) => {
+        if (data.data.tokenAddress === tokenDetail?.contractAddress) {
+          refetchDetail();
+        }
+      });
+    }
+  }, [isConnected]);
+
   return (
     <div className="bg-neutral-2 rounded-[16px] shadow-[0px_40px_32px_-24px_rgba(15,15,15,0.12)] p-5 flex flex-col gap-[15px]">
       <div className="flex justify-between items-center">
@@ -92,11 +101,9 @@ const PriceSection = () => {
         <div className="text-14px-medium text-white-neutral">
           ${" "}
           <AppTextLoading
-            text={
-              nFormatter(
-                BigNumber(tokenDetail?.volume).div(USDT_DECIMAL).toString()
-              ) || "-"
-            }
+            text={nFormatter(
+              BigNumber(tokenDetail?.volume).div(USDT_DECIMAL).toString()
+            )}
             loading={textLoading}
           />
         </div>
@@ -110,7 +117,7 @@ const PriceSection = () => {
         </div>
         <div className="text-14px-medium text-white-neutral">
           <AppTextLoading
-            text={nFormatter(tokenDetail?.progressToListDex) || "-"}
+            text={nFormatter(tokenDetail?.progressToListDex)}
             loading={textLoading}
           />{" "}
           %
