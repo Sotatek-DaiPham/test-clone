@@ -28,6 +28,7 @@ const TokenDetailPage = () => {
     if (isConnected) {
       addEvent(ESocketEvent.BUY, (data) => {
         if (data) {
+          console.log("data", data);
         }
       });
       addEvent(ESocketEvent.SELL, (data) => {

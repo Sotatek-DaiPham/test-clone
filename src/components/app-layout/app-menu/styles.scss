@@ -57,11 +57,11 @@
       background-color: var(--color-primary-main) !important;
     }
     img {
-      filter: brightness(0) saturate(100%) invert(97%) sepia(100%) saturate(11%)
-        hue-rotate(217deg) brightness(105%) contrast(104%);
+      filter: brightness(0) saturate(100%) invert(0%) sepia(6%) saturate(7500%)
+        hue-rotate(259deg) brightness(93%) contrast(107%);
     }
     span {
-      color: var(--color-neutral-white);
+      color: var(--color-neutral-1);
     }
   }
 }
