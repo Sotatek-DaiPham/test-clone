@@ -3,7 +3,7 @@ import "./styles.scss";
 
 interface Props {
   loading: boolean;
-  text: string | null;
+  text: string | null | number;
   className?: string;
 }
 

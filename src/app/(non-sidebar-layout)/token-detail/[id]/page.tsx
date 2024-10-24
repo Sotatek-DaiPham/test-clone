@@ -35,10 +35,16 @@ const TokenDetailPage = () => {
           console.log("data", data);
         }
       });
+      addEvent(ESocketEvent.CREATE_TOKEN, (data) => {
+        if (data) {
+          console.log("data", data);
+        }
+      });
     }
     return () => {
       removeEvent(ESocketEvent.BUY);
       removeEvent(ESocketEvent.SELL);
+      removeEvent(ESocketEvent.CREATE_TOKEN);
     };
   }, [isConnected]);
 
