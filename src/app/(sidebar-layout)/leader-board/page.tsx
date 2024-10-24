@@ -24,6 +24,7 @@ import { useAccount } from "wagmi";
 import TopUser from "./components/TopUser";
 import useWindowSize from "@/hooks/useWindowSize";
 import MyTopLine from "./components/MyTopLine";
+import AppPaginationCustom from "@/components/app-pagination/app-pagination-custom";
 
 const data = [
   {
@@ -281,7 +282,15 @@ const LeaderboardPage = () => {
           rowKey="rank"
         />
       </div>
-      <AppPagination
+      <AppPaginationCustom
+        label="users"
+        total={100}
+        page={params?.page}
+        limit={params?.limit}
+        onChange={(page) => setParams({ ...params, page })}
+        hideOnSinglePage={true}
+      />
+      {/* <AppPagination
         className="w-full !justify-end !mr-6"
         hideOnSinglePage={true}
         showTotal={(total, range) => (
@@ -293,7 +302,7 @@ const LeaderboardPage = () => {
         onChange={(page, size) => {
           setParams((prev: any) => ({ ...prev, page, limit: size }));
         }}
-      />
+      /> */}
     </div>
   );
 };

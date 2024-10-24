@@ -33,25 +33,23 @@ const ProjectCard = ({ data, className, footer }: IProjectCardProps) => {
         router.push(PATH_ROUTER.TOKEN_DETAIL(data?.id));
       }}
     >
-      <div className="grid grid-cols-5 gap-4">
-        <div className="col-span-2">
+      <div className="flex flex-row gap-4">
+        <div className="!overflow-hidden !bg-neutral-4 !w-[130px] justify-center flex items-center !h-[130px] rounded-2xl">
           {data?.avatar ? (
             <AppImage
-              className="!bg-neutral-4 min-w-[115px] w-full !h-[110px] rounded-2xl overflow-hidden flex [&>img]:!object-contain"
-              src={data?.avatar || DEFAULT_AVATAR}
+              className="[&>img]:!object-contain"
+              src={data?.avatar}
               alt="logo"
             />
           ) : (
-            <div className="min-w-[115px] w-full !h-[110px] rounded-2xl !bg-neutral-4  flex justify-center overflow-hidden">
-              <Image
-                className="!bg-neutral-4 [&>img]:!object-contain"
-                alt="logo"
-                src={ImageDefaultIcon}
-              />
-            </div>
+            <Image
+              className="[&>img]:!object-contain"
+              alt="logo"
+              src={ImageDefaultIcon}
+            />
           )}
         </div>
-        <div className="col-span-3 flex-1">
+        <div className="flex-1">
           <div className="flex-1">
             {!footer && (
               <div className="text-primary-7 flex w-full items-center flex-row !text-12px-normal">

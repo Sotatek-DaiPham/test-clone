@@ -24,6 +24,12 @@
   outline: none !important;
   border: 1px solid var(--color-neutral-5);
   background: transparent !important;
+  &:active {
+    border-color: var(--color-primary-main) !important;
+  }
+  &:hover {
+    border-color: var(--color-primary-main) !important;
+  }
 }
 
 .app-button.outline-primary {

@@ -17,6 +17,7 @@ import InfiniteScroll from "react-infinite-scroll-component";
 import DiscussionItem from "./component/DiscussionItem";
 import ReplySection from "./component/ReplySection";
 import { DiscussionThreadItem } from "@/entities/my-profile";
+import useWindowSize from "@/hooks/useWindowSize";
 
 const DiscussionThread = () => {
   const [form] = Form.useForm();
@@ -28,7 +29,7 @@ const DiscussionThread = () => {
     (state) => state.user
   );
   const { userId } = useAppSelector((state) => state.user);
-
+  const { isMobile } = useWindowSize();
   const [selectedReplies, setSelectedReplies] = useState([]);
   const [showInputComment, setShowInputComment] = useState(false);
   const [isShowReplySection, setIsShowReplySection] = useState(false);
@@ -180,7 +181,11 @@ const DiscussionThread = () => {
   return (
     <div className="flex gap-6 w-full">
       <div className="flex gap-6 w-full">
-        <div className="flex flex-col gap-6 flex-1 w-1/2">
+        <div
+          className={`flex flex-col gap-6 flex-1 ${
+            replyTo?.commentId || !isMobile ? "w-full" : "w-1/2"
+          }`}
+        >
           <InfiniteScroll
             dataLength={data?.pages.flatMap((page) => page.data).length || 0}
             next={fetchNextPage}
@@ -197,6 +202,35 @@ const DiscussionThread = () => {
                     onShowReplies={handleShowReplies}
                     selectedReplies={selectedReplies}
                   />
+                  {isMobile && replyTo?.commentId && (
+                    <div className={`flex-1 w-full mb-6`}>
+                      {isShowReplySection &&
+                        replyTo?.commentId === item.comment_id && (
+                          <InfiniteScroll
+                            dataLength={
+                              selectedReplies?.flatMap((page) => page).length ||
+                              0
+                            }
+                            next={fetchNextRepliesPage}
+                            hasMore={!!hasNextRepliesPage}
+                            loader={<div>Loading...</div>}
+                          >
+                            <ReplySection
+                              onClose={handleCloseReplySection}
+                              refetchReplies={refetchReplies}
+                              selectedReplies={selectedReplies}
+                              isAuthenticated={isAuthenticated}
+                              onAddReply={onFinish}
+                              userId={userId}
+                              tokenId={tokenId}
+                              replyTo={replyTo}
+                              handleUpload={handleUpload}
+                              postCommentMutation={postCommentMutation}
+                            />
+                          </InfiniteScroll>
+                        )}
+                    </div>
+                  )}
                 </div>
               ))
             )}
@@ -204,7 +238,7 @@ const DiscussionThread = () => {
           {isAuthenticated && !showInputComment && (
             <AppRoundedInfo
               text="Post a Reply"
-              customClassName="cursor-pointer"
+              customClassName="cursor-pointer !w-fit !px-8"
               onClick={() => {
                 setShowInputComment(true);
               }}
@@ -223,29 +257,33 @@ const DiscussionThread = () => {
           )}
         </div>
         {/* reply section */}
-        <div className="flex-1 w-1/2">
-          {isShowReplySection && (
-            <InfiniteScroll
-              dataLength={selectedReplies?.flatMap((page) => page).length || 0}
-              next={fetchNextRepliesPage}
-              hasMore={!!hasNextRepliesPage}
-              loader={<div>Loading...</div>}
-            >
-              <ReplySection
-                onClose={handleCloseReplySection}
-                refetchReplies={refetchReplies}
-                selectedReplies={selectedReplies}
-                isAuthenticated={isAuthenticated}
-                onAddReply={onFinish}
-                userId={userId}
-                tokenId={tokenId}
-                replyTo={replyTo}
-                handleUpload={handleUpload}
-                postCommentMutation={postCommentMutation}
-              />
-            </InfiniteScroll>
-          )}
-        </div>
+        {!isMobile && (
+          <div className={`flex-1 ${replyTo?.commentId ? "w-1/2" : "hidden"}`}>
+            {isShowReplySection && (
+              <InfiniteScroll
+                dataLength={
+                  selectedReplies?.flatMap((page) => page).length || 0
+                }
+                next={fetchNextRepliesPage}
+                hasMore={!!hasNextRepliesPage}
+                loader={<div>Loading...</div>}
+              >
+                <ReplySection
+                  onClose={handleCloseReplySection}
+                  refetchReplies={refetchReplies}
+                  selectedReplies={selectedReplies}
+                  isAuthenticated={isAuthenticated}
+                  onAddReply={onFinish}
+                  userId={userId}
+                  tokenId={tokenId}
+                  replyTo={replyTo}
+                  handleUpload={handleUpload}
+                  postCommentMutation={postCommentMutation}
+                />
+              </InfiniteScroll>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
