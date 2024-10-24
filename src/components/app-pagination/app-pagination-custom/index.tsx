@@ -68,7 +68,7 @@ const AppPaginationCustom = ({
                   limit * (page + 1) > total ? total : limit * (page + 1)
                 )}`
               : `${formatAmount(limit * (page - 1) + 1)}-${formatAmount(
-                  limit * (page + 1)
+                  limit * (page + 1) > total ? total : limit * (page + 1)
                 )}`}
           </span>
           <Image

@@ -217,7 +217,7 @@ export default function Home() {
                     <AppImage
                       src={item?.token_avatar}
                       alt="logo"
-                      className="w-[24px] h-[24px] rounded-full mx-3"
+                      className="!w-[24px] !h-[24px] rounded-full mx-3"
                     />
                     <span className="text-14px-bold text-primary-6">
                       {item?.token_name}

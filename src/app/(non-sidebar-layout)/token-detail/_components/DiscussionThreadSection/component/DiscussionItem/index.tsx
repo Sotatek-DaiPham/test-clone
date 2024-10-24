@@ -18,7 +18,6 @@ const DiscussionItem: React.FC<DiscussionItemProps> = ({
   selectedReplies,
 }) => {
   const router = useRouter();
-  console.log("data", data);
   return (
     <div className="flex flex-col gap-1 mb-6">
       <div className="px-6 py-4 rounded-2xl bg-neutral-2 flex flex-col gap-4">

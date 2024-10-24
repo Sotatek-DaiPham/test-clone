@@ -43,10 +43,18 @@ async function getData({ resolution, tokenAddress }: IDataChart) {
 
   const bars: any = dataTradingView.map((bar: any) => ({
     time: bar.endTimeFrame,
-    close: parseFloat(bar.close),
-    open: parseFloat(bar.open),
-    high: parseFloat(bar.hight),
-    low: parseFloat(bar.low),
+    close: parseFloat(
+      new BigNumber(bar.close).div(new BigNumber(10).pow(6))?.toString()
+    ),
+    open: parseFloat(
+      new BigNumber(bar.open).div(new BigNumber(10).pow(6))?.toString()
+    ),
+    high: parseFloat(
+      new BigNumber(bar.hight).div(new BigNumber(10).pow(6))?.toString()
+    ),
+    low: parseFloat(
+      new BigNumber(bar.low).div(new BigNumber(10).pow(6))?.toString()
+    ),
     volume: parseFloat(
       new BigNumber(bar.volume).div(new BigNumber(10).pow(18))?.toString()
     ),
@@ -65,7 +73,7 @@ export default async function onInitTradingView({
       details: false,
     },
     custom_css_url: "/tradingview-chart.css",
-    toolbar_bg: "#16171c",
+    // toolbar_bg: "#16171c",
     symbol,
     timezone: getClientTimezone(),
     enabled_features: ["study_templates"],
@@ -116,7 +124,7 @@ export default async function onInitTradingView({
           session: "24x7",
           timezone: getClientTimezone(),
           minmov: 1,
-          pricescale: 10000,
+          pricescale: 100000000,
           has_intraday: true,
           has_weekly_and_monthly: true,
           intraday_multipliers: configurationData.intraday_multipliers,
