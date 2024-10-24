@@ -11,7 +11,7 @@ export interface IEllipsisTextWithTooltipProps
   className?: string;
   tooltipProps?: TooltipProps;
   style?: React.CSSProperties;
-  onClick?: () => void;
+  onClick?: (e: any) => void;
 }
 
 function TextWithLineBreaks({ text }: any) {
@@ -35,7 +35,7 @@ const EllipsisTextWithTooltip: React.FC<IEllipsisTextWithTooltipProps> = ({
   return (
     <Typography.Text
       onClick={onClick}
-      className={`${className ?? ""}`}
+      className={`font-sfPro ${className ?? ""}`}
       ellipsis={{
         tooltip: {
           color: "var(--color-icon-secondary)",

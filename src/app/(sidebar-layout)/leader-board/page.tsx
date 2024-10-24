@@ -22,6 +22,8 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useAccount } from "wagmi";
 import TopUser from "./components/TopUser";
+import useWindowSize from "@/hooks/useWindowSize";
+import MyTopLine from "./components/MyTopLine";
 
 const data = [
   {
@@ -89,6 +91,7 @@ const data = [
   },
 ];
 const LeaderboardPage = () => {
+  const { isDesktop, isMobile } = useWindowSize();
   const { address: userAddress } = useAccount();
   const { userId } = useAppSelector((state) => state.user);
   const router = useRouter();
@@ -103,22 +106,30 @@ const LeaderboardPage = () => {
       title: "Rank",
       dataIndex: "rank",
       key: "rank",
+      // width: !isDesktop ? "470px" : "10%",
       width: "10%",
       render: (value: string, data: any) => {
         return (
-          <div className="relative h-fit w-fit">
-            <Image
-              src={TopLeaderBoardIcon}
-              alt="top-leaderboard"
-              className={
-                userAddress === data?.address && userId
-                  ? "active-primary-icon"
-                  : ""
-              }
-            />
-            <span className="text-primary-main text-22px-bold absolute inset-0 flex items-center justify-center">
-              {value}
-            </span>
+          <div className="relative h-fit w-full">
+            <div className="relative h-fit w-fit">
+              <Image
+                src={TopLeaderBoardIcon}
+                alt="top-leaderboard"
+                className={
+                  userAddress === data?.address && userId
+                    ? "active-primary-icon"
+                    : ""
+                }
+              />
+              <span className="text-primary-main text-22px-bold absolute inset-0 flex items-center justify-center">
+                {value}
+              </span>
+            </div>
+            {/* {userAddress !== data?.address && userId && (
+              <div className="absolute rounded-2xl px-[6px] right-0 top-0 leading-4 bg-[var(--color-primary-10)] text-primary-main text-[10px] font-bold">
+                My Rank
+              </div>
+            )} */}
           </div>
         );
       },
@@ -197,7 +208,21 @@ const LeaderboardPage = () => {
 
   return (
     <div className="m-auto max-w-[var(--width-content-sidebar-layout)]">
-      <div className="grid grid-cols-3 gap-6 mb-6">
+      <div className="grid sm:grid-cols-3 grid-cols-1 gap-6 mb-6">
+        {isMobile && (
+          <TopUser
+            image={UserTop1}
+            top1={true}
+            className="!bg-gradient-to-b from-[var(--color-top-1-from)] to-[var(--color-top-1-to)]"
+            data={{
+              username: "Kristin Watson 1",
+              address: "0x16A18C10301132505B2a7469b8857B97B155C86A",
+              total: 50000,
+              buy: 30000,
+              sell: 20000,
+            }}
+          />
+        )}
         <TopUser
           image={UserTop2}
           className="!bg-gradient-to-b from-[var(--color-top-2-from)] to-[var(--color-top-2-to)]"
@@ -209,18 +234,20 @@ const LeaderboardPage = () => {
             sell: 20000,
           }}
         />
-        <TopUser
-          image={UserTop1}
-          top1={true}
-          className="!bg-gradient-to-b from-[var(--color-top-1-from)] to-[var(--color-top-1-to)]"
-          data={{
-            username: "Kristin Watson 1",
-            address: "0x16A18C10301132505B2a7469b8857B97B155C86A",
-            total: 50000,
-            buy: 30000,
-            sell: 20000,
-          }}
-        />
+        {!isMobile && (
+          <TopUser
+            image={UserTop1}
+            top1={true}
+            className="!bg-gradient-to-b from-[var(--color-top-1-from)] to-[var(--color-top-1-to)]"
+            data={{
+              username: "Kristin Watson 1",
+              address: "0x16A18C10301132505B2a7469b8857B97B155C86A",
+              total: 50000,
+              buy: 30000,
+              sell: 20000,
+            }}
+          />
+        )}
         <TopUser
           image={UserTop3}
           className="!bg-gradient-to-b from-[var(--color-top-3-from)] to-[var(--color-top-3-to)]"
@@ -233,9 +260,10 @@ const LeaderboardPage = () => {
           }}
         />
       </div>
-      <div className="w-full flex justify-end">
+      <div className="w-full flex justify-between sm:flex-row flex-col items-center">
+        <MyTopLine top={8} total={10} />
         <AppInput
-          className="!w-[400px]"
+          className="sm:!w-[400px] w-full h-[40px]"
           isSearch={true}
           iconPosition="left"
           placeholder="Search"

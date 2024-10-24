@@ -26,6 +26,8 @@ import AppTooltip from "@/components/app-tooltip";
 import { EDirection } from "@/constant";
 import useSocket from "@/hooks/useSocket";
 import { ESocketEvent } from "@/libs/socket/constants";
+import { useRouter } from "next/navigation";
+import { PATH_ROUTER } from "@/constant/router";
 
 enum ETabsTerminal {
   ALL = "all",
@@ -37,6 +39,7 @@ export default function Home() {
   const { accessToken } = useWalletAuth();
   const { searchParams, setSearchParams } = useAppSearchParams("terminal");
   const [activeTab, setActiveTab] = useState<string>(ETabsTerminal.ALL);
+  const router = useRouter();
 
   const { data, refetch } = useQuery({
     queryKey: ["king-of-the-sky"],
@@ -183,10 +186,19 @@ export default function Home() {
                     key={index}
                     className="slide-item flex flex-row items-center text-14px-normal text-neutral-9 border-r border-neutral-4 px-3"
                   >
-                    <AppTooltip className="mr-2" title={item?.user_address}>
-                      {shortenAddress(item?.user_address)}
+                    <AppTooltip title={item?.user_address}>
+                      <span
+                        className="mr-2 cursor-pointer"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          router.push(
+                            PATH_ROUTER.USER_PROFILE(item?.user_address)
+                          );
+                        }}
+                      >
+                        {shortenAddress(item?.user_address)}
+                      </span>
                     </AppTooltip>
-
                     <span
                       className={
                         item?.action === "BUY"
