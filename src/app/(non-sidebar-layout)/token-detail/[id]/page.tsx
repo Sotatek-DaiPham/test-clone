@@ -23,7 +23,6 @@ const TokenDetailPage = () => {
   const { addEvent, isConnected, removeEvent } = useSocket();
   const router = useRouter();
   const { tokenDetail } = useTokenDetail();
-
   useEffect(() => {
     if (isConnected) {
       addEvent(ESocketEvent.BUY, (data) => {
@@ -44,7 +43,7 @@ const TokenDetailPage = () => {
   }, [isConnected]);
 
   return (
-    <div className="m-auto p-6 max-w-[var(--width-content-sidebar-layout)]">
+    <div className="m-auto p-2 max-w-[var(--width-content-sidebar-layout)]">
       <div
         className="flex gap-[9px] items-center mb-[26px] cursor-pointer"
         onClick={() => router.back()}

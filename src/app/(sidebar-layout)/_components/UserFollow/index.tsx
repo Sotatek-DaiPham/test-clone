@@ -30,7 +30,7 @@ const UserFollow = ({ data, onFollow }: IUserFollow) => {
       }
     >
       <div className="w-full flex flex-row">
-        <div className="sm:w-[5%] w-[10%] mr-4">
+        <div className="w-[50px]">
           {data?.avatar ? (
             <AppImage
               className="!bg-neutral-4 !w-[50px] !h-[50px] rounded-xl overflow-hidden flex [&>img]:!object-contain"
@@ -47,8 +47,8 @@ const UserFollow = ({ data, onFollow }: IUserFollow) => {
             </div>
           )}
         </div>
-        <div className="sm:w-[80%] w-[40%] ml-4 mr-6">
-          <span className="text-16px-medium text-white-neutral mr-3">
+        <div className="grow mx-4">
+          <span className="text-16px-medium text-white-neutral truncate-1-line">
             {data?.username || "-"}
           </span>
           <div className="text-neutral-7 text-14px-normal my-1">
@@ -64,7 +64,7 @@ const UserFollow = ({ data, onFollow }: IUserFollow) => {
             </div>
           )}
         </div>
-        <div className="sm:w-[15%] w-[30%] flex justify-center">
+        <div className="w-[100px] flex justify-center">
           {userAddress !== data?.wallet_address && (
             <AppButton
               size="small"

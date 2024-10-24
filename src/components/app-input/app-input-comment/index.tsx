@@ -1,8 +1,8 @@
-import React, { ChangeEvent, useState, useRef } from "react";
-import { Input, message, Form } from "antd";
-import { LinkHorizontalIcon, CloseIcon } from "@public/assets";
-import Image from "next/image";
 import AppRoundedInfo from "@/components/app-rounded-info";
+import { CloseIcon, LinkHorizontalIcon } from "@public/assets";
+import { Form, Input } from "antd";
+import Image from "next/image";
+import React, { ChangeEvent, useRef, useState } from "react";
 
 const { TextArea } = Input;
 
@@ -27,6 +27,7 @@ const AppInputComment: React.FC<AppInputCommentProps> = ({
   const [fileList, setFileList] = useState<FileItem[]>([]);
   const [canUpload, setCanUpload] = useState(true);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const fileTextAreaRef = useRef<HTMLInputElement>(null);
   const [form] = Form.useForm();
 
   const handleUpload = (e: ChangeEvent<HTMLInputElement>) => {
@@ -84,6 +85,7 @@ const AppInputComment: React.FC<AppInputCommentProps> = ({
   return (
     <Form
       form={form}
+      onClick={() => fileTextAreaRef.current?.focus()}
       onFinish={handleSubmit}
       className="app-input-comment border border-neutral-5 rounded-[8px] p-3"
     >
@@ -92,11 +94,18 @@ const AppInputComment: React.FC<AppInputCommentProps> = ({
         rules={[{ required: true, message: "Please enter your comment" }]}
       >
         <TextArea
+          ref={fileTextAreaRef}
           rows={1}
-          placeholder="Mô tả ..."
-          className="comment-textarea border-none focus:shadow-none !bg-transparent text-neutral-9 !resize-none placeholder-neutral-5"
+          placeholder="Describe..."
+          className="comment-textarea border-none focus:!outline-none focus-within:!shadow-none focus:!shadow-none !bg-transparent !text-neutral-9 !resize-none !placeholder-neutral-5"
           maxLength={1200}
-          showCount
+          showCount={{
+            formatter: (value) => (
+              <div className="text-neutral-5">
+                {value?.count}/{value?.maxLength}
+              </div>
+            ),
+          }}
           autoSize={{ minRows: 1, maxRows: 6 }}
           onKeyDown={(e) => {
             const value = e.currentTarget.value;
