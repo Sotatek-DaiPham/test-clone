@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 const MOBILE_PX = 480;
 export const TABLET_PX = 768;
-const DESKTOP_PX = 1600;
+const DESKTOP_PX = 1024;
 
 const useWindowSize = () => {
   const [windowSize, setWindowSize] = useState<any>({

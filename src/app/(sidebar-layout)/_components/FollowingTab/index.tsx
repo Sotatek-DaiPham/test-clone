@@ -92,7 +92,7 @@ const FollowingTab = () => {
         <NoData></NoData>
       ) : (
         <div>
-          <div className="grid grid-cols-3 gap-6 my-9">
+          <div className="grid xl:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-6 my-9">
             {tokenList?.map(
               (project: ITokenDashboardResponse, index: number) => (
                 <ProjectCard data={project} key={index} />

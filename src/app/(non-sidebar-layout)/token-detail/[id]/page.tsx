@@ -4,7 +4,7 @@ import AppRoundedInfo from "@/components/app-rounded-info";
 import { useTokenDetail } from "@/context/TokenDetailContext";
 import { getTimeDDMMMYYYYHHMM } from "@/helpers/date-time";
 import useSocket from "@/hooks/useSocket";
-import { ESocketEvent } from "@/libs/socket/contants";
+import { ESocketEvent } from "@/libs/socket/constants";
 import { BackIcon } from "@public/assets";
 import dynamic from "next/dynamic";
 import Image from "next/image";

@@ -3,10 +3,11 @@ import NoData from "@/components/no-data";
 import { API_PATH } from "@/constant/api-path";
 import { ITokenDashboardResponse } from "@/entities/dashboard";
 import { BeSuccessResponse } from "@/entities/response";
+import { getAge, getAgeType } from "@/helpers/date-time";
 import { useAppSearchParams } from "@/hooks/useAppSearchParams";
 import useDebounce from "@/hooks/useDebounce";
 import useSocket from "@/hooks/useSocket";
-import { ESocketEvent } from "@/libs/socket/contants";
+import { ESocketEvent } from "@/libs/socket/constants";
 import { getAPI } from "@/service";
 import {
   DollarCircleUpIcon,
@@ -107,24 +108,24 @@ const FILTER_TERMINAL = [
     icon: UsersIcon,
     children: [
       { key: "", label: "Any" },
-      { key: "less15m", label: "≤15m" },
-      { key: "less30m", label: "≤30m" },
-      { key: "less1h", label: "≤1h" },
-      { key: "less3h", label: "≤3h" },
-      { key: "less6h", label: "≤6h" },
-      { key: "less12h", label: "≤12h" },
-      { key: "less124h", label: "≤24h" },
-      { key: "less3d", label: "≤3d" },
+      { key: "less15M", label: "≤15m" },
+      { key: "less30M", label: "≤30m" },
+      { key: "less1H", label: "≤1h" },
+      { key: "less3H", label: "≤3h" },
+      { key: "less6H", label: "≤6h" },
+      { key: "less12H", label: "≤12h" },
+      { key: "less24H", label: "≤24h" },
+      { key: "less3D", label: "≤3d" },
     ],
     children1: [
-      { key: "bigger15m", label: "≥15m" },
-      { key: "bigger30m", label: "≥30m" },
-      { key: "bigger1h", label: "≥1h" },
-      { key: "bigger3h", label: "≥3h" },
-      { key: "bigger6h", label: "≥6h" },
-      { key: "bigger12h", label: "≥12h" },
-      { key: "bigger25h", label: "≥24h" },
-      { key: "bigger3d", label: "≥3d" },
+      { key: "bigger15M", label: "≥15m" },
+      { key: "bigger30M", label: "≥30m" },
+      { key: "bigger1H", label: "≥1h" },
+      { key: "bigger3H", label: "≥3h" },
+      { key: "bigger6H", label: "≥6h" },
+      { key: "bigger12H", label: "≥12h" },
+      { key: "bigger24H", label: "≥24h" },
+      { key: "bigger3D", label: "≥3d" },
     ],
   },
   {
@@ -183,7 +184,8 @@ const AllTab = () => {
         params: {
           ...params,
           keyword: debounceSearch,
-          age: searchParams?.age,
+          typeFilterAge: getAgeType(searchParams?.age),
+          age: getAge(searchParams?.age),
           minProgress: searchParams?.minProgress,
           maxProgress: searchParams?.maxProgress,
           mainFilterToken:
@@ -191,7 +193,7 @@ const AllTab = () => {
               ? "TOP_VOLUME"
               : searchParams.top === "txns"
               ? "TOP_TRANSACTION"
-              : searchParams.filter?.toUpperCase() || "TRENDING",
+              : searchParams?.filter?.toUpperCase() || "TRENDING",
         },
       }) as Promise<
         AxiosResponse<BeSuccessResponse<ITokenDashboardResponse[]>, any>
@@ -261,7 +263,7 @@ const AllTab = () => {
         <NoData></NoData>
       ) : (
         <div>
-          <div className="grid grid-cols-3 gap-6 my-9">
+          <div className="grid xl:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-6 my-9">
             {tokenList?.map(
               (project: ITokenDashboardResponse, index: number) => (
                 <ProjectCard data={project} key={index} />

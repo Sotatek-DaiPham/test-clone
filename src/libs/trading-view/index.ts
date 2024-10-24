@@ -1,3 +1,7 @@
+"use client";
+import { BigNumber } from "bignumber.js";
+import { API_PATH } from "@/constant/api-path";
+import { getAPI } from "@/service";
 import {
   LibrarySymbolInfo,
   ResolveCallback,
@@ -8,38 +12,53 @@ import get from "lodash/get";
 import {
   configurationData,
   DEFAULT_TRADING_VIEW_INTERVAL,
+  disabledFeatures,
+  getInterval,
+  getIntervalString,
   ID_TRADING_VIEW,
 } from "./constants";
 import { getClientTimezone } from "./helpers";
 
 interface IParams {
-  marketId: string;
+  tokenAddress: string;
   symbol: string;
 }
 
 interface IDataChart {
   resolution: string;
-  countback: number;
-  marketId: string;
+  tokenAddress: string;
 }
 
-async function getData({ resolution, countback, marketId }: IDataChart) {
-  // if (!marketId) return [];
-  // const data = await fetchMarketsHistory([marketId], resolution, countback);
-  const data: any = [];
-  return get(data, "[0].c")?.map((_: any, index: number) => {
-    return {
-      time: get(data, `[0].t.${index}`, 0) * 1000,
-      close: get(data, `[0].c.${index}`),
-      open: get(data, `[0].o.${index}`, 0),
-      high: get(data, `[0].h.${index}`, 0),
-      low: get(data, `[0].l.${index}`, 0),
-      volume: get(data, `[0].v.${index}`, 0),
-    };
+async function getData({ resolution, tokenAddress }: IDataChart) {
+  if (!tokenAddress) return [];
+  const intervalInSeconds = getInterval(resolution) * 60 * 1000;
+  const data = await getAPI(API_PATH.TRADING.TRADING_VIEW, {
+    params: {
+      tokenAddress,
+      resolution: intervalInSeconds,
+    },
   });
+
+  const dataTradingView = get(data, "data.data", []);
+
+  const bars: any = dataTradingView.map((bar: any) => ({
+    time: bar.endTimeFrame,
+    close: parseFloat(bar.close),
+    open: parseFloat(bar.open),
+    high: parseFloat(bar.hight),
+    low: parseFloat(bar.low),
+    volume: parseFloat(
+      new BigNumber(bar.volume).div(new BigNumber(10).pow(18))?.toString()
+    ),
+  }));
+
+  return bars;
 }
 
-export default async function onInitTradingView({ marketId, symbol }: IParams) {
+export default async function onInitTradingView({
+  tokenAddress,
+  symbol,
+}: IParams) {
   const widgetOptions: TradingTerminalWidgetOptions = {
     fullscreen: true,
     widgetbar: {
@@ -52,6 +71,26 @@ export default async function onInitTradingView({ marketId, symbol }: IParams) {
     enabled_features: ["study_templates"],
     interval: DEFAULT_TRADING_VIEW_INTERVAL,
     container_id: ID_TRADING_VIEW,
+
+    library_path: "/charting_library/",
+    charts_storage_url: "https://saveload.tradingview.com",
+    charts_storage_api_version: "1.1",
+    client_id: "tradingview.com",
+    user_id: "public_user_id",
+    locale: "en",
+    autosize: true,
+    disabled_features: disabledFeatures,
+    theme: "Dark",
+    // overrides: {
+    //   "paneProperties.background":
+    //     theme === THEME_MODE.LIGHT ? "#FFFFFF" : "#16171c",
+    //   headerWidgetBackgroundColor:
+    //     theme === THEME_MODE.LIGHT ? "#F7F7F7" : "#16171c",
+    //   "scalesProperties.lineColor":
+    //     theme === THEME_MODE.LIGHT ? "#DDE1E8" : "#16171c",
+    //   "scalesProperties.textColor":
+    //     theme === THEME_MODE.LIGHT ? "#9BA0AE" : "#9BA0AE",
+    // },
     datafeed: {
       onReady: (callback: any) => {
         setTimeout(() => callback(configurationData));
@@ -77,7 +116,7 @@ export default async function onInitTradingView({ marketId, symbol }: IParams) {
           session: "24x7",
           timezone: getClientTimezone(),
           minmov: 1,
-          pricescale: 10,
+          pricescale: 10000,
           has_intraday: true,
           has_weekly_and_monthly: true,
           intraday_multipliers: configurationData.intraday_multipliers,
@@ -95,11 +134,11 @@ export default async function onInitTradingView({ marketId, symbol }: IParams) {
         onError: any,
         isFirstCall: boolean
       ) => {
-        if (isFirstCall && marketId) {
+        console.log("resolution", resolution);
+        if (isFirstCall && tokenAddress) {
           const data = await getData({
             resolution,
-            countback: 960,
-            marketId,
+            tokenAddress,
           });
           onResult(data, { noData: false });
         } else {
@@ -114,7 +153,10 @@ export default async function onInitTradingView({ marketId, symbol }: IParams) {
         onResetCacheNeededCallback: () => void
       ) => {
         const interval = setInterval(async () => {
-          const [data] = await getData({ resolution, countback: 1, marketId });
+          const [data] = await getData({
+            resolution,
+            tokenAddress,
+          });
           onTick(data);
           onResetCacheNeededCallback();
         }, 1 * 60 * 1000);
@@ -124,28 +166,9 @@ export default async function onInitTradingView({ marketId, symbol }: IParams) {
         clearInterval((window as any)[listenerGuid]);
       },
     },
-    library_path: "/charting_library/",
-    locale: "en",
-    user_id: "public_user_id",
-    disabled_features: [
-      "symbol_search_request",
-      "symbol_search_hot_key",
-      "header_symbol_search",
-      // "timeframes_toolbar",
-      // "header_widget",
-      "border_around_the_chart",
-    ],
-    theme: "Dark",
-    // overrides: {
-    //   "paneProperties.background":
-    //     theme === THEME_MODE.LIGHT ? "#FFFFFF" : "#16171c",
-    //   headerWidgetBackgroundColor:
-    //     theme === THEME_MODE.LIGHT ? "#F7F7F7" : "#16171c",
-    //   "scalesProperties.lineColor":
-    //     theme === THEME_MODE.LIGHT ? "#DDE1E8" : "#16171c",
-    //   "scalesProperties.textColor":
-    //     theme === THEME_MODE.LIGHT ? "#9BA0AE" : "#9BA0AE",
-    // },
+    studies_overrides: {
+      "volume.show ma": true,
+    },
   };
   const tvWidget = new widget(widgetOptions);
   tvWidget.onChartReady(() => {
