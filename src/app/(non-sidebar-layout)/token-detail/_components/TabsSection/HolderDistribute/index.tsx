@@ -1,3 +1,5 @@
+import AppButton from "@/components/app-button";
+import AppModal from "@/components/app-modal";
 import AppPagination from "@/components/app-pagination";
 import AppTable from "@/components/app-table";
 import ShowingPage from "@/components/showing-page";
@@ -19,6 +21,7 @@ import { useState } from "react";
 
 const HolderDistribute = () => {
   const { tokenDetail } = useTokenDetail();
+  const [isOpenBubbleChart, setisOpenBubbleChart] = useState(false);
   const [searchParams, setSearchParams] = useState<{
     page: number;
   }>({
@@ -98,6 +101,13 @@ const HolderDistribute = () => {
 
   return (
     <div>
+      <AppButton
+        typeButton="secondary"
+        onClick={() => setisOpenBubbleChart(true)}
+        customClass="!w-fit my-6"
+      >
+        Generate bubble map
+      </AppButton>
       <AppTable
         scroll={{ x: 900 }}
         columns={columns}
@@ -118,6 +128,22 @@ const HolderDistribute = () => {
           setSearchParams((prev: any) => ({ ...prev, page }));
         }}
       />
+      <AppModal
+        width={700}
+        open={isOpenBubbleChart}
+        onCancel={() => setisOpenBubbleChart(false)}
+        footer={null}
+        centered={false}
+      >
+        <iframe
+          src="https://app.bubblemaps.io/arbi/token/0xfd086bc7cd5c481dcc9c85ebe478a1c0b69fcbb9"
+          style={{
+            width: "100%",
+            height: "500px",
+            marginTop: "40px",
+          }}
+        />
+      </AppModal>
     </div>
   );
 };
