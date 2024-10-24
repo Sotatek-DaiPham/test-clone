@@ -40,3 +40,6 @@ export enum EDirection {
   ASC = "ASC",
   DESC = "DESC",
 }
+
+export const DEFAULT_AVATAR =
+  "https://nft-ticket-the-bucket.s3.ap-southeast-1.amazonaws.com/images/d76403890c-image.png";
