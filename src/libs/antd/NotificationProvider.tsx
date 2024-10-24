@@ -44,7 +44,7 @@ export const NotificationProvider = ({
         },
         // icon: <ErrorIcon />,
         message: (
-          <p className="capitalize text-text-primary-2 text-[16px] font-[700]">
+          <p className="text-text-primary-2 text-[16px] font-[700]">
             {message ?? "Action Failed"}
           </p>
         ),
@@ -117,7 +117,7 @@ export const NotificationProvider = ({
         },
         // icon: <SuccessIcon />,
         message: (
-          <p className="capitalize text-text-primary-2 text-[16px] font-[700]">
+          <p className="text-text-primary-2 text-[16px] font-[700]">
             {message ?? "Action Completed"}
           </p>
         ),
