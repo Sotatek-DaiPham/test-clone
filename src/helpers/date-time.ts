@@ -46,5 +46,5 @@ export const getAgeType = (age: string | undefined) => {
     return "LESS_THAN_EQUAL";
   } else if (age.includes("bigger")) {
     return "GREATER_THAN_EQUAL";
-  }
+  } else return "";
 };

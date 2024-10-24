@@ -6,6 +6,8 @@ import { AxiosResponse } from "axios";
 import Image from "next/image";
 import { CloseIcon } from "@public/assets";
 import { DEFAULT_AVATAR } from "@/constant";
+import { useRouter } from "next/navigation";
+import { PATH_ROUTER } from "@/constant/router";
 
 interface DiscussionThreadItem {
   comment_id: number;
@@ -13,6 +15,7 @@ interface DiscussionThreadItem {
   username: string;
   created_at: string;
   content: string;
+  wallet_address: string;
 }
 
 interface ReplySectionProps {
@@ -45,6 +48,7 @@ const ReplySection: React.FC<ReplySectionProps> = ({
   postCommentMutation,
   refetchReplies,
 }) => {
+  const router = useRouter();
   const [form] = Form.useForm();
 
   const onFinish = async (values: any) => {
@@ -98,7 +102,14 @@ const ReplySection: React.FC<ReplySectionProps> = ({
                   />
                 </div>
                 <div className="flex flex-col">
-                  <span className='text-neutral-9 text-16px-bold" break-words'>
+                  <span
+                    className="text-neutral-9 text-16px-bold break-words cursor-pointer"
+                    onClick={() =>
+                      router.push(
+                        PATH_ROUTER.USER_PROFILE(reply.wallet_address)
+                      )
+                    }
+                  >
                     {reply.username || "-"}
                   </span>
                   <span className="text-neutral-7 text-14px-medium break-words">

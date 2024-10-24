@@ -6,13 +6,13 @@ import { LIMIT_ITEMS_TABLE } from "@/constant";
 import { API_PATH } from "@/constant/api-path";
 import { INotificationResponse } from "@/entities/notification";
 import { BeSuccessResponse } from "@/entities/response";
+import { getTimeDDMMMYYYYHHMM } from "@/helpers/date-time";
 import isAuth from "@/helpers/isAuth";
 import useDebounce from "@/hooks/useDebounce";
 import { getAPI } from "@/service";
 import { useQuery } from "@tanstack/react-query";
 import { Spin } from "antd";
 import { AxiosResponse } from "axios";
-import dayjs from "dayjs";
 import { get } from "lodash";
 import { useState } from "react";
 import TabTitle from "../_components/TabTitle";
@@ -22,19 +22,9 @@ const NotificationItem = ({ data }: { data: INotificationResponse }) => {
     <div>
       <div className="text-16px-medium capitalize text-neutral-9 mb-1">
         {data?.title}
-        {/* <span>{data?.address}</span>
-        <span
-          className={
-            data?.type === "Bought" ? "text-[#64e06c]" : "text-[#da302c]"
-          }
-        >
-          {data?.type}
-        </span>
-        <span>{data?.balance} of</span>
-        <span className="text-[#FFFF53]">{data?.coin}</span> */}
       </div>
       <div className="text-12px-medium text-neutral-7">
-        {dayjs(data?.createdAt)?.format("DD/MM/YYYY HH:mm")}
+        {getTimeDDMMMYYYYHHMM(data?.createdAt)}
       </div>
       <AppDivider />
     </div>
@@ -68,10 +58,10 @@ const NotificationPage = () => {
   console.log("data", notification);
   return (
     <div className="m-auto max-w-[var(--width-content-sidebar-layout)]">
-      <div className="w-full flex flex-row items-center justify-between">
+      <div className="w-full flex sm:flex-row flex-col sm:items-center justify-between">
         <TabTitle title="Notification" />
         <AppInput
-          className="!w-[400px]"
+          className="sm:!w-[400px] w-full h-[40px]"
           isSearch={true}
           iconPosition="left"
           placeholder="Search"

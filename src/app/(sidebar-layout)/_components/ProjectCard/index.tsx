@@ -2,6 +2,7 @@ import AppDivider from "@/components/app-divider";
 import AppImage from "@/components/app-image";
 import AppProgress from "@/components/app-progress";
 import { DECIMAL_USDT, DEFAULT_AVATAR } from "@/constant";
+import { PATH_ROUTER } from "@/constant/router";
 import { countAgeToken } from "@/helpers/calculate";
 import {
   convertNumber,
@@ -12,6 +13,7 @@ import { CalendarIcon, ImageDefaultIcon, SwapIcon } from "@public/assets";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import "./styles.scss";
+import EllipsisTextWithTooltip from "@/components/app-tooltip/EllipsisTextWithTooltip";
 
 interface IProjectCardProps {
   data: any;
@@ -27,32 +29,37 @@ const ProjectCard = ({ data, className, footer }: IProjectCardProps) => {
         className ?? ""
       }`}
       onClick={() => {
-        router.push(`/token-detail/${data?.id}`);
+        router.push(PATH_ROUTER.TOKEN_DETAIL(data?.id));
       }}
     >
-      <div className="grid grid-cols-3 gap-4">
-        <div className="col-span-1">
+      <div className="grid grid-cols-5 gap-4">
+        <div className="col-span-2">
           {data?.avatar ? (
             <AppImage
-              className="!bg-neutral-4 w-full h-full rounded-3xl overflow-hidden flex [&>img]:!object-cover"
+              className="!bg-neutral-4 min-w-[115px] w-full !h-[110px] rounded-2xl overflow-hidden flex [&>img]:!object-contain"
               src={data?.avatar || DEFAULT_AVATAR}
               alt="logo"
             />
           ) : (
-            <div className="!w-full !h-full !bg-neutral-4 !rounded-3xl flex justify-center overflow-hidden">
+            <div className="min-w-[115px] w-full !h-[110px] rounded-2xl !bg-neutral-4  flex justify-center overflow-hidden">
               <Image
-                className="!bg-neutral-4 [&>img]:!object-cover"
+                className="!bg-neutral-4 [&>img]:!object-contain"
                 alt="logo"
                 src={ImageDefaultIcon}
               />
             </div>
           )}
         </div>
-        <div className="col-span-2">
-          <div>
+        <div className="col-span-3 flex-1">
+          <div className="flex-1">
             {!footer && (
-              <div className="text-primary-7 text-12px-normal">
-                Create by {data?.username || "-"}
+              <div className="text-primary-7 flex w-full items-center flex-row !text-12px-normal">
+                <span className="mr-1">Create by</span>
+                <EllipsisTextWithTooltip
+                  className="text-primary-7 flex-1 !text-12px-normal"
+                  value={data?.username}
+                  width="100%"
+                />
               </div>
             )}
             <div className="text-neutral-9 text-18px-bold capitalize truncate-1-line">

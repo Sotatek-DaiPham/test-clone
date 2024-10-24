@@ -4,13 +4,14 @@ import AppDivider from "@/components/app-divider";
 import AppInput from "@/components/app-input";
 import AppPaginationCustom from "@/components/app-pagination/app-pagination-custom";
 import NoData from "@/components/no-data";
-import { LIMIT_ITEMS_TABLE } from "@/constant";
+import { EDirection, LIMIT_ITEMS_TABLE } from "@/constant";
 import { API_PATH } from "@/constant/api-path";
 import { IProjectCardResponse } from "@/entities/my-profile";
 import { BeSuccessResponse } from "@/entities/response";
 import { useAppSearchParams } from "@/hooks/useAppSearchParams";
 import useDebounce from "@/hooks/useDebounce";
 import useSocket from "@/hooks/useSocket";
+import { ESocketEvent } from "@/libs/socket/constants";
 import { getAPI } from "@/service";
 import { HideDustCoinIcon } from "@public/assets";
 import { useQuery } from "@tanstack/react-query";
@@ -20,7 +21,6 @@ import get from "lodash/get";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import TabTitle from "../../TabTitle";
-import { ESocketEvent } from "@/libs/socket/constants";
 
 const PortfolioTab = ({ walletAddress }: { walletAddress: string }) => {
   const { addEvent, isConnected, removeEvent } = useSocket();
@@ -38,11 +38,14 @@ const PortfolioTab = ({ walletAddress }: { walletAddress: string }) => {
   );
 
   const { data, isPending, refetch } = useQuery({
-    queryKey: ["portfolio", params, debounceSearch, searchParams],
+    queryKey: ["portfolio", params, debounceSearch, searchParams, hideDustCoin],
     queryFn: async () => {
       return getAPI(API_PATH.TOKEN.PORTFOLIO, {
         params: {
           ...params,
+          orderBy: "amount",
+          direction: EDirection.DESC,
+          minAmountHeld: hideDustCoin ? "0.01" : "",
           walletAddress: walletAddress,
           keyword: debounceSearch,
         },
@@ -76,9 +79,9 @@ const PortfolioTab = ({ walletAddress }: { walletAddress: string }) => {
 
   return (
     <div>
-      <div className="w-full flex flex-row items-center justify-between">
+      <div className="w-full flex sm:flex-row flex-col sm:items-center justify-between">
         <TabTitle title="Portfolio" />
-        <div className="flex flex-row items-center">
+        <div className="flex sm:flex-row flex-col-reverse items-center">
           <AppButton
             size="middle"
             typeButton="outline"
@@ -96,7 +99,7 @@ const PortfolioTab = ({ walletAddress }: { walletAddress: string }) => {
             <span className="ml-2">Hide dust coin</span>
           </AppButton>
           <AppInput
-            className="!w-[400px] ml-4"
+            className="sm:!w-[400px] w-full h-[40px] mb-2 sm:mb-0  sm:ml-4"
             isSearch={true}
             iconPosition="left"
             placeholder="Search"

@@ -22,6 +22,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useAccount } from "wagmi";
 import TopUser from "./components/TopUser";
+import useWindowSize from "@/hooks/useWindowSize";
 
 const data = [
   {
@@ -89,6 +90,7 @@ const data = [
   },
 ];
 const LeaderboardPage = () => {
+  const { isMobile } = useWindowSize();
   const { address: userAddress } = useAccount();
   const { userId } = useAppSelector((state) => state.user);
   const router = useRouter();
@@ -197,7 +199,21 @@ const LeaderboardPage = () => {
 
   return (
     <div className="m-auto max-w-[var(--width-content-sidebar-layout)]">
-      <div className="grid grid-cols-3 gap-6 mb-6">
+      <div className="grid sm:grid-cols-3 grid-cols-1 gap-6 mb-6">
+        {isMobile && (
+          <TopUser
+            image={UserTop1}
+            top1={true}
+            className="!bg-gradient-to-b from-[var(--color-top-1-from)] to-[var(--color-top-1-to)]"
+            data={{
+              username: "Kristin Watson 1",
+              address: "0x16A18C10301132505B2a7469b8857B97B155C86A",
+              total: 50000,
+              buy: 30000,
+              sell: 20000,
+            }}
+          />
+        )}
         <TopUser
           image={UserTop2}
           className="!bg-gradient-to-b from-[var(--color-top-2-from)] to-[var(--color-top-2-to)]"
@@ -209,18 +225,20 @@ const LeaderboardPage = () => {
             sell: 20000,
           }}
         />
-        <TopUser
-          image={UserTop1}
-          top1={true}
-          className="!bg-gradient-to-b from-[var(--color-top-1-from)] to-[var(--color-top-1-to)]"
-          data={{
-            username: "Kristin Watson 1",
-            address: "0x16A18C10301132505B2a7469b8857B97B155C86A",
-            total: 50000,
-            buy: 30000,
-            sell: 20000,
-          }}
-        />
+        {!isMobile && (
+          <TopUser
+            image={UserTop1}
+            top1={true}
+            className="!bg-gradient-to-b from-[var(--color-top-1-from)] to-[var(--color-top-1-to)]"
+            data={{
+              username: "Kristin Watson 1",
+              address: "0x16A18C10301132505B2a7469b8857B97B155C86A",
+              total: 50000,
+              buy: 30000,
+              sell: 20000,
+            }}
+          />
+        )}
         <TopUser
           image={UserTop3}
           className="!bg-gradient-to-b from-[var(--color-top-3-from)] to-[var(--color-top-3-to)]"

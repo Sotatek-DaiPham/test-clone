@@ -1,7 +1,7 @@
 export interface INotificationResponse {
   id: number;
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt: string;
+  updatedAt: string;
   deletedAt: any;
   userId: number;
   title: string;

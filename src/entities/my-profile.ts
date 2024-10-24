@@ -67,7 +67,7 @@ export interface IProjectCardResponse {
   numberView: number;
   timeToListDex: number;
   volume: number;
-  createAt: string;
+  createdAt: string;
 }
 
 export enum ETabsMyProfile {

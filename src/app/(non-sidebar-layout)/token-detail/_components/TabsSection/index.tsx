@@ -3,8 +3,8 @@ import DiscussionThread from "../DiscussionThreadSection";
 import TradeHistory from "./TradeHistory";
 import HolderDistribute from "./HolderDistribute";
 
-enum ETokenDetalTabs {
-  DICUSSION = "DICUSSION",
+enum ETokenDetailTabs {
+  DISCUSSION = "DISCUSSION",
   HOLDER = "HOLDER",
   TRANSACTION = "TRANSACTION",
 }
@@ -12,17 +12,17 @@ const TabsSection = () => {
   const tabs = [
     {
       label: "Discussion Thread",
-      key: ETokenDetalTabs.DICUSSION,
+      key: ETokenDetailTabs.DISCUSSION,
       children: <DiscussionThread />,
     },
     {
       label: "Holder Distribution",
-      key: ETokenDetalTabs.HOLDER,
+      key: ETokenDetailTabs.HOLDER,
       children: <HolderDistribute />,
     },
     {
       label: "Transactions",
-      key: ETokenDetalTabs.TRANSACTION,
+      key: ETokenDetailTabs.TRANSACTION,
       children: <TradeHistory />,
     },
   ];
