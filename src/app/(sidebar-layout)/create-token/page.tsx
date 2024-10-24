@@ -162,14 +162,32 @@ const CreateTokenPage = () => {
     return uploadImageRes.data;
   };
 
-  const handleCreateTokenSuccess = (tokenId?: string) => {
+  const handleCreateTokenSuccess = (
+    tokenId?: string,
+    isMint: boolean = true,
+    isWithoutBuy: boolean = false
+  ) => {
     form.resetFields();
     setIsOpenInitialBuyModal(false);
     router.push(PATH_ROUTER.TOKEN_DETAIL(tokenId || tokenCreatedId));
-    success({
-      message: "Coin created succesfully",
-      key: "1",
-    });
+    if (isMint) {
+      success({
+        message: "Initial buy transaction completed. Coin created succesfully",
+        key: "1",
+      });
+    } else {
+      if (isWithoutBuy) {
+        success({
+          message: "Coin created succesfully",
+          key: "2",
+        });
+      } else {
+        success({
+          message: "Initial buy transaction denied. Coin created succesfully",
+          key: "3",
+        });
+      }
+    }
   };
 
   const getUSDTAllowance = async () => {
@@ -202,19 +220,16 @@ const CreateTokenPage = () => {
       await txn?.wait();
       await handleCreateTokenSC(tokenCreatedIdx);
 
-      handleCreateTokenSuccess();
       setLoadingStatus((prev) => ({ ...prev, approve: false }));
     } catch (e: any) {
       console.log({ e });
-      if (e?.code === ErrorCode.MetamaskDeniedTx) {
-        handleCreateTokenSuccess();
-      }
+      handleCreateTokenSuccess(undefined, false);
     } finally {
       setLoadingStatus((prev) => ({ ...prev, approve: false }));
     }
   };
 
-  const handleCreateTokenSC = async (idx: string) => {
+  const handleCreateTokenSC = async (idx: string, tokenId?: string) => {
     const values = form.getFieldsValue();
     try {
       const contract = await tokenFactoryContract;
@@ -241,22 +256,10 @@ const CreateTokenPage = () => {
       );
 
       await tx.wait();
+      handleCreateTokenSuccess(tokenId);
     } catch (e: any) {
       console.log({ e });
-      if (e?.info?.error?.code === ErrorCode.INSUFFICIENT_FEE) {
-        error({
-          message: "Insufficient fee",
-        });
-        return;
-      }
-      if (e?.code === ErrorCode.MetamaskDeniedTx) {
-        handleCreateTokenSuccess();
-        return;
-      }
-
-      error({
-        message: "Transaction error",
-      });
+      handleCreateTokenSuccess(tokenId, false);
     }
   };
 
@@ -289,7 +292,7 @@ const CreateTokenPage = () => {
 
       if (!initialBuyAmount || withoutBuy) {
         setIsOpenInitialBuyModal(false);
-        handleCreateTokenSuccess(createTokenDetail.id.toString());
+        handleCreateTokenSuccess(createTokenDetail.id.toString(), false, true);
         return;
       }
 
@@ -302,8 +305,10 @@ const CreateTokenPage = () => {
         return;
       }
 
-      await handleCreateTokenSC(createTokenDetail.idx);
-      handleCreateTokenSuccess(createTokenDetail.id.toString());
+      await handleCreateTokenSC(
+        createTokenDetail.idx,
+        createTokenDetail?.id.toString()
+      );
     } catch (e) {
       console.log({ e });
     } finally {
@@ -512,7 +517,7 @@ const CreateTokenPage = () => {
         onOk={handleApprove}
         onCancel={() => {
           setIsOpenApproveModal(false);
-          handleCreateTokenSuccess();
+          handleCreateTokenSuccess(undefined, false);
         }}
       />
     </div>
