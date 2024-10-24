@@ -13,7 +13,7 @@ const TabsSection = () => {
     {
       label: "Discussion Thread",
       key: ETokenDetalTabs.DICUSSION,
-      children: <DiscussionThread />
+      children: <DiscussionThread />,
     },
     {
       label: "Holder Distribution",
@@ -21,7 +21,7 @@ const TabsSection = () => {
       children: <HolderDistribute />,
     },
     {
-      label: "Transaction",
+      label: "Transactions",
       key: ETokenDetalTabs.TRANSACTION,
       children: <TradeHistory />,
     },
