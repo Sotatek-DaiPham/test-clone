@@ -1,5 +1,6 @@
 import AppTabs from "@/components/app-tabs";
 import TradeHistory from "./TradeHistory";
+import HolderDistribute from "./HolderDistribute";
 
 enum ETokenDetalTabs {
   DICUSSION = "DICUSSION",
@@ -16,7 +17,7 @@ const TabsSection = () => {
     {
       label: "Holder Distribution",
       key: ETokenDetalTabs.HOLDER,
-      children: <h1 className="text-white">Holder Distribution</h1>,
+      children: <HolderDistribute />,
     },
     {
       label: "Transaction",

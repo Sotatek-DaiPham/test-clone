@@ -66,7 +66,7 @@ const SocketProvider = ({ children }: Props) => {
         autoConnect: false,
         transports: ["websocket", "polling"],
         query: {
-          authorization: accessToken,
+          // authorization: accessToken,
         },
       });
     }
@@ -119,11 +119,7 @@ const SocketProvider = ({ children }: Props) => {
     []
   );
   useEffect(() => {
-    if (accessToken) {
-      connect();
-    } else {
-      disconnect();
-    }
+    connect();
   }, [accessToken, isConnected]);
 
   return (

@@ -2,16 +2,16 @@
 import AppButton from "@/components/app-button";
 import { useTokenDetail } from "@/context/TokenDetailContext";
 import { getTimeDDMMMYYYYHHMM } from "@/helpers/date-time";
+import useSocket from "@/hooks/useSocket";
 import { BackIcon } from "@public/assets";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 import PriceSection from "../_components/PriceSection";
 import TabsSection from "../_components/TabsSection";
 import TokenInfoSection from "../_components/TokenInfoSection";
 import TradeSection from "../_components/TradeSection";
-import { useEffect } from "react";
-import useSocket from "@/hooks/useSocket";
 import { ESocketEvent } from "@/libs/socket/constants";
 
 const TradingView = dynamic(() => import("@/components/app-trading-view"), {
@@ -27,6 +27,7 @@ const TokenDetailPage = () => {
     if (isConnected) {
       addEvent(ESocketEvent.BUY, (data) => {
         if (data) {
+          console.log("data", data);
         }
       });
       addEvent(ESocketEvent.SELL, (data) => {

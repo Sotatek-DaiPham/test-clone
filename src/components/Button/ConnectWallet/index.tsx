@@ -5,6 +5,7 @@ import { Flex } from "antd";
 import ButtonContained from "../ButtonContained";
 import { shortenAddress } from "@/helpers/shorten";
 import "./styles.scss";
+import AppButton from "@/components/app-button";
 
 const ConnectWalletButton = ({ customClass }: { customClass?: string }) => {
   const { userAddress, isConnected, accessToken, logout } = useWalletAuth();
@@ -55,21 +56,15 @@ const ConnectWalletButton = ({ customClass }: { customClass?: string }) => {
             {(() => {
               if (!connected) {
                 return (
-                  <ButtonContained
-                    onClick={openConnectModal}
-                    buttonType="primary"
-                    fullWidth
-                  >
+                  <AppButton onClick={openConnectModal} customClass="w-full">
                     Connect Wallet
-                  </ButtonContained>
+                  </AppButton>
                 );
               }
 
               if (chain.unsupported) {
                 return (
-                  <ButtonContained onClick={openChainModal} type="primary">
-                    Wrong network
-                  </ButtonContained>
+                  <AppButton onClick={openChainModal}>Wrong network</AppButton>
                 );
               }
 

@@ -1,7 +1,7 @@
 import AppButton from "@/components/app-button";
 import AppImage from "@/components/app-image";
 import { envs } from "@/constant/envs";
-import { DATE_FORMAT } from "@/constant/format";
+import { PATH_ROUTER } from "@/constant/router";
 import { getTimeDDMMMYYYYHHMM } from "@/helpers/date-time";
 import { shortenAddress } from "@/helpers/shorten";
 import { ITokenDetailRes } from "@/interfaces/token";
@@ -12,7 +12,6 @@ import {
   TwitterLinkIcon,
   WebsiteLinkIcon,
 } from "@public/assets";
-import dayjs from "dayjs";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -88,7 +87,7 @@ const TokenInfoSection = ({ tokenDetail }: ITokenInfoSectionProps) => {
         <div className="primary-box flex justify-between">
           <div className="text-16px-normal text-neutral-7">Creator</div>
           <Link
-            href={"#"}
+            href={PATH_ROUTER.USER_PROFILE(tokenDetail?.userWalletAddress)}
             className="py-[2px] px-3 rounded-[16px] bg-[rgba(15,190,90,0.20)] text-[#0FBE5A] text-16px-normal"
           >
             {tokenDetail?.username}
