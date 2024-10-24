@@ -1,8 +1,10 @@
 "use client";
 import AppButton from "@/components/app-button";
+import AppRoundedInfo from "@/components/app-rounded-info";
 import { useTokenDetail } from "@/context/TokenDetailContext";
 import { getTimeDDMMMYYYYHHMM } from "@/helpers/date-time";
 import useSocket from "@/hooks/useSocket";
+import { ESocketEvent } from "@/libs/socket/constants";
 import { BackIcon } from "@public/assets";
 import dynamic from "next/dynamic";
 import Image from "next/image";
@@ -12,7 +14,6 @@ import PriceSection from "../_components/PriceSection";
 import TabsSection from "../_components/TabsSection";
 import TokenInfoSection from "../_components/TokenInfoSection";
 import TradeSection from "../_components/TradeSection";
-import { ESocketEvent } from "@/libs/socket/constants";
 
 const TradingView = dynamic(() => import("@/components/app-trading-view"), {
   ssr: false,
@@ -82,26 +83,11 @@ const TokenDetailPage = () => {
 
           {/* Detail information section */}
           <PriceSection />
-          {tokenDetail?.kingOfTheHillDate ? (
-            <div
-              className="
-            mt-4
-            px-[10px]
-            py-3
-            w-full
-            text-14px-bold
-            text-white-neutral
-            rounded-[256px] 
-            bg-neutral-3 
-            flex justify-center
-            shadow-[inset_0px_-2px_0px_0px_rgba(191,195,184,0.15)] 
-            backdrop-blur-[59.4px]
-          "
-            >
-              Crowned king of the hill at{" "}
-              {getTimeDDMMMYYYYHHMM(tokenDetail?.kingOfTheHillDate)}
-            </div>
-          ) : null}
+          {tokenDetail?.kingOfTheHillDate && (
+            <AppRoundedInfo customClassName="mt-4"
+              text={`Crowned king of the hill at ${getTimeDDMMMYYYYHHMM(tokenDetail.kingOfTheHillDate)}`}
+            />
+          )}
 
           <TokenInfoSection tokenDetail={tokenDetail} />
         </div>
