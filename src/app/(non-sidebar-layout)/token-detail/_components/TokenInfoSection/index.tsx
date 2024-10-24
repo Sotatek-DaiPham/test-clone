@@ -39,7 +39,7 @@ const TokenInfoSection = ({ tokenDetail }: ITokenInfoSectionProps) => {
           </div>
 
           <div className="text-22px-bold text-white-neutral mt-6 text-center">
-            {tokenDetail?.name}
+            {tokenDetail?.name} ({tokenDetail?.symbol})
           </div>
           <div className="text-12px-normal text-neutral-7 mt-3">
             {tokenDetail?.description}
