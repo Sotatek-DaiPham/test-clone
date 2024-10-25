@@ -1,11 +1,16 @@
 "use client";
 import AppButton from "@/components/app-button";
 import AppRoundedInfo from "@/components/app-rounded-info";
+import { API_PATH } from "@/constant/api-path";
 import { useTokenDetail } from "@/context/TokenDetailContext";
+import { BeSuccessResponse } from "@/entities/response";
 import { getTimeDDMMMYYYYHHMM } from "@/helpers/date-time";
 import useSocket from "@/hooks/useSocket";
 import { ESocketEvent } from "@/libs/socket/constants";
+import { postAPI, postFormDataAPI } from "@/service";
 import { BackIcon } from "@public/assets";
+import { useMutation } from "@tanstack/react-query";
+import { AxiosResponse } from "axios";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -23,6 +28,24 @@ const TokenDetailPage = () => {
   const { addEvent, isConnected, removeEvent } = useSocket();
   const router = useRouter();
   const { tokenDetail } = useTokenDetail();
+  const { mutateAsync: viewToken } = useMutation({
+    mutationFn: (
+      tokenId: number
+    ): Promise<AxiosResponse<BeSuccessResponse<any>>> => {
+      return postAPI(API_PATH.USER.VIEW_TOKEN, {
+        tokenId,
+      });
+    },
+    onError: (err) => {},
+    mutationKey: ["view-token"],
+  });
+
+  useEffect(() => {
+    if (tokenDetail?.id) {
+      viewToken(tokenDetail?.id);
+    }
+  }, [tokenDetail?.id]);
+
   useEffect(() => {
     if (isConnected) {
       addEvent(ESocketEvent.BUY, (data) => {
