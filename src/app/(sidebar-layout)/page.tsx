@@ -28,6 +28,7 @@ import useSocket from "@/hooks/useSocket";
 import { ESocketEvent } from "@/libs/socket/constants";
 import { useRouter } from "next/navigation";
 import { PATH_ROUTER } from "@/constant/router";
+import AppTruncateText from "@/components/app-truncate-text";
 
 enum ETabsTerminal {
   ALL = "all",
@@ -217,10 +218,10 @@ export default function Home() {
                     <AppImage
                       src={item?.token_avatar}
                       alt="logo"
-                      className="!w-[24px] !h-[24px] rounded-full mx-3"
+                      className="min-w-[24px] h-[24px] rounded-full mx-3 [&>img]:!w-full [&>img]:!h-full [&>img]:!object-cover"
                     />
                     <span className="text-14px-bold text-primary-6">
-                      {item?.token_name}
+                      <AppTruncateText text={item?.token_name} maxLength={5} />
                     </span>
                   </div>
                 )
