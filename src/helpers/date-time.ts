@@ -1,7 +1,7 @@
 import { DATE_TIME_FORMAT, DATE_TIME_SECONDS_FORMAT } from "@/constant/format";
 import dayjs from "dayjs";
 
-export const getTimeDDMMMYYYYHHMM = (date: string | null) => {
+export const getTimeDDMMMYYYYHHMM = (date: string | number | null) => {
   if (!dayjs(date).isValid()) {
     return "-";
   }
@@ -9,7 +9,7 @@ export const getTimeDDMMMYYYYHHMM = (date: string | null) => {
   return dayjs(date).format(DATE_TIME_FORMAT);
 };
 
-export const getTimeDDMMMYYYYHHMMss = (date: string | null) => {
+export const getTimeDDMMMYYYYHHMMss = (date: string | number | null) => {
   if (!dayjs(date).isValid()) {
     return "-";
   }

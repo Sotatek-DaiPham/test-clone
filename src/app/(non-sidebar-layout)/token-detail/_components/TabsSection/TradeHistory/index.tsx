@@ -1,6 +1,7 @@
 import DatePickerModal from "@/components/app-modal/app-date-picker-modal";
 import AppPagination from "@/components/app-pagination";
 import AppTable from "@/components/app-table";
+import AppTruncateText from "@/components/app-truncate-text";
 import ShowingPage from "@/components/showing-page";
 import { ETradeAction, TOKEN_DECIMAL, USDT_DECIMAL } from "@/constant";
 import { API_PATH } from "@/constant/api-path";
@@ -181,7 +182,7 @@ const TradeHistory = () => {
               router.push(PATH_ROUTER.USER_PROFILE(record.user_address));
             }}
           >
-            {value}
+            <AppTruncateText text={value} maxLength={15} />
           </div>
         );
       },

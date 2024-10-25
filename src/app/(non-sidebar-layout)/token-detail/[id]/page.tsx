@@ -51,7 +51,7 @@ const TokenDetailPage = () => {
   return (
     <div className="m-auto p-2 max-w-[var(--width-content-sidebar-layout)]">
       <div
-        className="flex gap-[9px] items-center mb-[26px] cursor-pointer"
+        className="flex gap-[9px] items-center mb-[26px] cursor-pointer w-fit"
         onClick={() => router.back()}
       >
         <Image src={BackIcon} alt="back icon" />
@@ -68,7 +68,7 @@ const TokenDetailPage = () => {
             <div className="flex gap-6 mt-6 items-center">
               <div className="text-neutral-9 text-16px-normal">
                 This token is successfully listed on Uniswap at{" "}
-                {getTimeDDMMMYYYYHHMM(tokenDetail?.timeToListDex)}
+                {getTimeDDMMMYYYYHHMM(Number(tokenDetail?.timeToListDex))}
               </div>
               <AppButton size="small" customClass="!w-fit">
                 View On Uniswap
