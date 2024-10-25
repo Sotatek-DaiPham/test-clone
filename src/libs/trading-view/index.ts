@@ -42,7 +42,7 @@ async function getData({ resolution, tokenAddress }: IDataChart) {
   const dataTradingView = get(data, "data.data", []);
 
   const bars: any = dataTradingView.map((bar: any) => ({
-    time: bar.endTimeFrame,
+    time: bar.startTimeFrame,
     close: parseFloat(
       new BigNumber(bar.close).div(new BigNumber(10).pow(6))?.toString()
     ),
@@ -50,7 +50,7 @@ async function getData({ resolution, tokenAddress }: IDataChart) {
       new BigNumber(bar.open).div(new BigNumber(10).pow(6))?.toString()
     ),
     high: parseFloat(
-      new BigNumber(bar.hight).div(new BigNumber(10).pow(6))?.toString()
+      new BigNumber(bar.high).div(new BigNumber(10).pow(6))?.toString()
     ),
     low: parseFloat(
       new BigNumber(bar.low).div(new BigNumber(10).pow(6))?.toString()
@@ -79,7 +79,6 @@ export default async function onInitTradingView({
     enabled_features: ["study_templates"],
     interval: DEFAULT_TRADING_VIEW_INTERVAL,
     container_id: ID_TRADING_VIEW,
-
     library_path: "/charting_library/",
     charts_storage_url: "https://saveload.tradingview.com",
     charts_storage_api_version: "1.1",
