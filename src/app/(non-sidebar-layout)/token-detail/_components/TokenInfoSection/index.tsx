@@ -1,5 +1,6 @@
 import AppButton from "@/components/app-button";
 import AppImage from "@/components/app-image";
+import AppTruncateText from "@/components/app-truncate-text";
 import { envs } from "@/constant/envs";
 import { PATH_ROUTER } from "@/constant/router";
 import { getTimeDDMMMYYYYHHMM } from "@/helpers/date-time";
@@ -38,10 +39,13 @@ const TokenInfoSection = ({ tokenDetail }: ITokenInfoSectionProps) => {
             />
           </div>
 
-          <div className="text-22px-bold text-white-neutral mt-6 text-center">
-            {tokenDetail?.name} ({tokenDetail?.symbol})
+          <div className="text-22px-bold text-white-neutral mt-6 justify-center flex gap-x-1 flex-wrap">
+            <div>
+              <AppTruncateText text={tokenDetail?.name} maxLength={20} />
+            </div>
+            <span>({tokenDetail?.symbol})</span>
           </div>
-          <div className="text-12px-normal text-neutral-7 mt-3">
+          <div className="text-12px-normal text-neutral-7 mt-3 break-words">
             {tokenDetail?.description}
           </div>
 
@@ -90,7 +94,7 @@ const TokenInfoSection = ({ tokenDetail }: ITokenInfoSectionProps) => {
             href={PATH_ROUTER.USER_PROFILE(tokenDetail?.userWalletAddress)}
             className="py-[2px] px-3 rounded-[16px] bg-[rgba(15,190,90,0.20)] text-[#0FBE5A] text-16px-normal"
           >
-            {tokenDetail?.username}
+            <AppTruncateText text={tokenDetail?.username} maxLength={15} />
           </Link>
         </div>
         <div className="primary-box flex justify-between">

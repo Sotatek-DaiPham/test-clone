@@ -105,9 +105,11 @@
       .ant-table-cell {
         color: var(--color-neutral-7);
         background-color: var(--color-neutral-4);
-        font-size: 16px;
+        font-size: 14px;
         line-height: 24px;
         font-weight: 400;
+        padding-top: 9.5px;
+        padding-bottom: 9.5px;
         border: none !important;
         &::before {
           background: transparent !important;
