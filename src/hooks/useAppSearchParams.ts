@@ -16,7 +16,7 @@ export function useAppSearchParams<K extends keyof typeof SEARCH_PARAMS>(
 
   const addQueryParam = (value) => {
     const params = new URLSearchParams(value);
-    router.push(`${pathname}?${params.toString()}`);
+    router.push(`${pathname}?${params.toString()}`, { scroll: false });
   };
 
   const memoSearchParams = useMemo(() => {

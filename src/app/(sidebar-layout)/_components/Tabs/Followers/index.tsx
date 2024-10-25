@@ -1,8 +1,7 @@
 import AppDivider from "@/components/app-divider";
 import AppInput from "@/components/app-input";
-import AppPagination from "@/components/app-pagination";
+import AppPaginationCustom from "@/components/app-pagination/app-pagination-custom";
 import NoData from "@/components/no-data";
-import ShowingPage from "@/components/showing-page";
 import { EDirection, LIMIT_ITEMS_TABLE } from "@/constant";
 import { API_PATH } from "@/constant/api-path";
 import { IFollowerResponse } from "@/entities/my-profile";
@@ -11,6 +10,7 @@ import { useAppSearchParams } from "@/hooks/useAppSearchParams";
 import useDebounce from "@/hooks/useDebounce";
 import useFollowUser from "@/hooks/useFollowUser";
 import { NotificationContext } from "@/libs/antd/NotificationProvider";
+import { useAppSelector } from "@/libs/hooks";
 import { getAPI } from "@/service";
 import { useQuery } from "@tanstack/react-query";
 import { Spin } from "antd";
@@ -20,7 +20,6 @@ import { useContext, useState } from "react";
 import TabTitle from "../../TabTitle";
 import UserFollow from "../../UserFollow";
 import { EFollow } from "../MyProfileTab";
-import AppPaginationCustom from "@/components/app-pagination/app-pagination-custom";
 
 const FollowersTab = ({ walletAddress }: { walletAddress: string }) => {
   const { error, success } = useContext(NotificationContext);
@@ -29,6 +28,8 @@ const FollowersTab = ({ walletAddress }: { walletAddress: string }) => {
     page: 1,
     limit: LIMIT_ITEMS_TABLE,
   });
+
+  const { userId } = useAppSelector((state) => state.user);
   const [search, setSearch] = useState<string>("");
 
   const [followData, setFollowData] = useState<any>({});
@@ -47,6 +48,7 @@ const FollowersTab = ({ walletAddress }: { walletAddress: string }) => {
           direction: EDirection.DESC,
           walletAddress: walletAddress,
           keyword: debounceSearch,
+          viewerId: userId,
         },
       }) as Promise<AxiosResponse<BeSuccessResponse<IFollowerResponse[]>, any>>;
     },

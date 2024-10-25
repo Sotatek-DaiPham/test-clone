@@ -7,7 +7,6 @@ import { AntdRegistry } from "@ant-design/nextjs-registry";
 import "@rainbow-me/rainbowkit/styles.css";
 import type { Metadata } from "next";
 import dynamic from "next/dynamic";
-// import "@/app/globals.scss";
 
 const ReduxProviders = dynamic(() => import("@/providers/StoreProvider"), {
   ssr: false,
