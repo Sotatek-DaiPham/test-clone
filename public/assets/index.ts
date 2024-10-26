@@ -37,6 +37,9 @@ export { default as ProfileIcon } from "./icons/profile-icon.svg";
 export { default as LeaderboardIcon } from "./icons/leaderboard-icon.svg";
 export { default as XIcon } from "./icons/x-icon.svg";
 export { default as TelegramIcon } from "./icons/telegram-icon.svg";
+export { default as RainLaunchIcon } from "./icons/rain-launch.svg";
+export { default as RainDropIcon } from "./icons/rain-drop.svg";
+export { default as RainboostIcon } from "./icons/rain-boost.svg";
 
 // Affects
 export { default as BackgounrdEffect1 } from "./effects/bg-affect-1.svg";

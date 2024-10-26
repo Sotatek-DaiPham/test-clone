@@ -80,40 +80,6 @@ const TokenInfoSection = ({ tokenDetail }: ITokenInfoSectionProps) => {
           </div>
         </div>
       </div>
-
-      <div className="flex flex-col gap-2 mt-6">
-        <div className="primary-box flex justify-between">
-          <div className="text-16px-normal text-neutral-7">Created on</div>
-          <div className="text-16px-medium text-white-neutral">
-            {getTimeDDMMMYYYYHHMM(tokenDetail?.createdAt)}
-          </div>
-        </div>
-        <div className="primary-box flex justify-between">
-          <div className="text-16px-normal text-neutral-7">Creator</div>
-          <Link
-            href={PATH_ROUTER.USER_PROFILE(tokenDetail?.userWalletAddress)}
-            className="py-[2px] px-3 rounded-[16px] bg-[rgba(15,190,90,0.20)] text-[#0FBE5A] text-16px-normal"
-          >
-            <AppTruncateText text={tokenDetail?.username} maxLength={15} />
-          </Link>
-        </div>
-        <div className="primary-box flex justify-between">
-          <div className="text-16px-normal text-neutral-7">
-            Contract address
-          </div>
-
-          <Link
-            href={`${envs.SCAN_URL}/address/${tokenDetail?.contractAddress}`}
-            target="_blank"
-            className="text-16px-medium text-white-neutral flex gap-1"
-          >
-            <div>
-              {shortenAddress(tokenDetail?.contractAddress || "") || "-"}
-            </div>
-            <Image src={ArrowExport} alt="arrow-export" />
-          </Link>
-        </div>
-      </div>
     </>
   );
 };

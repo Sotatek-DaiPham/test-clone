@@ -4,6 +4,8 @@
 .app-menu {
   background: var(--color-neutral-2);
   padding: 0 24px;
+  overflow-y: scroll;
+  max-height: 80vh;
   li {
     span {
       color: var(--color-neutral-7);

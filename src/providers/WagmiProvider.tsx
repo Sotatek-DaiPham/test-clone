@@ -14,11 +14,11 @@ const queryClient = new QueryClient({
 
 const myCustomTheme: Theme = merge(darkTheme(), {
   colors: {
-    accentColor: "#8F57FF",
-    modalBackground: "#23262F",
+    accentColor: "#ff57c4",
+    modalBackground: "#373738",
   },
   fonts: {
-    body: "__DM_Sans_8a1573', '__DM_Sans_Fallback_8a1573",
+    body: "SF Pro",
   },
 });
 export function WagmiRainbowKitProvider({

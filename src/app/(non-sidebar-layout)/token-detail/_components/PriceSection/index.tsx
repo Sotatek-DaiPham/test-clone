@@ -125,7 +125,7 @@ const PriceSection = () => {
       </div>
       <AppProgress
         percent={+tokenDetail?.progressToListDex}
-        strokeColor="#CBB2FF"
+        strokeColor="#ff57c4"
       />
     </div>
   );

@@ -229,6 +229,10 @@ const config: Config = {
         "2xl": "1440px",
         "3xl": "1900px",
       },
+      filter: {
+        white:
+          "brightness(0) saturate(100%) invert(100%) sepia(0%) saturate(7500%) hue-rotate(359deg) brightness(101%) contrast(101%)",
+      },
     },
   },
   plugins: [
@@ -242,6 +246,7 @@ const config: Config = {
         },
       });
     }),
+    require("tailwindcss-filters"),
   ],
 };
 export default config;
