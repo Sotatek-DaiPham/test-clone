@@ -179,13 +179,13 @@ export default function Home() {
           </div>
         </div>
         {tradeHistory?.length && !isPending && (
-          <div className="mt-7 mb-5 border overflow-hidden border-neutral-4 flex bg-neutral-3 rounded-lg py-1">
+          <div className="mt-7 mb-5 !h-[40px] border overflow-hidden border-neutral-4 flex bg-neutral-3 rounded-lg py-1">
             <div className="loop-slide">
               {tradeHistory?.map(
                 (item: ITradeHistoryResponse, index: number) => (
                   <div
                     key={index}
-                    className="slide-item flex flex-row items-center text-14px-normal text-neutral-9 border-r border-neutral-4 px-3"
+                    className="flex flex-row items-center text-14px-normal text-neutral-9 border-r border-neutral-4 px-3"
                   >
                     <AppTooltip title={item?.user_address}>
                       <span
@@ -218,7 +218,7 @@ export default function Home() {
                     <AppImage
                       src={item?.token_avatar}
                       alt="logo"
-                      className="min-w-[24px] h-[24px] rounded-full mx-3 [&>img]:!w-full [&>img]:!h-full [&>img]:!object-cover"
+                      className="!w-[24px] !h-[24px] rounded-full flex justify-center items-center mx-3"
                     />
                     <span className="text-14px-bold text-primary-6">
                       <AppTruncateText text={item?.token_name} maxLength={5} />

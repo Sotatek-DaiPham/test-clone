@@ -199,38 +199,42 @@ input[type="number"] {
 }
 
 .truncate-1-line {
-  display: -webkit-box;
+  display: -webkit-box; /* Required for multiline truncation */
+  -webkit-line-clamp: 1; /* Number of lines to show */
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 1;
-  overflow: hidden;
   text-overflow: ellipsis;
-  word-break: break-word;
+  overflow: hidden;
+  white-space: pre-wrap;
+  word-break: break-all;
 }
 .truncate-2-line {
-  display: -webkit-box;
+  display: -webkit-box; /* Required for multiline truncation */
+  -webkit-line-clamp: 2; /* Number of lines to show */
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  overflow: hidden;
   text-overflow: ellipsis;
-  word-break: break-word;
+  overflow: hidden;
+  white-space: pre-wrap;
+  word-break: break-all;
 }
 
 .truncate-3-line {
-  display: -webkit-box;
+  display: -webkit-box; /* Required for multiline truncation */
+  -webkit-line-clamp: 3; /* Number of lines to show */
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 3;
-  overflow: hidden;
   text-overflow: ellipsis;
-  word-break: break-word;
+  overflow: hidden;
+  white-space: pre-wrap;
+  word-break: break-all;
 }
 
 .truncate-4-line {
-  display: -webkit-box;
+  display: -webkit-box; /* Required for multiline truncation */
+  -webkit-line-clamp: 4; /* Number of lines to show */
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 4;
-  overflow: hidden;
   text-overflow: ellipsis;
-  word-break: break-word;
+  overflow: hidden;
+  white-space: pre-wrap;
+  word-break: break-all;
 }
 
 body {
