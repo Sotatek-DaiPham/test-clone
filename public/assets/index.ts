@@ -76,3 +76,7 @@ export { default as UserTop3 } from "./icons/user-top-3.svg";
 export { default as StarTopIcon } from "./icons/star.svg";
 
 export { default as TableFilterIcon } from "./icons/table-filter.svg";
+
+// toast message
+export { default as SuccessIcon } from "./icons/tick-circle.svg";
+export { default as ErrorIcon } from "./icons/info-circle.svg";

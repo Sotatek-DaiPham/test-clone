@@ -10,6 +10,8 @@ import {
   Notification_Duration,
   NotificationParams,
 } from "@/constant/toast-message";
+import Image from "next/image";
+import { ErrorIcon, SuccessIcon } from "@public/assets";
 
 export const NotificationContext = createContext<Notification>({
   error: (params: NotificationParams) => {},
@@ -38,16 +40,14 @@ export const NotificationProvider = ({
       ...props
     }: NotificationParams) => {
       rawApi.error({
-        className: `toast-error rounded-[8px]`,
-        style: {
-          backgroundColor: "var(--color-sematic-error-interactive-2)",
-        },
-        // icon: <ErrorIcon />,
+        className: `toast-error rounded-[5px]`,
+        icon: <Image src={ErrorIcon} alt="error icon" />,
         message: (
-          <p className="text-text-primary-2 text-[16px] font-[700]">
+          <p className="text-white-neutral text-16px-medium">
             {message ?? "Action Failed"}
           </p>
         ),
+        closeIcon: false,
         // description: (
         //   <div className="text-text-secondary text-[14px]">
         //     {description || "Something went wrong!"}
@@ -111,17 +111,15 @@ export const NotificationProvider = ({
       ...props
     }: NotificationParams) => {
       rawApi.success({
-        className: `toast-success rounded-[8px] ${className}`,
-        style: {
-          backgroundColor: "var(--color-sematic-success-interactive-1)",
-        },
+        className: `toast-success rounded-[5px] ${className}`,
+        icon: <Image src={SuccessIcon} alt="success icon" />,
         // icon: <SuccessIcon />,
         message: (
-          <p className="text-text-primary-2 text-[16px] font-[700]">
+          <p className="text-white-neutral text-16px-medium">
             {message ?? "Action Completed"}
           </p>
         ),
-
+        closeIcon: false,
         description: (
           <div className="text-text-secondary text-[14px]">{description}</div>
         ),

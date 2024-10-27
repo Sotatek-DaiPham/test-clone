@@ -62,7 +62,8 @@ const InitialBuyModal = ({
 
   const isDisableBuyButton =
     !!(
-      initialBuyAmount && BigNumber(initialBuyAmount).lt(MINIMUM_BUY_AMOUNT)
+      !initialBuyAmount ||
+      (initialBuyAmount && BigNumber(initialBuyAmount).lt(MINIMUM_BUY_AMOUNT))
     ) || !!(usdtShouldPay && BigNumber(usdtShouldPay).lt(MINIMUM_BUY_AMOUNT));
 
   useEffect(() => {
