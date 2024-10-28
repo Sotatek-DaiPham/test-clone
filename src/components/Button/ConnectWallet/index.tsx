@@ -2,13 +2,13 @@ import { useEffect } from "react";
 import useWalletAuth from "@/hooks/useWalletAuth";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { Flex } from "antd";
-import ButtonContained from "../ButtonContained";
 import { shortenAddress } from "@/helpers/shorten";
-import "./styles.scss";
 import AppButton from "@/components/app-button";
+import useWindowSize from "@/hooks/useWindowSize";
 
 const ConnectWalletButton = ({ customClass }: { customClass?: string }) => {
   const { userAddress, isConnected, accessToken, logout } = useWalletAuth();
+  const { isDesktop } = useWindowSize();
 
   useEffect(() => {
     if (!isConnected) {
@@ -69,12 +69,7 @@ const ConnectWalletButton = ({ customClass }: { customClass?: string }) => {
               }
 
               return (
-                <Flex
-                  align="center"
-                  justify="center"
-                  gap={12}
-                  className="flex-col md:flex-row flex-1 md:flex-auto"
-                >
+                <div className="flex items-center justify-center gap-3 flex-col md:flex-row flex-1 md:flex-auto">
                   {/* <ButtonContained
                     buttonType="secondary"
                     className="pointer-events-none"
@@ -82,19 +77,14 @@ const ConnectWalletButton = ({ customClass }: { customClass?: string }) => {
                     {chain.name}
                   </ButtonContained> */}
 
-                  <Flex
-                    className="wallet-info"
-                    align="center"
+                  <div
+                    className="flex rounded-[90px] border-[1.5px] border-neutral-4 text-white-neutral text-14px-bold h-[32px] md:h-[40px] overflow-hidden cursor-pointer  w-full md:w-auto"
                     onClick={openAccountModal}
                   >
-                    <Flex
-                      className="wallet-info__token"
-                      gap={10}
-                      align="center"
-                    >
+                    <div className="flex items-center gap-2.5 h-full flex-1 md:flex-auto ml-[5px] mr-2.5">
                       {chain.hasIcon && (
                         <div
-                          className="wallet-info__token__icon"
+                          className="flex items-center justify-center rounded-full overflow-hidden"
                           style={{
                             background: chain.iconBackground,
                           }}
@@ -104,23 +94,28 @@ const ConnectWalletButton = ({ customClass }: { customClass?: string }) => {
                             <img
                               alt={chain.name ?? "Chain icon"}
                               src={chain.iconUrl}
-                              style={{ width: 32, height: 32 }}
+                              style={{
+                                width: isDesktop ? 32 : 24,
+                                height: isDesktop ? 32 : 24,
+                              }}
                             />
                           )}
                         </div>
                       )}
-                      <div className="wallet-info__token__balance">
+                      <div className="text-12px-medium">
                         {account.displayBalance
                           ? ` ${account.displayBalance}`
                           : ""}
                       </div>
-                    </Flex>
-
-                    <div className="wallet-info__address">
-                      {shortenAddress(account.address, 6, -3)}
                     </div>
-                  </Flex>
-                </Flex>
+
+                    <div className="p-4 bg-neutral-3 flex items-center text-12px-medium">
+                      {isDesktop
+                        ? shortenAddress(account.address, 6, -3)
+                        : shortenAddress(account.address, 3, -3)}
+                    </div>
+                  </div>
+                </div>
               );
             })()}
           </Flex>

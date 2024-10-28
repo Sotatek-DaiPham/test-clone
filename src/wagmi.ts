@@ -49,9 +49,7 @@ export const config = createConfig({
   ],
   chains: [arbitrumSepolia],
   transports: {
-    [arbitrumSepolia.id]: http(
-      process.env.NEXT_PUBLIC_ARBITRUM_SEPOLIA_RPC_URL
-    ),
+    [arbitrumSepolia.id]: http(process.env.NEXT_PUBLIC_ARBITRUM_RPC_URL),
   },
   multiInjectedProviderDiscovery: false,
   ssr: true,

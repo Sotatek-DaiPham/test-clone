@@ -8,28 +8,44 @@ import AppCheckbox from "@/components/app-checkbox";
 import AppInputBalance from "@/components/app-input/app-input-balance";
 import { PREDEFINE_PRIORITY_FEE, PREDEFINE_SLIPPAGE } from "@/constant";
 import { REGEX_INPUT_DECIMAL } from "@/constant/regex";
+import { NotificationContext } from "@/libs/antd/NotificationProvider";
 import { EthIcon } from "@public/assets";
 import { Form, FormInstance, ModalProps } from "antd";
+import { useWatch } from "antd/es/form/Form";
+import { Dispatch, SetStateAction, useContext } from "react";
 import AppModal from "..";
 import "./styles.scss";
-import { useContext } from "react";
-import { NotificationContext } from "@/libs/antd/NotificationProvider";
-import { useWatch } from "antd/es/form/Form";
 
 interface ITradeSettingModal extends ModalProps {
   onOk: () => void;
   form: FormInstance<FormSetting>;
+  tradeSettings: FormSetting;
+  setTradeSettings: Dispatch<SetStateAction<FormSetting>>;
 }
 
 const TradeSettingModal = ({
   title,
   onOk,
   form,
+  tradeSettings,
+  setTradeSettings,
   ...props
 }: ITradeSettingModal) => {
   const { success } = useContext(NotificationContext);
   const fontRunningValue = useWatch(SETTINGS_FIELD_NAMES.FONT_RUNNING, form);
 
+  const handleApplyTradeSetting = (e: any) => {
+    props?.onClose?.(e);
+    const values = form.getFieldsValue();
+    setTradeSettings({
+      slippage: values[SETTINGS_FIELD_NAMES.SLIPPAGE],
+      fontRunning: values[SETTINGS_FIELD_NAMES.FONT_RUNNING],
+      priorityFee: values[SETTINGS_FIELD_NAMES.PRIORITY_FEE],
+    });
+    success({
+      message: "Trade setting saved",
+    });
+  };
   return (
     <AppModal
       className="trade-setting-modal"
@@ -38,11 +54,11 @@ const TradeSettingModal = ({
       centered
       onCancel={(e) => {
         props.onClose?.(e);
-        // form.resetFields();
+        form.resetFields();
       }}
       {...props}
     >
-      <Form form={form}>
+      <Form form={form} initialValues={tradeSettings}>
         <div className="flex flex-col gap-4">
           <div className="text-26px-bold text-white-neutral">Trade Setting</div>
 
@@ -118,17 +134,7 @@ const TradeSettingModal = ({
             </div>
           ) : null}
 
-          <AppButton
-            widthFull
-            onClick={(e) => {
-              props?.onClose?.(e);
-              success({
-                message: "Trade setting saved",
-              });
-            }}
-          >
-            Apply
-          </AppButton>
+          <AppButton onClick={handleApplyTradeSetting}>Apply</AppButton>
         </div>
       </Form>
     </AppModal>

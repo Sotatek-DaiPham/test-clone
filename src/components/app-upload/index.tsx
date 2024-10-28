@@ -3,7 +3,7 @@ import { CloseCircleOutlined } from "@ant-design/icons";
 import { CloseIcon, UploadIcon } from "@public/assets";
 import Upload, { UploadChangeParam, UploadFile } from "antd/es/upload";
 import Image from "next/image";
-import ButtonOutlined from "../Button/ButtonOutlined";
+import AppButton from "../app-button";
 import "./styles.scss";
 
 export interface AppUploadProps {
@@ -62,7 +62,7 @@ const AppUpload = (props: AppUploadProps) => {
           </div>
         ) : (
           isShowSuggest && (
-            <div className="flex items-center gap-8">
+            <div className="flex items-center gap-2 md:gap-8 md:flex-row flex-col">
               <Image src={UploadIcon} alt="upload icon" />
               <div className="flex items-center justify-between  flex-col">
                 <div className="text-white-neutral text-[14px]">
@@ -75,7 +75,9 @@ const AppUpload = (props: AppUploadProps) => {
             </div>
           )
         )}
-        <ButtonOutlined buttonType="secondary">Upload File</ButtonOutlined>
+        <AppButton customClass="!w-fit" typeButton="outline-primary">
+          Upload File
+        </AppButton>
       </Upload>
       {props.value?.src && variant === "secondary" ? (
         <div className="px-2 py-1.5 bg-neutral-3 rounded-[8px] flex justify-between items-center w-full md:w-[423px] mt-2">

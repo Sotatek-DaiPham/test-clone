@@ -331,3 +331,23 @@ img.active-primary-icon {
     }
   }
 }
+
+.ant-notification-notice-wrapper {
+  .ant-notification-notice {
+    padding: 7px 16px !important;
+    border-radius: 5px;
+    .ant-notification-notice-message {
+      margin-bottom: 0 !important;
+    }
+    &.toast-success {
+      border: 1px solid #305d52;
+      background-color: #273c38;
+      backdrop-filter: blur(15px);
+    }
+    &.toast-error {
+      border: 1px solid #66353a;
+      background-color: #40292c;
+      backdrop-filter: blur(15px);
+    }
+  }
+}

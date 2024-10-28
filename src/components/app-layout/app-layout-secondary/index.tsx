@@ -16,8 +16,8 @@ export default function AppLayoutSecondary({
       <Content className={`relative p-10 ${!isDesktop ? "mt-20 p-4" : ""}`}>
         <div className="relative z-[2]">{children}</div>
         <Image
-          className="absolute left-[-2%] top-[-52px] scale-[0.8]"
-          src={BackgounrdEffect4}
+          className="absolute left-[-40%] top-[-8%] md:left-[-23%] md:top-[-14%] scale-[0.8]"
+          src={BackgounrdEffect5}
           alt="effect"
         />
         <Image
