@@ -77,12 +77,16 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
   const [openSettingModal, setOpenSettingModal] = useState(false);
   const [formSetting] = Form.useForm<FormSetting>();
   const [form] = Form.useForm<{ amount: string }>();
-  const { tokenDetail, isTokenDetailLoading, tokenDetailSC, refetch } =
-    useTokenDetail();
+  const { tokenDetail, tokenDetailSC, refetch } = useTokenDetail();
   const [loadingStatus, setLoadingStatus] = useState({
     buyToken: false,
     sellToken: false,
     approve: false,
+  });
+  const [tradeSettings, setTradeSettings] = useState<FormSetting>({
+    slippage: "",
+    fontRunning: false,
+    priorityFee: "",
   });
 
   const [coinType, setCoinType] = useState(ECoinType.StableCoin);
@@ -93,7 +97,6 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
     pumpContractABI,
     envs.TOKEN_FACTORY_ADDRESS || ""
   );
-  const formSettingValues = useWatch([], formSetting);
 
   const isTokenListed = tokenDetailSC?.isListed;
   const isTokenMint = !!tokenDetail?.contractAddress;
@@ -200,12 +203,12 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
   const handleCreateAndBuyToken = async () => {
     setLoadingStatus((prev) => ({ ...prev, buyToken: true }));
     const contract = await tokenFactoryContract;
-    const minTokenOut = formSettingValues?.slippage
-      ? decreaseByPercent(tokenWillReceive, formSettingValues?.slippage)
+    const minTokenOut = tradeSettings?.slippage
+      ? decreaseByPercent(tokenWillReceive, tradeSettings?.slippage)
       : 0;
 
-    const gasLimit = formSettingValues?.priorityFee
-      ? BigNumber(formSettingValues?.priorityFee).multipliedBy(1e10).toString()
+    const gasLimit = tradeSettings?.priorityFee
+      ? BigNumber(tradeSettings?.priorityFee).multipliedBy(1e10).toString()
       : 0;
     try {
       console.log(
@@ -249,11 +252,11 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
   const handleBuyTokenExactIn = async () => {
     const contract = await tokenFactoryContract;
     setLoadingStatus((prev) => ({ ...prev, buyToken: true }));
-    const minTokenOut = formSettingValues?.slippage
-      ? decreaseByPercent(tokenWillReceive, formSettingValues?.slippage)
+    const minTokenOut = tradeSettings?.slippage
+      ? decreaseByPercent(tokenWillReceive, tradeSettings?.slippage)
       : 0;
-    const gasLimit = formSettingValues?.priorityFee
-      ? BigNumber(formSettingValues?.priorityFee).multipliedBy(1e10).toString()
+    const gasLimit = tradeSettings?.priorityFee
+      ? BigNumber(tradeSettings?.priorityFee).multipliedBy(1e10).toString()
       : 0;
     try {
       console.log(
@@ -291,12 +294,13 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
   const handleBuyTokenExactOut = async () => {
     const contract = await tokenFactoryContract;
     setLoadingStatus((prev) => ({ ...prev, buyToken: true }));
-    const maxUSDTOut = formSettingValues?.slippage
-      ? increaseByPercent(usdtShouldPay, formSettingValues?.slippage)
+    const maxUSDTOut = tradeSettings?.slippage
+      ? increaseByPercent(usdtShouldPay, tradeSettings?.slippage)
       : usdtShouldPay;
-    const gasLimit = formSettingValues?.priorityFee
-      ? BigNumber(formSettingValues?.priorityFee).multipliedBy(1e10).toString()
+    const gasLimit = tradeSettings?.priorityFee
+      ? BigNumber(tradeSettings?.priorityFee).multipliedBy(1e10).toString()
       : 0;
+
     try {
       console.log(
         "buyExactOutParam",
@@ -332,12 +336,12 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
   const handleSellToken = async () => {
     setLoadingStatus((prev) => ({ ...prev, sellToken: true }));
     const contract = await tokenFactoryContract;
-    const minUSDTOut = formSettingValues?.slippage
-      ? decreaseByPercent(sellAmountOut, formSettingValues?.slippage)
+    const minUSDTOut = tradeSettings?.slippage
+      ? decreaseByPercent(sellAmountOut, tradeSettings?.slippage)
       : 0;
 
-    const gasLimit = formSettingValues?.priorityFee
-      ? BigNumber(formSettingValues?.priorityFee).multipliedBy(1e10).toString()
+    const gasLimit = tradeSettings?.priorityFee
+      ? BigNumber(tradeSettings?.priorityFee).multipliedBy(1e10).toString()
       : 0;
     try {
       console.log(
@@ -580,6 +584,8 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
         }}
         onOk={() => setOpenSettingModal(false)}
         form={formSetting}
+        tradeSettings={tradeSettings}
+        setTradeSettings={setTradeSettings}
       />
       <ConfirmModal
         title="You need to approve your tokens in order to make transaction"

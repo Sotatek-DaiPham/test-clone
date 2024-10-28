@@ -1,6 +1,7 @@
 import AppDivider from "@/components/app-divider";
 import AppImage from "@/components/app-image";
 import AppProgress from "@/components/app-progress";
+import EllipsisTextWithTooltip from "@/components/app-tooltip/EllipsisTextWithTooltip";
 import { DECIMAL_USDT, DEFAULT_AVATAR } from "@/constant";
 import { PATH_ROUTER } from "@/constant/router";
 import { countAgeToken } from "@/helpers/calculate";
@@ -13,7 +14,6 @@ import { CalendarIcon, ImageDefaultIcon, SwapIcon } from "@public/assets";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import "./styles.scss";
-import EllipsisTextWithTooltip from "@/components/app-tooltip/EllipsisTextWithTooltip";
 
 interface IProjectCardProps {
   data: any;
@@ -23,7 +23,7 @@ interface IProjectCardProps {
 
 const ProjectCard = ({ data, className, footer }: IProjectCardProps) => {
   const router = useRouter();
-  console.log(data);
+
   return (
     <div
       className={`animate-bg-opacity p-4 pb-6 rounded-3xl bg-neutral-2 text-neutral-7 cursor-pointer ${
@@ -33,8 +33,8 @@ const ProjectCard = ({ data, className, footer }: IProjectCardProps) => {
         router.push(PATH_ROUTER.TOKEN_DETAIL(data?.id));
       }}
     >
-      <div className="grid grid-cols-5">
-        <div className="col-span-2">
+      <div className="flex w-full flex-row gap-4">
+        <div className="!overflow-hidden shrink-0 !bg-neutral-4 !w-[130px] justify-center flex items-center !h-[130px] rounded-2xl">
           {data?.avatar ? (
             <AppImage
               className="!bg-neutral-4 min-w-[115px] w-full !h-[110px] rounded-2xl overflow-hidden flex [&>img]:!object-cover [&>img]:!w-full [&>img]:!h-full"
@@ -49,25 +49,24 @@ const ProjectCard = ({ data, className, footer }: IProjectCardProps) => {
             />
           )}
         </div>
-        <div className="col-span-3 flex-1 md:ml-4">
-          <div className="flex-1">
+        <div className="grow">
+          <div className="w-full">
             {!footer && (
               <div className="text-primary-7 flex w-full items-center flex-row !text-12px-normal">
-                <span className="mr-1">Create by</span>
-                <EllipsisTextWithTooltip
-                  onClick={(e: any) => {
-                    e.stopPropagation();
-                    router.push(
-                      PATH_ROUTER.USER_PROFILE(data?.userWalletAddress)
-                    );
-                  }}
-                  className="text-primary-7 flex-1 !text-12px-normal"
-                  value={data?.username}
-                  style={{
-                    display: "flex",
-                  }}
-                  width="100%"
-                />
+                <div className="mr-1 !min-w-[55px]">Create by</div>
+                <div className="w-[141px] sm:w-[45px] md:w-[109px] 2md:w-[173] lg:w-[107] xl:w-[70px] 2xl:w-[123px] 3xl:w-[211px]">
+                  <EllipsisTextWithTooltip
+                    onClick={(e: any) => {
+                      e.stopPropagation();
+                      router.push(
+                        PATH_ROUTER.USER_PROFILE(data?.userWalletAddress)
+                      );
+                    }}
+                    width="100%"
+                    value={data?.username}
+                    className="text-primary-7 !text-12px-normal"
+                  />
+                </div>
               </div>
             )}
             <div className="text-neutral-9 text-18px-bold capitalize truncate-1-line">
@@ -75,9 +74,7 @@ const ProjectCard = ({ data, className, footer }: IProjectCardProps) => {
             </div>
             <AppDivider />
           </div>
-          <div className="truncate-3-line min-h-[65px]">
-            {data?.description || "-"}
-          </div>
+          <div className="truncate-3-line">{data?.description || "-"}</div>
         </div>
       </div>
       {footer && (

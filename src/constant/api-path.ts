@@ -1,6 +1,7 @@
 export const API_PATH = {
   AUTH: {
     CONNECT_WALLET: "/auth/connect-wallet",
+    REFRESH_TOKEN: "/auth/refresh-token",
   },
   UPLOAD_IMAGE: "/medias/image",
   USER: {
@@ -15,6 +16,7 @@ export const API_PATH = {
     FOLLOW_USER: (id: string) => `/user/follow-user/${id}`,
     POST_COMMENT: "/user/post-comment",
     LIKE_COMMENT: "/user/like-comment",
+    VIEW_TOKEN: "/user/user-view-token",
   },
   TOKEN: {
     LIST: "/token",

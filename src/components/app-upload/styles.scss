@@ -1,4 +1,11 @@
+@import "@/assets/scss/responsive.scss";
+
 .basic-upload {
+  .ant-upload-select {
+    @include mobile {
+      width: 100%;
+    }
+  }
   span.ant-upload {
     display: flex;
     align-items: center;
@@ -9,6 +16,12 @@
     border: 1px dashed var(--color-neutral-5);
     width: fit-content;
     background: transparent;
+
+    @include mobile {
+      flex-direction: column;
+      gap: 8px;
+      width: 100%;
+    }
   }
 
   &__image-box {

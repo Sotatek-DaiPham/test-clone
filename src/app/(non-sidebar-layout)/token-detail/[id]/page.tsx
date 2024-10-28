@@ -1,15 +1,22 @@
 "use client";
 import AppButton from "@/components/app-button";
 import AppRoundedInfo from "@/components/app-rounded-info";
+import { API_PATH } from "@/constant/api-path";
 import { useTokenDetail } from "@/context/TokenDetailContext";
+import { BeSuccessResponse } from "@/entities/response";
 import { getTimeDDMMMYYYYHHMM } from "@/helpers/date-time";
 import useSocket from "@/hooks/useSocket";
+import useWindowSize from "@/hooks/useWindowSize";
 import { ESocketEvent } from "@/libs/socket/constants";
+import { postAPI } from "@/service";
 import { BackIcon } from "@public/assets";
+import { useMutation } from "@tanstack/react-query";
+import { AxiosResponse } from "axios";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import GeneralInfo from "../_components/GeneralInfo";
 import PriceSection from "../_components/PriceSection";
 import TabsSection from "../_components/TabsSection";
 import TokenInfoSection from "../_components/TokenInfoSection";
@@ -20,9 +27,28 @@ const TradingView = dynamic(() => import("@/components/app-trading-view"), {
 });
 
 const TokenDetailPage = () => {
+  const { isDesktop } = useWindowSize();
   const { addEvent, isConnected, removeEvent } = useSocket();
   const router = useRouter();
   const { tokenDetail } = useTokenDetail();
+  const { mutateAsync: viewToken } = useMutation({
+    mutationFn: (
+      tokenId: number
+    ): Promise<AxiosResponse<BeSuccessResponse<any>>> => {
+      return postAPI(API_PATH.USER.VIEW_TOKEN, {
+        tokenId,
+      });
+    },
+    onError: (err) => {},
+    mutationKey: ["view-token"],
+  });
+
+  useEffect(() => {
+    if (tokenDetail?.id) {
+      viewToken(tokenDetail?.id);
+    }
+  }, [tokenDetail?.id]);
+
   useEffect(() => {
     if (isConnected) {
       addEvent(ESocketEvent.BUY, (data) => {
@@ -57,10 +83,12 @@ const TokenDetailPage = () => {
         <Image src={BackIcon} alt="back icon" />
         <span className="text-white-neutral text-18px-bold">Coin Detail</span>
       </div>
+
       <div className="flex flex-col lg:flex-row gap-6">
         <div className="w-full lg:w-[65%] order-1 lg:order-1 gap-4">
           {/* Trading view section */}
           <div>
+            <GeneralInfo />
             <TradingView />
           </div>
 
@@ -77,7 +105,7 @@ const TokenDetailPage = () => {
           ) : null}
 
           {/* Tab list section */}
-          <TabsSection />
+          {isDesktop ? <TabsSection /> : null}
         </div>
 
         <div className="w-full lg:w-[35%] order-2 lg:order-2 gap-4">
@@ -98,6 +126,7 @@ const TokenDetailPage = () => {
           )}
 
           <TokenInfoSection tokenDetail={tokenDetail} />
+          {!isDesktop ? <TabsSection /> : null}
         </div>
       </div>
     </div>

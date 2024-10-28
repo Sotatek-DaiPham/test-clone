@@ -1,6 +1,6 @@
 import { TooltipProps, Typography } from "antd";
-
 import { TypographyProps } from "antd/lib";
+import "./styles.scss";
 
 export interface IEllipsisTextWithTooltipProps
   extends Partial<TypographyProps> {
@@ -38,7 +38,7 @@ const EllipsisTextWithTooltip: React.FC<IEllipsisTextWithTooltipProps> = ({
       className={`font-sfPro ${className ?? ""}`}
       ellipsis={{
         tooltip: {
-          color: "var(--color-icon-secondary)",
+          overlayClassName: "app-tooltip-ellipsis",
           title: <TextWithLineBreaks text={value} />,
           trigger: "hover",
           ...tooltipProps,

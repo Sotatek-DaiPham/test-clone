@@ -7,6 +7,9 @@ import {
   LeaderboardIcon,
   NotificationsIcon,
   ProfileIcon,
+  RainboostIcon,
+  RainDropIcon,
+  RainLaunchIcon,
   TelegramIcon,
   XIcon,
 } from "@public/assets";
@@ -73,6 +76,24 @@ export default function AppMenu({ className }: AppMenuProps) {
       onClick: () => {
         router.push(PATH_ROUTER.LEADER_BOARD);
       },
+    },
+    {
+      type: "divider",
+    },
+    {
+      label: "RainLaunch",
+      key: "rainlaunch",
+      icon: <Image src={RainLaunchIcon} alt="menu icon" />,
+    },
+    {
+      label: "RainBoost",
+      key: "rainboost",
+      icon: <Image src={RainboostIcon} alt="menu icon" />,
+    },
+    {
+      label: "RainDrop",
+      key: "raindrop",
+      icon: <Image src={RainDropIcon} alt="menu icon" />,
     },
     {
       type: "divider",

@@ -5,6 +5,7 @@ import { Flex, ModalProps } from "antd";
 import Image from "next/image";
 import AppModal from "..";
 import "./styles.scss";
+import AppButton from "@/components/app-button";
 
 interface ILoginModal extends ModalProps {
   title: string;
@@ -33,10 +34,12 @@ const LoginModal = ({
         <div className="warning-modal__title">{title}</div>
         <div className="warning-modal__content">{content}</div>
         <div className="warning-modal__actions">
-          <ButtonOutlined onClick={props.onCancel}>Cancel</ButtonOutlined>
-          <ButtonContained loading={loading} onClick={onOk}>
+          <AppButton typeButton="secondary" onClick={props.onCancel}>
+            Cancel
+          </AppButton>
+          <AppButton loading={loading} onClick={onOk}>
             Sign In
-          </ButtonContained>
+          </AppButton>
         </div>
       </Flex>
     </AppModal>

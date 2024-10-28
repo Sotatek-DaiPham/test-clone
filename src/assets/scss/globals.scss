@@ -199,38 +199,42 @@ input[type="number"] {
 }
 
 .truncate-1-line {
-  display: -webkit-box;
+  display: -webkit-box; /* Required for multiline truncation */
+  -webkit-line-clamp: 1; /* Number of lines to show */
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 1;
-  overflow: hidden;
   text-overflow: ellipsis;
-  word-break: break-word;
+  overflow: hidden;
+  white-space: pre-wrap;
+  word-break: break-all;
 }
 .truncate-2-line {
-  display: -webkit-box;
+  display: -webkit-box; /* Required for multiline truncation */
+  -webkit-line-clamp: 2; /* Number of lines to show */
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-  overflow: hidden;
   text-overflow: ellipsis;
-  word-break: break-word;
+  overflow: hidden;
+  white-space: pre-wrap;
+  word-break: break-all;
 }
 
 .truncate-3-line {
-  display: -webkit-box;
+  display: -webkit-box; /* Required for multiline truncation */
+  -webkit-line-clamp: 3; /* Number of lines to show */
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 3;
-  overflow: hidden;
   text-overflow: ellipsis;
-  word-break: break-word;
+  overflow: hidden;
+  white-space: pre-wrap;
+  word-break: break-all;
 }
 
 .truncate-4-line {
-  display: -webkit-box;
+  display: -webkit-box; /* Required for multiline truncation */
+  -webkit-line-clamp: 4; /* Number of lines to show */
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 4;
-  overflow: hidden;
   text-overflow: ellipsis;
-  word-break: break-word;
+  overflow: hidden;
+  white-space: pre-wrap;
+  word-break: break-all;
 }
 
 body {
@@ -324,6 +328,26 @@ img.active-primary-icon {
       &:after {
         border-color: var(--color-neutral-white) !important;
       }
+    }
+  }
+}
+
+.ant-notification-notice-wrapper {
+  .ant-notification-notice {
+    padding: 7px 16px !important;
+    border-radius: 5px;
+    .ant-notification-notice-message {
+      margin-bottom: 0 !important;
+    }
+    &.toast-success {
+      border: 1px solid #305d52;
+      background-color: #273c38;
+      backdrop-filter: blur(15px);
+    }
+    &.toast-error {
+      border: 1px solid #66353a;
+      background-color: #40292c;
+      backdrop-filter: blur(15px);
     }
   }
 }
