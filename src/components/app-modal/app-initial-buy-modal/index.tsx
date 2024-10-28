@@ -88,7 +88,7 @@ const InitialBuyModal = ({
       {...props}
     >
       <div className="flex flex-col gap-4">
-        <div className="text-26px-bold text-white-neutral">
+        <div className="text-20px-bold md:text-26px-bold text-white-neutral">
           Initial buy (Optional)
         </div>
         <div className="bg-[#16181C] p-6 rounded-[12px] flex flex-col ">
