@@ -88,16 +88,16 @@ export default async function onInitTradingView({
     autosize: true,
     disabled_features: disabledFeatures,
     theme: "Dark",
-    // overrides: {
-    //   "paneProperties.background":
-    //     theme === THEME_MODE.LIGHT ? "#FFFFFF" : "#16171c",
-    //   headerWidgetBackgroundColor:
-    //     theme === THEME_MODE.LIGHT ? "#F7F7F7" : "#16171c",
-    //   "scalesProperties.lineColor":
-    //     theme === THEME_MODE.LIGHT ? "#DDE1E8" : "#16171c",
-    //   "scalesProperties.textColor":
-    //     theme === THEME_MODE.LIGHT ? "#9BA0AE" : "#9BA0AE",
-    // },
+    toolbar_bg: "#171717",
+    overrides: {
+      "paneProperties.background": "#171717",
+      // headerWidgetBackgroundColor:
+      //   theme === THEME_MODE.LIGHT ? "#F7F7F7" : "#16171c",
+      // "scalesProperties.lineColor":
+      //   theme === THEME_MODE.LIGHT ? "#DDE1E8" : "#16171c",
+      // "scalesProperties.textColor":
+      //   theme === THEME_MODE.LIGHT ? "#9BA0AE" : "#9BA0AE",
+    },
     datafeed: {
       onReady: (callback: any) => {
         setTimeout(() => callback(configurationData));

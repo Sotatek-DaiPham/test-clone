@@ -1,20 +1,14 @@
 import AppButton from "@/components/app-button";
 import AppImage from "@/components/app-image";
 import AppTruncateText from "@/components/app-truncate-text";
-import { envs } from "@/constant/envs";
-import { PATH_ROUTER } from "@/constant/router";
-import { getTimeDDMMMYYYYHHMM } from "@/helpers/date-time";
-import { shortenAddress } from "@/helpers/shorten";
 import { ITokenDetailRes } from "@/interfaces/token";
 import {
-  ArrowExport,
   DiscordLinkIcon,
   TeleLinkIcon,
   TwitterLinkIcon,
   WebsiteLinkIcon,
 } from "@public/assets";
 import Image from "next/image";
-import Link from "next/link";
 
 interface ITokenInfoSectionProps {
   tokenDetail: ITokenDetailRes;

@@ -1,4 +1,5 @@
 import { API_PATH } from "@/constant/api-path";
+import { getStorageRefreshToken } from "@/helpers/storage";
 import { clearUser, setUser } from "@/libs/slices/userSlice";
 import makeStore from "@/libs/store";
 import axios, { AxiosRequestConfig } from "axios";
@@ -24,7 +25,7 @@ const refreshExpiredTokenClosure = () => {
     } else {
       isCalled = true;
       runningPromise = axiosInstance?.post(API_PATH.AUTH.REFRESH_TOKEN, {
-        refreshToken: localStorage.getItem("refreshToken"),
+        refreshToken: getStorageRefreshToken(),
       });
       runningPromise.finally(() => {
         isCalled = false;

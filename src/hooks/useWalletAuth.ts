@@ -1,5 +1,6 @@
 import { API_PATH } from "@/constant/api-path";
 import { PATH_ROUTER } from "@/constant/router";
+import { setStorageRefreshToken } from "@/helpers/storage";
 import { useAppDispatch, useAppSelector } from "@/libs/hooks";
 import { clearUser, setUser } from "@/libs/slices/userSlice";
 import { postAPI } from "@/service";
@@ -57,6 +58,7 @@ const useWalletAuth = () => {
         dispatch(
           setUser({ accessToken, refreshToken, address: userAddress, userId })
         );
+        setStorageRefreshToken(refreshToken);
       }
 
       onSuccess?.();
