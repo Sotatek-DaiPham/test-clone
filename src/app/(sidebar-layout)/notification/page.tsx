@@ -68,7 +68,11 @@ const checkType = (type: string, data: Information) => {
       return (
         <>
           <span className="text-[var(--color-created-noti)]">
-            {type || "-"}
+            {type === EEventNoti.TOKEN_CREATED
+              ? "Created"
+              : type === EEventNoti.TOKEN_LISTED
+              ? "Listed"
+              : "-"}
           </span>
           <AppImage
             src={get(data, "token.avatar", "")}
