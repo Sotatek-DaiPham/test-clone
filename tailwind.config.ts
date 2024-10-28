@@ -217,6 +217,13 @@ const config: Config = {
             fontWeight: "400",
           },
         ],
+        "20px-bold": [
+          "20px",
+          {
+            lineHeight: "40px",
+            fontWeight: "700",
+          },
+        ],
       },
       screens: {
         "2xs": "0px",

@@ -3,6 +3,9 @@
 .initial-buy-modal {
   .ant-modal-content {
     background-color: #23262f !important;
+    @include mobile {
+      padding: 16px;
+    }
   }
 
   .ant-form-item-has-error {
