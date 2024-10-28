@@ -10,7 +10,7 @@ const AppAmountSelect = ({
   customClass?: string;
 }) => {
   return (
-    <div className={clsx("flex gap-3", customClass ?? "")}>
+    <div className={clsx("flex gap-3 flex-wrap", customClass ?? "")}>
       {numbers.map((num, index) => (
         <button
           key={index}

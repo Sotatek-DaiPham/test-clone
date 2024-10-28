@@ -1,6 +1,5 @@
-import ButtonContained from "@/components/Button/ButtonContained";
-import ButtonOutlined from "@/components/Button/ButtonOutlined";
-import { ApproveIcon, WarningModalIcon } from "@public/assets";
+import AppButton from "@/components/app-button";
+import { ApproveIcon } from "@public/assets";
 import { Flex, ModalProps } from "antd";
 import Image from "next/image";
 import AppModal from "..";
@@ -32,16 +31,20 @@ const ConfirmModal = ({
     >
       <Flex vertical align="center" justify="space-between">
         <Image src={icon || ApproveIcon} alt="approve icon" />
-        <div className="text-white-neutral text-2xl font-bold leading-8 tracking-tight mt-9 text-center">
+        <div className="text-white-neutral text-20px-bold leading-8 tracking-tight md:mt-[35px] mt-6 text-center">
           {title}
         </div>
-        <div className="flex w-full mt-9 md:gap-5 gap-[10px">
-          <ButtonOutlined className="w-1/2" onClick={props.onCancel}>
+        <div className="flex w-full md:mt-[35px] mt-6 md:gap-5 gap-4">
+          <AppButton
+            typeButton="secondary"
+            customClass="w-1/2"
+            onClick={props.onCancel}
+          >
             Cancel
-          </ButtonOutlined>
-          <ButtonContained className="w-1/2" loading={loading} onClick={onOk}>
+          </AppButton>
+          <AppButton customClass="w-1/2" loading={loading} onClick={onOk}>
             {onOkText || "Confirm"}
-          </ButtonContained>
+          </AppButton>
         </div>
       </Flex>
     </AppModal>

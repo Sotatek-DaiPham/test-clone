@@ -60,7 +60,9 @@ const TradeSettingModal = ({
     >
       <Form form={form} initialValues={tradeSettings}>
         <div className="flex flex-col gap-4">
-          <div className="text-26px-bold text-white-neutral">Trade Setting</div>
+          <div className="text-20px-bold md:text-26px-bold text-white-neutral">
+            Trade Settings
+          </div>
 
           <div className="bg-neutral-1 p-6 rounded-[12px] flex flex-col gap-2">
             <label className="text-14px-medium text-neutral-7">
@@ -120,6 +122,7 @@ const TradeSettingModal = ({
               </Form.Item>
               <AppAmountSelect
                 numbers={PREDEFINE_PRIORITY_FEE}
+                customClass="[&>button]:!flex-none md:[&>button]:!flex-1"
                 onSelect={(value) =>
                   form.setFieldValue(
                     SETTINGS_FIELD_NAMES.PRIORITY_FEE,
