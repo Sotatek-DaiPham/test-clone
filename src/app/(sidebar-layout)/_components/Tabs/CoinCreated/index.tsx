@@ -43,7 +43,7 @@ const CoinCreatedTab = ({ walletAddress }: { walletAddress: string }) => {
           orderBy: "createdAt",
           direction: EDirection.DESC,
           walletAddress: walletAddress,
-          keyword: debounceSearch,
+          keyword: debounceSearch?.trim(),
         },
       }) as Promise<
         AxiosResponse<BeSuccessResponse<IProjectCardResponse[]>, any>

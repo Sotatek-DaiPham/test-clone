@@ -19,9 +19,15 @@ interface IProjectCardProps {
   data: any;
   className?: string;
   footer?: React.ReactNode;
+  header?: React.ReactNode;
 }
 
-const ProjectCard = ({ data, className, footer }: IProjectCardProps) => {
+const ProjectCard = ({
+  data,
+  header,
+  className,
+  footer,
+}: IProjectCardProps) => {
   const router = useRouter();
 
   return (
@@ -33,17 +39,18 @@ const ProjectCard = ({ data, className, footer }: IProjectCardProps) => {
         router.push(PATH_ROUTER.TOKEN_DETAIL(data?.id));
       }}
     >
+      {header && header}
       <div className="flex w-full flex-row gap-4">
-        <div className="!overflow-hidden shrink-0 !bg-neutral-4 !w-[130px] justify-center flex items-center !h-[130px] rounded-2xl">
+        <div className="!overflow-hidden shrink-0 !bg-neutral-4 !min-w-[130px] !w-[130px] justify-center flex items-center !h-[130px] rounded-2xl">
           {data?.avatar ? (
             <AppImage
-              className="!bg-neutral-4 min-w-[115px] w-full !h-[110px] rounded-2xl overflow-hidden flex [&>img]:!object-cover [&>img]:!w-full [&>img]:!h-full"
+              className="!bg-neutral-4 min-w-[115px] w-full !h-[130px] rounded-2xl overflow-hidden flex [&>img]:!object-cover [&>img]:!w-full [&>img]:!h-full"
               src={data?.avatar || DEFAULT_AVATAR}
               alt="logo"
             />
           ) : (
             <Image
-              className="[&>img]:!object-contain"
+              className="[&>img]:!object-cover"
               alt="logo"
               src={ImageDefaultIcon}
             />
@@ -51,7 +58,7 @@ const ProjectCard = ({ data, className, footer }: IProjectCardProps) => {
         </div>
         <div className="grow">
           <div className="w-full">
-            {!footer && (
+            {!footer && !header && (
               <div className="text-primary-7 flex w-full items-center flex-row !text-12px-normal">
                 <div className="mr-1 !min-w-[55px]">Create by</div>
                 <div className="w-[141px] sm:w-[45px] md:w-[109px] 2md:w-[173] lg:w-[107] xl:w-[70px] 2xl:w-[123px] 3xl:w-[211px]">
@@ -117,7 +124,7 @@ const ProjectCard = ({ data, className, footer }: IProjectCardProps) => {
             <span className="text-primary-7 mr-1">
               {formatAmount(data?.progressToListDex || 0)}%
             </span>
-            <span>${nFormatter(12000)}</span>
+            <span>${12}K</span>
           </div>
           <div className="flex flex-row items-center">
             <Image src={CalendarIcon} alt="calender-icon" />

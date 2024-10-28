@@ -135,7 +135,7 @@ const AppInputComment: React.FC<AppInputCommentProps> = ({
                 alt="Uploaded"
                 width={80}
                 height={80}
-                className="max-h-[80px] object-contain"
+                className="max-h-[80px] object-cover"
               />
               <Image
                 src={CloseIcon}

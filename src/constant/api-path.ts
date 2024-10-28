@@ -34,5 +34,7 @@ export const API_PATH = {
   TRADING: {
     ACTIVITY: "/user-trading-histories/following",
     TRADING_VIEW: "/user-trading-histories/trading-view",
+    LEADERBOARD: "/user-trading-histories/leaderboard",
+    MY_RANK: "/user-trading-histories/my-rank",
   },
 };

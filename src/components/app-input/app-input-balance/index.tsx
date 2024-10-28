@@ -64,7 +64,7 @@ const AppInputBalance = ({
                     alt="token"
                     width={20}
                     height={20}
-                    className="rounded-full object-contain h-5"
+                    className="rounded-full object-cover h-5"
                     src={tokenImageSrc}
                   />
                 )}
@@ -80,7 +80,7 @@ const AppInputBalance = ({
                   width={20}
                   height={20}
                   src={UsdtIcon}
-                  className="rounded-full object-contain h-5"
+                  className="rounded-full object-cover h-5"
                 />
                 <span className="text-neutral-9 text-16px-medium">USDT</span>
               </div>
@@ -95,7 +95,7 @@ const AppInputBalance = ({
               width={20}
               height={20}
               src={tokenImageSrc}
-              className="rounded-full object-contain h-5"
+              className="rounded-full object-cover h-5"
             />
           )}
           <span className="text-neutral-9 text-16px-medium">{tokenSymbol}</span>
