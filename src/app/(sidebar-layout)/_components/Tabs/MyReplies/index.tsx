@@ -25,27 +25,26 @@ import { PATH_ROUTER } from "@/constant/router";
 
 const ReplyItem = ({ data }: { data: IMyRepliesResponse }) => {
   const router = useRouter();
-  console.log("data", data);
   return (
     <div className="flex flex-col w-full bg-neutral-2 rounded-3xl px-6 py-4 text-neutral-9">
       <div className="flex flex-row gap-3">
-        <div className="w-[40px] h-[40px] overflow-hidden rounded-full bg-primary-7">
+        <div className="!min-w-[40px] !w-[40px] !h-[40px] overflow-hidden flex items-center justify-center rounded-full bg-primary-7">
           {data?.avatar ? (
             <AppImage
-              className="!bg-neutral-4 flex [&>img]:!object-contain"
+              className="!bg-neutral-4 [&>img]:!object-cover"
               src={data?.avatar}
               alt="logo"
             />
           ) : (
             <Image
-              className="!bg-neutral-4 [&>img]:!object-contain"
+              className="!bg-neutral-4 [&>img]:!object-cover"
               alt="logo"
               src={ImageDefaultIcon}
             />
           )}
         </div>
-        <div className="flex flex-col">
-          <div className="text-16px-bold">{data?.userName}</div>
+        <div className="flex w-full flex-col">
+          <div className="text-16px-bold truncate-1-line">{data?.userName}</div>
           <span className="text-14px-normal text-neutral-7">
             {getTimeDDMMMYYYYHHMM(data?.createdAt)}
           </span>
@@ -96,7 +95,7 @@ const MyRepliesTab = () => {
           ...params,
           orderBy: "createdAt",
           direction: EDirection.DESC,
-          keyword: debounceSearch,
+          keyword: debounceSearch?.trim(),
         },
       }) as Promise<
         AxiosResponse<BeSuccessResponse<IMyRepliesResponse[]>, any>

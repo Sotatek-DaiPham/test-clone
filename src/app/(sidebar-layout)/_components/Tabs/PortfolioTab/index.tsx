@@ -47,7 +47,7 @@ const PortfolioTab = ({ walletAddress }: { walletAddress: string }) => {
           direction: EDirection.DESC,
           minAmountHeld: hideDustCoin ? "0.01" : "",
           walletAddress: walletAddress,
-          keyword: debounceSearch,
+          keyword: debounceSearch?.trim(),
         },
       }) as Promise<
         AxiosResponse<BeSuccessResponse<IProjectCardResponse[]>, any>

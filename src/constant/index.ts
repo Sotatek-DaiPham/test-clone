@@ -3,7 +3,7 @@ export const ErrorCode = {
   INSUFFICIENT_FEE: -32603,
 };
 
-export const LIMIT_ITEMS_TABLE = 9;
+export const LIMIT_ITEMS_TABLE = 10;
 
 export const MINIMUM_BUY_AMOUNT = 0.1;
 
@@ -43,3 +43,10 @@ export enum EDirection {
 
 export const DEFAULT_AVATAR =
   "https://nft-ticket-the-bucket.s3.ap-southeast-1.amazonaws.com/images/d76403890c-image.png";
+
+export enum EEventNoti {
+  TOKEN_CREATED = "TokenCreated",
+  BUY = "Buy",
+  SELL = "Sell",
+  TOKEN_LISTED = "TokenListed",
+}

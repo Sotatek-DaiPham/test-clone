@@ -47,7 +47,7 @@ const FollowersTab = ({ walletAddress }: { walletAddress: string }) => {
           orderBy: "createdAt",
           direction: EDirection.DESC,
           walletAddress: walletAddress,
-          keyword: debounceSearch,
+          keyword: debounceSearch?.trim(),
           viewerId: userId,
         },
       }) as Promise<AxiosResponse<BeSuccessResponse<IFollowerResponse[]>, any>>;

@@ -27,7 +27,7 @@ const TokenInfoSection = ({ tokenDetail }: ITokenInfoSectionProps) => {
         <div className="flex flex-col">
           <div className="flex justify-center">
             <AppImage
-              className="h-auto max-w-[278px] object-contain"
+              className="h-auto max-w-[278px] object-cover"
               src={tokenDetail?.avatar}
               alt="token image"
             />

@@ -183,7 +183,7 @@ const AllTab = () => {
       return getAPI(API_PATH.TOKEN.LIST, {
         params: {
           ...params,
-          keyword: debounceSearch,
+          keyword: debounceSearch?.trim(),
           typeFilterAge: getAgeType(searchParams?.age),
           age: getAge(searchParams?.age),
           minProgress: searchParams?.minProgress,
