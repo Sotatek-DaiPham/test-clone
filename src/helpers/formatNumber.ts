@@ -22,7 +22,7 @@ export const nFormatter = (
 
   const SI = [
     { value: 1, symbol: "" },
-    { value: 1, symbol: "" },
+    // { value: 1e3, symbol: "K" },
     { value: 1e6, symbol: "M" },
     { value: 1e9, symbol: "B" },
     { value: 1e12, symbol: "T" },

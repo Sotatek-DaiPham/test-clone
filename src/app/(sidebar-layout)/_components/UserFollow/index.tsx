@@ -30,17 +30,17 @@ const UserFollow = ({ data, onFollow }: IUserFollow) => {
       }
     >
       <div className="w-full flex flex-row">
-        <div className="w-[50px]">
+        <div className="w-[50px] !min-w-[50px]">
           {data?.avatar ? (
             <AppImage
-              className="!bg-neutral-4 !w-[50px] !h-[50px] rounded-xl overflow-hidden flex [&>img]:!object-contain"
+              className="!bg-neutral-4 !w-[50px] !min-w-[50px] !h-[50px] rounded-xl overflow-hidden flex [&>img]:!object-cover"
               alt="logo"
               src={data?.avatar}
             />
           ) : (
-            <div className="border border-white-neutral !w-[50px] !h-[50px] rounded-xl overflow-hidden">
+            <div className="border border-white-neutral !min-w-[50px] !w-[50px] !h-[50px] rounded-xl overflow-hidden">
               <Image
-                className="flex bg-primary-7 [&>img]:!object-contain"
+                className="flex bg-primary-7 [&>img]:!object-cover"
                 alt="logo"
                 src={ImageDefaultIcon}
               />

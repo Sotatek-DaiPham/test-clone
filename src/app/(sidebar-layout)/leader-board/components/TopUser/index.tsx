@@ -1,7 +1,8 @@
 import AppDivider from "@/components/app-divider";
 import AppImage from "@/components/app-image";
+import EllipsisTextWithTooltip from "@/components/app-tooltip/EllipsisTextWithTooltip";
 import { PATH_ROUTER } from "@/constant/router";
-import { formatAmount } from "@/helpers/formatNumber";
+import { convertNumber, formatAmount } from "@/helpers/formatNumber";
 import { shortenAddress } from "@/helpers/shorten";
 import useWindowSize from "@/hooks/useWindowSize";
 import Image from "next/image";
@@ -34,7 +35,7 @@ const TopUser = ({
               <AppImage
                 src={data?.avatar}
                 alt="avatar"
-                className={`border overflow-hidden border-white-neutral rounded-full bg-primary-7 ${
+                className={`border overflow-hidden border-white-neutral flex m-auto [&>img]:!object-cover rounded-full bg-primary-7 ${
                   top1 && !isMobile
                     ? "!w-[120px] !h-[120px]"
                     : isMobile
@@ -44,15 +45,17 @@ const TopUser = ({
               />
               {!isMobile && (
                 <>
-                  <p
-                    className={`mt-4 mb-1 ${
-                      top1 ? "text-22px-bold" : "text-18px-bold"
-                    }`}
-                  >
-                    {data?.username || "-"}
-                  </p>
+                  <div>
+                    <EllipsisTextWithTooltip
+                      value={data?.username || "-"}
+                      className={`mt-4 text-white-neutral mb-1 ${
+                        top1 ? "text-22px-bold" : "text-18px-bold"
+                      }`}
+                      width={200}
+                    />
+                  </div>
                   <p className="text-16px-normal text-neutral-7">
-                    {shortenAddress(data?.address) || "-"}
+                    {shortenAddress(data?.walletAddress) || "-"}
                   </p>
                 </>
               )}
@@ -61,16 +64,18 @@ const TopUser = ({
           {isMobile && (
             <div className="text-white-neutral ml-4 text-left flex justify-end flex-col mb-2">
               <div>
-                <p className="mt-4 mb-1 text-18px-bold">
-                  {data?.username || "-"}
-                </p>
+                <EllipsisTextWithTooltip
+                  value={data?.username || "-"}
+                  className="mt-4 text-white-neutral mb-1 text-18px-bold"
+                  width={200}
+                />
                 <p
                   className="text-14px-normal text-neutral-7"
                   onClick={() =>
-                    router.push(PATH_ROUTER.USER_PROFILE(data?.address))
+                    router.push(PATH_ROUTER.USER_PROFILE(data?.walletAddress))
                   }
                 >
-                  {shortenAddress(data?.address) || "-"}
+                  {shortenAddress(data?.walletAddress) || "-"}
                 </p>
               </div>
             </div>
@@ -81,19 +86,25 @@ const TopUser = ({
           <div className="w-full flex sm:flex-col flex-row items-center justify-between text-center">
             <span>Total</span>
             <span className="text-16px-medium text-white-neutral mt-1">
-              {data?.total ? `${formatAmount(data?.total)} USDT` : "-"}
+              {data?.total
+                ? `${formatAmount(convertNumber(data?.total, 6))} USDT`
+                : "-"}
             </span>
           </div>
           <div className="w-full flex sm:flex-col flex-row items-center justify-between text-center">
             <span>Buy</span>
             <span className="text-16px-medium text-success-main mt-1">
-              {data?.buy ? `${formatAmount(data?.buy)} USDT` : "-"}
+              {data?.buy
+                ? `${formatAmount(convertNumber(data?.buy, 6))} USDT`
+                : "-"}
             </span>
           </div>
           <div className="w-full flex sm:flex-col flex-row items-center justify-between text-center">
             <span>Sell</span>
             <span className="text-16px-medium text-error-main mt-1">
-              {data?.sell ? `${formatAmount(data?.sell)} USDT` : "-"}
+              {data?.sell
+                ? `${formatAmount(convertNumber(data?.sell, 6))} USDT`
+                : "-"}
             </span>
           </div>
         </div>

@@ -1,17 +1,18 @@
 import AppPaginationCustom from "@/components/app-pagination/app-pagination-custom";
+import EllipsisTextWithTooltip from "@/components/app-tooltip/EllipsisTextWithTooltip";
 import NoData from "@/components/no-data";
 import { API_PATH } from "@/constant/api-path";
+import { PATH_ROUTER } from "@/constant/router";
 import { ITokenDashboardResponse } from "@/entities/dashboard";
-import { BeSuccessResponse } from "@/entities/response";
+import { convertNumber, formatAmount } from "@/helpers/formatNumber";
 import { useAppSearchParams } from "@/hooks/useAppSearchParams";
 import useDebounce from "@/hooks/useDebounce";
 import { getAPI } from "@/service";
 import { DollarCircleUpIcon, TrendUpIcon } from "@public/assets";
-import { useQuery } from "@tanstack/react-query";
 import { Spin } from "antd";
-import { AxiosResponse } from "axios";
 import get from "lodash/get";
-import { useCallback, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useCallback, useEffect, useState } from "react";
 import FilterTerminal from "../FilterTerminal";
 import ProjectCard from "../ProjectCard";
 
@@ -31,6 +32,9 @@ const FILTER_TERMINAL = [
 const FollowingTab = () => {
   const [search, setSearch] = useState<string>("");
   const { searchParams, setSearchParams } = useAppSearchParams("terminal");
+  const router = useRouter();
+  const [data, setData] = useState<ITokenDashboardResponse[]>([]);
+  const [isPending, setIsPending] = useState<boolean>(false);
 
   const [params, setParams] = useState<any>({
     page: 1,
@@ -39,26 +43,51 @@ const FollowingTab = () => {
 
   const debounceSearch = useDebounce(search);
 
-  const { data, isPending, isError, refetch } = useQuery({
-    queryKey: ["all-following", params, debounceSearch],
-    queryFn: async () => {
-      return getAPI(
-        searchParams?.filter === "created"
-          ? API_PATH.TOKEN.FOLLOWING_TOKEN_CREATED
-          : API_PATH.TRADING.ACTIVITY,
-        {
-          params: {
-            ...params,
-            keyword: debounceSearch,
-          },
-        }
-      ) as Promise<
-        AxiosResponse<BeSuccessResponse<ITokenDashboardResponse[]>, any>
-      >;
-    },
-  });
+  const fetchActivityTab = async () => {
+    setIsPending(true);
+    const response = await getAPI(API_PATH.TRADING.ACTIVITY, {
+      params: {
+        ...params,
+        keyword: debounceSearch?.trim(),
+      },
+    }).then((data) => {
+      setIsPending(false);
+      return data;
+    });
+    const tokenList = get(
+      response,
+      "data.data",
+      []
+    ) as ITokenDashboardResponse[];
+    setData(tokenList);
+  };
 
-  const tokenList = get(data, "data.data", []) as ITokenDashboardResponse[];
+  const fetchCreatedTab = async () => {
+    setIsPending(true);
+    const response = await getAPI(API_PATH.TOKEN.FOLLOWING_TOKEN_CREATED, {
+      params: {
+        ...params,
+        keyword: debounceSearch?.trim(),
+      },
+    }).then((data) => {
+      setIsPending(false);
+      return data;
+    });
+    const tokenList = get(
+      response,
+      "data.data",
+      []
+    ) as ITokenDashboardResponse[];
+    setData(tokenList);
+  };
+  useEffect(() => {
+    if (searchParams?.filter === "created") {
+      fetchCreatedTab();
+    }
+    if (searchParams?.filter === "activity") {
+      fetchActivityTab();
+    }
+  }, [searchParams?.filter, debounceSearch, params]);
 
   const total = get(data, "data.metadata.total", 0) as number;
 
@@ -68,7 +97,6 @@ const FollowingTab = () => {
         ...searchParams,
         [queryKey]: value,
       });
-      refetch();
     },
     [searchParams, setSearchParams]
   );
@@ -88,16 +116,58 @@ const FollowingTab = () => {
       />
       {isPending ? (
         <Spin />
-      ) : !tokenList?.length && !isPending ? (
+      ) : !data?.length && !isPending ? (
         <NoData></NoData>
       ) : (
         <div>
           <div className="grid xl:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-6 my-9">
-            {tokenList?.map(
-              (project: ITokenDashboardResponse, index: number) => (
-                <ProjectCard data={project} key={index} />
-              )
-            )}
+            {data?.map((project: any, index: number) => (
+              <ProjectCard
+                data={project}
+                key={index}
+                header={
+                  searchParams?.filter === "created" ? null : (
+                    <div className="mb-3">
+                      <EllipsisTextWithTooltip
+                        className="mr-2 cursor-pointer text-neutral-7"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          router.push(
+                            PATH_ROUTER.USER_PROFILE(project?.wallet_address)
+                          );
+                        }}
+                        value={project?.username}
+                        maxWidth={100}
+                      />
+                      <span
+                        className={
+                          project?.action === "BUY"
+                            ? "text-success-main"
+                            : project?.action === "SELL"
+                            ? "text-error-main"
+                            : ""
+                        }
+                      >
+                        {project?.action || "-"}
+                      </span>
+                      <span className="mx-1 ml-2">
+                        {formatAmount(
+                          convertNumber(project?.amount, project?.decimal)
+                        ) || "-"}
+                        &nbsp;
+                        {project?.symbol}
+                      </span>
+                      <span className="text-14px-normal">for</span>
+                      <span className="mx-1 ml-2">
+                        {formatAmount(convertNumber(project?.usdt_amount, 6)) ||
+                          "-"}
+                        &nbsp;USDT
+                      </span>
+                    </div>
+                  )
+                }
+              />
+            ))}
           </div>
           <AppPaginationCustom
             label="tokens"
@@ -107,17 +177,6 @@ const FollowingTab = () => {
             onChange={(page) => setParams({ ...params, page })}
             hideOnSinglePage={true}
           />
-          {/* {baseData?.length < total && (
-            <div className="w-full flex justify-center mt-2">
-              <AppButton
-                customClass="!w-[200px]"
-                loading={isPending}
-                onClick={() => setParams({ ...params, page: params.page + 1 })}
-              >
-                Load more
-              </AppButton>
-            </div>
-          )} */}
         </div>
       )}
     </div>

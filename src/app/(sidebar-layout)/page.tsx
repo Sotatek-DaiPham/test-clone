@@ -1,34 +1,29 @@
 "use client";
 import AppButton from "@/components/app-button";
-import AppImage from "@/components/app-image";
 import AppTabs from "@/components/app-tabs";
+import { EDirection } from "@/constant";
 import { API_PATH } from "@/constant/api-path";
 import {
   IKingOfTheSkyResponse,
   ITradeHistoryResponse,
 } from "@/entities/dashboard";
 import { BeSuccessResponse } from "@/entities/response";
-import { convertNumber, formatAmount } from "@/helpers/formatNumber";
-import { shortenAddress } from "@/helpers/shorten";
 import { useAppSearchParams } from "@/hooks/useAppSearchParams";
+import useSocket from "@/hooks/useSocket";
 import useWalletAuth from "@/hooks/useWalletAuth";
+import { ESocketEvent } from "@/libs/socket/constants";
 import { getAPI } from "@/service";
 import { HowItWorksIcon } from "@public/assets";
 import { useQuery } from "@tanstack/react-query";
 import { AxiosResponse } from "axios";
 import get from "lodash/get";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import AllTab from "./_components/AllTab";
 import FollowingTab from "./_components/FollowingTab";
 import ProjectCard from "./_components/ProjectCard";
-import AppTooltip from "@/components/app-tooltip";
-import { EDirection } from "@/constant";
-import useSocket from "@/hooks/useSocket";
-import { ESocketEvent } from "@/libs/socket/constants";
-import { useRouter } from "next/navigation";
-import { PATH_ROUTER } from "@/constant/router";
-import AppTruncateText from "@/components/app-truncate-text";
+import TradeHistoryItem from "./_components/TradeHistoryItem";
 
 enum ETabsTerminal {
   ALL = "all",
@@ -40,7 +35,6 @@ export default function Home() {
   const { accessToken } = useWalletAuth();
   const { searchParams, setSearchParams } = useAppSearchParams("terminal");
   const [activeTab, setActiveTab] = useState<string>(ETabsTerminal.ALL);
-  const router = useRouter();
 
   const { data, refetch } = useQuery({
     queryKey: ["king-of-the-sky"],
@@ -183,47 +177,7 @@ export default function Home() {
             <div className="loop-slide">
               {tradeHistory?.map(
                 (item: ITradeHistoryResponse, index: number) => (
-                  <div
-                    key={index}
-                    className="flex flex-row items-center text-14px-normal text-neutral-9 border-r border-neutral-4 px-3"
-                  >
-                    <AppTooltip title={item?.user_address}>
-                      <span
-                        className="mr-2 cursor-pointer"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          router.push(
-                            PATH_ROUTER.USER_PROFILE(item?.user_address)
-                          );
-                        }}
-                      >
-                        {shortenAddress(item?.user_address)}
-                      </span>
-                    </AppTooltip>
-                    <span
-                      className={
-                        item?.action === "BUY"
-                          ? "text-success-main"
-                          : "text-error-main"
-                      }
-                    >
-                      {item?.action}
-                    </span>
-                    <span className="mx-1 ml-2">
-                      {formatAmount(
-                        convertNumber(item?.amount, item?.decimal)
-                      ) || "-"}
-                    </span>
-                    <span className="text-14px-normal">of</span>
-                    <AppImage
-                      src={item?.token_avatar}
-                      alt="logo"
-                      className="!w-[24px] !h-[24px] rounded-full flex justify-center items-center mx-3"
-                    />
-                    <span className="text-14px-bold text-primary-6">
-                      <AppTruncateText text={item?.token_name} maxLength={5} />
-                    </span>
-                  </div>
+                  <TradeHistoryItem key={index} item={item} />
                 )
               )}
             </div>

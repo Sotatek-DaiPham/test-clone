@@ -8,7 +8,7 @@ import ConfirmModal from "@/components/app-modal/app-confirm-modal";
 import InitialBuyModal from "@/components/app-modal/app-initial-buy-modal";
 import AppUpload from "@/components/app-upload";
 import ConnectWalletButton from "@/components/Button/ConnectWallet";
-import { AMOUNT_FIELD_NAME, ErrorCode, USDT_DECIMAL } from "@/constant";
+import { AMOUNT_FIELD_NAME, USDT_DECIMAL } from "@/constant";
 import { API_PATH } from "@/constant/api-path";
 import { envs } from "@/constant/envs";
 import {
@@ -24,6 +24,7 @@ import {
   calculateUsdtShouldPay,
 } from "@/helpers/calculate";
 import { ImageValidator } from "@/helpers/upload";
+import useWindowSize from "@/hooks/useWindowSize";
 import {
   ECoinType,
   ICreateTokenReq,
@@ -34,7 +35,7 @@ import { useAppSelector } from "@/libs/hooks";
 import { postFormDataAPI } from "@/service";
 import { useContract } from "@/web3/contracts/useContract";
 import { useMutation } from "@tanstack/react-query";
-import { Flex, Form } from "antd";
+import { Form } from "antd";
 import { useWatch } from "antd/es/form/Form";
 import { AxiosResponse } from "axios";
 import BigNumber from "bignumber.js";
@@ -83,6 +84,7 @@ const urlValidator = (props: any, value: string) => {
 
 const CreateTokenPage = () => {
   const router = useRouter();
+  const { isDesktop } = useWindowSize();
   const [form] = Form.useForm<CreateTokenFormValues>();
   const [amountForm] = Form.useForm<{ amount: string }>();
   const { accessToken: isAuthenticated, address } = useAppSelector(
@@ -340,6 +342,12 @@ const CreateTokenPage = () => {
 
   return (
     <div className="create-token-page w-full mr-auto ml-auto">
+      {!isDesktop ? (
+        <div className="text-20px-bold mb-4 text-white-neutral">
+          Create A New Token
+        </div>
+      ) : null}
+
       <Form<CreateTokenFormValues>
         form={form}
         layout="vertical"
@@ -349,11 +357,11 @@ const CreateTokenPage = () => {
           [FIELD_NAMES.DESCRIPTION]: "",
         }}
       >
-        <h5 className="text-22px-bold mb-4 text-primary-main">
+        <h5 className="text-16px-bold md:text-22px-bold mb-4 text-primary-main">
           Coin Information
         </h5>
-        <div className="rounded-[24px] bg-neutral-2 backdrop-blur-[75px] p-6 mb-8">
-          <Flex gap={24} className="flex-col md:flex-row">
+        <div className="rounded-[24px] bg-neutral-2 backdrop-blur-[75px] md:p-6 p-4 mb-8">
+          <div className="flex flex-col md:flex-row md:gap-6 gap-0">
             <Form.Item
               name={FIELD_NAMES.COIN_NAME}
               required={false}
@@ -382,7 +390,7 @@ const CreateTokenPage = () => {
             >
               <AppInput placeholder="Enter token ticker" maxLength={10} />
             </Form.Item>
-          </Flex>
+          </div>
           <Form.Item
             name={FIELD_NAMES.DESCRIPTION}
             required={false}
@@ -411,9 +419,11 @@ const CreateTokenPage = () => {
           </Form.Item>
         </div>
 
-        <h5 className="text-primary-main text-22px-bold mt-4 mb-4">Links</h5>
-        <div className="rounded-[24px] bg-neutral-2 backdrop-blur-[75px] p-6 mb-6">
-          <Flex gap={24} className="flex-col md:flex-row">
+        <h5 className="text-primary-main text-16px-bold md:text-22px-bold mt-4 mb-4">
+          Links
+        </h5>
+        <div className="rounded-[24px] bg-neutral-2 backdrop-blur-[75px] md:p-6 p-4 mb-6">
+          <div className="flex flex-col md:flex-row md:gap-6 gap-0">
             <Form.Item
               name={FIELD_NAMES.WEBSITE}
               label={<FormItemLabel label="Website" />}
@@ -438,8 +448,8 @@ const CreateTokenPage = () => {
             >
               <AppInput placeholder="Twitter URL" />
             </Form.Item>
-          </Flex>
-          <Flex gap={24} className="flex-col md:flex-row">
+          </div>
+          <div className="flex flex-col md:flex-row md:gap-6 gap-0">
             <Form.Item
               name={FIELD_NAMES.TELEGRAM}
               label={<FormItemLabel label="Telegram" />}
@@ -455,7 +465,7 @@ const CreateTokenPage = () => {
             <Form.Item
               name={FIELD_NAMES.DISCORD}
               label={<FormItemLabel label="Discord" />}
-              className="w-full md:flex-1"
+              className="w-full md:flex-1 md:mb-6 !mb-0"
               rules={[
                 {
                   validator: urlValidator,
@@ -464,7 +474,7 @@ const CreateTokenPage = () => {
             >
               <AppInput placeholder="Discord URL" />
             </Form.Item>
-          </Flex>
+          </div>
         </div>
         <div className="flex justify-end mb-9">
           {isAuthenticated ? (
@@ -480,7 +490,7 @@ const CreateTokenPage = () => {
                   setIsOpenInitialBuyModal(true);
                 }
               }}
-              customClass="!w-fit"
+              customClass="md:!w-fit !w-full"
             >
               Create Coin
             </AppButton>
