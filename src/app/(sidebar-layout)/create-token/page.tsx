@@ -8,7 +8,7 @@ import ConfirmModal from "@/components/app-modal/app-confirm-modal";
 import InitialBuyModal from "@/components/app-modal/app-initial-buy-modal";
 import AppUpload from "@/components/app-upload";
 import ConnectWalletButton from "@/components/Button/ConnectWallet";
-import { AMOUNT_FIELD_NAME, ErrorCode, USDT_DECIMAL } from "@/constant";
+import { AMOUNT_FIELD_NAME, USDT_DECIMAL } from "@/constant";
 import { API_PATH } from "@/constant/api-path";
 import { envs } from "@/constant/envs";
 import {
@@ -35,7 +35,7 @@ import { useAppSelector } from "@/libs/hooks";
 import { postFormDataAPI } from "@/service";
 import { useContract } from "@/web3/contracts/useContract";
 import { useMutation } from "@tanstack/react-query";
-import { Flex, Form } from "antd";
+import { Form } from "antd";
 import { useWatch } from "antd/es/form/Form";
 import { AxiosResponse } from "axios";
 import BigNumber from "bignumber.js";
@@ -360,7 +360,7 @@ const CreateTokenPage = () => {
         <h5 className="text-16px-bold md:text-22px-bold mb-4 text-primary-main">
           Coin Information
         </h5>
-        <div className="rounded-[24px] bg-neutral-2 backdrop-blur-[75px] p-6 mb-8">
+        <div className="rounded-[24px] bg-neutral-2 backdrop-blur-[75px] md:p-6 p-4 mb-8">
           <div className="flex flex-col md:flex-row md:gap-6 gap-0">
             <Form.Item
               name={FIELD_NAMES.COIN_NAME}
@@ -422,7 +422,7 @@ const CreateTokenPage = () => {
         <h5 className="text-primary-main text-16px-bold md:text-22px-bold mt-4 mb-4">
           Links
         </h5>
-        <div className="rounded-[24px] bg-neutral-2 backdrop-blur-[75px] p-6 mb-6">
+        <div className="rounded-[24px] bg-neutral-2 backdrop-blur-[75px] md:p-6 p-4 mb-6">
           <div className="flex flex-col md:flex-row md:gap-6 gap-0">
             <Form.Item
               name={FIELD_NAMES.WEBSITE}
@@ -465,7 +465,7 @@ const CreateTokenPage = () => {
             <Form.Item
               name={FIELD_NAMES.DISCORD}
               label={<FormItemLabel label="Discord" />}
-              className="w-full md:flex-1"
+              className="w-full md:flex-1 md:mb-6 !mb-0"
               rules={[
                 {
                   validator: urlValidator,
