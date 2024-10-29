@@ -4,7 +4,7 @@ import AppDivider from "@/components/app-divider";
 import AppInput from "@/components/app-input";
 import AppPaginationCustom from "@/components/app-pagination/app-pagination-custom";
 import NoData from "@/components/no-data";
-import { EDirection, LIMIT_ITEMS_TABLE } from "@/constant";
+import { EDirection, LIMIT_COIN_ITEMS_TABLE } from "@/constant";
 import { API_PATH } from "@/constant/api-path";
 import { IProjectCardResponse } from "@/entities/my-profile";
 import { BeSuccessResponse } from "@/entities/response";
@@ -13,7 +13,7 @@ import useDebounce from "@/hooks/useDebounce";
 import useSocket from "@/hooks/useSocket";
 import { ESocketEvent } from "@/libs/socket/constants";
 import { getAPI } from "@/service";
-import { HideDustCoinIcon } from "@public/assets";
+import { HideDustCoinIcon, ShowEyesIcon } from "@public/assets";
 import { useQuery } from "@tanstack/react-query";
 import { Spin } from "antd";
 import { AxiosResponse } from "axios";
@@ -25,10 +25,10 @@ import TabTitle from "../../TabTitle";
 const PortfolioTab = ({ walletAddress }: { walletAddress: string }) => {
   const { addEvent, isConnected, removeEvent } = useSocket();
   const [hideDustCoin, setHideDustCoin] = useState<boolean>(false);
-  const { searchParams, setSearchParams } = useAppSearchParams("myProfile");
+  const { searchParams } = useAppSearchParams("myProfile");
   const [params, setParams] = useState<any>({
     page: 1,
-    limit: LIMIT_ITEMS_TABLE,
+    limit: LIMIT_COIN_ITEMS_TABLE,
   });
 
   const [search, setSearch] = useState<string>(searchParams.search || "");
@@ -45,7 +45,7 @@ const PortfolioTab = ({ walletAddress }: { walletAddress: string }) => {
           ...params,
           orderBy: "amount",
           direction: EDirection.DESC,
-          minAmountHeld: hideDustCoin ? "0.01" : "",
+          minAmountHeld: hideDustCoin ? "0.1" : "",
           walletAddress: walletAddress,
           keyword: debounceSearch?.trim(),
         },
@@ -63,17 +63,18 @@ const PortfolioTab = ({ walletAddress }: { walletAddress: string }) => {
     if (isConnected) {
       addEvent(ESocketEvent.BUY, (data) => {
         if (data) {
+          refetch();
         }
       });
       addEvent(ESocketEvent.SELL, (data) => {
         if (data) {
+          refetch();
         }
       });
     }
     return () => {
       removeEvent(ESocketEvent.BUY);
       removeEvent(ESocketEvent.SELL);
-      removeEvent(ESocketEvent.CHANGE_KING_OF_THE_HILL);
     };
   }, [isConnected]);
 
@@ -92,11 +93,12 @@ const PortfolioTab = ({ walletAddress }: { walletAddress: string }) => {
             onClick={() => setHideDustCoin(!hideDustCoin)}
           >
             <Image
-              src={HideDustCoinIcon}
+              src={hideDustCoin ? ShowEyesIcon : HideDustCoinIcon}
               alt="hide-coin"
-              className={`${hideDustCoin ? "active-primary-icon" : ""}`}
             />
-            <span className="ml-2">Hide dust coin</span>
+            <span className="ml-2">
+              {hideDustCoin ? "Show Dust Token" : "Hide Dust Token"}
+            </span>
           </AppButton>
           <AppInput
             className="sm:!w-[400px] w-full h-[40px] mb-2 sm:mb-0  sm:ml-4"

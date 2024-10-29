@@ -131,3 +131,52 @@ export const formatBytes = (bytes: number): string => {
   const size = (bytes / Math.pow(k, i)).toFixed(2); // Rounded to 2 decimal places
   return `${size} ${units[i]}`;
 };
+
+export const nFormatterVer2 = (
+  number: string | number,
+  digits = 2,
+  roundingMode?: BigNumber.RoundingMode
+) => {
+  if (Number(number) === 0 || isNaN(Number(number))) {
+    return 0;
+  }
+
+  const SI = [
+    { value: 1, symbol: "" },
+    { value: 1e3, symbol: "K" },
+    { value: 1e6, symbol: "M" },
+    { value: 1e9, symbol: "B" },
+    { value: 1e12, symbol: "T" },
+    { value: 1e15, symbol: "q" },
+    { value: 1e18, symbol: "Q" },
+    { value: 1e21, symbol: "s" },
+    { value: 1e24, symbol: "S" },
+  ];
+  // |(\.[0-9]*[1-9])0+$
+  const rx = /\.0+$|(\.[0-9]*[1-9])0+$/;
+  const num = parseFloat(number?.toString());
+
+  let i;
+  for (i = SI.length - 1; i > 0; i--) {
+    if (num >= SI[i].value) {
+      break;
+    }
+  }
+
+  const roundingModeCombined = roundingMode || BigNumber.ROUND_HALF_UP;
+
+  const minimumNumber = BigNumber(1).div(`1e${digits}`).toNumber();
+
+  if (Number(number) > 0 && new BigNumber(number).lt(minimumNumber)) {
+    return "< " + parseFloat(minimumNumber?.toExponential()).toFixed(digits);
+  }
+
+  const formatedValue =
+    new BigNumber(num)
+      .div(SI[i].value)
+      .toFixed(digits, roundingModeCombined)
+      .toString()
+      .replace(rx, "$1") + SI[i].symbol;
+
+  return formatNumberWithComma(formatedValue);
+};

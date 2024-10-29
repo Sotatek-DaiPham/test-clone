@@ -4,6 +4,7 @@ export const ErrorCode = {
 };
 
 export const LIMIT_ITEMS_TABLE = 10;
+export const LIMIT_COIN_ITEMS_TABLE = 100;
 
 export const MINIMUM_BUY_AMOUNT = 0.1;
 

@@ -1,15 +1,16 @@
 import ProjectCard from "@/app/(sidebar-layout)/_components/ProjectCard";
 import AppDivider from "@/components/app-divider";
 import AppInput from "@/components/app-input";
-import AppPagination from "@/components/app-pagination";
+import AppPaginationCustom from "@/components/app-pagination/app-pagination-custom";
 import NoData from "@/components/no-data";
-import ShowingPage from "@/components/showing-page";
-import { EDirection, LIMIT_ITEMS_TABLE } from "@/constant";
+import { EDirection, LIMIT_COIN_ITEMS_TABLE } from "@/constant";
 import { API_PATH } from "@/constant/api-path";
 import { IProjectCardResponse } from "@/entities/my-profile";
 import { BeSuccessResponse } from "@/entities/response";
 import { useAppSearchParams } from "@/hooks/useAppSearchParams";
 import useDebounce from "@/hooks/useDebounce";
+import useSocket from "@/hooks/useSocket";
+import { ESocketEvent } from "@/libs/socket/constants";
 import { getAPI } from "@/service";
 import { useQuery } from "@tanstack/react-query";
 import { Spin } from "antd";
@@ -17,16 +18,13 @@ import { AxiosResponse } from "axios";
 import get from "lodash/get";
 import { useEffect, useState } from "react";
 import TabTitle from "../../TabTitle";
-import AppPaginationCustom from "@/components/app-pagination/app-pagination-custom";
-import useSocket from "@/hooks/useSocket";
-import { ESocketEvent } from "@/libs/socket/constants";
 
 const CoinCreatedTab = ({ walletAddress }: { walletAddress: string }) => {
   const { addEvent, isConnected, removeEvent } = useSocket();
   const { searchParams } = useAppSearchParams("myProfile");
   const [params, setParams] = useState<any>({
     page: 1,
-    limit: LIMIT_ITEMS_TABLE,
+    limit: LIMIT_COIN_ITEMS_TABLE,
   });
   const [search, setSearch] = useState<string>("");
 
@@ -34,7 +32,7 @@ const CoinCreatedTab = ({ walletAddress }: { walletAddress: string }) => {
     setParams({ ...params, page: 1 })
   );
 
-  const { data, isPending, isError, refetch } = useQuery({
+  const { data, isPending, refetch } = useQuery({
     queryKey: ["coin-created", params, debounceSearch, searchParams],
     queryFn: async () => {
       return getAPI(API_PATH.TOKEN.COINS_CREATED, {
@@ -59,10 +57,12 @@ const CoinCreatedTab = ({ walletAddress }: { walletAddress: string }) => {
     if (isConnected) {
       addEvent(ESocketEvent.BUY, (data) => {
         if (data) {
+          refetch();
         }
       });
       addEvent(ESocketEvent.SELL, (data) => {
         if (data) {
+          refetch();
         }
       });
     }

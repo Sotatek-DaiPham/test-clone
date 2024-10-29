@@ -30,7 +30,7 @@ const getAgeMilliseconds = (interval: string): number => {
   if (stringIntervals[interval]) {
     return stringIntervals[interval] * 60 * 1000;
   } else {
-    return Number(interval?.replace("M", "")) * 1000;
+    return Number(interval?.replace("M", "")) * 60 * 1000;
   }
 };
 

@@ -30,7 +30,7 @@ const GeneralInfo = () => {
           <div className="text-14px-normal text-neutral-7">Creator</div>
           <Link
             href={PATH_ROUTER.USER_PROFILE(tokenDetail?.userWalletAddress)}
-            className="py-[2px] px-3 rounded-[16px] bg-[rgba(15,190,90,0.20)] text-[#0FBE5A] text-14px-normal"
+            className="py-[2px] px-3 rounded-[16px] bg-[rgba(15,190,90,0.20)] text-[#0FBE5A] text-14px-normal hover:underline"
           >
             <AppTruncateText text={tokenDetail?.username} maxLength={6} />
           </Link>

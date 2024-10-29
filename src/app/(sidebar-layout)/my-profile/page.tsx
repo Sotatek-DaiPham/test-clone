@@ -29,7 +29,7 @@ const MyProfilePage = () => {
 
   const tabs = [
     {
-      label: "My profile",
+      label: "My Profile",
       key: ETabsMyProfile.MY_PROFILE,
       children: (
         <MyProfileTab apiPath={API_PATH.USER.PROFILE(userAddress as string)} />
@@ -43,7 +43,7 @@ const MyProfilePage = () => {
       icon: <Image src={PortfolioIcon} alt="my-portfolio" />,
     },
     {
-      label: "Coin created",
+      label: "Coin Created",
       key: ETabsMyProfile.COIN_CREATED,
       children: <CoinCreatedTab walletAddress={userAddress as string} />,
       icon: <Image src={DollarCircleUpIcon} alt="coin-created" />,
@@ -61,7 +61,7 @@ const MyProfilePage = () => {
       icon: <Image src={FollowingIcon} alt="following" />,
     },
     {
-      label: "My replies",
+      label: "My Replies",
       key: ETabsMyProfile.MY_REPLIES,
       children: <MyRepliesTab />,
       icon: <Image src={MyRepliesIcon} alt="my-replies" />,

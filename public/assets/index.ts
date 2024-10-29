@@ -80,3 +80,4 @@ export { default as TableFilterIcon } from "./icons/table-filter.svg";
 // toast message
 export { default as SuccessIcon } from "./icons/tick-circle.svg";
 export { default as ErrorIcon } from "./icons/info-circle.svg";
+export { default as ShowEyesIcon } from "./icons/eye-show.svg";
