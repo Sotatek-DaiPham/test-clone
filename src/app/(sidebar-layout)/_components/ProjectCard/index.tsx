@@ -61,7 +61,7 @@ const ProjectCard = ({
             {!footer && !header && (
               <div className="text-primary-7 flex w-full items-center flex-row !text-12px-normal">
                 <div className="mr-1 !min-w-[55px]">Create by</div>
-                <div className="w-[141px] sm:w-[45px] md:w-[109px] 2md:w-[173] lg:w-[107] xl:w-[70px] 2xl:w-[123px] 3xl:w-[211px]">
+                <div className="w-[80px] 2xs:w-[125px] 3xs:w-[141px] sm:w-[45px] md:w-[109px] 2md:w-[173] lg:w-[107] xl:w-[70px] 2xl:w-[123px] 3xl:w-[211px]">
                   <EllipsisTextWithTooltip
                     onClick={(e: any) => {
                       e.stopPropagation();
