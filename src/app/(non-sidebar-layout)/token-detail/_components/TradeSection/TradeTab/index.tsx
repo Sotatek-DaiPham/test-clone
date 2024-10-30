@@ -73,11 +73,11 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
     (state) => state.user
   );
   const { error, success } = useContext(NotificationContext);
-  const { allowance } = useUsdtAllowance(address);
+  const { allowance, refetch: refetchAllownce } = useUsdtAllowance(address);
   const [openSettingModal, setOpenSettingModal] = useState(false);
   const [formSetting] = Form.useForm<FormSetting>();
   const [form] = Form.useForm<{ amount: string }>();
-  const { tokenDetail, tokenDetailSC, refetch } = useTokenDetail();
+  const { tokenDetail, refetchDetail } = useTokenDetail();
   const [loadingStatus, setLoadingStatus] = useState({
     buyToken: false,
     sellToken: false,
@@ -98,7 +98,6 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
     envs.TOKEN_FACTORY_ADDRESS || ""
   );
 
-  const isTokenListed = tokenDetailSC?.isListed;
   const isTokenMint = !!tokenDetail?.contractAddress;
 
   const amountValue = useWatch(AMOUNT_FIELD_NAME, form);
@@ -193,7 +192,8 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
   const handleTransactionSuccess = () => {
     form.resetFields();
     setIsOpenApproveModal(false);
-    refetch();
+    refetchDetail();
+    refetchAllownce();
     success({
       message: "Transaction completed",
       key: "1",
@@ -454,7 +454,7 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
           <span className="text-white-neutral text-14px-medium">
             {" "}
             {coinType === ECoinType.MemeCoin
-              ? `${nFormatter(usdtShouldPay, 6) || 0} USDT`
+              ? `${nFormatter(usdtShouldPay) || 0} USDT`
               : `${nFormatter(tokenWillReceive) || 0} ${tokenDetail?.symbol}`}
           </span>
         </div>
@@ -516,14 +516,14 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
               tokenImageSrc={tokenDetail?.avatar}
               tokenSymbol={tokenDetail?.symbol}
               onTokenChange={(token) => setCoinType(token)}
-              regex={REGEX_INPUT_DECIMAL(0, 2)}
+              regex={REGEX_INPUT_DECIMAL(0, 6)}
               isSwap
             />
           ) : (
             <AppInputBalance
               tokenImageSrc={tokenDetail?.avatar}
               tokenSymbol={tokenDetail?.symbol}
-              regex={REGEX_INPUT_DECIMAL(0, 2)}
+              regex={REGEX_INPUT_DECIMAL(0, 6)}
             />
           )}
         </Form.Item>

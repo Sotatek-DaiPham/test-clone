@@ -21,6 +21,8 @@ import PriceSection from "../_components/PriceSection";
 import TabsSection from "../_components/TabsSection";
 import TokenInfoSection from "../_components/TokenInfoSection";
 import TradeSection from "../_components/TradeSection";
+import { ISocketData } from "@/interfaces/token";
+import useWalletAuth from "@/hooks/useWalletAuth";
 
 const TradingView = dynamic(() => import("@/components/app-trading-view"), {
   ssr: false,
@@ -28,9 +30,10 @@ const TradingView = dynamic(() => import("@/components/app-trading-view"), {
 
 const TokenDetailPage = () => {
   const { isDesktop } = useWindowSize();
+  const { userAddress, accessToken } = useWalletAuth();
   const { addEvent, isConnected, removeEvent } = useSocket();
   const router = useRouter();
-  const { tokenDetail } = useTokenDetail();
+  const { tokenDetail, refetchDetail } = useTokenDetail();
   const { mutateAsync: viewToken } = useMutation({
     mutationFn: (
       tokenId: number
@@ -44,26 +47,41 @@ const TokenDetailPage = () => {
   });
 
   useEffect(() => {
-    if (tokenDetail?.id) {
+    if (tokenDetail?.id && accessToken) {
       viewToken(tokenDetail?.id);
     }
   }, [tokenDetail?.id]);
 
   useEffect(() => {
     if (isConnected) {
-      addEvent(ESocketEvent.BUY, (data) => {
-        if (data) {
-          console.log("data", data);
+      addEvent(ESocketEvent.BUY, (data: ISocketData) => {
+        if (
+          data.data.tokenAddress === tokenDetail?.contractAddress &&
+          data.data.userAddress.toLowerCase() === userAddress?.toLowerCase()
+        ) {
+          console.log("buy event");
+          refetchDetail();
         }
       });
-      addEvent(ESocketEvent.SELL, (data) => {
-        if (data) {
-          console.log("data", data);
+      addEvent(ESocketEvent.SELL, (data: ISocketData) => {
+        if (
+          data.data.tokenAddress === tokenDetail?.contractAddress &&
+          data.data.userAddress.toLowerCase() === userAddress?.toLowerCase()
+        ) {
+          console.log("sell event");
+          refetchDetail();
         }
       });
-      addEvent(ESocketEvent.CREATE_TOKEN, (data) => {
-        if (data) {
-          console.log("data", data);
+      addEvent(ESocketEvent.CREATE_TOKEN, (data: ISocketData) => {
+        console.log(
+          "buy event",
+          data.data.tokenAddress === tokenDetail?.contractAddress
+        );
+        if (
+          data.data.userAddress.toLowerCase() === userAddress?.toLowerCase()
+        ) {
+          console.log("create token event");
+          refetchDetail();
         }
       });
     }

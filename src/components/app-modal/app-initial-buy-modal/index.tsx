@@ -3,7 +3,7 @@ import AppButton from "@/components/app-button";
 import AppInputBalance from "@/components/app-input/app-input-balance";
 import { AMOUNT_FIELD_NAME, MINIMUM_BUY_AMOUNT } from "@/constant";
 import { REGEX_INPUT_DECIMAL } from "@/constant/regex";
-import { formatRoundFloorDisplayWithCompare } from "@/helpers/formatNumber";
+import { nFormatter } from "@/helpers/formatNumber";
 import { ECoinType } from "@/interfaces/token";
 import { Form, FormInstance, ModalProps } from "antd";
 import BigNumber from "bignumber.js";
@@ -123,7 +123,7 @@ const InitialBuyModal = ({
                 tokenImageSrc={tokenImage}
                 tokenSymbol={tokenSymbol}
                 onTokenChange={(token) => setCoinType(token)}
-                regex={REGEX_INPUT_DECIMAL(0, 2)}
+                regex={REGEX_INPUT_DECIMAL(0, 6)}
                 isSwap
               />
             </Form.Item>
@@ -144,12 +144,8 @@ const InitialBuyModal = ({
               : "You will receive "}
             <span className="text-white-neutral text-14px-medium">
               {coinType === ECoinType.MemeCoin
-                ? `${
-                    formatRoundFloorDisplayWithCompare(usdtShouldPay) || 0
-                  } USDT`
-                : `${
-                    formatRoundFloorDisplayWithCompare(tokenWillReceive) || 0
-                  } ${tokenSymbol}`}
+                ? `${nFormatter(usdtShouldPay) || 0} USDT`
+                : `${nFormatter(tokenWillReceive) || 0} ${tokenSymbol}`}
             </span>
           </div>
           <div className="text-14px-normal text-neutral-7">

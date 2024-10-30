@@ -36,5 +36,6 @@ export const API_PATH = {
     TRADING_VIEW: "/user-trading-histories/trading-view",
     LEADERBOARD: "/user-trading-histories/leaderboard",
     MY_RANK: "/user-trading-histories/my-rank",
+    CONFIRM: (id: string) => `/user-trading-histories/confirm/${id}`,
   },
 };
