@@ -30,7 +30,7 @@ const TradingView = dynamic(() => import("@/components/app-trading-view"), {
 
 const TokenDetailPage = () => {
   const { isDesktop } = useWindowSize();
-  const { userAddress } = useWalletAuth();
+  const { userAddress, accessToken } = useWalletAuth();
   const { addEvent, isConnected, removeEvent } = useSocket();
   const router = useRouter();
   const { tokenDetail, refetchDetail } = useTokenDetail();
@@ -47,7 +47,7 @@ const TokenDetailPage = () => {
   });
 
   useEffect(() => {
-    if (tokenDetail?.id) {
+    if (tokenDetail?.id && accessToken) {
       viewToken(tokenDetail?.id);
     }
   }, [tokenDetail?.id]);
