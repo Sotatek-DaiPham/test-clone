@@ -141,7 +141,6 @@ export default async function onInitTradingView({
         onError: any,
         isFirstCall: boolean
       ) => {
-        console.log("resolution", resolution);
         if (isFirstCall && tokenAddress) {
           const data = await getData({
             resolution,

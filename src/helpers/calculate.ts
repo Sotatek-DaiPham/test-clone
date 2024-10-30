@@ -48,6 +48,9 @@ export const countAgeToken = (createdAt: any): string => {
     dayjs(createdAt).format("YYYY-MM-DD HH:mm"),
     "month"
   );
+  if (Math.floor(diffMonth) > 12) {
+    return ">12m";
+  }
   if (Math.floor(diffMonth) > 0) {
     return `${Math.floor(diffMonth)}mo`;
   }
@@ -56,6 +59,9 @@ export const countAgeToken = (createdAt: any): string => {
   }
   if (Math.floor(diffHour) > 0) {
     return `${Math.floor(diffHour)}h`;
+  }
+  if (Math.floor(diffMinute) < 1) {
+    return "<1m";
   }
   return `${Math.floor(diffMinute) || 1}m`;
 };

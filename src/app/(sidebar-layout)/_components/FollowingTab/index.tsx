@@ -127,19 +127,19 @@ const FollowingTab = () => {
                 key={index}
                 header={
                   searchParams?.filter === "created" ? null : (
-                    <div className="mb-3">
+                    <div className="mb-3 flex-row flex items-center">
                       <EllipsisTextWithTooltip
-                        className="mr-2 cursor-pointer text-neutral-7"
+                        className="mr-2 cursor-pointer text-neutral-7 hover:!underline"
                         onClick={(e) => {
                           e.stopPropagation();
                           router.push(
-                            PATH_ROUTER.USER_PROFILE(project?.wallet_address)
+                            PATH_ROUTER.USER_PROFILE(project?.walletAddress)
                           );
                         }}
                         value={project?.username}
                         maxWidth={100}
                       />
-                      <span
+                      <div
                         className={
                           project?.action === "BUY"
                             ? "text-success-main"
@@ -148,21 +148,25 @@ const FollowingTab = () => {
                             : ""
                         }
                       >
-                        {project?.action || "-"}
-                      </span>
-                      <span className="mx-1 ml-2">
+                        {project?.action === "BUY"
+                          ? "bought"
+                          : project?.action === "SELL"
+                          ? "sold"
+                          : "-"}
+                      </div>
+                      <div className="mx-1 ml-2">
                         {formatAmount(
                           convertNumber(project?.amount, project?.decimal)
                         ) || "-"}
                         &nbsp;
                         {project?.symbol}
-                      </span>
-                      <span className="text-14px-normal">for</span>
-                      <span className="mx-1 ml-2">
-                        {formatAmount(convertNumber(project?.usdt_amount, 6)) ||
+                      </div>
+                      <div className="text-14px-normal">for</div>
+                      <div className="mx-1 ml-2">
+                        {formatAmount(convertNumber(project?.usdtAmount, 6)) ||
                           "-"}
                         &nbsp;USDT
-                      </span>
+                      </div>
                     </div>
                   )
                 }

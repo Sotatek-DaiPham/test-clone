@@ -3,14 +3,14 @@ import AppImage from "@/components/app-image";
 import { PATH_ROUTER } from "@/constant/router";
 import { IFollowerResponse } from "@/entities/my-profile";
 import { formatAmount } from "@/helpers/formatNumber";
-import { useAppSelector } from "@/libs/hooks";
+import useWalletAuth from "@/hooks/useWalletAuth";
+import useWindowSize from "@/hooks/useWindowSize";
 import { ImageDefaultIcon } from "@public/assets";
 import { useConnectModal } from "@rainbow-me/rainbowkit";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useAccount } from "wagmi";
 import { EFollow } from "../Tabs/MyProfileTab";
-import useWindowSize from "@/hooks/useWindowSize";
 
 interface IUserFollow {
   data: IFollowerResponse;
@@ -19,7 +19,7 @@ interface IUserFollow {
 const UserFollow = ({ data, onFollow }: IUserFollow) => {
   const router = useRouter();
   const { openConnectModal } = useConnectModal();
-  const { userId } = useAppSelector((state) => state.user);
+  const { accessToken } = useWalletAuth();
   const { address: userAddress } = useAccount();
   const { isMobile } = useWindowSize();
   return (
@@ -68,10 +68,12 @@ const UserFollow = ({ data, onFollow }: IUserFollow) => {
           {userAddress !== data?.wallet_address && (
             <AppButton
               size="small"
-              typeButton={data?.isFollowing ? "secondary" : "primary"}
+              typeButton={
+                accessToken && data?.isFollowing ? "secondary" : "primary"
+              }
               customClass="!w-[100px] !rounded-full"
               onClick={
-                !!userId
+                !!accessToken
                   ? (e) => {
                       e.stopPropagation();
                       onFollow({
@@ -86,7 +88,7 @@ const UserFollow = ({ data, onFollow }: IUserFollow) => {
                   : openConnectModal
               }
             >
-              {data?.isFollowing ? "Unfollow" : "Follow"}
+              {accessToken && data?.isFollowing ? "Unfollow" : "Follow"}
             </AppButton>
           )}
         </div>

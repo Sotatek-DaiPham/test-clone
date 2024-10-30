@@ -66,7 +66,12 @@ const EditProfileModal = ({ data, onOk, ...props }: IEditProfileModalProps) => {
       }
       await updateProfile({
         ...values,
-        avatar: uploadedFile ? uploadedFile?.data : data?.avatar,
+        avatar:
+          form.getFieldValue("avatar")?.src && uploadedFile
+            ? uploadedFile?.data
+            : form.getFieldValue("avatar")?.src && !uploadedFile
+            ? data?.avatar
+            : null,
       });
     } catch (error) {}
   };
@@ -79,12 +84,16 @@ const EditProfileModal = ({ data, onOk, ...props }: IEditProfileModalProps) => {
   };
 
   useEffect(() => {
+    form.setFieldsValue({
+      username: data.username,
+      bio: data.bio,
+    });
     form.setFieldValue("avatar", { src: data?.avatar });
   }, [data]);
 
   return (
     <AppModal
-      width={510}
+      width={573}
       footer={false}
       className="p-6"
       title={false}

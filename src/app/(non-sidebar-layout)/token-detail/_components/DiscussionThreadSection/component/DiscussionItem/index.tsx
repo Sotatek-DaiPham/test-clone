@@ -6,20 +6,25 @@ import { ArrowTurnDownRightIcon } from "@public/assets";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
+import "./styles.scss";
 interface DiscussionItemProps {
   data: DiscussionThreadItem;
   onShowReplies: (commentId: number, replyUserId: number) => void;
   selectedReplies: IReplyThreadItem[];
+  isShowReplySection?: boolean;
+  replyTo?: any;
 }
 
 const DiscussionItem: React.FC<DiscussionItemProps> = ({
   data,
   onShowReplies,
   selectedReplies,
+  replyTo,
+  isShowReplySection = false,
 }) => {
   const router = useRouter();
   return (
-    <div className="flex flex-col gap-1 mb-6">
+    <div className="discussion-item flex flex-col gap-1 mb-6">
       <div className="px-6 py-4 rounded-2xl bg-neutral-2 flex flex-col gap-4">
         <div className="flex items-center gap-3">
           <div className="p-auto">
@@ -31,7 +36,7 @@ const DiscussionItem: React.FC<DiscussionItemProps> = ({
           </div>
           <div className="flex flex-col">
             <span
-              className="text-neutral-9 text-16px-bold cursor-pointer"
+              className="text-neutral-9 text-16px-bold cursor-pointer hover:!underline truncate-1-line"
               onClick={() =>
                 router.push(PATH_ROUTER.USER_PROFILE(data?.wallet_address))
               }
@@ -44,6 +49,13 @@ const DiscussionItem: React.FC<DiscussionItemProps> = ({
           </div>
         </div>
         <p className="text-neutral-9 text-14px-normal">{data.content}</p>
+        {data.image && (
+          <AppImage
+            className="comment-image rounded-[12px] overflow-hidden w-[80px] h-[80px] object-cover"
+            src={data.image}
+            preview={true}
+          />
+        )}
       </div>
 
       <div className="flex flex-col ml-6 gap-2">
@@ -61,11 +73,12 @@ const DiscussionItem: React.FC<DiscussionItemProps> = ({
                   .slice(0, 2)
                   .map((comment, index) => (
                     <AppImage
+                      // key={`User ${index + 1} 123asd`}
                       key={index}
                       className={`!bg-neutral-4 w-[18px] h-[18px] rounded-full overflow-hidden flex border-2 border-neutral-2 ${
                         index === 1 ? "absolute left-[14px]" : ""
                       }`}
-                      src={comment.avatar || ""}
+                      src={comment.avatar || DEFAULT_AVATAR}
                       alt={`User ${index + 1}`}
                     />
                   ))}
@@ -74,13 +87,18 @@ const DiscussionItem: React.FC<DiscussionItemProps> = ({
 
           <span
             className={`${
+              (isShowReplySection && replyTo?.commentId === data.comment_id) ||
               selectedReplies.some(
                 (reply) => Number(reply?.reply_id) === Number(data?.comment_id)
               )
                 ? "text-primary-main"
                 : "text-white"
             } text-14px-medium`}
-          >{`Reply (${data.number_replies})`}</span>
+          >{`Reply ${
+            data?.number_replies && data?.number_replies > 0
+              ? `${data?.number_replies}`
+              : ""
+          }`}</span>
         </div>
       </div>
     </div>

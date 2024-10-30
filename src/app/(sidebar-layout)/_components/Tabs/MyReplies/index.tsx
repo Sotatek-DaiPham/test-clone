@@ -1,11 +1,13 @@
+"use-client";
 import AppButton from "@/components/app-button";
 import AppDivider from "@/components/app-divider";
 import AppImage from "@/components/app-image";
 import AppInput from "@/components/app-input";
 import AppPaginationCustom from "@/components/app-pagination/app-pagination-custom";
 import NoData from "@/components/no-data";
-import { EDirection, LIMIT_ITEMS_TABLE } from "@/constant";
+import { EDirection, LIMIT_COIN_ITEMS_TABLE } from "@/constant";
 import { API_PATH } from "@/constant/api-path";
+import { PATH_ROUTER } from "@/constant/router";
 import { IMyRepliesResponse } from "@/entities/my-profile";
 import { BeSuccessResponse } from "@/entities/response";
 import { getTimeDDMMMYYYYHHMM } from "@/helpers/date-time";
@@ -21,7 +23,6 @@ import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import TabTitle from "../../TabTitle";
-import { PATH_ROUTER } from "@/constant/router";
 
 const ReplyItem = ({ data }: { data: IMyRepliesResponse }) => {
   const router = useRouter();
@@ -31,13 +32,13 @@ const ReplyItem = ({ data }: { data: IMyRepliesResponse }) => {
         <div className="!min-w-[40px] !w-[40px] !h-[40px] overflow-hidden flex items-center justify-center rounded-full bg-primary-7">
           {data?.avatar ? (
             <AppImage
-              className="!bg-neutral-4 [&>img]:!object-cover"
+              className="!bg-neutral-4 !min-w-[40px] !w-[40px] !h-[40px] flex items-center justify-center rounded-full [&>img]:object-cover [&>img]:!w-full [&>img]:!h-full"
               src={data?.avatar}
               alt="logo"
             />
           ) : (
             <Image
-              className="!bg-neutral-4 [&>img]:!object-cover"
+              className="!bg-neutral-4 !min-w-[40px] !w-[40px] !h-[40px] [&>img]:!object-cover"
               alt="logo"
               src={ImageDefaultIcon}
             />
@@ -59,7 +60,8 @@ const ReplyItem = ({ data }: { data: IMyRepliesResponse }) => {
         customClass="!w-fit !rounded-full"
         classChildren="!flex !flex-row !items-center !text-primary-main"
         onClick={() => {
-          router.push(PATH_ROUTER.TOKEN_DETAIL(data?.tokenId), {
+          const query = `?replyId=${data?.replyId}&replyUserId=${data?.replyUserId}`;
+          router.push(`${PATH_ROUTER.TOKEN_DETAIL(data?.tokenId)}${query}`, {
             scroll: true,
           });
         }}
@@ -79,7 +81,7 @@ const MyRepliesTab = () => {
   const { searchParams, setSearchParams } = useAppSearchParams("myProfile");
   const [params, setParams] = useState<any>({
     page: 1,
-    limit: LIMIT_ITEMS_TABLE,
+    limit: LIMIT_COIN_ITEMS_TABLE,
   });
   const [search, setSearch] = useState<string>("");
 
@@ -87,7 +89,7 @@ const MyRepliesTab = () => {
     setParams({ ...params, page: 1 })
   );
 
-  const { data, isPending, isError, refetch } = useQuery({
+  const { data, isPending } = useQuery({
     queryKey: ["my-replies", params, debounceSearch, searchParams],
     queryFn: async () => {
       return getAPI(API_PATH.USER.MY_REPLIES, {
