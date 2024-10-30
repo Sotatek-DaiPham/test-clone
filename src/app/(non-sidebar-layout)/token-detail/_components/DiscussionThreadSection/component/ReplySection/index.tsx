@@ -16,6 +16,7 @@ interface DiscussionThreadItem {
   created_at: string;
   content: string;
   wallet_address: string;
+  image?: string;
 }
 
 interface ReplySectionProps {
@@ -57,7 +58,6 @@ const ReplySection: React.FC<ReplySectionProps> = ({
       if (values?.image && values?.image instanceof File) {
         imageUrl = await handleUpload(values.image);
       }
-      console.log("imageUrl", imageUrl);
       const payload = {
         userId: Number(userId),
         tokenId: Number(tokenId),
@@ -66,7 +66,6 @@ const ReplySection: React.FC<ReplySectionProps> = ({
         content: values.comment,
         image: imageUrl,
       };
-      console.log("payload", payload);
       await postCommentMutation.mutateAsync(payload);
       form.resetFields();
 
@@ -77,7 +76,7 @@ const ReplySection: React.FC<ReplySectionProps> = ({
   };
 
   return (
-    <div className="flex flex-col gap-4 bg-neutral-2 px-6 py-4 rounded-tr-2xl rounded-bl-2xl rounded-br-2xl flex-1 h-fit relative">
+    <div className="discussion-item flex flex-col gap-4 bg-neutral-2 px-6 py-4 rounded-tr-2xl rounded-bl-2xl rounded-br-2xl flex-1 h-fit relative">
       <span className="text-neutral-9 text-16px-bold">
         {`View replies (${selectedReplies.length})`}
       </span>
@@ -124,6 +123,13 @@ const ReplySection: React.FC<ReplySectionProps> = ({
               <p className="text-neutral-9 text-14px-normal break-words max-w-[300px] md:max-w-[400px]">
                 {reply.content}
               </p>
+              {reply.image && (
+                <AppImage
+                  className="comment-image rounded-[12px] overflow-hidden w-[80px] h-[80px]"
+                  src={reply.image}
+                  preview={true}
+                />
+              )}
             </div>
           </div>
         ))}
