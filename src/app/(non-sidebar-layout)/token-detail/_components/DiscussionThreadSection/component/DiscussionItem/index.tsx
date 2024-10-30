@@ -11,12 +11,16 @@ interface DiscussionItemProps {
   data: DiscussionThreadItem;
   onShowReplies: (commentId: number, replyUserId: number) => void;
   selectedReplies: IReplyThreadItem[];
+  isShowReplySection?: boolean;
+  replyTo?: any;
 }
 
 const DiscussionItem: React.FC<DiscussionItemProps> = ({
   data,
   onShowReplies,
   selectedReplies,
+  replyTo,
+  isShowReplySection = false,
 }) => {
   const router = useRouter();
   return (
@@ -32,7 +36,7 @@ const DiscussionItem: React.FC<DiscussionItemProps> = ({
           </div>
           <div className="flex flex-col">
             <span
-              className="text-neutral-9 text-16px-bold cursor-pointer"
+              className="text-neutral-9 text-16px-bold cursor-pointer hover:!underline truncate-1-line"
               onClick={() =>
                 router.push(PATH_ROUTER.USER_PROFILE(data?.wallet_address))
               }
@@ -69,6 +73,7 @@ const DiscussionItem: React.FC<DiscussionItemProps> = ({
                   .slice(0, 2)
                   .map((comment, index) => (
                     <AppImage
+                      // key={`User ${index + 1} 123asd`}
                       key={index}
                       className={`!bg-neutral-4 w-[18px] h-[18px] rounded-full overflow-hidden flex border-2 border-neutral-2 ${
                         index === 1 ? "absolute left-[14px]" : ""
@@ -82,6 +87,7 @@ const DiscussionItem: React.FC<DiscussionItemProps> = ({
 
           <span
             className={`${
+              (isShowReplySection && replyTo?.commentId === data.comment_id) ||
               selectedReplies.some(
                 (reply) => Number(reply?.reply_id) === Number(data?.comment_id)
               )

@@ -176,7 +176,7 @@ const TradeHistory = () => {
       render(value, record, index) {
         return (
           <div
-            className="text-[#0184FC] px-3 text-16px-normal rounded-xl bg-[rgba(1,132,252,0.20)] w-fit cursor-pointer"
+            className="text-[#0184FC] px-3 text-16px-normal rounded-xl bg-[rgba(1,132,252,0.20)] w-fit cursor-pointer hover:!underline"
             onClick={(e) => {
               e.stopPropagation();
               router.push(PATH_ROUTER.USER_PROFILE(record.user_address));

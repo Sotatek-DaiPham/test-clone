@@ -70,7 +70,7 @@ const TopUser = ({
                   width={200}
                 />
                 <p
-                  className="text-14px-normal text-neutral-7"
+                  className="text-14px-normal text-neutral-7 hover:underline"
                   onClick={() =>
                     router.push(PATH_ROUTER.USER_PROFILE(data?.walletAddress))
                   }

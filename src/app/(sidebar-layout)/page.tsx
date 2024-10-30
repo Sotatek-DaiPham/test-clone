@@ -24,6 +24,7 @@ import AllTab from "./_components/AllTab";
 import FollowingTab from "./_components/FollowingTab";
 import ProjectCard from "./_components/ProjectCard";
 import TradeHistoryItem from "./_components/TradeHistoryItem";
+import ModalHowItsWork from "./_components/ModalHowItsWork";
 
 enum ETabsTerminal {
   ALL = "all",
@@ -35,6 +36,7 @@ export default function Home() {
   const { accessToken } = useWalletAuth();
   const { searchParams, setSearchParams } = useAppSearchParams("terminal");
   const [activeTab, setActiveTab] = useState<string>(ETabsTerminal.ALL);
+  const [isShowModal, setIsShowModal] = useState<boolean>(false);
 
   const { data, refetch } = useQuery({
     queryKey: ["king-of-the-sky"],
@@ -148,6 +150,7 @@ export default function Home() {
                 </div>
               </div>
               <AppButton
+                onClick={() => setIsShowModal(true)}
                 typeButton="teriary"
                 customClass="!rounded-3xl !w-fit !bg-white-neutral"
                 classChildren="!text-neutral-1 !text-14px-bold p-6"
@@ -192,6 +195,14 @@ export default function Home() {
           />
         </div>
       </div>
+      <ModalHowItsWork
+        open={isShowModal}
+        onOk={() => {
+          setIsShowModal(false);
+        }}
+        onCancel={() => setIsShowModal(false)}
+        destroyOnClose={true}
+      />
     </div>
   );
 }

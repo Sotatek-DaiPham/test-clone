@@ -2,6 +2,7 @@
   .ant-upload {
     width: 100% !important;
     span.ant-upload {
+      flex-direction: row !important;
       height: 125px !important;
       background: transparent !important;
       // min-width: fit-content !important;

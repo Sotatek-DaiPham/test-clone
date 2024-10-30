@@ -1,32 +1,34 @@
 "use client";
 import AppDivider from "@/components/app-divider";
+import AppImage from "@/components/app-image";
 import AppInput from "@/components/app-input";
+import AppPaginationCustom from "@/components/app-pagination/app-pagination-custom";
+import EllipsisTextWithTooltip from "@/components/app-tooltip/EllipsisTextWithTooltip";
 import NoData from "@/components/no-data";
-import { EEventNoti, LIMIT_ITEMS_TABLE } from "@/constant";
+import {
+  EEventNoti,
+  LIMIT_COIN_ITEMS_TABLE
+} from "@/constant";
 import { API_PATH } from "@/constant/api-path";
+import { PATH_ROUTER } from "@/constant/router";
 import {
   Information,
-  INotificationResponse,
-  Token,
+  INotificationResponse
 } from "@/entities/notification";
 import { BeSuccessResponse } from "@/entities/response";
 import { getTimeDDMMMYYYYHHMM } from "@/helpers/date-time";
+import { convertNumber, formatAmount } from "@/helpers/formatNumber";
 import isAuth from "@/helpers/isAuth";
 import useDebounce from "@/hooks/useDebounce";
+import useWindowSize from "@/hooks/useWindowSize";
 import { getAPI } from "@/service";
 import { useQuery } from "@tanstack/react-query";
 import { Spin } from "antd";
 import { AxiosResponse } from "axios";
 import { get } from "lodash";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import TabTitle from "../_components/TabTitle";
-import EllipsisTextWithTooltip from "@/components/app-tooltip/EllipsisTextWithTooltip";
-import { useRouter } from "next/navigation";
-import { PATH_ROUTER } from "@/constant/router";
-import AppImage from "@/components/app-image";
-import { convertNumber, formatAmount } from "@/helpers/formatNumber";
-import useWindowSize from "@/hooks/useWindowSize";
-import AppPaginationCustom from "@/components/app-pagination/app-pagination-custom";
 
 const checkType = (type: string, data: Information) => {
   switch (type) {
@@ -92,7 +94,7 @@ const NotificationItem = ({ data }: { data: INotificationResponse }) => {
     <div className="my-2">
       <div className="text-16px-bold flex flex-row items-center mt-3 mb-2">
         <EllipsisTextWithTooltip
-          className="mr-2 cursor-pointer text-16px-bold text-neutral-9"
+          className="mr-2 cursor-pointer text-16px-bold text-neutral-9 hover:!underline"
           onClick={(e) => {
             e.stopPropagation();
             router.push(
@@ -106,7 +108,7 @@ const NotificationItem = ({ data }: { data: INotificationResponse }) => {
         />
         {checkType(get(data, "information.action", ""), data?.information)}
         <EllipsisTextWithTooltip
-          className="mr-2 cursor-pointer text-16px-bold text-[var(--color-noti-token)]"
+          className="mr-2 cursor-pointer text-16px-bold text-[var(--color-noti-token)] hover:!underline"
           onClick={(e) => {
             e.stopPropagation();
             router.push(
@@ -128,12 +130,12 @@ const NotificationItem = ({ data }: { data: INotificationResponse }) => {
 const NotificationPage = () => {
   const [params, setParams] = useState<any>({
     page: 1,
-    limit: LIMIT_ITEMS_TABLE,
+    limit: LIMIT_COIN_ITEMS_TABLE,
   });
   const [search, setSearch] = useState<string>("");
   const debounceSearch = useDebounce(search);
 
-  const { data, isPending, isError, refetch } = useQuery({
+  const { data, isPending } = useQuery({
     queryKey: ["notification", params, debounceSearch],
     queryFn: async () => {
       return getAPI(API_PATH.USER.NOTIFICATION, {

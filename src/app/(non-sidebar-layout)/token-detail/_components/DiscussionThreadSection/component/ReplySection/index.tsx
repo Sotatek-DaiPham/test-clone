@@ -76,7 +76,7 @@ const ReplySection: React.FC<ReplySectionProps> = ({
   };
 
   return (
-    <div className="flex flex-col gap-4 bg-neutral-2 px-6 py-4 rounded-tr-2xl rounded-bl-2xl rounded-br-2xl flex-1 h-fit relative">
+    <div className="discussion-item flex flex-col gap-4 bg-neutral-2 px-6 py-4 rounded-tr-2xl rounded-bl-2xl rounded-br-2xl flex-1 h-fit relative">
       <span className="text-neutral-9 text-16px-bold">
         {`View replies (${selectedReplies.length})`}
       </span>
@@ -90,6 +90,10 @@ const ReplySection: React.FC<ReplySectionProps> = ({
       />
       <div className="max-h-[750px] overflow-y-auto">
         {selectedReplies.map((reply: DiscussionThreadItem) => (
+          // <div
+          //   key={`${Math.floor(Math.random() * 10000)}nameuserskk`}
+          //   className="flex flex-col gap-2 mb-4"
+          // >
           <div key={reply?.comment_id} className="flex flex-col gap-2 mb-4">
             <div className="flex flex-col gap-4">
               <div className="flex items-center gap-3">
@@ -102,7 +106,7 @@ const ReplySection: React.FC<ReplySectionProps> = ({
                 </div>
                 <div className="flex flex-col">
                   <span
-                    className="text-neutral-9 text-16px-bold break-words cursor-pointer"
+                    className="text-neutral-9 text-16px-bold break-words cursor-pointer hover:!underline truncate-1-line"
                     onClick={() =>
                       router.push(
                         PATH_ROUTER.USER_PROFILE(reply.wallet_address)

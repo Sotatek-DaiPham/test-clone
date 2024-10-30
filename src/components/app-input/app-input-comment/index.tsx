@@ -48,7 +48,12 @@ const AppInputComment: React.FC<AppInputCommentProps> = ({
     <Form form={form} onFinish={handleSubmit}>
       <Form.Item
         name="comment"
-        rules={[{ required: true, message: "Please enter your comment" }]}
+        rules={[
+          {
+            required: fileList.length > 0 ? false : true,
+            message: "Please enter your comment",
+          },
+        ]}
       >
         <CustomCommentInput
           ref={fileTextAreaRef}

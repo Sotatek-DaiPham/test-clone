@@ -5,6 +5,7 @@ import AppRoundedInfo from "@/components/app-rounded-info";
 import NoData from "@/components/no-data";
 import { API_PATH } from "@/constant/api-path";
 import { DiscussionThreadItem } from "@/entities/my-profile";
+import { useAppSearchParams } from "@/hooks/useAppSearchParams";
 import useWindowSize from "@/hooks/useWindowSize";
 import { useAppSelector } from "@/libs/hooks";
 import { getAPI, postFormDataAPI } from "@/service";
@@ -15,7 +16,7 @@ import {
 } from "@tanstack/react-query";
 import { Form, message, Spin } from "antd";
 import { useParams } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import DiscussionItem from "./component/DiscussionItem";
 import ReplySection from "./component/ReplySection";
@@ -24,6 +25,7 @@ const DiscussionThread = () => {
   const [form] = Form.useForm();
   const params = useParams();
   const { id: tokenId } = params;
+  const { searchParams, setSearchParams } = useAppSearchParams("reply");
   const queryClient = useQueryClient();
 
   const { accessToken: isAuthenticated } = useAppSelector(
@@ -37,7 +39,20 @@ const DiscussionThread = () => {
   const [replyTo, setReplyTo] = useState<{
     commentId: number | null;
     replyUserId: number | null;
-  }>({ commentId: null, replyUserId: null });
+  }>({
+    commentId: null,
+    replyUserId: null,
+  });
+
+  useLayoutEffect(() => {
+    if (searchParams?.replyId && !replyTo?.commentId) {
+      setIsShowReplySection(true);
+      setReplyTo({
+        commentId: Number(searchParams.replyId),
+        replyUserId: Number(searchParams?.replyUserId),
+      });
+    }
+  }, []);
 
   const fetchDiscussionThreads = async ({ pageParam = 1 }) => {
     const response = await getAPI(API_PATH.TOKEN.DISCUSSION_THREADS, {
@@ -99,6 +114,10 @@ const DiscussionThread = () => {
 
   const handleShowReplies = useCallback(
     async (commentId: number, replyUserId: number) => {
+      setSearchParams({
+        replyId: commentId,
+        replyUserId,
+      });
       setReplyTo({ commentId, replyUserId });
       await refetchReplies();
       setIsShowReplySection(true);
@@ -182,6 +201,7 @@ const DiscussionThread = () => {
   const handleCloseReplySection = () => {
     setIsShowReplySection(false);
     setReplyTo({ commentId: null, replyUserId: null });
+    setSearchParams("");
   };
 
   const dataLength = data?.pages.flatMap((page) => page.data).length || 0;
@@ -213,6 +233,8 @@ const DiscussionThread = () => {
                       data={item}
                       onShowReplies={handleShowReplies}
                       selectedReplies={selectedReplies}
+                      isShowReplySection={isShowReplySection}
+                      replyTo={replyTo}
                     />
                     {isMobile && replyTo?.commentId && (
                       <div className={`flex-1 w-full mb-6`}>
