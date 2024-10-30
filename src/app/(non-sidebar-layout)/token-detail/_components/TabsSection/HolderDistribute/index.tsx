@@ -75,8 +75,8 @@ const HolderDistribute = () => {
     },
     {
       title: "VALUE {$}",
-      dataIndex: "amount",
-      key: "amount",
+      dataIndex: "value",
+      key: "value",
       render(value, record, index) {
         return <div>{nFormatter(value)}</div>;
       },

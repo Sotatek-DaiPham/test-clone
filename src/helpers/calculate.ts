@@ -95,3 +95,51 @@ export const decreaseByPercent = (
   const factor = new BigNumber(1).minus(decrease.div(100));
   return original.multipliedBy(factor).toString();
 };
+
+const FEE_MULTIPLIER = 0.997; // 0.3% Uniswap fee
+
+type SwapFunction = (x: any, y: any, delta: any) => any;
+
+/**
+ * Calculates how much Token 2 you receive when swapping Token 1.
+ */
+export const swapToken1ForToken2: SwapFunction = (x, y, deltaX) => {
+  const k = x.multipliedBy(y); // Constant product k = x * y
+  const newY = k.dividedBy(x.plus(deltaX.multipliedBy(FEE_MULTIPLIER))); // New reserve of Token 2
+  return y.minus(newY); // Token 2 received
+};
+
+/**
+ * Calculates how much Token 1 you receive when swapping Token 2.
+ */
+export const swapToken2ForToken1: SwapFunction = (x, y, deltaY) => {
+  const k = x.multipliedBy(y); // Constant product k = x * y
+  const newX = k.dividedBy(y.plus(deltaY.multipliedBy(FEE_MULTIPLIER))); // New reserve of Token 1
+  return x.minus(newX); // Token 1 received
+};
+
+export const calculateUsdtShouldPayAfterListed = (
+  tokenReserve: BigNumber,
+  usdtReserve: BigNumber,
+  y: string
+): string => {
+  const k = tokenReserve.multipliedBy(usdtReserve);
+  const denominator = tokenReserve.minus(BigNumber(y));
+
+  const x = k.dividedBy(denominator).minus(usdtReserve);
+  const result = BigNumber(x).div(FEE_MULTIPLIER);
+
+  return result.toFixed();
+};
+
+export const calculateTokenReceiveAfterListed = (
+  tokenReserve: BigNumber,
+  usdtReserve: BigNumber,
+  x: string
+): string => {
+  const k = tokenReserve.multipliedBy(usdtReserve);
+  const discountedX = BigNumber(x).multipliedBy(FEE_MULTIPLIER);
+  const denominator = usdtReserve.plus(discountedX);
+  const result = tokenReserve.minus(k.dividedBy(denominator));
+  return result.toFixed();
+};
