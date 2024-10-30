@@ -2,7 +2,10 @@
 
 import AppInputComment from "@/components/app-input/app-input-comment";
 import AppRoundedInfo from "@/components/app-rounded-info";
+import NoData from "@/components/no-data";
 import { API_PATH } from "@/constant/api-path";
+import { DiscussionThreadItem } from "@/entities/my-profile";
+import useWindowSize from "@/hooks/useWindowSize";
 import { useAppSelector } from "@/libs/hooks";
 import { getAPI, postFormDataAPI } from "@/service";
 import {
@@ -10,14 +13,12 @@ import {
   useMutation,
   useQueryClient,
 } from "@tanstack/react-query";
-import { Form, message } from "antd";
+import { Form, message, Spin } from "antd";
 import { useParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import DiscussionItem from "./component/DiscussionItem";
 import ReplySection from "./component/ReplySection";
-import { DiscussionThreadItem } from "@/entities/my-profile";
-import useWindowSize from "@/hooks/useWindowSize";
 
 const DiscussionThread = () => {
   const [form] = Form.useForm();
@@ -25,7 +26,7 @@ const DiscussionThread = () => {
   const { id: tokenId } = params;
   const queryClient = useQueryClient();
 
-  const { accessToken: isAuthenticated, address } = useAppSelector(
+  const { accessToken: isAuthenticated } = useAppSelector(
     (state) => state.user
   );
   const { userId } = useAppSelector((state) => state.user);
@@ -171,12 +172,19 @@ const DiscussionThread = () => {
     }
   };
 
-  if (isLoading) return <div>Loading...</div>;
+  if (isLoading)
+    return (
+      <div>
+        <Spin />
+      </div>
+    );
 
   const handleCloseReplySection = () => {
     setIsShowReplySection(false);
     setReplyTo({ commentId: null, replyUserId: null });
   };
+
+  const dataLength = data?.pages.flatMap((page) => page.data).length || 0;
 
   return (
     <div className="flex gap-6 w-full">
@@ -186,57 +194,71 @@ const DiscussionThread = () => {
             replyTo?.commentId || !isMobile ? "w-full" : "w-1/2"
           }`}
         >
-          <InfiniteScroll
-            dataLength={data?.pages.flatMap((page) => page.data).length || 0}
-            next={fetchNextPage}
-            hasMore={!!hasNextPage}
-            loader={<div>Loading...</div>}
-            style={{ maxHeight: "750px", overflow: "auto" }}
-            endMessage={<p>No more comments to load</p>}
-          >
-            {data?.pages.flatMap((page) =>
-              page.data.map((item: DiscussionThreadItem, index: number) => (
-                <div key={index}>
-                  <DiscussionItem
-                    data={item}
-                    onShowReplies={handleShowReplies}
-                    selectedReplies={selectedReplies}
-                  />
-                  {isMobile && replyTo?.commentId && (
-                    <div className={`flex-1 w-full mb-6`}>
-                      {isShowReplySection &&
-                        replyTo?.commentId === item.comment_id && (
-                          <InfiniteScroll
-                            dataLength={
-                              selectedReplies?.flatMap((page) => page).length ||
-                              0
-                            }
-                            next={fetchNextRepliesPage}
-                            hasMore={!!hasNextRepliesPage}
-                            loader={<div>Loading...</div>}
-                          >
-                            <ReplySection
-                              onClose={handleCloseReplySection}
-                              refetchReplies={refetchReplies}
-                              selectedReplies={selectedReplies}
-                              isAuthenticated={isAuthenticated}
-                              onAddReply={onFinish}
-                              userId={userId}
-                              tokenId={tokenId}
-                              replyTo={replyTo}
-                              handleUpload={handleUpload}
-                              postCommentMutation={postCommentMutation}
-                            />
-                          </InfiniteScroll>
-                        )}
-                    </div>
-                  )}
+          {dataLength > 0 ? (
+            <InfiniteScroll
+              dataLength={dataLength}
+              next={fetchNextPage}
+              hasMore={!!hasNextPage}
+              loader={
+                <div>
+                  <Spin />
                 </div>
-              ))
-            )}
-          </InfiniteScroll>
+              }
+              style={{ maxHeight: "750px", overflow: "auto" }}
+            >
+              {data?.pages.flatMap((page) =>
+                page.data.map((item: DiscussionThreadItem, index: number) => (
+                  <div key={index}>
+                    <DiscussionItem
+                      data={item}
+                      onShowReplies={handleShowReplies}
+                      selectedReplies={selectedReplies}
+                    />
+                    {isMobile && replyTo?.commentId && (
+                      <div className={`flex-1 w-full mb-6`}>
+                        {isShowReplySection &&
+                          replyTo?.commentId === item.comment_id && (
+                            <InfiniteScroll
+                              dataLength={
+                                selectedReplies?.flatMap((page) => page)
+                                  .length || 0
+                              }
+                              next={fetchNextRepliesPage}
+                              hasMore={!!hasNextRepliesPage}
+                              loader={
+                                <div>
+                                  <Spin />
+                                </div>
+                              }
+                            >
+                              <ReplySection
+                                onClose={handleCloseReplySection}
+                                refetchReplies={refetchReplies}
+                                selectedReplies={selectedReplies}
+                                isAuthenticated={isAuthenticated}
+                                onAddReply={onFinish}
+                                userId={userId}
+                                tokenId={tokenId}
+                                replyTo={replyTo}
+                                handleUpload={handleUpload}
+                                postCommentMutation={postCommentMutation}
+                              />
+                            </InfiniteScroll>
+                          )}
+                      </div>
+                    )}
+                  </div>
+                ))
+              )}
+            </InfiniteScroll>
+          ) : (
+            <div>
+              <NoData mode="secondary" />
+            </div>
+          )}
           {isAuthenticated && !showInputComment && (
             <AppRoundedInfo
+              disabled={!!replyTo?.commentId}
               text="Post a Reply"
               customClassName="cursor-pointer !w-fit !px-8"
               onClick={() => {
@@ -266,7 +288,11 @@ const DiscussionThread = () => {
                 }
                 next={fetchNextRepliesPage}
                 hasMore={!!hasNextRepliesPage}
-                loader={<div>Loading...</div>}
+                loader={
+                  <div>
+                    <Spin />
+                  </div>
+                }
               >
                 <ReplySection
                   onClose={handleCloseReplySection}

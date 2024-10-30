@@ -1,19 +1,23 @@
 "use client";
-import { useEffect, useState } from "react";
-import { Layout } from "antd";
-import useWindowSize from "@/hooks/useWindowSize";
 import useWalletAuth from "@/hooks/useWalletAuth";
-import LoginModal from "../app-modal/app-login-modal";
-import { watchAccount } from "wagmi/actions";
-import { config } from "@/wagmi";
+import useWindowSize from "@/hooks/useWindowSize";
 import { useAppDispatch } from "@/libs/hooks";
 import { clearUser } from "@/libs/slices/userSlice";
+import { config } from "@/wagmi";
+import { useChainModal } from "@rainbow-me/rainbowkit";
+import { Layout } from "antd";
+import { useEffect, useState } from "react";
+import { useAccount } from "wagmi";
+import { watchAccount } from "wagmi/actions";
+import LoginModal from "../app-modal/app-login-modal";
 import "./styles.scss";
 
 const AppLayout = ({ children }: { children: React.ReactNode }) => {
   const { isMobile } = useWindowSize();
   const dispatch = useAppDispatch();
   const [isOpenWarningModal, setIsOpenWarningModal] = useState(false);
+  const { chain } = useAccount();
+  const { openChainModal } = useChainModal();
   const {
     login,
     accessToken: isAuth,
@@ -23,16 +27,23 @@ const AppLayout = ({ children }: { children: React.ReactNode }) => {
   } = useWalletAuth();
 
   useEffect(() => {
-    if (isConnected && !isAuth) {
-      const inner = setTimeout(() => {
+    let timeout: NodeJS.Timeout;
+    if (isConnected && !isAuth && chain) {
+      timeout = setTimeout(() => {
         setIsOpenWarningModal(true);
       }, 1000);
-
-      return () => {
-        clearTimeout(inner);
-      };
+    } else if (isConnected && !isAuth && !chain) {
+      timeout = setTimeout(() => {
+        openChainModal?.();
+      }, 1000);
     }
-  }, [isConnected, isAuth]);
+
+    return () => {
+      if (timeout) {
+        clearTimeout(timeout);
+      }
+    };
+  }, [isConnected, isAuth, chain]);
 
   useEffect(() => {
     const unwatchAccount = watchAccount(config, {

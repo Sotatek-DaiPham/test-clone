@@ -12,8 +12,8 @@ const AppImage = ({ className, alt, ...props }: AppImageProps) => {
     <Image
       rootClassName={`app-image ${className}`}
       alt={alt}
-      {...props}
       preview={false}
+      {...props}
     />
   );
 };
