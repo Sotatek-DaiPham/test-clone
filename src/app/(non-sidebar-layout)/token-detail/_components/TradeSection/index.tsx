@@ -1,6 +1,8 @@
 import { Tabs, TabsProps } from "antd";
 import TradeTab from "./TradeTab";
 import "./styles.scss";
+import { useTokenDetail } from "@/context/TokenDetailContext";
+import TradeTabAfterListed from "./TradeTabAfterListed";
 
 export enum TabKey {
   BUY = "buy",
@@ -8,16 +10,25 @@ export enum TabKey {
 }
 
 const TradeSection = () => {
+  const { tokenDetail } = useTokenDetail();
   const items: TabsProps["items"] = [
     {
       key: TabKey.BUY,
       label: "Buy",
-      children: <TradeTab tabKey={TabKey.BUY} />,
+      children: tokenDetail?.pairListDex ? (
+        <TradeTabAfterListed tabKey={TabKey.BUY} />
+      ) : (
+        <TradeTab tabKey={TabKey.BUY} />
+      ),
     },
     {
       key: TabKey.SELL,
       label: "Sell",
-      children: <TradeTab tabKey={TabKey.SELL} />,
+      children: tokenDetail?.pairListDex ? (
+        <TradeTabAfterListed tabKey={TabKey.SELL} />
+      ) : (
+        <TradeTab tabKey={TabKey.SELL} />
+      ),
     },
   ];
 

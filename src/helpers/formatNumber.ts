@@ -13,7 +13,7 @@ export const formatNumberWithComma = (value: string) => {
 
 export const nFormatter = (
   number: string | number,
-  digits = 2,
+  digits = 6,
   roundingMode?: BigNumber.RoundingMode
 ) => {
   if (Number(number) === 0 || isNaN(Number(number))) {
@@ -42,7 +42,7 @@ export const nFormatter = (
     }
   }
 
-  const roundingModeCombined = roundingMode || BigNumber.ROUND_HALF_UP;
+  const roundingModeCombined = roundingMode || BigNumber.ROUND_DOWN;
 
   const minimumNumber = BigNumber(1).div(`1e${digits}`).toNumber();
 
