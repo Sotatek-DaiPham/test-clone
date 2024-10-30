@@ -3,7 +3,7 @@ import { NoDataIcon } from "@public/assets";
 import Image from "next/image";
 
 interface Props {
-  mode: "primary" | "secondary";
+  mode?: "primary" | "secondary";
 }
 
 const NoData = ({ mode = "primary" }: Props) => {
