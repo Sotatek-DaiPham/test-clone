@@ -2,13 +2,14 @@ import AppDivider from "@/components/app-divider";
 import AppInput from "@/components/app-input";
 import AppPaginationCustom from "@/components/app-pagination/app-pagination-custom";
 import NoData from "@/components/no-data";
-import { EDirection, LIMIT_ITEMS_TABLE } from "@/constant";
+import { EDirection, LIMIT_COIN_ITEMS_TABLE } from "@/constant";
 import { API_PATH } from "@/constant/api-path";
 import { IFollowerResponse } from "@/entities/my-profile";
 import { BeSuccessResponse } from "@/entities/response";
 import { useAppSearchParams } from "@/hooks/useAppSearchParams";
 import useDebounce from "@/hooks/useDebounce";
 import useFollowUser from "@/hooks/useFollowUser";
+import useWalletAuth from "@/hooks/useWalletAuth";
 import { NotificationContext } from "@/libs/antd/NotificationProvider";
 import { useAppSelector } from "@/libs/hooks";
 import { getAPI } from "@/service";
@@ -16,7 +17,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Spin } from "antd";
 import { AxiosResponse } from "axios";
 import get from "lodash/get";
-import { useContext, useState } from "react";
+import { useContext, useLayoutEffect, useState } from "react";
 import TabTitle from "../../TabTitle";
 import UserFollow from "../../UserFollow";
 import { EFollow } from "../MyProfileTab";
@@ -26,7 +27,7 @@ const FollowersTab = ({ walletAddress }: { walletAddress: string }) => {
   const { searchParams } = useAppSearchParams("myProfile");
   const [params, setParams] = useState<any>({
     page: 1,
-    limit: LIMIT_ITEMS_TABLE,
+    limit: LIMIT_COIN_ITEMS_TABLE,
   });
 
   const { userId } = useAppSelector((state) => state.user);
@@ -37,8 +38,9 @@ const FollowersTab = ({ walletAddress }: { walletAddress: string }) => {
   const debounceSearch = useDebounce(search, () =>
     setParams({ ...params, page: 1 })
   );
+  const { accessToken } = useWalletAuth();
 
-  const { data, isPending, isError, refetch } = useQuery({
+  const { data, isPending, refetch } = useQuery({
     queryKey: ["followers", params, debounceSearch, searchParams],
     queryFn: async () => {
       return getAPI(API_PATH.USER.FOLLOWERS, {
@@ -57,6 +59,12 @@ const FollowersTab = ({ walletAddress }: { walletAddress: string }) => {
 
   const followers = get(data, "data.data", []) as IFollowerResponse[];
   const total = get(data, "data.metadata.total", 0) as number;
+
+  useLayoutEffect(() => {
+    if (searchParams.tab === "followers") {
+      refetch();
+    }
+  }, [accessToken]);
 
   const { onFollow } = useFollowUser({
     onFollowSuccess: () => {

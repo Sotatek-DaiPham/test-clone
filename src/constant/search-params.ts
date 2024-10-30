@@ -13,6 +13,10 @@ export const SEARCH_PARAMS = {
     tab: "tab",
     search: "search",
   },
+  reply: {
+    replyId: "replyId",
+    replyUserId: "replyUserId",
+  },
 } as const;
 
 export type ExtractKeyType<T, K extends keyof T> = T[K][keyof T[K]];

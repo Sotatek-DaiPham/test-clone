@@ -3,6 +3,9 @@
 import AppInputComment from "@/components/app-input/app-input-comment";
 import AppRoundedInfo from "@/components/app-rounded-info";
 import { API_PATH } from "@/constant/api-path";
+import { DiscussionThreadItem } from "@/entities/my-profile";
+import { useAppSearchParams } from "@/hooks/useAppSearchParams";
+import useWindowSize from "@/hooks/useWindowSize";
 import { useAppSelector } from "@/libs/hooks";
 import { getAPI, postFormDataAPI } from "@/service";
 import {
@@ -12,17 +15,17 @@ import {
 } from "@tanstack/react-query";
 import { Form, message } from "antd";
 import { useParams } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useState } from "react";
 import InfiniteScroll from "react-infinite-scroll-component";
 import DiscussionItem from "./component/DiscussionItem";
 import ReplySection from "./component/ReplySection";
-import { DiscussionThreadItem } from "@/entities/my-profile";
-import useWindowSize from "@/hooks/useWindowSize";
 
 const DiscussionThread = () => {
   const [form] = Form.useForm();
   const params = useParams();
   const { id: tokenId } = params;
+  const { searchParams, setSearchParams } = useAppSearchParams("reply");
+  console.log("search params", searchParams);
   const queryClient = useQueryClient();
 
   const { accessToken: isAuthenticated, address } = useAppSelector(
@@ -36,7 +39,20 @@ const DiscussionThread = () => {
   const [replyTo, setReplyTo] = useState<{
     commentId: number | null;
     replyUserId: number | null;
-  }>({ commentId: null, replyUserId: null });
+  }>({
+    commentId: null,
+    replyUserId: null,
+  });
+
+  useLayoutEffect(() => {
+    if (searchParams?.replyId && !replyTo?.commentId) {
+      setIsShowReplySection(true);
+      setReplyTo({
+        commentId: Number(searchParams.replyId),
+        replyUserId: Number(searchParams?.replyUserId),
+      });
+    }
+  }, []);
 
   const fetchDiscussionThreads = async ({ pageParam = 1 }) => {
     const response = await getAPI(API_PATH.TOKEN.DISCUSSION_THREADS, {
@@ -98,6 +114,10 @@ const DiscussionThread = () => {
 
   const handleShowReplies = useCallback(
     async (commentId: number, replyUserId: number) => {
+      setSearchParams({
+        replyId: commentId,
+        replyUserId,
+      });
       setReplyTo({ commentId, replyUserId });
       await refetchReplies();
       setIsShowReplySection(true);
@@ -176,6 +196,7 @@ const DiscussionThread = () => {
   const handleCloseReplySection = () => {
     setIsShowReplySection(false);
     setReplyTo({ commentId: null, replyUserId: null });
+    setSearchParams("");
   };
 
   return (
@@ -196,11 +217,14 @@ const DiscussionThread = () => {
           >
             {data?.pages.flatMap((page) =>
               page.data.map((item: DiscussionThreadItem, index: number) => (
+                // <div key={`${Math.floor(Math.random() * 10000)}setReplyTo`}>
                 <div key={index}>
                   <DiscussionItem
                     data={item}
                     onShowReplies={handleShowReplies}
                     selectedReplies={selectedReplies}
+                    isShowReplySection={isShowReplySection}
+                    replyTo={replyTo}
                   />
                   {isMobile && replyTo?.commentId && (
                     <div className={`flex-1 w-full mb-6`}>

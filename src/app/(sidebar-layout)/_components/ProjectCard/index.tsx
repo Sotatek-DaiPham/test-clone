@@ -9,6 +9,7 @@ import {
   convertNumber,
   formatAmount,
   nFormatter,
+  nFormatterVer2,
 } from "@/helpers/formatNumber";
 import { CalendarIcon, ImageDefaultIcon, SwapIcon } from "@public/assets";
 import Image from "next/image";
@@ -69,9 +70,9 @@ const ProjectCard = ({
                         PATH_ROUTER.USER_PROFILE(data?.userWalletAddress)
                       );
                     }}
-                    width="100%"
+                    maxWidth={100}
                     value={data?.username}
-                    className="text-primary-7 !text-12px-normal"
+                    className="text-primary-7 !text-12px-normal hover:!underline"
                   />
                 </div>
               </div>
@@ -124,7 +125,12 @@ const ProjectCard = ({
             <span className="text-primary-7 mr-1">
               {formatAmount(data?.progressToListDex || 0)}%
             </span>
-            <span>${12}K</span>
+            <span>
+              $
+              {nFormatterVer2(
+                convertNumber(data?.marketCap, DECIMAL_USDT) || 0
+              )}
+            </span>
           </div>
           <div className="flex flex-row items-center">
             <Image src={CalendarIcon} alt="calender-icon" />
@@ -134,14 +140,11 @@ const ProjectCard = ({
             <span className="mx-1">txns</span>
             <span>
               /
-              {data?.progressToListDex === 100 ? (
-                <span className="ml-1">Listed</span>
-              ) : (
-                <span className="ml-1">
-                  ${nFormatter(convertNumber(data?.volume, DECIMAL_USDT)) || 0}{" "}
-                  vol
-                </span>
-              )}
+              <span className="ml-1">
+                $
+                {nFormatterVer2(convertNumber(data?.volume, DECIMAL_USDT)) || 0}{" "}
+                vol
+              </span>
             </span>
           </div>
         </div>

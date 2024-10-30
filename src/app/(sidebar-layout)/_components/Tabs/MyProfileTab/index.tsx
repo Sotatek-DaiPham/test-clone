@@ -6,6 +6,7 @@ import { MyProfileResponse } from "@/entities/my-profile";
 import { BeSuccessResponse } from "@/entities/response";
 import { useAppSearchParams } from "@/hooks/useAppSearchParams";
 import useFollowUser from "@/hooks/useFollowUser";
+import useWalletAuth from "@/hooks/useWalletAuth";
 import { NotificationContext } from "@/libs/antd/NotificationProvider";
 import { useAppSelector } from "@/libs/hooks";
 import { getAPI } from "@/service";
@@ -16,7 +17,7 @@ import { AxiosResponse } from "axios";
 import get from "lodash/get";
 import Image from "next/image";
 import { useParams } from "next/navigation";
-import { useContext, useState } from "react";
+import { useContext, useLayoutEffect, useState } from "react";
 import TabTitle from "../../TabTitle";
 import EditProfileModal from "./EditProfileModal";
 
@@ -35,6 +36,7 @@ const MyProfileTab = ({ apiPath }: { apiPath: string }) => {
   const { searchParams } = useAppSearchParams("myProfile");
   const { userId } = useAppSelector((state) => state.user);
   const [followData, setFollowData] = useState<any>({});
+  const { accessToken } = useWalletAuth();
 
   const { data, refetch } = useQuery({
     queryKey: ["my-profile", searchParams],
@@ -47,6 +49,12 @@ const MyProfileTab = ({ apiPath }: { apiPath: string }) => {
     },
     enabled: !searchParams.tab ? true : searchParams.tab === "my-profile",
   });
+
+  useLayoutEffect(() => {
+    if (searchParams.tab === "my-profile") {
+      refetch();
+    }
+  }, [accessToken]);
 
   const myProfile = get(data, "data.data", {}) as MyProfileResponse;
 
@@ -88,11 +96,13 @@ const MyProfileTab = ({ apiPath }: { apiPath: string }) => {
         {id ? (
           <AppButton
             size="small"
-            typeButton={myProfile?.isFollowing ? "secondary" : "primary"}
+            typeButton={
+              accessToken && myProfile?.isFollowing ? "secondary" : "primary"
+            }
             customClass="!w-[100px] !rounded-full"
-            onClick={!!userId ? handleFollow : openConnectModal}
+            onClick={!!accessToken ? handleFollow : openConnectModal}
           >
-            {myProfile?.isFollowing ? "Unfollow" : "Follow"}
+            {accessToken && myProfile?.isFollowing ? "Unfollow" : "Follow"}
           </AppButton>
         ) : (
           <AppButton
@@ -128,7 +138,7 @@ const MyProfileTab = ({ apiPath }: { apiPath: string }) => {
         <div className="w-full text-14px-normal">
           <div className="grid grid-cols-6 mb-4">
             <span className="sm:col-span-1 col-span-2 text-neutral-7">
-              Wallet address
+              Wallet Address
             </span>
             <div className="sm:col-span-5 col-span-4 flex flex-row">
               <span className="text-14px-medium text-white-neutral mr-2 break-all">
@@ -149,7 +159,9 @@ const MyProfileTab = ({ apiPath }: { apiPath: string }) => {
           </div>
           <AppDivider />
           <div className="grid grid-cols-6 my-4">
-            <span className="sm:col-span-1 col-span-2 text-neutral-7">User name</span>
+            <span className="sm:col-span-1 col-span-2 text-neutral-7">
+              User name
+            </span>
             <span className="sm:col-span-5 col-span-4 text-14px-medium text-white-neutral">
               {myProfile?.username || "-"}
             </span>

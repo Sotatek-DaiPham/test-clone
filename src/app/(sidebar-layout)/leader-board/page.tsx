@@ -68,7 +68,8 @@ const LeaderboardPage = () => {
     if (debounceSearch?.trim() || params?.page > 1) {
       return leaderboardRes;
     } else {
-      return leaderboardRes?.slice(0, 3);
+      const data = [...leaderboardRes];
+      return data?.slice(3);
     }
   }, [userId, debounceSearch, leaderboardRes]);
 
@@ -124,7 +125,7 @@ const LeaderboardPage = () => {
       render: (value: string, data: any) => {
         return (
           <div
-            className="flex flex-row items-center w-fit cursor-pointer"
+            className="flex flex-row items-center w-fit cursor-pointer hover:underline"
             onClick={(e) => {
               e.stopPropagation();
               router.push(PATH_ROUTER.USER_PROFILE(data?.walletAddress));
@@ -204,34 +205,34 @@ const LeaderboardPage = () => {
     <div className="m-auto max-w-[var(--width-content-sidebar-layout)]">
       {!debounceSearch?.trim() && (
         <div className="grid sm:grid-cols-3 grid-cols-1 gap-6 mb-6">
-          {isMobile && topUser?.length > 0 && (
+          {isMobile && leaderboardRes?.length > 0 && (
             <TopUser
               image={UserTop1}
               top1={true}
               className="!bg-gradient-to-b from-[var(--color-top-1-from)] to-[var(--color-top-1-to)]"
-              data={topUser[0]}
+              data={leaderboardRes[0]}
             />
           )}
-          {topUser?.length > 1 && (
+          {leaderboardRes?.length > 1 && (
             <TopUser
               image={UserTop2}
               className="!bg-gradient-to-b from-[var(--color-top-2-from)] to-[var(--color-top-2-to)]"
-              data={topUser[1]}
+              data={leaderboardRes[1]}
             />
           )}
-          {!isMobile && topUser?.length > 0 && (
+          {!isMobile && leaderboardRes?.length > 0 && (
             <TopUser
               image={UserTop1}
               top1={true}
               className="!bg-gradient-to-b from-[var(--color-top-1-from)] to-[var(--color-top-1-to)]"
-              data={topUser[0]}
+              data={leaderboardRes[0]}
             />
           )}
-          {topUser?.length > 2 && (
+          {leaderboardRes?.length > 2 && (
             <TopUser
               image={UserTop3}
               className="!bg-gradient-to-b from-[var(--color-top-3-from)] to-[var(--color-top-3-to)]"
-              data={topUser[2]}
+              data={leaderboardRes[2]}
             />
           )}
         </div>
