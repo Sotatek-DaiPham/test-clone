@@ -114,10 +114,6 @@ const DiscussionThread = () => {
 
   const handleShowReplies = useCallback(
     async (commentId: number, replyUserId: number) => {
-      setSearchParams({
-        replyId: commentId,
-        replyUserId,
-      });
       setReplyTo({ commentId, replyUserId });
       await refetchReplies();
       setIsShowReplySection(true);

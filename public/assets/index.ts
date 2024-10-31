@@ -81,3 +81,7 @@ export { default as TableFilterIcon } from "./icons/table-filter.svg";
 export { default as SuccessIcon } from "./icons/tick-circle.svg";
 export { default as ErrorIcon } from "./icons/info-circle.svg";
 export { default as ShowEyesIcon } from "./icons/eye-show.svg";
+export { default as RainPumpRabbitIcon } from "./icons/rain-pump-rabbit.svg";
+export { default as RainPumpText } from "./icons/rain-pump-text-logo.svg";
+export { default as RainPumpTextWhite } from "./icons/rain-pump-text-logo-white.svg";
+export { default as BGEffect4Icon } from "./icons/bg-effect-4.svg";

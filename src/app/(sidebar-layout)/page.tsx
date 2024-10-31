@@ -11,25 +11,78 @@ import { BeSuccessResponse } from "@/entities/response";
 import { useAppSearchParams } from "@/hooks/useAppSearchParams";
 import useSocket from "@/hooks/useSocket";
 import useWalletAuth from "@/hooks/useWalletAuth";
+import useWindowSize from "@/hooks/useWindowSize";
 import { ESocketEvent } from "@/libs/socket/constants";
 import { getAPI } from "@/service";
-import { HowItWorksIcon } from "@public/assets";
+import {
+  BGEffect4Icon,
+  RainPumpRabbitIcon,
+  RainPumpText,
+  RainPumpTextWhite,
+} from "@public/assets";
 import { useQuery } from "@tanstack/react-query";
+import { Spin } from "antd";
 import { AxiosResponse } from "axios";
 import get from "lodash/get";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import AllTab from "./_components/AllTab";
 import FollowingTab from "./_components/FollowingTab";
+import ModalHowItsWork from "./_components/ModalHowItsWork";
 import ProjectCard from "./_components/ProjectCard";
 import TradeHistoryItem from "./_components/TradeHistoryItem";
-import ModalHowItsWork from "./_components/ModalHowItsWork";
 
 enum ETabsTerminal {
   ALL = "all",
   FOLLOWING = "following",
 }
+
+const HowItWorkMain = ({ onClick }: { onClick: (show: boolean) => void }) => {
+  return (
+    <div className="mb-3">
+      <div className="h-full grid grid-cols-3 rounded-3xl !bg-neutral-2">
+        <div className="col-span-1 relative">
+          <Image
+            src={RainPumpRabbitIcon}
+            alt="how-it-work"
+            className="absolute right-[-90px] bottom-0 scale-x-[-1]"
+          />
+        </div>
+        <div className="col-span-1 h-full flex flex-col justify-between px-8 py-6 pb-10 relative !overflow-hidden">
+          <div className="h-full w-full flex flex-col justify-center z-[2]">
+            <div className="mx-auto">
+              <div>
+                <Image src={RainPumpTextWhite} alt="rain-pump-text" />
+              </div>
+              <div className="mx-auto my-4 !mb-10 text-white-neutral text-16px-normal">
+                The Most Liquid Fair Launch Platform
+              </div>
+            </div>
+            <AppButton
+              onClick={() => onClick(true)}
+              customClass="!rounded-3xl !w-fit px-8 py-6 mx-auto"
+              classChildren="!text-neutral-1 !text-14px-bold"
+            >
+              How it works?
+            </AppButton>
+          </div>
+          <Image
+            className="absolute right-0 left-0 bottom-0 top-0 scale-110 z-[1]"
+            src={BGEffect4Icon}
+            alt="effect"
+          />
+        </div>
+        <div className="col-span-1 relative">
+          <Image
+            src={RainPumpRabbitIcon}
+            alt="how-it-work"
+            className="absolute left-[-90px] bottom-0"
+          />
+        </div>
+      </div>
+    </div>
+  );
+};
 
 export default function Home() {
   const { addEvent, isConnected, removeEvent } = useSocket();
@@ -37,8 +90,13 @@ export default function Home() {
   const { searchParams, setSearchParams } = useAppSearchParams("terminal");
   const [activeTab, setActiveTab] = useState<string>(ETabsTerminal.ALL);
   const [isShowModal, setIsShowModal] = useState<boolean>(false);
+  const { isMobile } = useWindowSize();
 
-  const { data, refetch } = useQuery({
+  const {
+    data,
+    isPending: isPendingKing,
+    refetch,
+  } = useQuery({
     queryKey: ["king-of-the-sky"],
     queryFn: async () => {
       return getAPI(API_PATH.TOKEN.KING_OF_THE_SKY) as Promise<
@@ -135,45 +193,57 @@ export default function Home() {
   return (
     <div className="h-full !m-[-24px]">
       <div className="m-auto p-6 max-w-[var(--width-content-sidebar-layout)]">
-        <div className="grid sm:grid-cols-2 grid-cols-1 gap-6">
-          <div className="h-full grid grid-cols-3 rounded-3xl how-it-work-bg !overflow-hidden">
-            <div className="col-span-2 h-full flex flex-col justify-between py-[40px]">
-              <div className="h-full">
-                <span className="text-32px-bold text-white-neutral">
-                  RainPump
-                </span>
-                <div className="truncate-4-line my-2 text-white-neutral text-16px-normal">
-                  Lorem ipsum dolor sit, amet consectetur adipisicing elit.
-                  Beatae ea perferendis ipsum quisquam excepturi quis sit libero
-                  officia! Facere neque vitae quae deleniti in adipisci.
-                  Recusandae, eligendi animi. Eius, provident!
+        <div
+          className={`grid sm:grid-cols-2 grid-cols-1 gap-6 ${
+            !Boolean(kingOfTheSky?.contractAddress) ? "!grid-cols-1" : ""
+          }`}
+        >
+          {isPendingKing ? (
+            <Spin />
+          ) : !Boolean(kingOfTheSky?.contractAddress) &&
+            !isMobile &&
+            !isPendingKing ? (
+            <HowItWorkMain onClick={setIsShowModal} />
+          ) : (
+            <div className="h-full grid grid-cols-3 rounded-3xl !bg-neutral-2">
+              <div className="col-span-2 h-full flex flex-col justify-between px-8 py-6">
+                <div className="h-full">
+                  <div>
+                    <Image src={RainPumpText} alt="rain-pump-text" />
+                  </div>
+                  <div className="truncate-4-line sm:my-3 my-4 text-white-neutral text-16px-normal">
+                    The Most Liquid Fair
+                    <br />
+                    Launch Platform
+                  </div>
                 </div>
+                <AppButton
+                  onClick={() => setIsShowModal(true)}
+                  customClass="!rounded-3xl !w-fit sm:mb-2 sm:!p-6 !px-3"
+                  classChildren="!text-neutral-1 !text-14px-bold"
+                >
+                  How it works?
+                </AppButton>
               </div>
-              <AppButton
-                onClick={() => setIsShowModal(true)}
-                typeButton="teriary"
-                customClass="!rounded-3xl !w-fit !bg-white-neutral"
-                classChildren="!text-neutral-1 !text-14px-bold p-6"
-              >
-                How it works?
-              </AppButton>
+              <div className="col-span-1 relative">
+                <Image
+                  src={RainPumpRabbitIcon}
+                  alt="how-it-work"
+                  className="absolute sm:!w-[160%] sm:!max-w-[160%] !w-[190%] !max-w-[190%] sm:!right-[20px] right-0 bottom-0"
+                />
+              </div>
             </div>
-            <div className="col-span-1 relative">
-              <Image
-                src={HowItWorksIcon}
-                alt="how-it-work"
-                className="absolute !max-w-[125%] left-[-50px] bottom-0"
-              />
+          )}
+          {Boolean(kingOfTheSky?.contractAddress) && (
+            <div className="h-full">
+              <div className="bg-neutral-2 rounded-3xl sm:p-6 px-2 pt-6 pb-2">
+                <span className="text-primary-main italic text-32px-bold flex w-full justify-center">
+                  King of The Sky
+                </span>
+                <ProjectCard className="p-0" data={kingOfTheSky} />
+              </div>
             </div>
-          </div>
-          <div className="h-full">
-            <div className="bg-neutral-2 rounded-3xl sm:p-6 px-2 pt-6 pb-2">
-              <span className="text-primary-main italic text-32px-bold flex w-full justify-center">
-                King of The Sky
-              </span>
-              <ProjectCard className="p-0" data={kingOfTheSky} />
-            </div>
-          </div>
+          )}
         </div>
         {tradeHistory?.length && !isPending && (
           <div className="mt-7 mb-5 !h-[40px] border overflow-hidden border-neutral-4 flex bg-neutral-3 rounded-lg py-1">
