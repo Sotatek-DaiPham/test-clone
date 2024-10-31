@@ -6,6 +6,7 @@ import { useTokenDetail } from "@/context/TokenDetailContext";
 import { BeSuccessResponse } from "@/entities/response";
 import { getTimeDDMMMYYYYHHMM } from "@/helpers/date-time";
 import useSocket from "@/hooks/useSocket";
+import useWalletAuth from "@/hooks/useWalletAuth";
 import useWindowSize from "@/hooks/useWindowSize";
 import { ESocketEvent } from "@/libs/socket/constants";
 import { postAPI } from "@/service";
@@ -31,6 +32,7 @@ const TokenDetailPage = () => {
   const { addEvent, isConnected, removeEvent } = useSocket();
   const router = useRouter();
   const { tokenDetail } = useTokenDetail();
+  const { accessToken } = useWalletAuth();
   const { mutateAsync: viewToken } = useMutation({
     mutationFn: (
       tokenId: number
@@ -44,10 +46,10 @@ const TokenDetailPage = () => {
   });
 
   useEffect(() => {
-    if (tokenDetail?.id) {
+    if (tokenDetail?.id && accessToken) {
       viewToken(tokenDetail?.id);
     }
-  }, [tokenDetail?.id]);
+  }, [tokenDetail?.id, accessToken]);
 
   useEffect(() => {
     if (isConnected) {

@@ -1,9 +1,8 @@
 import AppTruncateText from "@/components/app-truncate-text";
 import { envs } from "@/constant/envs";
-import { DATE_FORMAT, DATE_TIME_FORMAT } from "@/constant/format";
+import { DATE_FORMAT } from "@/constant/format";
 import { PATH_ROUTER } from "@/constant/router";
 import { useTokenDetail } from "@/context/TokenDetailContext";
-import { getTimeDDMMMYYYYHHMM } from "@/helpers/date-time";
 import { shortenAddress } from "@/helpers/shorten";
 import { ArrowExport } from "@public/assets";
 import dayjs from "dayjs";
@@ -20,13 +19,13 @@ const GeneralInfo = () => {
             Created on
           </div>
           <div className="text-12px-medium md:text-14px-medium text-white-neutral">
-            {" "}
+            &nbsp;
             {tokenDetail?.createdAt
               ? dayjs(tokenDetail?.createdAt).format(DATE_FORMAT)
               : "-"}
           </div>
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-2 flex-row items-center">
           <div className="text-14px-normal text-neutral-7">Creator</div>
           <Link
             href={PATH_ROUTER.USER_PROFILE(tokenDetail?.userWalletAddress)}
@@ -36,7 +35,7 @@ const GeneralInfo = () => {
           </Link>
         </div>
       </div>
-      <div className="flex gap-2">
+      <div className="flex flex-row items-center gap-2">
         <div className="text-12px-normal md:text-14px-normal text-neutral-7">
           Contract Address
         </div>

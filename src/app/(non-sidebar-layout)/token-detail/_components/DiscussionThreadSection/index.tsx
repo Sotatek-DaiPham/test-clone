@@ -25,7 +25,6 @@ const DiscussionThread = () => {
   const params = useParams();
   const { id: tokenId } = params;
   const { searchParams, setSearchParams } = useAppSearchParams("reply");
-  console.log("search params", searchParams);
   const queryClient = useQueryClient();
 
   const { accessToken: isAuthenticated, address } = useAppSelector(
@@ -114,10 +113,6 @@ const DiscussionThread = () => {
 
   const handleShowReplies = useCallback(
     async (commentId: number, replyUserId: number) => {
-      setSearchParams({
-        replyId: commentId,
-        replyUserId,
-      });
       setReplyTo({ commentId, replyUserId });
       await refetchReplies();
       setIsShowReplySection(true);

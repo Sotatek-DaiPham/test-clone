@@ -1,5 +1,6 @@
 import AppPaginationCustom from "@/components/app-pagination/app-pagination-custom";
 import NoData from "@/components/no-data";
+import { LIMIT_COIN_ITEMS_TABLE } from "@/constant";
 import { API_PATH } from "@/constant/api-path";
 import { ITokenDashboardResponse } from "@/entities/dashboard";
 import { BeSuccessResponse } from "@/entities/response";
@@ -163,7 +164,7 @@ const AllTab = () => {
 
   const [params, setParams] = useState<any>({
     page: 1,
-    limit: 100,
+    limit: 10,
   });
 
   const debounceSearch = useDebounce(search);
@@ -236,10 +237,10 @@ const AllTab = () => {
   useEffect(() => {
     if (isConnected) {
       socket?.on(ESocketEvent.BUY, () => {
-        console.log("buy on all tab");
+        refetch();
       });
       socket?.on(ESocketEvent.SELL, () => {
-        console.log("sell on all tab");
+        refetch();
       });
     }
   }, [isConnected]);

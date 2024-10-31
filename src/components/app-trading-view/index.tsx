@@ -2,10 +2,10 @@
 import { ID_TRADING_VIEW } from "@/libs/trading-view/constants";
 import { useEffect, useRef } from "react";
 
+import { useTokenDetail } from "@/context/TokenDetailContext";
 import withClient from "@/helpers/with-client";
 import onInitTradingView from "@/libs/trading-view";
 import { Spin } from "antd";
-import { useTokenDetail } from "@/context/TokenDetailContext";
 
 const TradingViewChart = () => {
   const tradingChartRef = useRef<HTMLDivElement>(null);
@@ -16,6 +16,7 @@ const TradingViewChart = () => {
       onInitTradingView({
         tokenAddress: tokenDetail?.contractAddress,
         symbol: tokenDetail?.symbol,
+        createdAt: tokenDetail?.createdAt,
       });
     }
   }, [tokenDetail]);
