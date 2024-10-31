@@ -15,6 +15,7 @@ import { CalendarIcon, ImageDefaultIcon, SwapIcon } from "@public/assets";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import "./styles.scss";
+import AppNumberToolTip from "@/components/app-number-tooltip";
 
 interface IProjectCardProps {
   data: any;
@@ -92,9 +93,14 @@ const ProjectCard = ({
               <span>Total hold</span>
               <span>
                 <span className="text-primary-main mr-2">
-                  {data?.amount
-                    ? formatAmount(convertNumber(data?.amount, data?.decimal))
-                    : "-"}
+                  {data?.amount ? (
+                    <AppNumberToolTip
+                      value={convertNumber(data?.amount, data?.decimal)}
+                      isNoFormatterKMB={true}
+                    />
+                  ) : (
+                    "-"
+                  )}
                 </span>
                 <span className="text-white-neutral capitalize">
                   {data?.symbol || "-"}
@@ -111,7 +117,11 @@ const ProjectCard = ({
                       : "text-white-neutral mr-2"
                   }
                 >
-                  {nFormatter(data?.price) || "-"}
+                  {Number(data?.price) > 0 ? (
+                    <AppNumberToolTip value={data?.price} />
+                  ) : (
+                    "-"
+                  )}
                 </span>
                 <span className="text-white-neutral uppercase">USDT</span>
               </span>
@@ -127,9 +137,9 @@ const ProjectCard = ({
             </span>
             <span>
               $
-              {nFormatterVer2(
-                convertNumber(data?.marketCap, DECIMAL_USDT) || 0
-              )}
+              <AppNumberToolTip
+                value={convertNumber(data?.marketCap, DECIMAL_USDT) || 0}
+              />
             </span>
           </div>
           <div className="flex flex-row items-center">
@@ -138,12 +148,14 @@ const ProjectCard = ({
             <Image src={SwapIcon} alt="swap-icon" className="mx-1" />
             <span>{formatAmount(data?.numberTransaction) || 0}</span>
             <span className="mx-1">txns</span>
-            <span>
+            <span className="flex flex-row items-center">
               /
-              <span className="ml-1">
+              <span className="ml-1 flex flex-row items-center">
                 $
-                {nFormatterVer2(convertNumber(data?.volume, DECIMAL_USDT)) || 0}{" "}
-                vol
+                <AppNumberToolTip
+                  value={convertNumber(data?.volume, DECIMAL_USDT) || 0}
+                />
+                &nbsp;vol
               </span>
             </span>
           </div>

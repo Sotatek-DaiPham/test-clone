@@ -13,7 +13,8 @@ const AppTooltip = ({ children, ...props }: ITooltipProps) => {
       overlayClassName={`app-tooltip ${props.overlayClassName || ""}`}
       {...props}
     >
-      {children || <Image src={TooltipIcon} alt="tooltip-icon" />}
+      {/* {children || <Image src={TooltipIcon} alt="tooltip-icon" />} */}
+      {children}
     </Tooltip>
   );
 };

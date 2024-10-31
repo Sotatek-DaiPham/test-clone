@@ -13,7 +13,7 @@ const ModalHowItsWork = ({ onOk, ...props }: IModalHowItsWorkProps) => {
       className="p-6"
       title={false}
       centered
-      closeIcon={null}
+      // closeIcon={null}
       {...props}
     >
       <div className="flex flex-col justify-center text-center">
