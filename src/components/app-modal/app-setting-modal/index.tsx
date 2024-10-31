@@ -71,7 +71,7 @@ const TradeSettingModal = ({
             <Form.Item name={SETTINGS_FIELD_NAMES.SLIPPAGE}>
               <AppInputBalance
                 tokenSymbol="Slippage (%)"
-                regex={REGEX_INPUT_DECIMAL()}
+                regex={REGEX_INPUT_DECIMAL(0, 6)}
                 maxValue={25}
               />
             </Form.Item>
@@ -117,7 +117,7 @@ const TradeSettingModal = ({
                 <AppInputBalance
                   tokenImageSrc={EthIcon}
                   tokenSymbol="ETH"
-                  regex={REGEX_INPUT_DECIMAL()}
+                  regex={REGEX_INPUT_DECIMAL(0, 6)}
                 />
               </Form.Item>
               <AppAmountSelect
