@@ -142,7 +142,7 @@ export default async function onInitTradingView({
       ) => {
         console.log("time", { from, to });
         if (createdAt && !isFirstCall && from < dayjs(createdAt).unix()) {
-          return;
+          return onResult([], { noData: true });
         }
         if (tokenAddress) {
           const startTime = from * 1000;
