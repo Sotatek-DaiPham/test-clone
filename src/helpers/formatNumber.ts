@@ -17,7 +17,7 @@ export const nFormatter = (
   roundingMode?: BigNumber.RoundingMode
 ) => {
   if (Number(number) === 0 || isNaN(Number(number))) {
-    return 0;
+    return "0.00";
   }
 
   const SI = [

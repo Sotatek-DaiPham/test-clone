@@ -84,9 +84,9 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
     approve: false,
   });
   const [tradeSettings, setTradeSettings] = useState<FormSetting>({
-    slippage: "",
+    slippage: "0",
     fontRunning: false,
-    priorityFee: "",
+    priorityFee: "0",
   });
 
   const [coinType, setCoinType] = useState(ECoinType.StableCoin);
@@ -101,6 +101,7 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
   const isTokenMint = !!tokenDetail?.contractAddress;
 
   const amountValue = useWatch(AMOUNT_FIELD_NAME, form);
+
   const { amount: buyAmountOut } = useCalculateAmount({
     contractAddress: tokenDetail?.contractAddress,
     value: amountValue,
@@ -171,6 +172,11 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
     !!(amountValue && BigNumber(amountValue).lt(MINIMUM_BUY_AMOUNT)) ||
     !!(usdtShouldPay && BigNumber(usdtShouldPay).lt(MINIMUM_BUY_AMOUNT));
 
+  const isDisableSellButton =
+    !isTokenMint ||
+    !amountValue ||
+    !!(sellAmountOut && BigNumber(sellAmountOut).lt(MINIMUM_BUY_AMOUNT));
+
   const handleSelect = (value: string) => {
     form.setFieldValue(AMOUNT_FIELD_NAME, value);
   };
@@ -203,11 +209,11 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
   const handleCreateAndBuyToken = async () => {
     setLoadingStatus((prev) => ({ ...prev, buyToken: true }));
     const contract = await tokenFactoryContract;
-    const minTokenOut = tradeSettings?.slippage
+    const minTokenOut = Number(tradeSettings?.slippage)
       ? decreaseByPercent(tokenWillReceive, tradeSettings?.slippage)
       : 0;
 
-    const gasLimit = tradeSettings?.priorityFee
+    const gasLimit = Number(tradeSettings?.priorityFee)
       ? BigNumber(tradeSettings?.priorityFee).multipliedBy(1e10).toString()
       : 0;
     try {
@@ -238,12 +244,7 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
       setLoadingStatus((prev) => ({ ...prev, buyToken: false }));
     } catch (e: any) {
       console.log({ e });
-      if (e?.info?.error?.code === ErrorCode.INSUFFICIENT_FEE) {
-        error({
-          message: "Insufficient fee",
-        });
-        return;
-      }
+      handleError(e);
 
       setLoadingStatus((prev) => ({ ...prev, buyToken: false }));
     }
@@ -252,10 +253,10 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
   const handleBuyTokenExactIn = async () => {
     const contract = await tokenFactoryContract;
     setLoadingStatus((prev) => ({ ...prev, buyToken: true }));
-    const minTokenOut = tradeSettings?.slippage
+    const minTokenOut = Number(tradeSettings?.slippage)
       ? decreaseByPercent(tokenWillReceive, tradeSettings?.slippage)
       : 0;
-    const gasLimit = tradeSettings?.priorityFee
+    const gasLimit = Number(tradeSettings?.priorityFee)
       ? BigNumber(tradeSettings?.priorityFee).multipliedBy(1e10).toString()
       : 0;
     try {
@@ -282,22 +283,17 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
     } catch (e: any) {
       console.log({ e });
       setLoadingStatus((prev) => ({ ...prev, buyToken: false }));
-      if (e?.info?.error?.code === ErrorCode.INSUFFICIENT_FEE) {
-        error({
-          message: "Insufficient fee",
-        });
-        return;
-      }
+      handleError(e);
     }
   };
 
   const handleBuyTokenExactOut = async () => {
     const contract = await tokenFactoryContract;
     setLoadingStatus((prev) => ({ ...prev, buyToken: true }));
-    const maxUSDTOut = tradeSettings?.slippage
+    const maxUSDTOut = Number(tradeSettings?.slippage)
       ? increaseByPercent(usdtShouldPay, tradeSettings?.slippage)
       : usdtShouldPay;
-    const gasLimit = tradeSettings?.priorityFee
+    const gasLimit = Number(tradeSettings?.priorityFee)
       ? BigNumber(tradeSettings?.priorityFee).multipliedBy(1e10).toString()
       : 0;
 
@@ -322,25 +318,20 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
       handleTransactionSuccess();
       setLoadingStatus((prev) => ({ ...prev, buyToken: false }));
     } catch (e: any) {
+      console.log({ e });
       setLoadingStatus((prev) => ({ ...prev, buyToken: false }));
-
-      if (e?.info?.error?.code === ErrorCode.INSUFFICIENT_FEE) {
-        error({
-          message: "Insufficient fee",
-        });
-        return;
-      }
+      handleError(e);
     }
   };
 
   const handleSellToken = async () => {
     setLoadingStatus((prev) => ({ ...prev, sellToken: true }));
     const contract = await tokenFactoryContract;
-    const minUSDTOut = tradeSettings?.slippage
+    const minUSDTOut = Number(tradeSettings?.slippage)
       ? decreaseByPercent(sellAmountOut, tradeSettings?.slippage)
       : 0;
 
-    const gasLimit = tradeSettings?.priorityFee
+    const gasLimit = Number(tradeSettings?.priorityFee)
       ? BigNumber(tradeSettings?.priorityFee).multipliedBy(1e10).toString()
       : 0;
     try {
@@ -367,12 +358,7 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
     } catch (e: any) {
       console.log({ e });
       setLoadingStatus((prev) => ({ ...prev, sellToken: false }));
-      if (e?.info?.error?.code === ErrorCode.INSUFFICIENT_FEE) {
-        error({
-          message: "Insufficient fee",
-        });
-        return;
-      }
+      handleError(e);
     }
   };
 
@@ -415,11 +401,7 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
         approve: false,
         buyToken: false,
       }));
-      if (e?.code === ErrorCode.MetamaskDeniedTx) {
-        error({
-          message: "Transaction denied",
-        });
-      }
+      handleError(e);
     } finally {
       setIsOpenApproveModal(false);
     }
@@ -469,6 +451,20 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
           </span>
         </div>
       );
+    }
+  };
+
+  const handleError = (e: any) => {
+    if (e?.code === ErrorCode.MetamaskDeniedTx) {
+      error({
+        message: "Transaction denied",
+      });
+    }
+
+    if (e?.info?.error?.code === ErrorCode.INSUFFICIENT_FEE) {
+      error({
+        message: e?.info?.error?.message,
+      });
     }
   };
 
@@ -560,7 +556,7 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
               customClass="w-full"
               onClick={handleSellToken}
               loading={loadingStatus.sellToken}
-              disabled={!isTokenMint || !amountValue}
+              disabled={isDisableSellButton}
             >
               Sell
             </AppButton>

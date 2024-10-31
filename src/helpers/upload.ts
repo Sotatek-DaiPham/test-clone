@@ -3,7 +3,7 @@ export const ImageValidator = (
   value: { src?: string; file?: File }
 ) => {
   if (!value?.src) {
-    return Promise.reject("Coin icon is required");
+    return Promise.reject("Icon is required");
   }
 
   if (value.file) {
@@ -13,7 +13,7 @@ export const ImageValidator = (
     }
 
     if (!checkValidUploadFileType(value.file)) {
-      return Promise.reject("Please upload PNG, JPG only");
+      return Promise.reject("Please upload PNG, JPG, GIF only");
     }
   }
 
@@ -31,7 +31,7 @@ export const ImageLogoValidator = (
     }
 
     if (!checkValidUploadFileType(value.file)) {
-      return Promise.reject("Please upload PNG, JPG only");
+      return Promise.reject("Please upload PNG, JPG, GIF only");
     }
   }
 
@@ -39,7 +39,12 @@ export const ImageLogoValidator = (
 };
 
 export const checkValidUploadFileType = (file: File) => {
-  return ALLOW_FILE_TYPE.includes(file.type);
+  const extFromFileName = getFileExt(file?.name as string);
+  console.log("extFromFileName", extFromFileName);
+  return (
+    ALLOW_FILE_TYPE.includes(file.type) &&
+    ALLOW_FILE_EXTENSION.includes(extFromFileName as string)
+  );
 };
 
 export const ALLOW_FILE_TYPE = [
@@ -48,3 +53,7 @@ export const ALLOW_FILE_TYPE = [
   "image/gif",
   "image/jpeg",
 ];
+
+export const ALLOW_FILE_EXTENSION = ["png", "jpg", "gif"];
+
+export const getFileExt = (fileName: string) => fileName.split(".").pop();

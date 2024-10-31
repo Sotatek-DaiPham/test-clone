@@ -137,7 +137,7 @@ const TokenDetailPage = () => {
           {tokenDetail?.kingOfTheHillDate && (
             <AppRoundedInfo
               customClassName="mt-4"
-              text={`Crowned king of the hill at ${getTimeDDMMMYYYYHHMM(
+              text={`Crowned king of the Sky at ${getTimeDDMMMYYYYHHMM(
                 tokenDetail.kingOfTheHillDate
               )}`}
             />
