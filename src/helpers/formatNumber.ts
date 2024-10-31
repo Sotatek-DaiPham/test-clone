@@ -163,7 +163,7 @@ export const nFormatterVer2 = (
     }
   }
 
-  const roundingModeCombined = roundingMode || BigNumber.ROUND_HALF_UP;
+  const roundingModeCombined = roundingMode || BigNumber.ROUND_DOWN;
 
   const minimumNumber = BigNumber(1).div(`1e${digits}`).toNumber();
 
