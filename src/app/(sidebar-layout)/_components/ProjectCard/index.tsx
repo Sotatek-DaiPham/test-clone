@@ -70,7 +70,7 @@ const ProjectCard = ({
                         PATH_ROUTER.USER_PROFILE(data?.userWalletAddress)
                       );
                     }}
-                    maxWidth={100}
+                    maxWidth="100%"
                     value={data?.username}
                     className="text-primary-7 !text-12px-normal hover:!underline"
                   />
