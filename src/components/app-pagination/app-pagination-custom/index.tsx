@@ -55,9 +55,9 @@ const AppPaginationCustom = ({
             <span className="ml-2 text-neutral-9">
               {page < 3
                 ? `1-${formatAmount(limit)}`
-                : `${formatAmount(
-                    limit * (page - 2) + (page === 1 ? 0 : 1)
-                  )}-${formatAmount(limit * (page - 1))}`}
+                : `${formatAmount(limit * (page - 2) + 1)}-${formatAmount(
+                    limit * (page - 1)
+                  )}`}
             </span>
           </AppButton>
         )}
@@ -70,15 +70,10 @@ const AppPaginationCustom = ({
             onClick={() => onChange(page + 1)}
           >
             <span className="mr-2 text-neutral-9">
-              {page > 1
-                ? `${formatAmount(
-                    limit * page + (page === 1 ? 0 : 1)
-                  )}-${formatAmount(
-                    limit * (page + 1) > total ? total : limit * (page + 1)
-                  )}`
-                : `${formatAmount(limit * (page - 1) + 1)}-${formatAmount(
-                    limit * (page + 1) > total ? total : limit * (page + 1)
-                  )}`}
+              {formatAmount(limit * page + 1)}-
+              {formatAmount(
+                limit * (page + 1) > total ? total : limit * (page + 1)
+              )}
             </span>
             <Image
               src={ArrowRightIcon}

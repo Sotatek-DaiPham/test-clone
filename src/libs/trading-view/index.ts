@@ -1,20 +1,21 @@
 "use client";
-import { BigNumber } from "bignumber.js";
 import { API_PATH } from "@/constant/api-path";
 import { getAPI } from "@/service";
 import {
+  HistoryCallback,
   LibrarySymbolInfo,
   ResolveCallback,
   TradingTerminalWidgetOptions,
   widget,
 } from "@public/charting_library/charting_library.min";
+import { BigNumber } from "bignumber.js";
+import dayjs from "dayjs";
 import get from "lodash/get";
 import {
   configurationData,
   DEFAULT_TRADING_VIEW_INTERVAL,
   disabledFeatures,
   getInterval,
-  getIntervalString,
   ID_TRADING_VIEW,
 } from "./constants";
 import { getClientTimezone } from "./helpers";
@@ -22,20 +23,23 @@ import { getClientTimezone } from "./helpers";
 interface IParams {
   tokenAddress: string;
   symbol: string;
+  createdAt: string | null;
 }
 
 interface IDataChart {
   resolution: string;
   tokenAddress: string;
+  endTime?: number;
 }
 
-async function getData({ resolution, tokenAddress }: IDataChart) {
+async function getData({ resolution, tokenAddress, endTime }: IDataChart) {
   if (!tokenAddress) return [];
   const intervalInSeconds = getInterval(resolution) * 60 * 1000;
   const data = await getAPI(API_PATH.TRADING.TRADING_VIEW, {
     params: {
       tokenAddress,
       resolution: intervalInSeconds,
+      endDateMilis: endTime,
     },
   });
 
@@ -66,14 +70,15 @@ async function getData({ resolution, tokenAddress }: IDataChart) {
 export default async function onInitTradingView({
   tokenAddress,
   symbol,
+  createdAt,
 }: IParams) {
+  let timeFrame: number = 0;
   const widgetOptions: TradingTerminalWidgetOptions = {
     fullscreen: true,
     widgetbar: {
       details: false,
     },
     custom_css_url: "/tradingview-chart.css",
-    // toolbar_bg: "#16171c",
     symbol,
     timezone: getClientTimezone(),
     enabled_features: ["study_templates"],
@@ -91,12 +96,6 @@ export default async function onInitTradingView({
     toolbar_bg: "#171717",
     overrides: {
       "paneProperties.background": "#171717",
-      // headerWidgetBackgroundColor:
-      //   theme === THEME_MODE.LIGHT ? "#F7F7F7" : "#16171c",
-      // "scalesProperties.lineColor":
-      //   theme === THEME_MODE.LIGHT ? "#DDE1E8" : "#16171c",
-      // "scalesProperties.textColor":
-      //   theme === THEME_MODE.LIGHT ? "#9BA0AE" : "#9BA0AE",
     },
     datafeed: {
       onReady: (callback: any) => {
@@ -135,16 +134,25 @@ export default async function onInitTradingView({
       getBars: async (
         symbolInfo: any,
         resolution: any,
-        rangeStartDate: number,
-        rangeEndDate: number,
-        onResult: any,
+        from: number,
+        to: number,
+        onResult: HistoryCallback,
         onError: any,
         isFirstCall: boolean
       ) => {
-        if (isFirstCall && tokenAddress) {
+        console.log("time", { from, to });
+        if (createdAt && !isFirstCall && from < dayjs(createdAt).unix()) {
+          return;
+        }
+        if (tokenAddress) {
+          const startTime = from * 1000;
+          const endTime = to * 1000;
+          const time = isFirstCall ? endTime : startTime;
+          timeFrame = time;
           const data = await getData({
             resolution,
             tokenAddress,
+            endTime: time,
           });
           onResult(data, { noData: false });
         } else {
@@ -162,6 +170,7 @@ export default async function onInitTradingView({
           const [data] = await getData({
             resolution,
             tokenAddress,
+            endTime: timeFrame,
           });
           onTick(data);
           onResetCacheNeededCallback();

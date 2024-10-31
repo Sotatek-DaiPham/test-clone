@@ -6,7 +6,9 @@ import { useTokenDetail } from "@/context/TokenDetailContext";
 import { BeSuccessResponse } from "@/entities/response";
 import { getTimeDDMMMYYYYHHMM } from "@/helpers/date-time";
 import useSocket from "@/hooks/useSocket";
+import useWalletAuth from "@/hooks/useWalletAuth";
 import useWindowSize from "@/hooks/useWindowSize";
+import { ISocketData } from "@/interfaces/token";
 import { ESocketEvent } from "@/libs/socket/constants";
 import { postAPI } from "@/service";
 import { BackIcon } from "@public/assets";
@@ -21,8 +23,6 @@ import PriceSection from "../_components/PriceSection";
 import TabsSection from "../_components/TabsSection";
 import TokenInfoSection from "../_components/TokenInfoSection";
 import TradeSection from "../_components/TradeSection";
-import { ISocketData } from "@/interfaces/token";
-import useWalletAuth from "@/hooks/useWalletAuth";
 
 const TradingView = dynamic(() => import("@/components/app-trading-view"), {
   ssr: false,
@@ -50,7 +50,7 @@ const TokenDetailPage = () => {
     if (tokenDetail?.id && accessToken) {
       viewToken(tokenDetail?.id);
     }
-  }, [tokenDetail?.id]);
+  }, [tokenDetail?.id, accessToken]);
 
   useEffect(() => {
     if (isConnected) {
