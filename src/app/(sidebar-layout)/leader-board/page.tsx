@@ -139,7 +139,7 @@ const LeaderboardPage = () => {
             <EllipsisTextWithTooltip
               className="text-neutral-9 text-16px-normal"
               value={value}
-              maxWidth={100}
+              maxWidth="100%"
             />
           </div>
         );
