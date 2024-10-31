@@ -145,10 +145,8 @@ const TradeHistory = () => {
       dataIndex: "amount",
       key: "amount",
       render(value, record, index) {
-        const tokenAmount = BigNumber(value).div(TOKEN_DECIMAL);
-        return (
-          <div>{formatRoundFloorDisplayWithCompare(tokenAmount) || ""}</div>
-        );
+        const tokenAmount = BigNumber(value).div(TOKEN_DECIMAL).toString();
+        return <div>{nFormatter(tokenAmount) || ""}</div>;
       },
     },
     {

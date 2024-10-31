@@ -164,7 +164,7 @@ const AllTab = () => {
 
   const [params, setParams] = useState<any>({
     page: 1,
-    limit: 10,
+    limit: LIMIT_COIN_ITEMS_TABLE,
   });
 
   const debounceSearch = useDebounce(search);

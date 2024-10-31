@@ -8,6 +8,7 @@ import { getTimeDDMMMYYYYHHMM } from "@/helpers/date-time";
 import useSocket from "@/hooks/useSocket";
 import useWalletAuth from "@/hooks/useWalletAuth";
 import useWindowSize from "@/hooks/useWindowSize";
+import { ISocketData } from "@/interfaces/token";
 import { ESocketEvent } from "@/libs/socket/constants";
 import { postAPI } from "@/service";
 import { BackIcon } from "@public/assets";
@@ -29,10 +30,10 @@ const TradingView = dynamic(() => import("@/components/app-trading-view"), {
 
 const TokenDetailPage = () => {
   const { isDesktop } = useWindowSize();
+  const { userAddress, accessToken } = useWalletAuth();
   const { addEvent, isConnected, removeEvent } = useSocket();
   const router = useRouter();
-  const { tokenDetail } = useTokenDetail();
-  const { accessToken } = useWalletAuth();
+  const { tokenDetail, refetchDetail } = useTokenDetail();
   const { mutateAsync: viewToken } = useMutation({
     mutationFn: (
       tokenId: number
@@ -53,19 +54,34 @@ const TokenDetailPage = () => {
 
   useEffect(() => {
     if (isConnected) {
-      addEvent(ESocketEvent.BUY, (data) => {
-        if (data) {
-          console.log("data", data);
+      addEvent(ESocketEvent.BUY, (data: ISocketData) => {
+        if (
+          data.data.tokenAddress === tokenDetail?.contractAddress &&
+          data.data.userAddress.toLowerCase() === userAddress?.toLowerCase()
+        ) {
+          console.log("buy event");
+          refetchDetail();
         }
       });
-      addEvent(ESocketEvent.SELL, (data) => {
-        if (data) {
-          console.log("data", data);
+      addEvent(ESocketEvent.SELL, (data: ISocketData) => {
+        if (
+          data.data.tokenAddress === tokenDetail?.contractAddress &&
+          data.data.userAddress.toLowerCase() === userAddress?.toLowerCase()
+        ) {
+          console.log("sell event");
+          refetchDetail();
         }
       });
-      addEvent(ESocketEvent.CREATE_TOKEN, (data) => {
-        if (data) {
-          console.log("data", data);
+      addEvent(ESocketEvent.CREATE_TOKEN, (data: ISocketData) => {
+        console.log(
+          "buy event",
+          data.data.tokenAddress === tokenDetail?.contractAddress
+        );
+        if (
+          data.data.userAddress.toLowerCase() === userAddress?.toLowerCase()
+        ) {
+          console.log("create token event");
+          refetchDetail();
         }
       });
     }
@@ -121,7 +137,7 @@ const TokenDetailPage = () => {
           {tokenDetail?.kingOfTheHillDate && (
             <AppRoundedInfo
               customClassName="mt-4"
-              text={`Crowned king of the hill at ${getTimeDDMMMYYYYHHMM(
+              text={`Crowned king of the Sky at ${getTimeDDMMMYYYYHHMM(
                 tokenDetail.kingOfTheHillDate
               )}`}
             />

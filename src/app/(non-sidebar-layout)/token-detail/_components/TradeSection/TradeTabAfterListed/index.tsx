@@ -1,4 +1,4 @@
-import { pumpContractABI } from "@/abi/pumpContractAbi";
+import { routerContactAbi } from "@/abi/routerContract";
 import { usdtABI } from "@/abi/usdtAbi";
 import AppAmountSelect from "@/components/app-amount-select";
 import AppButton from "@/components/app-button";
@@ -15,22 +15,17 @@ import {
   TOKEN_DECIMAL,
   USDT_DECIMAL,
 } from "@/constant";
-import { envs } from "@/constant/envs";
 import { REGEX_INPUT_DECIMAL } from "@/constant/regex";
 import { useTokenDetail } from "@/context/TokenDetailContext";
 import {
-  calculateTokenReceive,
-  calculateUsdtShouldPay,
+  calculateTokenReceiveAfterListed,
+  calculateUsdtShouldPayAfterListed,
   decreaseByPercent,
-  increaseByPercent,
+  swapToken1ForToken2,
 } from "@/helpers/calculate";
-import {
-  formatRoundFloorDisplayWithCompare,
-  nFormatter,
-} from "@/helpers/formatNumber";
-import useCalculateAmount from "@/hooks/useCalculateAmount";
+import { nFormatter } from "@/helpers/formatNumber";
+import usePairContract from "@/hooks/usePairContract";
 import useTokenBalance from "@/hooks/useTokenBalance";
-import useUsdtAllowance from "@/hooks/useUsdtAllowance";
 import { ECoinType } from "@/interfaces/token";
 import { NotificationContext } from "@/libs/antd/NotificationProvider";
 import { useAppSelector } from "@/libs/hooks";
@@ -41,7 +36,14 @@ import { useWatch } from "antd/es/form/Form";
 import BigNumber from "bignumber.js";
 import Image from "next/image";
 import { useContext, useEffect, useMemo, useState } from "react";
+import { useReadContract } from "wagmi";
 import { TabKey } from "..";
+import { useMutation } from "@tanstack/react-query";
+import { AxiosResponse } from "axios";
+import { BeSuccessResponse } from "@/entities/response";
+import { postAPI } from "@/service";
+import { API_PATH } from "@/constant/api-path";
+import { envs } from "@/constant/envs";
 
 export const SETTINGS_FIELD_NAMES = {
   FONT_RUNNING: "fontRunning",
@@ -54,6 +56,8 @@ export interface FormSetting {
   [SETTINGS_FIELD_NAMES.SLIPPAGE]: string;
   [SETTINGS_FIELD_NAMES.PRIORITY_FEE]: string;
 }
+
+const CONTRACT_ROUTER = envs.CONTRACT_ROUTER_ADDRESS;
 
 const amountValidator = (value: string, usdtShouldPay: string) => {
   const amount = Number(value);
@@ -68,16 +72,15 @@ const amountValidator = (value: string, usdtShouldPay: string) => {
   return Promise.resolve();
 };
 
-const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
+const TradeTabAfterListed = ({ tabKey }: { tabKey: TabKey }) => {
   const { accessToken: isAuthenticated, address } = useAppSelector(
     (state) => state.user
   );
   const { error, success } = useContext(NotificationContext);
-  const { allowance, refetch: refetchAllownce } = useUsdtAllowance(address);
   const [openSettingModal, setOpenSettingModal] = useState(false);
   const [formSetting] = Form.useForm<FormSetting>();
   const [form] = Form.useForm<{ amount: string }>();
-  const { tokenDetail, refetchDetail } = useTokenDetail();
+  const { tokenDetail, refetch } = useTokenDetail();
   const [loadingStatus, setLoadingStatus] = useState({
     buyToken: false,
     sellToken: false,
@@ -88,75 +91,81 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
     fontRunning: false,
     priorityFee: "0",
   });
+  const { mutateAsync: confirmHash } = useMutation({
+    mutationFn: (
+      hash: string
+    ): Promise<AxiosResponse<BeSuccessResponse<any>>> => {
+      return postAPI(API_PATH.TRADING.CONFIRM(hash));
+    },
+    onError: (err) => {},
+    mutationKey: ["confirm-hash"],
+  });
 
+  const { memeTokenAddress, usdtAddress, memeTokenReserve, usdtReserve } =
+    usePairContract(tokenDetail?.pairListDex);
+
+  const { data: memeTokenAllowance } = useReadContract({
+    abi: usdtABI,
+    address: memeTokenAddress as any,
+    functionName: "allowance",
+    args: [address, CONTRACT_ROUTER],
+  });
+
+  const { data: usdtAllowance } = useReadContract({
+    abi: usdtABI,
+    address: usdtAddress as any,
+    functionName: "allowance",
+    args: [address, CONTRACT_ROUTER],
+  });
   const [coinType, setCoinType] = useState(ECoinType.StableCoin);
   const [isOpenApproveModal, setIsOpenApproveModal] = useState(false);
+  const USDTContract = useContract(usdtABI, usdtAddress as string);
+  const MemeTokenContract = useContract(usdtABI, memeTokenAddress as string);
 
-  const USDTContract = useContract(usdtABI, envs.USDT_ADDRESS);
-  const tokenFactoryContract = useContract(
-    pumpContractABI,
-    envs.TOKEN_FACTORY_ADDRESS || ""
-  );
-
-  const isTokenMint = !!tokenDetail?.contractAddress;
+  const routerContract = useContract(routerContactAbi, CONTRACT_ROUTER);
 
   const amountValue = useWatch(AMOUNT_FIELD_NAME, form);
 
-  const { amount: buyAmountOut } = useCalculateAmount({
-    contractAddress: tokenDetail?.contractAddress,
-    value: amountValue,
-    decimalIn: USDT_DECIMAL,
-    decimalOut: TOKEN_DECIMAL,
-    functionName: "calculateBuyAmountOut",
-    coinType: coinType,
-  });
-
-  const { amount: buyAmountIn } = useCalculateAmount({
-    contractAddress: tokenDetail?.contractAddress,
-    value: amountValue,
-    decimalIn: TOKEN_DECIMAL,
-    decimalOut: USDT_DECIMAL,
-    functionName: "calculateBuyAmountIn",
-    coinType: coinType,
-  });
-
-  const { amount: sellAmountOut, error: err } = useCalculateAmount({
-    contractAddress: tokenDetail?.contractAddress,
-    value: amountValue,
-    decimalIn: TOKEN_DECIMAL,
-    decimalOut: USDT_DECIMAL,
-    functionName: "calculateSellAmountOut",
-    coinType: coinType,
-  });
-
   const { balance, refetch: refetchUserBalance } = useTokenBalance(
     address,
-    tokenDetail?.contractAddress
+    memeTokenAddress
   );
 
   const usdtShouldPay: any = useMemo(() => {
     if (amountValue && coinType === ECoinType.MemeCoin) {
-      if (isTokenMint) {
-        return buyAmountIn;
-      } else {
-        return calculateUsdtShouldPay(amountValue);
-      }
+      return calculateUsdtShouldPayAfterListed(
+        memeTokenReserve,
+        usdtReserve,
+        amountValue
+      );
     } else {
       return "";
     }
-  }, [amountValue, buyAmountIn, isTokenMint, coinType]);
+  }, [amountValue, tabKey, coinType]);
 
   const tokenWillReceive: any = useMemo(() => {
     if (amountValue && coinType === ECoinType.StableCoin) {
-      if (isTokenMint) {
-        return buyAmountOut;
-      } else {
-        return calculateTokenReceive(amountValue);
-      }
+      return calculateTokenReceiveAfterListed(
+        memeTokenReserve,
+        usdtReserve,
+        amountValue
+      );
     } else {
       return "";
     }
-  }, [amountValue, buyAmountOut, isTokenMint, coinType]);
+  }, [amountValue, tabKey, coinType]);
+
+  const sellAmountOut: any = useMemo(() => {
+    if (amountValue) {
+      return swapToken1ForToken2(
+        memeTokenReserve,
+        usdtReserve,
+        BigNumber(amountValue)
+      );
+    } else {
+      return "";
+    }
+  }, [amountValue, tabKey, coinType]);
 
   const usdtAmount =
     coinType === ECoinType.MemeCoin
@@ -171,11 +180,6 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
     !amountValue ||
     !!(amountValue && BigNumber(amountValue).lt(MINIMUM_BUY_AMOUNT)) ||
     !!(usdtShouldPay && BigNumber(usdtShouldPay).lt(MINIMUM_BUY_AMOUNT));
-
-  const isDisableSellButton =
-    !isTokenMint ||
-    !amountValue ||
-    !!(sellAmountOut && BigNumber(sellAmountOut).lt(MINIMUM_BUY_AMOUNT));
 
   const handleSelect = (value: string) => {
     form.setFieldValue(AMOUNT_FIELD_NAME, value);
@@ -198,204 +202,37 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
   const handleTransactionSuccess = () => {
     form.resetFields();
     setIsOpenApproveModal(false);
-    refetchDetail();
-    refetchAllownce();
+    refetchUserBalance();
+    refetch();
     success({
       message: "Transaction completed",
       key: "1",
     });
   };
 
-  const handleCreateAndBuyToken = async () => {
-    setLoadingStatus((prev) => ({ ...prev, buyToken: true }));
-    const contract = await tokenFactoryContract;
-    const minTokenOut = Number(tradeSettings?.slippage)
-      ? decreaseByPercent(tokenWillReceive, tradeSettings?.slippage)
-      : 0;
-
-    const gasLimit = Number(tradeSettings?.priorityFee)
-      ? BigNumber(tradeSettings?.priorityFee).multipliedBy(1e10).toString()
-      : 0;
-    try {
-      console.log(
-        "buyAndCreateToken",
-        tokenDetail?.symbol,
-        tokenDetail?.name,
-        BigNumber(usdtAmount).multipliedBy(USDT_DECIMAL).toFixed(),
-        BigNumber(minTokenOut).multipliedBy(TOKEN_DECIMAL).toFixed(0),
-        address,
-        tokenDetail.idx,
-        address
-      );
-      const tx = await contract?.buyAndCreateToken(
-        tokenDetail?.symbol,
-        tokenDetail?.name,
-        BigNumber(usdtAmount).multipliedBy(USDT_DECIMAL).toFixed(),
-        BigNumber(minTokenOut).multipliedBy(TOKEN_DECIMAL).toFixed(0),
-        address,
-        tokenDetail.idx,
-        address,
-        {
-          gasLimit: gasLimit || undefined,
-        }
-      );
-      await tx.wait();
-      handleTransactionSuccess();
-      setLoadingStatus((prev) => ({ ...prev, buyToken: false }));
-    } catch (e: any) {
-      console.log({ e });
-      handleError(e);
-
-      setLoadingStatus((prev) => ({ ...prev, buyToken: false }));
-    }
-  };
-
-  const handleBuyTokenExactIn = async () => {
-    const contract = await tokenFactoryContract;
-    setLoadingStatus((prev) => ({ ...prev, buyToken: true }));
-    const minTokenOut = Number(tradeSettings?.slippage)
-      ? decreaseByPercent(tokenWillReceive, tradeSettings?.slippage)
-      : 0;
-    const gasLimit = Number(tradeSettings?.priorityFee)
-      ? BigNumber(tradeSettings?.priorityFee).multipliedBy(1e10).toString()
-      : 0;
-    try {
-      console.log(
-        "buyExactInParam",
-        tokenDetail?.contractAddress,
-        BigNumber(amountValue).multipliedBy(USDT_DECIMAL).toFixed(),
-        BigNumber(minTokenOut).multipliedBy(TOKEN_DECIMAL).toFixed(0),
-        address
-      );
-
-      const tx = await contract?.buyExactIn(
-        tokenDetail?.contractAddress,
-        BigNumber(amountValue).multipliedBy(USDT_DECIMAL).toFixed(),
-        BigNumber(minTokenOut).multipliedBy(TOKEN_DECIMAL).toFixed(0),
-        address,
-        {
-          gasLimit: gasLimit || undefined,
-        }
-      );
-      await tx.wait();
-      handleTransactionSuccess();
-      setLoadingStatus((prev) => ({ ...prev, buyToken: false }));
-    } catch (e: any) {
-      console.log({ e });
-      setLoadingStatus((prev) => ({ ...prev, buyToken: false }));
-      handleError(e);
-    }
-  };
-
-  const handleBuyTokenExactOut = async () => {
-    const contract = await tokenFactoryContract;
-    setLoadingStatus((prev) => ({ ...prev, buyToken: true }));
-    const maxUSDTOut = Number(tradeSettings?.slippage)
-      ? increaseByPercent(usdtShouldPay, tradeSettings?.slippage)
-      : usdtShouldPay;
-    const gasLimit = Number(tradeSettings?.priorityFee)
-      ? BigNumber(tradeSettings?.priorityFee).multipliedBy(1e10).toString()
-      : 0;
-
-    try {
-      console.log(
-        "buyExactOutParam",
-        tokenDetail?.contractAddress,
-        BigNumber(amountValue).multipliedBy(TOKEN_DECIMAL).toFixed(),
-        BigNumber(maxUSDTOut).multipliedBy(USDT_DECIMAL).toFixed(0),
-        address
-      );
-      const tx = await contract?.buyExactOut(
-        tokenDetail?.contractAddress,
-        BigNumber(amountValue).multipliedBy(TOKEN_DECIMAL).toFixed(),
-        BigNumber(maxUSDTOut).multipliedBy(USDT_DECIMAL).toFixed(0),
-        address,
-        {
-          gasLimit: gasLimit || undefined,
-        }
-      );
-      await tx.wait();
-      handleTransactionSuccess();
-      setLoadingStatus((prev) => ({ ...prev, buyToken: false }));
-    } catch (e: any) {
-      console.log({ e });
-      setLoadingStatus((prev) => ({ ...prev, buyToken: false }));
-      handleError(e);
-    }
-  };
-
-  const handleSellToken = async () => {
-    setLoadingStatus((prev) => ({ ...prev, sellToken: true }));
-    const contract = await tokenFactoryContract;
-    const minUSDTOut = Number(tradeSettings?.slippage)
-      ? decreaseByPercent(sellAmountOut, tradeSettings?.slippage)
-      : 0;
-
-    const gasLimit = Number(tradeSettings?.priorityFee)
-      ? BigNumber(tradeSettings?.priorityFee).multipliedBy(1e10).toString()
-      : 0;
-    try {
-      console.log(
-        "sellTokenParam",
-        tokenDetail?.contractAddress,
-        BigNumber(amountValue).multipliedBy(TOKEN_DECIMAL).toFixed(),
-        BigNumber(minUSDTOut).multipliedBy(USDT_DECIMAL).toFixed(0),
-        address
-      );
-      const tx = await contract?.sellExactIn(
-        tokenDetail?.contractAddress,
-        BigNumber(amountValue).multipliedBy(TOKEN_DECIMAL).toFixed(),
-        BigNumber(minUSDTOut).multipliedBy(USDT_DECIMAL).toFixed(0),
-        address,
-        {
-          gasLimit: gasLimit || undefined,
-        }
-      );
-      await tx.wait();
-      handleTransactionSuccess();
-      refetchUserBalance();
-      setLoadingStatus((prev) => ({ ...prev, sellToken: false }));
-    } catch (e: any) {
-      console.log({ e });
-      setLoadingStatus((prev) => ({ ...prev, sellToken: false }));
-      handleError(e);
-    }
-  };
-
-  const handleApprove = async () => {
+  const handleApproveUsdt = async () => {
     const contract = await USDTContract;
+
+    const approveAmount =
+      coinType === ECoinType.MemeCoin ? usdtShouldPay : amountValue;
+
     setLoadingStatus((prev) => ({ ...prev, approve: true }));
     try {
       console.log(
         "Approve params",
-        envs.TOKEN_FACTORY_ADDRESS,
-        BigNumber(usdtAmount)
-          .multipliedBy(USDT_DECIMAL)
-          .integerValue(BigNumber.ROUND_HALF_UP)
-          .toString()
+        CONTRACT_ROUTER,
+        BigNumber(approveAmount).multipliedBy(USDT_DECIMAL).toFixed(0)
       );
       const txn = await contract?.approve(
-        envs.TOKEN_FACTORY_ADDRESS,
-        BigNumber(usdtAmount)
-          .multipliedBy(USDT_DECIMAL)
-          .integerValue(BigNumber.ROUND_HALF_UP)
-          .toString()
+        CONTRACT_ROUTER,
+        BigNumber(approveAmount).multipliedBy(USDT_DECIMAL).toFixed(0)
       );
 
       await txn?.wait();
-      if (isTokenMint) {
-        if (coinType === ECoinType.MemeCoin) {
-          await handleBuyTokenExactOut();
-        } else {
-          await handleBuyTokenExactIn();
-        }
-      } else {
-        await handleCreateAndBuyToken();
-      }
+      await handleSwapToken();
 
       setLoadingStatus((prev) => ({ ...prev, approve: false }));
     } catch (e: any) {
-      console.log({ e });
       setLoadingStatus((prev) => ({
         ...prev,
         approve: false,
@@ -407,25 +244,38 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
     }
   };
 
-  const handleBuyToken = async () => {
-    const isApproved = BigNumber(usdtAmount).gt(allowance ?? "0");
+  const handleApproveToken = async () => {
+    const contract = await MemeTokenContract;
 
-    if (isApproved) {
-      setIsOpenApproveModal(true);
-      return;
-    }
+    setLoadingStatus((prev) => ({ ...prev, approve: true }));
 
-    if (isTokenMint) {
-      if (coinType === ECoinType.MemeCoin) {
-        await handleBuyTokenExactOut();
-      } else {
-        await handleBuyTokenExactIn();
-      }
-    } else {
-      await handleCreateAndBuyToken();
+    try {
+      console.log(
+        "Approve params",
+        CONTRACT_ROUTER,
+        BigNumber(amountValue).multipliedBy(TOKEN_DECIMAL).toFixed()
+      );
+      const txn = await contract?.approve(
+        CONTRACT_ROUTER,
+        BigNumber(amountValue).multipliedBy(TOKEN_DECIMAL).toFixed()
+      );
+
+      await txn?.wait();
+      await handleSwapToken();
+
+      setLoadingStatus((prev) => ({ ...prev, approve: false }));
+    } catch (e: any) {
+      console.log({ e });
+      setLoadingStatus((prev) => ({
+        ...prev,
+        approve: false,
+        sellToken: false,
+      }));
+      handleError(e);
+    } finally {
+      setIsOpenApproveModal(false);
     }
   };
-
   const renderAmountInOut = () => {
     if (tabKey === TabKey.BUY) {
       return (
@@ -447,11 +297,35 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
           You will receive
           <span className="text-white-neutral text-14px-medium">
             {" "}
-            {`${formatRoundFloorDisplayWithCompare(sellAmountOut) || 0} USDT`}
+            {`${nFormatter(sellAmountOut) || 0} USDT`}
           </span>
         </div>
       );
     }
+  };
+
+  const getSwapAmount = () => {
+    return tabKey === TabKey.BUY
+      ? coinType === ECoinType.MemeCoin
+        ? BigNumber(usdtShouldPay).multipliedBy(USDT_DECIMAL).toFixed(0)
+        : BigNumber(amountValue).multipliedBy(USDT_DECIMAL).toFixed(0)
+      : BigNumber(amountValue).multipliedBy(TOKEN_DECIMAL).toFixed();
+  };
+
+  const getMinTokenOut = () => {
+    return Number(tradeSettings?.slippage)
+      ? tabKey === TabKey.BUY
+        ? coinType === ECoinType.MemeCoin
+          ? decreaseByPercent(amountValue, tradeSettings?.slippage)
+          : decreaseByPercent(tokenWillReceive, tradeSettings?.slippage)
+        : decreaseByPercent(sellAmountOut, tradeSettings?.slippage)
+      : 0;
+  };
+
+  const getSwapPath = () => {
+    return tabKey === TabKey.BUY
+      ? [usdtAddress, memeTokenAddress]
+      : [memeTokenAddress, usdtAddress];
   };
 
   const handleError = (e: any) => {
@@ -466,6 +340,105 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
         message: e?.info?.error?.message,
       });
     }
+  };
+
+  const handleSwapToken = async () => {
+    if (tabKey === TabKey.BUY) {
+      setLoadingStatus((prev) => ({ ...prev, buyToken: true }));
+    } else {
+      setLoadingStatus((prev) => ({ ...prev, sellToken: true }));
+    }
+    const contract = await routerContract;
+
+    const gasLimit = Number(tradeSettings?.priorityFee)
+      ? BigNumber(tradeSettings?.priorityFee).multipliedBy(1e10).toString()
+      : 0;
+
+    const swapAmount = getSwapAmount();
+    const minTokenOut = getMinTokenOut();
+
+    const path = getSwapPath();
+
+    console.log(
+      "Swap Params",
+      swapAmount,
+      BigNumber(minTokenOut)
+        .multipliedBy(tabKey === TabKey.BUY ? TOKEN_DECIMAL : USDT_DECIMAL)
+        .toFixed(0),
+      path,
+      address,
+      address,
+      9999999999999
+    );
+
+    try {
+      const tx =
+        await contract?.swapExactTokensForTokensSupportingFeeOnTransferTokens(
+          swapAmount,
+          BigNumber(minTokenOut)
+            .multipliedBy(tabKey === TabKey.BUY ? TOKEN_DECIMAL : USDT_DECIMAL)
+            .toFixed(0),
+          path,
+          address,
+          address,
+          9999999999999,
+          {
+            gasLimit: gasLimit || undefined,
+          }
+        );
+
+      await tx.wait();
+      const txHash = tx?.hash;
+      await confirmHash(txHash);
+      handleTransactionSuccess();
+      if (tabKey === TabKey.BUY) {
+        setLoadingStatus((prev) => ({ ...prev, buyToken: false }));
+      } else {
+        refetchUserBalance();
+        setLoadingStatus((prev) => ({ ...prev, sellToken: false }));
+      }
+    } catch (e: any) {
+      console.log({ e });
+      if (tabKey === TabKey.BUY) {
+        setLoadingStatus((prev) => ({ ...prev, buyToken: false }));
+      } else {
+        setLoadingStatus((prev) => ({ ...prev, sellToken: false }));
+      }
+      handleError(e);
+    }
+  };
+
+  const handleBuyToken = async () => {
+    let needApprove;
+    if (coinType === ECoinType.MemeCoin) {
+      needApprove = BigNumber(usdtShouldPay).gt(
+        (usdtAllowance as string) ?? "0"
+      );
+    } else {
+      needApprove = BigNumber(amountValue)
+        .multipliedBy(USDT_DECIMAL)
+        .gt((usdtAllowance as string) ?? "0");
+    }
+
+    if (needApprove && tabKey === TabKey.BUY) {
+      setIsOpenApproveModal(true);
+      return;
+    }
+
+    await handleSwapToken();
+  };
+
+  const handleSellToken = async () => {
+    const needApprove = BigNumber(amountValue).gt(
+      (memeTokenAllowance as string) ?? "0"
+    );
+
+    if (needApprove) {
+      setIsOpenApproveModal(true);
+      return;
+    }
+
+    await handleSwapToken();
   };
 
   useEffect(() => {
@@ -493,7 +466,6 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
         initialValues={{
           amount: "",
         }}
-        onValuesChange={(_, values) => console.log("formValues", values)}
       >
         <Form.Item
           name={AMOUNT_FIELD_NAME}
@@ -543,10 +515,7 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
             <AppButton
               customClass="w-full"
               onClick={handleBuyToken}
-              loading={
-                loadingStatus.buyToken ||
-                (!isTokenMint && loadingStatus.approve)
-              }
+              loading={loadingStatus.buyToken || loadingStatus.approve}
               disabled={isDisableBuyButton}
             >
               Buy
@@ -556,7 +525,7 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
               customClass="w-full"
               onClick={handleSellToken}
               loading={loadingStatus.sellToken}
-              disabled={isDisableSellButton}
+              disabled={!amountValue}
             >
               Sell
             </AppButton>
@@ -588,7 +557,7 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
         onOkText="Approve"
         open={isOpenApproveModal}
         loading={loadingStatus.approve}
-        onOk={handleApprove}
+        onOk={tabKey === TabKey.BUY ? handleApproveUsdt : handleApproveToken}
         onCancel={() => {
           setIsOpenApproveModal(false);
           setLoadingStatus((prev) => ({ ...prev, approve: false }));
@@ -598,4 +567,4 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
   );
 };
 
-export default TradeTab;
+export default TradeTabAfterListed;

@@ -1,15 +1,22 @@
-import React from 'react';
-
+import React from "react";
+import "./styles.scss";
 interface AppRoundedInfoProps {
   text: string;
   onClick?: () => void;
   customClassName?: string;
+  disabled?: boolean;
 }
 
-const AppRoundedInfo: React.FC<AppRoundedInfoProps> = ({ text, onClick, customClassName }) => {
+const AppRoundedInfo: React.FC<AppRoundedInfoProps> = ({
+  text,
+  onClick,
+  customClassName,
+  disabled,
+}) => {
   return (
     <div
       className={`
+        app-rounded-info--${disabled ? "disabled" : "enabled"}
         px-[10px]
         py-3
         w-full
@@ -20,9 +27,9 @@ const AppRoundedInfo: React.FC<AppRoundedInfoProps> = ({ text, onClick, customCl
         flex justify-center
         shadow-[inset_0px_-2px_0px_0px_rgba(191,195,184,0.15)] 
         backdrop-blur-[59.4px]
-        ${customClassName || ''}
+        ${customClassName || ""}
         `}
-      onClick={onClick}
+      onClick={disabled ? () => {} : onClick}
     >
       {text}
     </div>

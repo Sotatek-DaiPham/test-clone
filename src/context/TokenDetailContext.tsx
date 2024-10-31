@@ -16,6 +16,7 @@ import { TOKEN_DECIMAL, USDT_DECIMAL } from "@/constant";
 import BigNumber from "bignumber.js";
 import { useAppSelector } from "@/libs/hooks";
 import { ReadContractErrorType } from "viem";
+import { AxiosResponse } from "axios";
 
 interface TokenDetailContextType {
   tokenDetail: ITokenDetailRes;
@@ -25,6 +26,9 @@ interface TokenDetailContextType {
   refetch: (
     options?: RefetchOptions
   ) => Promise<QueryObserverResult<unknown, ReadContractErrorType>>;
+  refetchDetail: (
+    options?: RefetchOptions
+  ) => Promise<QueryObserverResult<AxiosResponse<any, any>, Error>>;
 }
 
 const TokenDetailContext = createContext<TokenDetailContextType | undefined>(
@@ -64,7 +68,11 @@ export const TokenDetailProvider: React.FC<{ children: React.ReactNode }> = ({
     (state) => state.user
   );
 
-  const { data, isFetching: isTokenDetailLoading } = useQuery({
+  const {
+    data,
+    isFetching: isTokenDetailLoading,
+    refetch: refetchDetail,
+  } = useQuery({
     queryFn: () => {
       return getAPI(API_PATH.TOKEN.TOKEN_DETAIL, {
         params: {
@@ -101,6 +109,7 @@ export const TokenDetailProvider: React.FC<{ children: React.ReactNode }> = ({
         isTokenDetailLoading,
         isTokenDetailScLoading,
         refetch,
+        refetchDetail,
       }}
     >
       {children}

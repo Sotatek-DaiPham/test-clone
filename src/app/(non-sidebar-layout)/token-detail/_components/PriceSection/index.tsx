@@ -5,26 +5,15 @@ import { TOKEN_DECIMAL, USDT_DECIMAL, USDT_THRESHOLD } from "@/constant";
 import { useTokenDetail } from "@/context/TokenDetailContext";
 import { calculateUsdtShouldPay } from "@/helpers/calculate";
 import { nFormatter } from "@/helpers/formatNumber";
-import useSocket from "@/hooks/useSocket";
-import { ISocketData, ITokenDetailRes } from "@/interfaces/token";
-import { ESocketEvent } from "@/libs/socket/constants";
 import BigNumber from "bignumber.js";
-import { useEffect, useMemo } from "react";
-
-interface IPriceSectionProps {
-  tokenDetail: ITokenDetailRes;
-  loading: boolean;
-}
+import { useMemo } from "react";
 
 const PriceSection = () => {
-  const { isConnected, socket } = useSocket();
-
   const {
     tokenDetail,
     tokenDetailSC,
     isTokenDetailLoading,
     isTokenDetailScLoading,
-    refetch: refetchDetail,
   } = useTokenDetail();
 
   const tokenInfo = useMemo(() => {
@@ -62,16 +51,6 @@ const PriceSection = () => {
 
   const textLoading = isTokenDetailScLoading || isTokenDetailLoading;
 
-  useEffect(() => {
-    if (isConnected) {
-      socket?.on(ESocketEvent.CREATE_TOKEN, (data: ISocketData) => {
-        if (data.data.tokenAddress === tokenDetail?.contractAddress) {
-          refetchDetail();
-        }
-      });
-    }
-  }, [isConnected]);
-
   return (
     <div className="bg-neutral-2 rounded-[16px] shadow-[0px_40px_32px_-24px_rgba(15,15,15,0.12)] p-5 flex flex-col gap-[15px]">
       <div className="flex justify-between items-center">
@@ -80,7 +59,9 @@ const PriceSection = () => {
           ${" "}
           <AppTextLoading
             text={
-              BigNumber(tokenDetail?.price).div(USDT_DECIMAL).toString() || "-"
+              BigNumber(tokenDetail?.price)
+                .div(USDT_DECIMAL)
+                .toFixed(6, BigNumber.ROUND_DOWN) || "-"
             }
             loading={textLoading}
           />

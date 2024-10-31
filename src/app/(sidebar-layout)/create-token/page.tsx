@@ -24,6 +24,7 @@ import {
   calculateUsdtShouldPay,
 } from "@/helpers/calculate";
 import { ImageValidator } from "@/helpers/upload";
+import useUsdtAllowance from "@/hooks/useUsdtAllowance";
 import useWindowSize from "@/hooks/useWindowSize";
 import {
   ECoinType,
@@ -100,12 +101,14 @@ const CreateTokenPage = () => {
   const [isOpenApproveModal, setIsOpenApproveModal] = useState(false);
   const [tokenCreatedIdx, setTokenCreatedIdx] = useState("");
   const [tokenCreatedId, setTokenCreatedId] = useState("");
-  const { mutateAsync: uploadImages, isPending: isUploading } = useMutation({
+  const { mutateAsync: uploadImages } = useMutation({
     mutationFn: (payload: FormData) => {
       return postFormDataAPI(API_PATH.UPLOAD_IMAGE, payload);
     },
     mutationKey: ["upload-images"],
   });
+
+  const { allowance } = useUsdtAllowance(address);
 
   const { mutateAsync: createToken } = useMutation({
     mutationFn: (
@@ -133,12 +136,11 @@ const CreateTokenPage = () => {
     coinType === ECoinType.StableCoin && initialBuyAmount
       ? calculateTokenReceive(initialBuyAmount)
       : "";
-
   const buyAmount =
     coinType === ECoinType.MemeCoin
       ? BigNumber(usdtShouldPay)
           .multipliedBy(USDT_DECIMAL)
-          .integerValue(BigNumber.ROUND_CEIL)
+          .integerValue(BigNumber.ROUND_DOWN)
           .dividedBy(USDT_DECIMAL)
           .toFixed(6)
       : initialBuyAmount;
@@ -151,11 +153,6 @@ const CreateTokenPage = () => {
   const coinTickerValue = useWatch(FIELD_NAMES.COIN_TICKER, form);
 
   const USDTContract = useContract(usdtABI, envs.USDT_ADDRESS);
-
-  const Erc20Contract = useContract(
-    usdtABI,
-    "0x86E88a559bAb54AC09527b7c531aAf9F5a2B7126"
-  );
 
   const handleUploadFiles = async (file: File) => {
     const formData = new FormData();
@@ -192,31 +189,13 @@ const CreateTokenPage = () => {
     }
   };
 
-  const getUSDTAllowance = async () => {
-    const contract = await USDTContract;
-    try {
-      const res = await contract?.allowance(
-        address,
-        envs.TOKEN_FACTORY_ADDRESS
-      );
-      const allowance = BigNumber(res).div(USDT_DECIMAL).toString();
-      return allowance;
-    } catch (e) {
-      console.log({ e });
-    } finally {
-    }
-  };
-
   const handleApprove = async () => {
     const contract = await USDTContract;
     setLoadingStatus((prev) => ({ ...prev, approve: true }));
     try {
       const txn = await contract?.approve(
         envs.TOKEN_FACTORY_ADDRESS,
-        BigNumber(buyAmount)
-          .multipliedBy(USDT_DECIMAL)
-          .integerValue(BigNumber.ROUND_HALF_UP)
-          .toString()
+        BigNumber(buyAmount).multipliedBy(USDT_DECIMAL).toFixed()
       );
 
       await txn?.wait();
@@ -240,7 +219,10 @@ const CreateTokenPage = () => {
         "create params",
         values[FIELD_NAMES.COIN_TICKER],
         values[FIELD_NAMES.COIN_NAME],
-        BigNumber(buyAmount).multipliedBy(USDT_DECIMAL).toFixed(),
+        BigNumber(buyAmount)
+          .multipliedBy(USDT_DECIMAL)
+          .integerValue(BigNumber.ROUND_DOWN)
+          .toString(),
         0,
         address,
         idx,
@@ -250,7 +232,10 @@ const CreateTokenPage = () => {
       const tx = await contract?.buyAndCreateToken(
         values[FIELD_NAMES.COIN_TICKER],
         values[FIELD_NAMES.COIN_NAME],
-        BigNumber(buyAmount).multipliedBy(USDT_DECIMAL).toFixed(),
+        BigNumber(buyAmount)
+          .multipliedBy(USDT_DECIMAL)
+          .integerValue(BigNumber.ROUND_DOWN)
+          .toString(),
         0,
         address,
         idx,
@@ -298,8 +283,6 @@ const CreateTokenPage = () => {
         return;
       }
 
-      const allowance = await getUSDTAllowance();
-
       const isApproved = BigNumber(buyAmount).gt(allowance ?? "0");
 
       if (isApproved) {
@@ -321,24 +304,6 @@ const CreateTokenPage = () => {
       }
     }
   };
-
-  useEffect(() => {
-    const getUSDTAllowance = async () => {
-      const contract = await Erc20Contract;
-      try {
-        const res = await contract?.balanceOf(address);
-        const allowance = BigNumber(res).div(1e18).toString();
-        return allowance;
-      } catch (e) {
-        console.log({ e });
-      } finally {
-      }
-    };
-
-    (async () => {
-      await getUSDTAllowance();
-    })();
-  }, []);
 
   return (
     <div className="create-token-page w-full mr-auto ml-auto">
@@ -370,7 +335,7 @@ const CreateTokenPage = () => {
               rules={[
                 {
                   required: true,
-                  message: "Coin name is required",
+                  message: "Token name is required",
                 },
               ]}
             >
@@ -384,7 +349,7 @@ const CreateTokenPage = () => {
               rules={[
                 {
                   required: true,
-                  message: "Coin ticker is required",
+                  message: "Token ticker is required",
                 },
               ]}
             >
