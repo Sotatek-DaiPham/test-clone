@@ -97,7 +97,11 @@ const DatePickerModal = ({
                 rules={[generateStartTimeValidator]}
                 dependencies={["endDate"]}
               >
-                <DatePicker format={DATE_TIME_FORMAT} showTime />
+                <DatePicker
+                  format={DATE_TIME_FORMAT}
+                  showTime
+                  placeholder="dd/mm/yyyy hh:mm"
+                />
               </Form.Item>
             </div>
             <div className="flex items-stretch rounded-[8px] border border-neutral-4 h-9">
@@ -109,7 +113,11 @@ const DatePickerModal = ({
                 rules={[generateEndTimeValidator]}
                 dependencies={["startDate"]}
               >
-                <DatePicker format={DATE_TIME_FORMAT} showTime />
+                <DatePicker
+                  format={DATE_TIME_FORMAT}
+                  showTime
+                  placeholder="dd/mm/yyyy hh:mm"
+                />
               </Form.Item>
             </div>
           </div>

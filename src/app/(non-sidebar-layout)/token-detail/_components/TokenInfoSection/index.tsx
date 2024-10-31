@@ -44,9 +44,11 @@ const TokenInfoSection = ({ tokenDetail }: ITokenInfoSectionProps) => {
           </div>
 
           <div className="w-full">
-            <div className="text-14px-medium text-error-3 mt-[30px] mb-[10px]">
-              Links
-            </div>
+            {SocialLink.every((item) => !item.link) ? null : (
+              <div className="text-14px-medium text-error-3 mt-[30px] mb-[10px]">
+                Links
+              </div>
+            )}
             <div className="flex flex-wrap gap-3">
               {SocialLink.map((item) =>
                 item?.link ? (

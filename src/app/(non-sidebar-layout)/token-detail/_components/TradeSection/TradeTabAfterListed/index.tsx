@@ -87,9 +87,9 @@ const TradeTabAfterListed = ({ tabKey }: { tabKey: TabKey }) => {
     approve: false,
   });
   const [tradeSettings, setTradeSettings] = useState<FormSetting>({
-    slippage: "",
+    slippage: "0",
     fontRunning: false,
-    priorityFee: "",
+    priorityFee: "0",
   });
   const { mutateAsync: confirmHash } = useMutation({
     mutationFn: (
@@ -313,7 +313,7 @@ const TradeTabAfterListed = ({ tabKey }: { tabKey: TabKey }) => {
   };
 
   const getMinTokenOut = () => {
-    return tradeSettings?.slippage
+    return Number(tradeSettings?.slippage)
       ? tabKey === TabKey.BUY
         ? coinType === ECoinType.MemeCoin
           ? decreaseByPercent(amountValue, tradeSettings?.slippage)
@@ -350,7 +350,7 @@ const TradeTabAfterListed = ({ tabKey }: { tabKey: TabKey }) => {
     }
     const contract = await routerContract;
 
-    const gasLimit = tradeSettings?.priorityFee
+    const gasLimit = Number(tradeSettings?.priorityFee)
       ? BigNumber(tradeSettings?.priorityFee).multipliedBy(1e10).toString()
       : 0;
 

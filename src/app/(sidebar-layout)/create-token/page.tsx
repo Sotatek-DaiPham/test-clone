@@ -335,7 +335,7 @@ const CreateTokenPage = () => {
               rules={[
                 {
                   required: true,
-                  message: "Coin name is required",
+                  message: "Token name is required",
                 },
               ]}
             >
@@ -349,7 +349,7 @@ const CreateTokenPage = () => {
               rules={[
                 {
                   required: true,
-                  message: "Coin ticker is required",
+                  message: "Token ticker is required",
                 },
               ]}
             >
