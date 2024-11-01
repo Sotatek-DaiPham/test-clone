@@ -14,7 +14,6 @@ import { postAPI } from "@/service";
 import { BackIcon } from "@public/assets";
 import { useMutation } from "@tanstack/react-query";
 import { AxiosResponse } from "axios";
-import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
@@ -23,10 +22,7 @@ import PriceSection from "../_components/PriceSection";
 import TabsSection from "../_components/TabsSection";
 import TokenInfoSection from "../_components/TokenInfoSection";
 import TradeSection from "../_components/TradeSection";
-
-const TradingView = dynamic(() => import("@/components/app-trading-view"), {
-  ssr: false,
-});
+import TradingView from "../_components/TradingView";
 
 const TokenDetailPage = () => {
   const { isDesktop } = useWindowSize();
@@ -59,7 +55,6 @@ const TokenDetailPage = () => {
           data.data.tokenAddress === tokenDetail?.contractAddress &&
           data.data.userAddress.toLowerCase() === userAddress?.toLowerCase()
         ) {
-          console.log("buy event");
           refetchDetail();
         }
       });
@@ -68,15 +63,10 @@ const TokenDetailPage = () => {
           data.data.tokenAddress === tokenDetail?.contractAddress &&
           data.data.userAddress.toLowerCase() === userAddress?.toLowerCase()
         ) {
-          console.log("sell event");
           refetchDetail();
         }
       });
       addEvent(ESocketEvent.CREATE_TOKEN, (data: ISocketData) => {
-        console.log(
-          "buy event",
-          data.data.tokenAddress === tokenDetail?.contractAddress
-        );
         if (
           data.data.userAddress.toLowerCase() === userAddress?.toLowerCase()
         ) {
