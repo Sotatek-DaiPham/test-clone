@@ -6,7 +6,7 @@
     "dev": "next dev",
     "start:dev": "next start -p 8005",
     "start:testing": "next start -p 8005",
-    "start:staging": "next start -p 9995",
+    "start:staging": "next start -p 9993",
     "dev:testing": "env-cmd -f .env.testing next dev",
     "dev:staging": "env-cmd -f .env.staging next dev",
     "build:staging": "env-cmd -f .env.staging next build",
