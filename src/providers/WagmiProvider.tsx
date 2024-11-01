@@ -52,7 +52,7 @@ export function useAccountModal(): AccountModalContextStates {
 }
 
 const AccountModalProvider = ({ children }: Props) => {
-  const [isOpen, setOpen] = React.useState(true);
+  const [isOpen, setOpen] = React.useState(false);
   const { address } = useAccount();
 
   const {
