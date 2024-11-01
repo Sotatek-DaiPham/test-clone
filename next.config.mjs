@@ -12,6 +12,15 @@ const nextConfig = {
       },
     ],
   },
+  async redirects() {
+    return [
+      {
+        source: "/",
+        destination: "/en/rain-pump",
+        permanent: true,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

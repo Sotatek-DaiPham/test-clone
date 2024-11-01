@@ -1,4 +1,3 @@
-import ProjectCard from "@/app/(sidebar-layout)/_components/ProjectCard";
 import AppButton from "@/components/app-button";
 import AppDivider from "@/components/app-divider";
 import AppInput from "@/components/app-input";
@@ -21,6 +20,7 @@ import get from "lodash/get";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import TabTitle from "../../TabTitle";
+import ProjectCard from "../../ProjectCard";
 
 const PortfolioTab = ({ walletAddress }: { walletAddress: string }) => {
   const { addEvent, isConnected, removeEvent } = useSocket();

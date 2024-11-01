@@ -1,4 +1,3 @@
-import ProjectCard from "@/app/(sidebar-layout)/_components/ProjectCard";
 import AppDivider from "@/components/app-divider";
 import AppInput from "@/components/app-input";
 import AppPaginationCustom from "@/components/app-pagination/app-pagination-custom";
@@ -18,6 +17,7 @@ import { AxiosResponse } from "axios";
 import get from "lodash/get";
 import { useEffect, useState } from "react";
 import TabTitle from "../../TabTitle";
+import ProjectCard from "../../ProjectCard";
 
 const CoinCreatedTab = ({ walletAddress }: { walletAddress: string }) => {
   const { addEvent, isConnected, removeEvent } = useSocket();
