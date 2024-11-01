@@ -24,9 +24,13 @@ import TabsSection from "../_components/TabsSection";
 import TokenInfoSection from "../_components/TokenInfoSection";
 import TradeSection from "../_components/TradeSection";
 
-const TradingView = dynamic(() => import("@/components/app-trading-view"), {
-  ssr: false,
-});
+const TradingView = dynamic(
+  () =>
+    import("@/components/app-trading-view").then((mod: any) => mod.TradingView),
+  {
+    ssr: false,
+  }
+);
 
 const TokenDetailPage = () => {
   const { isDesktop } = useWindowSize();
