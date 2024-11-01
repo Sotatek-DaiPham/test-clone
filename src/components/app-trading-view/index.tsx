@@ -140,7 +140,7 @@ const AppTradingView = (props: ChartContainerProps) => {
         });
       });
     }
-  }, [isConnected]);
+  }, [isConnected, tokenAddress]);
 
   useEffect(() => {
     if (isChartReady) {
