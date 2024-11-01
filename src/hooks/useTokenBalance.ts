@@ -3,7 +3,11 @@ import { TOKEN_DECIMAL } from "@/constant";
 import BigNumber from "bignumber.js";
 import { useReadContract } from "wagmi";
 
-const useTokenBalance = (userAddress: any, contractAddress: any) => {
+const useTokenBalance = (
+  userAddress: any,
+  contractAddress: any,
+  tokenDecimal?: number
+) => {
   const { data, ...rest } = useReadContract({
     abi: usdtABI,
     address: contractAddress,
@@ -15,9 +19,11 @@ const useTokenBalance = (userAddress: any, contractAddress: any) => {
   });
 
   return {
-    balance: BigNumber(data as string)
-      .div(TOKEN_DECIMAL)
-      .toString(),
+    balance: data
+      ? BigNumber(data as string)
+          .div(tokenDecimal || TOKEN_DECIMAL)
+          .toString()
+      : "0",
     ...rest,
   };
 };

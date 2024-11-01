@@ -1,14 +1,17 @@
-import { useEffect } from "react";
+import AppButton from "@/components/app-button";
+import { formatAmount } from "@/helpers/formatNumber";
+import { shortenAddress } from "@/helpers/shorten";
 import useWalletAuth from "@/hooks/useWalletAuth";
+import useWindowSize from "@/hooks/useWindowSize";
+import { useAccountModal } from "@/providers/WagmiProvider";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { Flex } from "antd";
-import { shortenAddress } from "@/helpers/shorten";
-import AppButton from "@/components/app-button";
-import useWindowSize from "@/hooks/useWindowSize";
+import { useEffect } from "react";
 
 const ConnectWalletButton = ({ customClass }: { customClass?: string }) => {
   const { userAddress, isConnected, accessToken, logout } = useWalletAuth();
   const { isDesktop } = useWindowSize();
+  const { setOpenAccountModal, userBalance } = useAccountModal();
 
   useEffect(() => {
     if (!isConnected) {
@@ -27,7 +30,6 @@ const ConnectWalletButton = ({ customClass }: { customClass?: string }) => {
       {({
         account,
         chain,
-        openAccountModal,
         openChainModal,
         openConnectModal,
         authenticationStatus,
@@ -79,7 +81,7 @@ const ConnectWalletButton = ({ customClass }: { customClass?: string }) => {
 
                   <div
                     className="flex rounded-[90px] border-[1.5px] border-neutral-4 text-white-neutral text-14px-bold h-[32px] md:h-[40px] overflow-hidden cursor-pointer  w-full md:w-auto"
-                    onClick={openAccountModal}
+                    onClick={() => setOpenAccountModal(true)}
                   >
                     <div className="flex items-center gap-2.5 h-full flex-1 md:flex-auto ml-[5px] mr-2.5">
                       {chain.hasIcon && (
@@ -103,9 +105,7 @@ const ConnectWalletButton = ({ customClass }: { customClass?: string }) => {
                         </div>
                       )}
                       <div className="text-12px-medium">
-                        {account.displayBalance
-                          ? ` ${account.displayBalance}`
-                          : ""}
+                        {formatAmount(userBalance)} USDT
                       </div>
                     </div>
 
