@@ -39,12 +39,7 @@ export const ImageLogoValidator = (
 };
 
 export const checkValidUploadFileType = (file: File) => {
-  const extFromFileName = getFileExt(file?.name as string);
-  console.log("extFromFileName", extFromFileName);
-  return (
-    ALLOW_FILE_TYPE.includes(file.type) &&
-    ALLOW_FILE_EXTENSION.includes(extFromFileName as string)
-  );
+  return ALLOW_FILE_TYPE.includes(file.type);
 };
 
 export const ALLOW_FILE_TYPE = [

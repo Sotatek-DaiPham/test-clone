@@ -1,7 +1,3 @@
-import {
-  FormSetting,
-  SETTINGS_FIELD_NAMES,
-} from "@/app/(non-sidebar-layout)/token-detail/_components/TradeSection/TradeTab";
 import AppAmountSelect from "@/components/app-amount-select";
 import AppButton from "@/components/app-button";
 import AppCheckbox from "@/components/app-checkbox";
@@ -15,6 +11,10 @@ import { useWatch } from "antd/es/form/Form";
 import { Dispatch, SetStateAction, useContext } from "react";
 import AppModal from "..";
 import "./styles.scss";
+import {
+  FormSetting,
+  SETTINGS_FIELD_NAMES,
+} from "@/app/en/rain-pump/(non-sidebar-layout)/token-detail/_components/TradeSection/TradeTab";
 
 interface ITradeSettingModal extends ModalProps {
   onOk: () => void;
