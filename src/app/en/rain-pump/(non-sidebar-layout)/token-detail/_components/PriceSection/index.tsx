@@ -1,3 +1,4 @@
+import AppNumberToolTip from "@/components/app-number-tooltip";
 import AppProgress from "@/components/app-progress";
 import AppTextLoading from "@/components/app-text-loading";
 import AppTooltip from "@/components/app-tooltip";
@@ -59,9 +60,13 @@ const PriceSection = () => {
           ${" "}
           <AppTextLoading
             text={
-              BigNumber(tokenDetail?.price)
-                .div(USDT_DECIMAL)
-                .toFixed(6, BigNumber.ROUND_DOWN) || "-"
+              <AppNumberToolTip
+                decimal={6}
+                isFormatterK={false}
+                value={BigNumber(tokenDetail?.price)
+                  .div(USDT_DECIMAL)
+                  .toString()}
+              />
             }
             loading={textLoading}
           />
@@ -72,7 +77,13 @@ const PriceSection = () => {
         <div className="text-14px-medium text-white-neutral">
           ${" "}
           <AppTextLoading
-            text={nFormatter(tokenInfo.marketCap) || "-"}
+            text={
+              <AppNumberToolTip
+                decimal={6}
+                isFormatterK={false}
+                value={tokenInfo?.marketCap}
+              />
+            }
             loading={textLoading}
           />
         </div>
@@ -82,9 +93,15 @@ const PriceSection = () => {
         <div className="text-14px-medium text-white-neutral">
           ${" "}
           <AppTextLoading
-            text={nFormatter(
-              BigNumber(tokenDetail?.volume).div(USDT_DECIMAL).toString()
-            )}
+            text={
+              <AppNumberToolTip
+                decimal={6}
+                isFormatterK={false}
+                value={BigNumber(tokenDetail?.volume)
+                  .div(USDT_DECIMAL)
+                  .toString()}
+              />
+            }
             loading={textLoading}
           />
         </div>

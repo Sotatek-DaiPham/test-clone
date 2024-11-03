@@ -5,6 +5,7 @@ import AppButton from "@/components/app-button";
 import AppInputBalance from "@/components/app-input/app-input-balance";
 import ConfirmModal from "@/components/app-modal/app-confirm-modal";
 import TradeSettingModal from "@/components/app-modal/app-setting-modal";
+import AppNumberToolTip from "@/components/app-number-tooltip";
 import ConnectWalletButton from "@/components/Button/ConnectWallet";
 import {
   AMOUNT_FIELD_NAME,
@@ -24,10 +25,6 @@ import {
   decreaseByPercent,
   increaseByPercent,
 } from "@/helpers/calculate";
-import {
-  formatRoundFloorDisplayWithCompare,
-  nFormatter,
-} from "@/helpers/formatNumber";
 import useCalculateAmount from "@/hooks/useCalculateAmount";
 import useTokenBalance from "@/hooks/useTokenBalance";
 import useUsdtAllowance from "@/hooks/useUsdtAllowance";
@@ -41,7 +38,7 @@ import { useWatch } from "antd/es/form/Form";
 import BigNumber from "bignumber.js";
 import Image from "next/image";
 import { useContext, useEffect, useMemo, useState } from "react";
-import { TabKey } from "..";
+import { TabKey, useTradeSettings } from "..";
 
 export const SETTINGS_FIELD_NAMES = {
   FONT_RUNNING: "fontRunning",
@@ -83,11 +80,8 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
     sellToken: false,
     approve: false,
   });
-  const [tradeSettings, setTradeSettings] = useState<FormSetting>({
-    slippage: "0",
-    fontRunning: false,
-    priorityFee: "0",
-  });
+
+  const { tradeSettings } = useTradeSettings();
 
   const [coinType, setCoinType] = useState(ECoinType.StableCoin);
   const [isOpenApproveModal, setIsOpenApproveModal] = useState(false);
@@ -435,9 +429,25 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
             : "You will receive "}
           <span className="text-white-neutral text-14px-medium">
             {" "}
-            {coinType === ECoinType.MemeCoin
-              ? `${nFormatter(usdtShouldPay) || 0} USDT`
-              : `${nFormatter(tokenWillReceive) || 0} ${tokenDetail?.symbol}`}
+            {coinType === ECoinType.MemeCoin ? (
+              <>
+                <AppNumberToolTip
+                  decimal={6}
+                  isFormatterK={false}
+                  value={BigNumber(usdtShouldPay).toString()}
+                />{" "}
+                USDT
+              </>
+            ) : (
+              <>
+                <AppNumberToolTip
+                  decimal={6}
+                  isFormatterK={false}
+                  value={BigNumber(tokenWillReceive).toString()}
+                />{" "}
+                {tokenDetail?.symbol}
+              </>
+            )}
           </span>
         </div>
       );
@@ -447,7 +457,12 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
           You will receive
           <span className="text-white-neutral text-14px-medium">
             {" "}
-            {`${formatRoundFloorDisplayWithCompare(sellAmountOut) || 0} USDT`}
+            <AppNumberToolTip
+              decimal={6}
+              isFormatterK={false}
+              value={BigNumber(sellAmountOut).toString()}
+            />{" "}
+            USDT
           </span>
         </div>
       );
@@ -459,9 +474,17 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
       error({
         message: "Transaction denied",
       });
+      return;
     }
 
-    if (e?.info?.error?.code === ErrorCode.INSUFFICIENT_FEE) {
+    if (e?.action === "estimateGas") {
+      error({
+        message: "Insufficient fee",
+      });
+      return;
+    }
+
+    if (e?.info?.error?.message) {
       error({
         message: e?.info?.error?.message,
       });
@@ -580,9 +603,8 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
         }}
         onOk={() => setOpenSettingModal(false)}
         form={formSetting}
-        tradeSettings={tradeSettings}
-        setTradeSettings={setTradeSettings}
       />
+
       <ConfirmModal
         title="You need to approve your tokens in order to make transaction"
         onOkText="Approve"

@@ -72,7 +72,7 @@ const AccountModal = ({ onClose, ...props }: IAccountModal) => {
           <div className="address text-white-neutral font-[600] text-center text-[18px] leading-[24px]">
             <span>{shortenAddress(address || "", 4, -4)}</span>
           </div>
-          <div className="balance text-white-neutral font-[600] text-center text-[#fff9] leading-[18px]">
+          <div className="balance  font-[600] text-center text-[#fff9] leading-[18px]">
             <span>{formatAmount(userBalance)} USDT</span>
           </div>
         </div>

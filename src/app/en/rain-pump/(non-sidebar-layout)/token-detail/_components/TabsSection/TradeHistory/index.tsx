@@ -1,18 +1,19 @@
 import DatePickerModal from "@/components/app-modal/app-date-picker-modal";
-import AppPagination from "@/components/app-pagination";
+import AppNumberToolTip from "@/components/app-number-tooltip";
+import AppPaginationCustom from "@/components/app-pagination/app-pagination-custom";
 import AppTable from "@/components/app-table";
 import AppTruncateText from "@/components/app-truncate-text";
-import ShowingPage from "@/components/showing-page";
-import { ETradeAction, TOKEN_DECIMAL, USDT_DECIMAL } from "@/constant";
+import {
+  ETradeAction,
+  LIMIT_COIN_ITEMS_TABLE,
+  TOKEN_DECIMAL,
+  USDT_DECIMAL,
+} from "@/constant";
 import { API_PATH } from "@/constant/api-path";
 import { envs } from "@/constant/envs";
 import { PATH_ROUTER } from "@/constant/router";
 import { useTokenDetail } from "@/context/TokenDetailContext";
 import { getTimeDDMMMYYYYHHMM } from "@/helpers/date-time";
-import {
-  formatRoundFloorDisplayWithCompare,
-  nFormatter,
-} from "@/helpers/formatNumber";
 import { cleanParamObject } from "@/helpers/shorten";
 import useSocket from "@/hooks/useSocket";
 import { IMetaData } from "@/interfaces";
@@ -62,7 +63,7 @@ const TradeHistory = () => {
         params: cleanParamObject({
           tokenAddress: tokenDetail?.contractAddress,
           page: searchParams.page,
-          limit: 100,
+          limit: LIMIT_COIN_ITEMS_TABLE,
           startDate: searchParams.startDate,
           endDate: searchParams.endDate,
           action: filters.length > 1 ? "" : filters[0],
@@ -136,8 +137,15 @@ const TradeHistory = () => {
       dataIndex: "usdt_amount",
       key: "usdt_amount",
       render(value, record, index) {
-        const usdtAmount = BigNumber(value).div(USDT_DECIMAL).toString();
-        return <div>{nFormatter(usdtAmount, 6) || ""}</div>;
+        return (
+          <div>
+            <AppNumberToolTip
+              decimal={6}
+              isFormatterK={false}
+              value={BigNumber(value).div(USDT_DECIMAL).toString()}
+            />
+          </div>
+        );
       },
     },
     {
@@ -145,8 +153,15 @@ const TradeHistory = () => {
       dataIndex: "amount",
       key: "amount",
       render(value, record, index) {
-        const tokenAmount = BigNumber(value).div(TOKEN_DECIMAL).toString();
-        return <div>{nFormatter(tokenAmount) || ""}</div>;
+        return (
+          <div>
+            <AppNumberToolTip
+              decimal={6}
+              isFormatterK={false}
+              value={BigNumber(value).div(TOKEN_DECIMAL).toString()}
+            />
+          </div>
+        );
       },
     },
     {
@@ -227,19 +242,17 @@ const TradeHistory = () => {
         loading={isFetching}
         pagination={false}
       />
-      <AppPagination
-        className="w-full !justify-end !mr-6"
-        hideOnSinglePage={true}
-        showTotal={(total, range) => (
-          <ShowingPage total={total} range={range} />
-        )}
-        current={searchParams?.page}
-        pageSize={100}
-        total={metadata?.total}
-        onChange={(page, size) => {
-          setSearchParams((prev: any) => ({ ...prev, page }));
-        }}
-      />
+      <div className="mt-4">
+        <AppPaginationCustom
+          label="tokens"
+          total={metadata?.total}
+          page={searchParams.page}
+          limit={LIMIT_COIN_ITEMS_TABLE}
+          onChange={(page) => setSearchParams({ ...searchParams, page })}
+          hideOnSinglePage={true}
+        />
+      </div>
+
       <DatePickerModal
         form={form}
         open={isDatePickerModalOpen}
