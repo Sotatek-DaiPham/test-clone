@@ -277,11 +277,11 @@ const TradeTabAfterListed = ({ tabKey }: { tabKey: TabKey }) => {
   const renderAmountInOut = () => {
     if (tabKey === TabKey.BUY) {
       return (
-        <div className="text-14px-normal text-neutral-7">
+        <div className="text-16px-normal text-neutral-7">
           {coinType === ECoinType.MemeCoin
             ? "You must pay "
             : "You will receive "}
-          <span className="text-white-neutral text-14px-medium">
+          <span className="text-white-neutral text-16px-medium">
             {" "}
             {coinType === ECoinType.MemeCoin
               ? `${nFormatter(usdtShouldPay) || 0} USDT`
@@ -291,9 +291,9 @@ const TradeTabAfterListed = ({ tabKey }: { tabKey: TabKey }) => {
       );
     } else {
       return (
-        <div className="text-14px-normal text-neutral-7">
+        <div className="text-16px-normal text-neutral-7">
           You will receive
-          <span className="text-white-neutral text-14px-medium">
+          <span className="text-white-neutral text-16px-medium">
             {" "}
             {`${nFormatter(sellAmountOut) || 0} USDT`}
           </span>

@@ -423,11 +423,11 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
   const renderAmountInOut = () => {
     if (tabKey === TabKey.BUY) {
       return (
-        <div className="text-14px-normal text-neutral-7">
+        <div className="text-16px-normal text-neutral-7">
           {coinType === ECoinType.MemeCoin
             ? "You must pay "
             : "You will receive "}
-          <span className="text-white-neutral text-14px-medium">
+          <span className="text-white-neutral text-16px-medium">
             {" "}
             {coinType === ECoinType.MemeCoin ? (
               <>
@@ -453,9 +453,9 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
       );
     } else {
       return (
-        <div className="text-14px-normal text-neutral-7">
+        <div className="text-16px-normal text-neutral-7">
           You will receive
-          <span className="text-white-neutral text-14px-medium">
+          <span className="text-white-neutral text-16px-medium">
             {" "}
             <AppNumberToolTip
               decimal={6}
@@ -473,6 +473,21 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
     if (e?.code === ErrorCode.MetamaskDeniedTx) {
       error({
         message: "Transaction denied",
+      });
+      return;
+    }
+
+    if (e?.reason === ErrorCode.SLIPPAGE_ERROR) {
+      error({
+        message:
+          "The transaction is cancelled due to the price goes out of the slippage range",
+      });
+      return;
+    }
+
+    if (e?.shortMessage === ErrorCode.TRANSACTION_REVERTED) {
+      error({
+        message: `There are no ${tokenDetail?.symbol} left for sale`,
       });
       return;
     }

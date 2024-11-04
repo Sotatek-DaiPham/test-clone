@@ -25,7 +25,7 @@ import {
 import { ESocketEvent } from "@/libs/socket/constants";
 import { getAPI } from "@/service";
 import { ArrowExport, TableFilterIcon } from "@public/assets";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Checkbox } from "antd";
 import { useForm } from "antd/es/form/Form";
 import { ColumnType } from "antd/es/table";
@@ -37,6 +37,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 const TradeHistory = () => {
+  const queryClient = useQueryClient();
   const { tokenDetail } = useTokenDetail();
   const router = useRouter();
   const [searchParams, setSearchParams] = useState<{
@@ -222,6 +223,22 @@ const TradeHistory = () => {
     if (isConnected) {
       socket?.on(ESocketEvent.BUY, (data: ISocketData) => {
         if (data.data.tokenAddress === tokenDetail?.contractAddress) {
+          // queryClient.setQueryData(
+          //   [
+          //     API_PATH.TOKEN.TRADING_HISTORIES,
+          //     searchParams,
+          //     tokenDetail?.contractAddress,
+          //     filters,
+          //   ],
+          //   (oldData: any) => {
+          //     if (!oldData) return { data: [data.data], total: 1 };
+
+          //     return {
+          //       ...oldData,
+          //       data: [data.data, ...oldData.data.slice(0, 99)],
+          //     };
+          //   }
+          // );
           refetch();
         }
       });

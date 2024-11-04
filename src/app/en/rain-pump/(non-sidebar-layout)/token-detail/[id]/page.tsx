@@ -23,6 +23,7 @@ import TabsSection from "../_components/TabsSection";
 import TokenInfoSection from "../_components/TokenInfoSection";
 import TradeSection from "../_components/TradeSection";
 import TradingView from "../_components/TradingView";
+import { PATH_ROUTER } from "@/constant/router";
 
 const TokenDetailPage = () => {
   const { isDesktop } = useWindowSize();
@@ -86,10 +87,10 @@ const TokenDetailPage = () => {
     <div className="m-auto p-2 max-w-[var(--width-content-sidebar-layout)]">
       <div
         className="flex gap-[9px] items-center mb-[26px] cursor-pointer w-fit"
-        onClick={() => router.back()}
+        onClick={() => router.push(PATH_ROUTER.DASHBOARD)}
       >
         <Image src={BackIcon} alt="back icon" />
-        <span className="text-white-neutral text-18px-bold">Coin Detail</span>
+        <span className="text-white-neutral text-18px-bold">Token Detail</span>
       </div>
 
       <div className="flex flex-col lg:flex-row gap-6">
@@ -101,7 +102,7 @@ const TokenDetailPage = () => {
           </div>
 
           {tokenDetail?.timeToListDex ? (
-            <div className="flex gap-6 mt-6 items-center">
+            <div className="flex gap-2 md:gap-6 mt-6 items-center flex-wrap">
               <div className="text-neutral-9 text-16px-normal">
                 This token is successfully listed on Uniswap at{" "}
                 {getTimeDDMMMYYYYHHMM(Number(tokenDetail?.timeToListDex))}
