@@ -15,6 +15,7 @@ import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import FilterTerminal from "../FilterTerminal";
 import ProjectCard from "../ProjectCard";
+import { EDirection } from "@/constant";
 
 const FILTER_TERMINAL = [
   {
@@ -34,6 +35,7 @@ const FollowingTab = () => {
   const { searchParams, setSearchParams } = useAppSearchParams("terminal");
   const router = useRouter();
   const [data, setData] = useState<ITokenDashboardResponse[]>([]);
+  const [total, setTotal] = useState<number>(0);
   const [isPending, setIsPending] = useState<boolean>(false);
 
   const [params, setParams] = useState<any>({
@@ -48,6 +50,8 @@ const FollowingTab = () => {
     const response = await getAPI(API_PATH.TRADING.ACTIVITY, {
       params: {
         ...params,
+        orderBy: "createdAt",
+        direction: EDirection.DESC,
         keyword: debounceSearch?.trim(),
       },
     }).then((data) => {
@@ -59,7 +63,9 @@ const FollowingTab = () => {
       "data.data",
       []
     ) as ITokenDashboardResponse[];
+    const total = get(response, "data.metadata.total", 0) as number;
     setData(tokenList);
+    setTotal(total);
   };
 
   const fetchCreatedTab = async () => {
@@ -67,6 +73,8 @@ const FollowingTab = () => {
     const response = await getAPI(API_PATH.TOKEN.FOLLOWING_TOKEN_CREATED, {
       params: {
         ...params,
+        orderBy: "createdAt",
+        direction: EDirection.DESC,
         keyword: debounceSearch?.trim(),
       },
     }).then((data) => {
@@ -78,8 +86,11 @@ const FollowingTab = () => {
       "data.data",
       []
     ) as ITokenDashboardResponse[];
+    const total = get(response, "data.metadata.total", 0) as number;
     setData(tokenList);
+    setTotal(total);
   };
+
   useEffect(() => {
     if (searchParams?.filter === "created") {
       fetchCreatedTab();
@@ -89,10 +100,10 @@ const FollowingTab = () => {
     }
   }, [searchParams?.filter, debounceSearch, params]);
 
-  const total = get(data, "data.metadata.total", 0) as number;
-
   const handleClickFilter = useCallback(
     (value: any, queryKey: string) => {
+      setData([]);
+      setTotal(0);
       setSearchParams({
         ...searchParams,
         [queryKey]: value,
@@ -123,7 +134,11 @@ const FollowingTab = () => {
           <div className="grid xl:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-6 my-9">
             {data?.map((project: any, index: number) => (
               <ProjectCard
-                data={project}
+                data={{
+                  ...project,
+                  avatar: project?.avatar || project?.tokenAvatar,
+                  id: project?.id || project?.tokenId,
+                }}
                 key={index}
                 header={
                   searchParams?.filter === "created" ? null : (

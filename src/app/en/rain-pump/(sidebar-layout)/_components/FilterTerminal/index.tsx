@@ -93,9 +93,9 @@ const FilterTerminal = ({
                             filter?.value
                           );
                         }}
-                        className={`px-2 text-neutral-2 !text-14px-normal py-[3px] rounded-3xl bg-primary-7 hover:!bg-primary-2 hover:!text-neutral-9 ${
+                        className={`px-2 text-primary-11 !text-14px-normal py-[3px] rounded-3xl bg-primary-5 hover:!bg-primary-2 hover:!text-primary-11 ${
                           children?.value === searchParams?.[filter.value]
-                            ? "!bg-primary-2 !text-neutral-9"
+                            ? "!bg-white-neutral !text-neutral-1"
                             : ""
                         }`}
                       >

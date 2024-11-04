@@ -65,7 +65,7 @@ const UserFollow = ({ data, onFollow }: IUserFollow) => {
           )}
         </div>
         <div className="w-[100px] flex justify-center">
-          {userAddress !== data?.wallet_address && (
+          {userAddress !== data?.wallet_address && accessToken && (
             <AppButton
               size="small"
               typeButton={
