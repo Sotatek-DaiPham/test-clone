@@ -29,7 +29,7 @@ interface IDatePickerModal extends ModalProps {
 const generateStartTimeValidator = ({ getFieldValue }: any) => ({
   validator(_: any, value: string) {
     const endTime = getFieldValue("endDate");
-    if (endTime && dayjs(endTime).diff(value) <= 0) {
+    if (endTime && value && dayjs(endTime).diff(value) <= 0) {
       return Promise.reject("Invalid time");
     }
 
@@ -41,7 +41,7 @@ const generateEndTimeValidator = ({ getFieldValue }: any) => ({
   validator(_: any, value: string) {
     const startTime = getFieldValue("startDate");
 
-    if (startTime && dayjs(startTime).diff(value) >= 0) {
+    if (startTime && value && dayjs(startTime).diff(value) >= 0) {
       return Promise.reject("Invalid time");
     }
     return Promise.resolve();
