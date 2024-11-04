@@ -134,3 +134,16 @@ export interface ISocketData {
   };
   event: string;
 }
+
+export interface ISaveTradeSettingsReq {
+  id?: number;
+  slippage: string;
+  fontRunning: boolean;
+  priorityFee: string;
+}
+export interface ISaveTradeSettingsRes {
+  id?: number;
+  slippage: string;
+  priorityFee: string;
+  fontRunning: boolean;
+}

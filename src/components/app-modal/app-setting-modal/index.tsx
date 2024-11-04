@@ -1,51 +1,77 @@
+import { useTradeSettings } from "@/app/en/rain-pump/(non-sidebar-layout)/token-detail/_components/TradeSection";
+import {
+  FormSetting,
+  SETTINGS_FIELD_NAMES,
+} from "@/app/en/rain-pump/(non-sidebar-layout)/token-detail/_components/TradeSection/TradeTab";
 import AppAmountSelect from "@/components/app-amount-select";
 import AppButton from "@/components/app-button";
 import AppCheckbox from "@/components/app-checkbox";
 import AppInputBalance from "@/components/app-input/app-input-balance";
 import { PREDEFINE_PRIORITY_FEE, PREDEFINE_SLIPPAGE } from "@/constant";
+import { API_PATH } from "@/constant/api-path";
 import { REGEX_INPUT_DECIMAL } from "@/constant/regex";
+import { BeSuccessResponse } from "@/entities/response";
+import { ISaveTradeSettingsReq } from "@/interfaces/token";
 import { NotificationContext } from "@/libs/antd/NotificationProvider";
+import { postAPI } from "@/service";
 import { EthIcon } from "@public/assets";
+import { useMutation } from "@tanstack/react-query";
 import { Form, FormInstance, ModalProps } from "antd";
 import { useWatch } from "antd/es/form/Form";
-import { Dispatch, SetStateAction, useContext } from "react";
+import { AxiosResponse } from "axios";
+import { useContext, useEffect } from "react";
 import AppModal from "..";
 import "./styles.scss";
-import {
-  FormSetting,
-  SETTINGS_FIELD_NAMES,
-} from "@/app/en/rain-pump/(non-sidebar-layout)/token-detail/_components/TradeSection/TradeTab";
 
 interface ITradeSettingModal extends ModalProps {
   onOk: () => void;
   form: FormInstance<FormSetting>;
-  tradeSettings: FormSetting;
-  setTradeSettings: Dispatch<SetStateAction<FormSetting>>;
 }
 
 const TradeSettingModal = ({
   title,
   onOk,
   form,
-  tradeSettings,
-  setTradeSettings,
   ...props
 }: ITradeSettingModal) => {
   const { success } = useContext(NotificationContext);
   const fontRunningValue = useWatch(SETTINGS_FIELD_NAMES.FONT_RUNNING, form);
+  const { tradeSettings, refetchTradeSettings } = useTradeSettings();
 
-  const handleApplyTradeSetting = (e: any) => {
+  const { mutateAsync: saveTradeSettings } = useMutation({
+    mutationFn: (
+      params: ISaveTradeSettingsReq
+    ): Promise<AxiosResponse<BeSuccessResponse<any>>> => {
+      return postAPI(API_PATH.USER.SAVE_TRADE_SETTINGS, {
+        ...params,
+      });
+    },
+    onError: (err) => {},
+    onSuccess: () => {
+      success({
+        message: "Trade setting saved",
+      });
+      refetchTradeSettings();
+    },
+    mutationKey: ["save-trade-settings"],
+  });
+
+  const handleApplyTradeSetting = async (e: any) => {
     props?.onClose?.(e);
     const values = form.getFieldsValue();
-    setTradeSettings({
-      slippage: values[SETTINGS_FIELD_NAMES.SLIPPAGE],
+
+    await saveTradeSettings({
+      slippage: values[SETTINGS_FIELD_NAMES.SLIPPAGE] || "0",
       fontRunning: values[SETTINGS_FIELD_NAMES.FONT_RUNNING],
-      priorityFee: values[SETTINGS_FIELD_NAMES.PRIORITY_FEE],
-    });
-    success({
-      message: "Trade setting saved",
+      priorityFee: values[SETTINGS_FIELD_NAMES.PRIORITY_FEE] || "0",
+      ...(tradeSettings?.id ? { id: tradeSettings.id } : {}),
     });
   };
+
+  useEffect(() => {
+    form.setFieldsValue(tradeSettings);
+  }, [tradeSettings]);
+
   return (
     <AppModal
       className="trade-setting-modal"
@@ -54,11 +80,11 @@ const TradeSettingModal = ({
       centered
       onCancel={(e) => {
         props.onClose?.(e);
-        form.resetFields();
+        form.setFieldsValue(tradeSettings);
       }}
       {...props}
     >
-      <Form form={form} initialValues={tradeSettings}>
+      <Form form={form}>
         <div className="flex flex-col gap-4">
           <div className="text-20px-bold md:text-26px-bold text-white-neutral">
             Trade Settings

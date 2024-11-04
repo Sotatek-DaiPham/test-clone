@@ -1,4 +1,7 @@
-import { Timezone } from "@public/charting_library/charting_library.min";
+import { convertNumber } from "./../../../helpers/formatNumber";
+import { BigNumber } from "bignumber.js";
+import { Timezone, Trade } from "@public/charting_library/charting_library.min";
+import { Candle } from "../constants";
 
 const timezones: { [key: string]: number } = {};
 
@@ -70,4 +73,70 @@ export function getClientTimezone(): Timezone {
 export function getClientTimezoneValue(): number {
   const timezoneKey = getClientTimezone();
   return timezones[timezoneKey];
+}
+
+export const round = (n: number, base: number): number => {
+  return Math.floor(n / base) * base;
+};
+
+export const addTradeToLastCandle = (
+  trade: Trade,
+  lastCandle: Candle,
+  intervalInMilliseconds: number,
+  chartRealtimeCallback: (candle: Candle) => void
+): Candle => {
+  const lastCandleEndTime = lastCandle?.time + intervalInMilliseconds;
+  const tradePrice = Number(convertNumber(trade.price, 6));
+  const tradeTime = round(
+    new Date(trade.createdAt).getTime(),
+    intervalInMilliseconds
+  );
+  if (tradeTime >= lastCandleEndTime) {
+    const newCandle: Candle = {
+      open: Number(lastCandle?.close),
+      close: tradePrice,
+      high: Math.max(tradePrice, lastCandle?.close),
+      low: Math.min(tradePrice, lastCandle?.close),
+      time: tradeTime,
+      volume: 0,
+    };
+    chartRealtimeCallback(lastCandle);
+    return newCandle;
+  } else {
+    lastCandle.low = Math.min(tradePrice, lastCandle?.low);
+    lastCandle.high = Math.max(tradePrice, lastCandle?.high);
+    lastCandle.close = Number(convertNumber(trade.price, 6));
+    lastCandle.volume += Number(convertNumber(trade?.amount, 18));
+    lastCandle.time = round(
+      new Date(trade?.createdAt).getTime(),
+      intervalInMilliseconds
+    );
+    chartRealtimeCallback(lastCandle);
+    return lastCandle;
+  }
+};
+
+export const getInterval = (interval: string): number => {
+  const stringIntervals: { [key: string]: number } = {
+    "1H": 60,
+    "1D": 24 * 60,
+    D: 3 * 24 * 60, // it should be '3D', but there is a bug of TradingView, it call get bars with resolution D
+    "3D": 3 * 24 * 60,
+    "1W": 7 * 24 * 60,
+    "1M": 30 * 24 * 60,
+  };
+  if (stringIntervals[interval]) {
+    return stringIntervals[interval];
+  } else {
+    return Number(interval);
+  }
+};
+
+export function getIntervalString(interval: number): string {
+  const days = interval / 24 / 60;
+  if (days >= 30) return "1M";
+  if (days >= 7) return "1W";
+  if (days >= 3) return "3D";
+  if (days === 1) return "1D";
+  return interval.toString();
 }

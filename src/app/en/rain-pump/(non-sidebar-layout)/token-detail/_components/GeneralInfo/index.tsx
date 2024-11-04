@@ -42,7 +42,7 @@ const GeneralInfo = () => {
         <Link
           href={`${envs.SCAN_URL}/address/${tokenDetail?.contractAddress}`}
           target="_blank"
-          className="text-12px-medium md:text-16px-medium text-white-neutral flex gap-1"
+          className="text-12px-medium md:text-14px-medium text-white-neutral flex gap-1"
         >
           <div>{shortenAddress(tokenDetail?.contractAddress || "") || "-"}</div>
           <Image src={ArrowExport} alt="arrow-export" />

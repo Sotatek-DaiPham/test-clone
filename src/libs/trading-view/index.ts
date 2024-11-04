@@ -16,10 +16,9 @@ import {
   configurationData,
   DEFAULT_TRADING_VIEW_INTERVAL,
   disabledFeatures,
-  getInterval,
   ID_TRADING_VIEW,
 } from "./constants";
-import { getClientTimezone } from "./helpers";
+import { getClientTimezone, getInterval } from "./helpers";
 
 interface IParams {
   tokenAddress: string;
