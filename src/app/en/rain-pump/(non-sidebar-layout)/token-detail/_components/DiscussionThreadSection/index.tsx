@@ -280,7 +280,7 @@ const DiscussionThread = () => {
               }}
             />
           )}
-          {dataLength <= 0 && (
+          {dataLength <= 0 && !showInputComment && (
             <div>
               <NoData mode="secondary" />
             </div>

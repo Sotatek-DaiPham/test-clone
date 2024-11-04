@@ -485,16 +485,16 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
       return;
     }
 
-    if (e?.shortMessage === ErrorCode.TRANSACTION_REVERTED) {
+    if (e?.action === "estimateGas") {
       error({
-        message: `There are no ${tokenDetail?.symbol} left for sale`,
+        message: "Insufficient fee",
       });
       return;
     }
 
-    if (e?.action === "estimateGas") {
+    if (e?.shortMessage === ErrorCode.TRANSACTION_REVERTED) {
       error({
-        message: "Insufficient fee",
+        message: `There are no ${tokenDetail?.symbol} left for sale`,
       });
       return;
     }

@@ -1,6 +1,7 @@
 import AppPaginationCustom from "@/components/app-pagination/app-pagination-custom";
 import EllipsisTextWithTooltip from "@/components/app-tooltip/EllipsisTextWithTooltip";
 import NoData from "@/components/no-data";
+import { EDirection } from "@/constant";
 import { API_PATH } from "@/constant/api-path";
 import { PATH_ROUTER } from "@/constant/router";
 import { ITokenDashboardResponse } from "@/entities/dashboard";
@@ -15,7 +16,6 @@ import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
 import FilterTerminal from "../FilterTerminal";
 import ProjectCard from "../ProjectCard";
-import { EDirection } from "@/constant";
 
 const FILTER_TERMINAL = [
   {
