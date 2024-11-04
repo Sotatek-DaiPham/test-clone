@@ -1,6 +1,8 @@
 export const ErrorCode = {
   MetamaskDeniedTx: "ACTION_REJECTED",
   INSUFFICIENT_FEE: -32603,
+  SLIPPAGE_ERROR: "Pump: INSUFFICIENT_OUTPUT_AMOUNT",
+  TRANSACTION_REVERTED: "execution reverted (unknown custom error)",
 };
 
 export const LIMIT_ITEMS_TABLE = 10;

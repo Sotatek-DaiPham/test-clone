@@ -66,7 +66,7 @@ const AppUpload = (props: AppUploadProps) => {
               <Image src={UploadIcon} alt="upload icon" />
               <div className="flex items-center justify-between  flex-col">
                 <div className="text-white-neutral text-[14px]">
-                  Drag and drop A file
+                  Drag and drop A File
                 </div>
                 <div className="text-[#7A7F86] text-12px-medium">
                   Max size - 5Mb. Jpg, Png, Gif
@@ -75,12 +75,12 @@ const AppUpload = (props: AppUploadProps) => {
             </div>
           )
         )}
-        <AppButton customClass="!w-fit" typeButton="outline-primary">
+        <AppButton customClass="!w-[150px]" typeButton="outline-primary">
           Upload File
         </AppButton>
       </Upload>
       {props.value?.src && variant === "secondary" ? (
-        <div className="px-2 py-1.5 bg-neutral-3 rounded-[8px] flex justify-between items-center w-full md:w-[423px] mt-2">
+        <div className="px-2 py-1.5 bg-neutral-3 rounded-[8px] flex justify-between items-center w-full md:w-[460px] mt-2">
           <div className="flex gap-3 items-center">
             <img
               src={props?.value?.src}

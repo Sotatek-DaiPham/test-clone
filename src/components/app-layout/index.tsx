@@ -1,19 +1,19 @@
 "use client";
 import useWalletAuth from "@/hooks/useWalletAuth";
-import useWindowSize from "@/hooks/useWindowSize";
+import { NotificationContext } from "@/libs/antd/NotificationProvider";
 import { useAppDispatch } from "@/libs/hooks";
 import { clearUser } from "@/libs/slices/userSlice";
 import { config } from "@/wagmi";
 import { useChainModal } from "@rainbow-me/rainbowkit";
 import { Layout } from "antd";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useAccount } from "wagmi";
 import { watchAccount } from "wagmi/actions";
 import LoginModal from "../app-modal/app-login-modal";
 import "./styles.scss";
 
 const AppLayout = ({ children }: { children: React.ReactNode }) => {
-  const { isMobile } = useWindowSize();
+  const { success } = useContext(NotificationContext);
   const dispatch = useAppDispatch();
   const [isOpenWarningModal, setIsOpenWarningModal] = useState(false);
   const { chain } = useAccount();
@@ -70,6 +70,10 @@ const AppLayout = ({ children }: { children: React.ReactNode }) => {
           login(
             () => {
               setIsOpenWarningModal(false);
+
+              success({
+                message: "Wallet connection successfull",
+              });
             },
             () => {
               setIsOpenWarningModal(false);

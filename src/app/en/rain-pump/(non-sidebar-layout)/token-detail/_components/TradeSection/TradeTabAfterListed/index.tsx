@@ -15,8 +15,11 @@ import {
   TOKEN_DECIMAL,
   USDT_DECIMAL,
 } from "@/constant";
+import { API_PATH } from "@/constant/api-path";
+import { envs } from "@/constant/envs";
 import { REGEX_INPUT_DECIMAL } from "@/constant/regex";
 import { useTokenDetail } from "@/context/TokenDetailContext";
+import { BeSuccessResponse } from "@/entities/response";
 import {
   calculateTokenReceiveAfterListed,
   calculateUsdtShouldPayAfterListed,
@@ -29,21 +32,18 @@ import useTokenBalance from "@/hooks/useTokenBalance";
 import { ECoinType } from "@/interfaces/token";
 import { NotificationContext } from "@/libs/antd/NotificationProvider";
 import { useAppSelector } from "@/libs/hooks";
+import { postAPI } from "@/service";
 import { useContract } from "@/web3/contracts/useContract";
 import { SettingIcon } from "@public/assets";
+import { useMutation } from "@tanstack/react-query";
 import { Form } from "antd";
 import { useWatch } from "antd/es/form/Form";
+import { AxiosResponse } from "axios";
 import BigNumber from "bignumber.js";
 import Image from "next/image";
 import { useContext, useEffect, useMemo, useState } from "react";
 import { useReadContract } from "wagmi";
-import { TabKey } from "..";
-import { useMutation } from "@tanstack/react-query";
-import { AxiosResponse } from "axios";
-import { BeSuccessResponse } from "@/entities/response";
-import { postAPI } from "@/service";
-import { API_PATH } from "@/constant/api-path";
-import { envs } from "@/constant/envs";
+import { TabKey, useTradeSettings } from "..";
 
 export const SETTINGS_FIELD_NAMES = {
   FONT_RUNNING: "fontRunning",
@@ -86,11 +86,9 @@ const TradeTabAfterListed = ({ tabKey }: { tabKey: TabKey }) => {
     sellToken: false,
     approve: false,
   });
-  const [tradeSettings, setTradeSettings] = useState<FormSetting>({
-    slippage: "0",
-    fontRunning: false,
-    priorityFee: "0",
-  });
+
+  const { tradeSettings } = useTradeSettings();
+
   const { mutateAsync: confirmHash } = useMutation({
     mutationFn: (
       hash: string
@@ -279,11 +277,11 @@ const TradeTabAfterListed = ({ tabKey }: { tabKey: TabKey }) => {
   const renderAmountInOut = () => {
     if (tabKey === TabKey.BUY) {
       return (
-        <div className="text-14px-normal text-neutral-7">
+        <div className="text-16px-normal text-neutral-7">
           {coinType === ECoinType.MemeCoin
             ? "You must pay "
             : "You will receive "}
-          <span className="text-white-neutral text-14px-medium">
+          <span className="text-white-neutral text-16px-medium">
             {" "}
             {coinType === ECoinType.MemeCoin
               ? `${nFormatter(usdtShouldPay) || 0} USDT`
@@ -293,9 +291,9 @@ const TradeTabAfterListed = ({ tabKey }: { tabKey: TabKey }) => {
       );
     } else {
       return (
-        <div className="text-14px-normal text-neutral-7">
+        <div className="text-16px-normal text-neutral-7">
           You will receive
-          <span className="text-white-neutral text-14px-medium">
+          <span className="text-white-neutral text-16px-medium">
             {" "}
             {`${nFormatter(sellAmountOut) || 0} USDT`}
           </span>
@@ -333,9 +331,17 @@ const TradeTabAfterListed = ({ tabKey }: { tabKey: TabKey }) => {
       error({
         message: "Transaction denied",
       });
+      return;
     }
 
-    if (e?.info?.error?.code === ErrorCode.INSUFFICIENT_FEE) {
+    if (e?.action === "estimateGas") {
+      error({
+        message: "Insufficient fee",
+      });
+      return;
+    }
+
+    if (e?.info?.error?.message) {
       error({
         message: e?.info?.error?.message,
       });
@@ -549,8 +555,6 @@ const TradeTabAfterListed = ({ tabKey }: { tabKey: TabKey }) => {
         }}
         onOk={() => setOpenSettingModal(false)}
         form={formSetting}
-        tradeSettings={tradeSettings}
-        setTradeSettings={setTradeSettings}
       />
       <ConfirmModal
         title="You need to approve your tokens in order to make transaction"

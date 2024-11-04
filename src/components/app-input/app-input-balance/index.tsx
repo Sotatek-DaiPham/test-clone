@@ -1,10 +1,10 @@
 import { ECoinType } from "@/interfaces/token";
 import { SelectDropdownIcon, UsdtIcon } from "@public/assets";
 import { Input, InputProps, Select } from "antd";
+import BigNumber from "bignumber.js";
 import Image from "next/image";
 import { ChangeEvent } from "react";
 import "./styles.scss";
-import BigNumber from "bignumber.js";
 
 interface Props extends InputProps {
   tokenSymbol: string;
@@ -43,6 +43,17 @@ const AppInputBalance = ({
     }
 
     onChange?.(e);
+  };
+
+  const handleBlur = (e: ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    const formattedValue = value
+      .replace(/(\.\d*?[1-9])0+$/, "$1") // Remove trailing zeros after a non-zero digit
+      .replace(/^0+(?=\d)/, "") // Remove leading zeros
+      .replace(/(\.\d*?)0+$/, "$1") // Remove trailing zeros if only decimal part is present
+      .replace(/\.$/, ""); // Remove the decimal point if it's the last character
+
+    onChange?.({ ...e, target: { ...e.target, value: formattedValue } });
   };
 
   return (
@@ -107,6 +118,7 @@ const AppInputBalance = ({
           autoComplete="off"
           value={value}
           onChange={handleChange}
+          onBlur={handleBlur}
           {...restProps}
         />
       </div>

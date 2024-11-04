@@ -3,7 +3,7 @@ import "./styles.scss";
 
 interface Props {
   loading: boolean;
-  text: string | null | number;
+  text: React.ReactNode;
   className?: string;
 }
 

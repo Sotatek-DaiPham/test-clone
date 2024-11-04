@@ -1,5 +1,5 @@
 import AppButton from "@/components/app-button";
-import { formatAmount } from "@/helpers/formatNumber";
+import { nFormatterVer2 } from "@/helpers/formatNumber";
 import { shortenAddress } from "@/helpers/shorten";
 import useWalletAuth from "@/hooks/useWalletAuth";
 import useWindowSize from "@/hooks/useWindowSize";
@@ -105,7 +105,7 @@ const ConnectWalletButton = ({ customClass }: { customClass?: string }) => {
                         </div>
                       )}
                       <div className="text-12px-medium">
-                        {formatAmount(userBalance)} USDT
+                        {nFormatterVer2(userBalance)} USDT
                       </div>
                     </div>
 

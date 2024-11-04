@@ -6,7 +6,9 @@ import { ArrowTurnDownRightIcon } from "@public/assets";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
+import { getTimeDDMMMYYYYHHMM } from "@/helpers/date-time";
 import "./styles.scss";
+
 interface DiscussionItemProps {
   data: DiscussionThreadItem;
   onShowReplies: (commentId: number, replyUserId: number) => void;
@@ -44,7 +46,7 @@ const DiscussionItem: React.FC<DiscussionItemProps> = ({
               {data.username || "-"}
             </span>
             <span className="text-neutral-7 text-14px-medium">
-              {new Date(data.created_at).toLocaleString()}
+              {getTimeDDMMMYYYYHHMM(data.created_at)}
             </span>
           </div>
         </div>

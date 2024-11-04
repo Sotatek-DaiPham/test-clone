@@ -17,6 +17,8 @@ export const API_PATH = {
     POST_COMMENT: "/user/post-comment",
     LIKE_COMMENT: "/user/like-comment",
     VIEW_TOKEN: "/user/user-view-token",
+    TRADE_SETTINGS: "/user/token-trading-setting",
+    SAVE_TRADE_SETTINGS: "/user/token-trading-setting",
   },
   TOKEN: {
     LIST: "/token",
