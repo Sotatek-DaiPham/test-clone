@@ -1,11 +1,13 @@
 import AppButton from "@/components/app-button";
-import { formatAmount } from "@/helpers/formatNumber";
+import { nFormatterVer2 } from "@/helpers/formatNumber";
 import { shortenAddress } from "@/helpers/shorten";
 import useWalletAuth from "@/hooks/useWalletAuth";
 import useWindowSize from "@/hooks/useWindowSize";
 import { useAccountModal } from "@/providers/WagmiProvider";
+import { UsdtIcon } from "@public/assets";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { Flex } from "antd";
+import Image from "next/image";
 import { useEffect } from "react";
 
 const ConnectWalletButton = ({ customClass }: { customClass?: string }) => {
@@ -93,19 +95,25 @@ const ConnectWalletButton = ({ customClass }: { customClass?: string }) => {
                         >
                           {chain.iconUrl && (
                             // eslint-disable-next-line @next/next/no-img-element
-                            <img
-                              alt={chain.name ?? "Chain icon"}
-                              src={chain.iconUrl}
-                              style={{
-                                width: isDesktop ? 32 : 24,
-                                height: isDesktop ? 32 : 24,
-                              }}
+                            // <img
+                            //   alt={chain.name ?? "Chain icon"}
+                            //   src={chain.iconUrl}
+                            //   style={{
+                            //     width: isDesktop ? 32 : 24,
+                            //     height: isDesktop ? 32 : 24,
+                            //   }}
+                            // />
+                            <Image
+                              alt={"USDT Icon"}
+                              src={UsdtIcon}
+                              width={isDesktop ? 32 : 24}
+                              height={isDesktop ? 32 : 24}
                             />
                           )}
                         </div>
                       )}
                       <div className="text-12px-medium">
-                        {formatAmount(userBalance)} USDT
+                        {nFormatterVer2(userBalance)} USDT
                       </div>
                     </div>
 
