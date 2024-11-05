@@ -69,7 +69,7 @@ const ProjectCard = ({
                     }}
                     maxWidth="100%"
                     value={data?.username}
-                    className="text-primary-7 !text-12px-normal hover:!underline"
+                    className="text-primary-7 !text-12px-normal hover:!underline cursor-pointer"
                   />
                 </div>
               </div>
@@ -128,7 +128,7 @@ const ProjectCard = ({
         </div>
       )}
       <div className="mt-3">
-        <div className="flex justify-between sm:flex-row flex-col sm:items-center mb-1 text-14px-normal text-white-neutral">
+        <div className="flex justify-between flex-row mb-1 text-14px-normal text-white-neutral flex-wrap">
           <div className="text-14px-bold flex flex-row items-center">
             <span className="text-primary-7 mr-1">
               {formatAmount(data?.progressToListDex || 0)}%

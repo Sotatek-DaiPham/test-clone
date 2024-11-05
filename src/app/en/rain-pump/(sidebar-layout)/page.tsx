@@ -117,7 +117,7 @@ export default function Home() {
       return getAPI(API_PATH.TOKEN.TRADE_HISTORY_SLIDER, {
         params: {
           orderBy: "created_at",
-          direction: EDirection.ASC,
+          direction: EDirection.DESC,
           page: 1,
           limit: 14,
         },

@@ -140,7 +140,6 @@ export default async function onInitTradingView({
         onError: any,
         isFirstCall: boolean
       ) => {
-        console.log("time", { from, to });
         if (createdAt && !isFirstCall && from < dayjs(createdAt).unix()) {
           return onResult([], { noData: true });
         }
