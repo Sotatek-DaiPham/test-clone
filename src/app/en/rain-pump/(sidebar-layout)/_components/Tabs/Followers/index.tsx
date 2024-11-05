@@ -47,7 +47,7 @@ const FollowersTab = ({ walletAddress }: { walletAddress: string }) => {
         params: {
           ...params,
           orderBy: "createdAt",
-          direction: EDirection.DESC,
+          direction: EDirection.ASC,
           walletAddress: walletAddress,
           keyword: debounceSearch?.trim(),
           viewerId: userId,

@@ -47,7 +47,7 @@ const FollowingTab = ({ walletAddress }: { walletAddress: string }) => {
         params: {
           ...params,
           orderBy: "id",
-          direction: EDirection.DESC,
+          direction: EDirection.ASC,
           walletAddress: walletAddress,
           keyword: debounceSearch?.trim(),
           viewerId: userId,

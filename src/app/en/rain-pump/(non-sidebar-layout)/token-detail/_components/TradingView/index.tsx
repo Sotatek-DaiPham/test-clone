@@ -1,4 +1,5 @@
 "use client";
+import NoData from "@/components/no-data";
 import { API_PATH } from "@/constant/api-path";
 import { useTokenDetail } from "@/context/TokenDetailContext";
 import useSocket from "@/hooks/useSocket";
@@ -28,7 +29,7 @@ import BigNumber from "bignumber.js";
 import dayjs from "dayjs";
 import { get, isEmpty } from "lodash";
 import dynamic from "next/dynamic";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useRef } from "react";
 
 const AppTradingView = dynamic(() => import("@/components/app-trading-view"), {
   ssr: false,
@@ -200,18 +201,26 @@ const TradingView = () => {
 
   return (
     <div className="w-full h-full flex flex-col">
-      <AppTradingView
-        onLoad={(chart: any) => {
-          chartRef.current = chart;
-        }}
-        resolveSymbol={resolveSymbol}
-        subscribeBars={subscribeBars}
-        getBars={getBars}
-        containerId={ID_TRADING_VIEW}
-        isConnected={isConnected}
-        symbol={tokenDetail?.symbol}
-        tokenAddress={tokenDetail?.contractAddress}
-      />
+      {!tokenDetail?.contractAddress ? (
+        <div className="w-full h-[var(--height-trading-view)] flex items-center justify-center">
+          <div>
+            <NoData />
+          </div>
+        </div>
+      ) : (
+        <AppTradingView
+          onLoad={(chart: any) => {
+            chartRef.current = chart;
+          }}
+          resolveSymbol={resolveSymbol}
+          subscribeBars={subscribeBars}
+          getBars={getBars}
+          containerId={ID_TRADING_VIEW}
+          isConnected={isConnected}
+          symbol={tokenDetail?.symbol}
+          tokenAddress={tokenDetail?.contractAddress}
+        />
+      )}
     </div>
   );
 };
