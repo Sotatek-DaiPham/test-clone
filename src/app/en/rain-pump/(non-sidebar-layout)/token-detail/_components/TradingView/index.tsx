@@ -118,22 +118,26 @@ const TradingView = () => {
         const startTime = from * 1000;
         const endTime = to * 1000;
         const time = isFirstCall ? endTime : startTime;
-        const bars = await getData({
-          resolution,
-          tokenAddress: tokenDetail?.contractAddress,
-          endTime: time,
-        });
-        if (!isEmpty(bars)) {
-          if (!bars[0]?.time) {
-            onResult([], { noData: true });
-            return;
-          }
-          lastCandleRef.current = bars[bars.length - 1];
-          onResult(bars, { noData: false });
-        } else {
-          onResult([], {
-            noData: true,
+        try {
+          const bars = await getData({
+            resolution,
+            tokenAddress: tokenDetail?.contractAddress,
+            endTime: time,
           });
+          if (!isEmpty(bars)) {
+            if (!bars[0]?.time) {
+              onResult([], { noData: true });
+              return;
+            }
+            lastCandleRef.current = bars[bars.length - 1];
+            onResult(bars, { noData: false });
+          } else {
+            onResult([], {
+              noData: true,
+            });
+          }
+        } catch (error) {
+          onResult([], { noData: true });
         }
       } else {
         onResult([], { noData: true });

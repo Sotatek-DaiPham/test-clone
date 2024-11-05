@@ -67,7 +67,9 @@ const ReplyItem = ({ data }: { data: IMyRepliesResponse }) => {
         customClass="!w-fit !rounded-full"
         classChildren="!flex !flex-row !items-center !text-primary-main"
         onClick={() => {
-          const query = `?replyId=${data?.replyId}&replyUserId=${data?.replyUserId}`;
+          const query = `?replyId=${
+            data?.replyId ? data?.replyId : data?.id
+          }&replyUserId=${data?.replyUserId ? data?.replyUserId : data?.id}`;
           router.push(`${PATH_ROUTER.TOKEN_DETAIL(data?.tokenId)}${query}`, {
             scroll: true,
           });

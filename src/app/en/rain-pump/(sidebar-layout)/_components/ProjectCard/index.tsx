@@ -8,6 +8,7 @@ import { PATH_ROUTER } from "@/constant/router";
 import { countAgeToken } from "@/helpers/calculate";
 import { convertNumber, formatAmount } from "@/helpers/formatNumber";
 import { CalendarIcon, ImageDefaultIcon, SwapIcon } from "@public/assets";
+import BigNumber from "bignumber.js";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import "./styles.scss";
@@ -107,13 +108,15 @@ const ProjectCard = ({
               <span>
                 <span
                   className={
-                    data?.price
+                    data?.valueUsdt
                       ? "text-primary-main mr-2"
                       : "text-white-neutral mr-2"
                   }
                 >
-                  {Number(data?.price) > 0 ? (
-                    <AppNumberToolTip value={data?.price} />
+                  {Number(data?.valueUsdt) > 0 ? (
+                    <AppNumberToolTip
+                      value={convertNumber(data?.valueUsdt, 6)}
+                    />
                   ) : (
                     "-"
                   )}
