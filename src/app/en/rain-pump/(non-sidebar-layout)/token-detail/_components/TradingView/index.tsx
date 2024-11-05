@@ -78,6 +78,7 @@ async function getData({ resolution, tokenAddress, endTime }: IDataChart) {
 const TradingView = () => {
   const chartRef = useRef<IChartingLibraryWidget>();
   const lastCandleRef = useRef<Candle>({} as Candle);
+  const timeRef = useRef<number>(0);
   const chartRealtimeCallback = useRef<any>();
   const chartResetCacheNeededCallback = useRef<() => void>();
   const { isConnected, socket } = useSocket();
@@ -115,10 +116,9 @@ const TradingView = () => {
         return onResult([], { noData: true });
       }
       if (tokenDetail?.contractAddress) {
-        const startTime = from * 1000;
-        const endTime = to * 1000;
-        const time = isFirstCall ? endTime : startTime;
         try {
+          const endTime = to * 1000;
+          const time = isFirstCall ? endTime : timeRef.current;
           const bars = await getData({
             resolution,
             tokenAddress: tokenDetail?.contractAddress,
@@ -129,6 +129,7 @@ const TradingView = () => {
               onResult([], { noData: true });
               return;
             }
+            timeRef.current = bars[0]?.time;
             lastCandleRef.current = bars[bars.length - 1];
             onResult(bars, { noData: false });
           } else {
@@ -143,7 +144,7 @@ const TradingView = () => {
         onResult([], { noData: true });
       }
     },
-    [tokenDetail]
+    [tokenDetail, timeRef.current]
   );
 
   const resolveSymbol = useCallback(
