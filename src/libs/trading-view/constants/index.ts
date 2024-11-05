@@ -42,30 +42,37 @@ export const disabledFeatures = [
   "symbol_search_hot_key",
   "header_symbol_search",
   "border_around_the_chart",
+  "header_saveload",
+  "header_screenshot",
+  "volume_force_overlay",
+
   // "timeframes_toolbar",
   // "header_widget",
+  // "use_localstorage_for_settings",
+  // "context_menus",
+  // "display_market_status",
+  // "timeframes_toolbar",
+  // "header_undo_redo",
+  // "header_interval_dialog_button",
+  // "control_bar",
+  // "border_around_the_chart",
+  // "header_widget",
+  // "chart_property_page_scales",
 ];
-export const getInterval = (interval: string): number => {
-  const stringIntervals: { [key: string]: number } = {
-    "1H": 60,
-    "1D": 24 * 60,
-    D: 3 * 24 * 60, // it should be '3D', but there is a bug of TradingView, it call get bars with resolution D
-    "3D": 3 * 24 * 60,
-    "1W": 7 * 24 * 60,
-    "1M": 30 * 24 * 60,
-  };
-  if (stringIntervals[interval]) {
-    return stringIntervals[interval];
-  } else {
-    return Number(interval);
-  }
-};
 
-export function getIntervalString(interval: number): string {
-  const days = interval / 24 / 60;
-  if (days >= 30) return "1M";
-  if (days >= 7) return "1W";
-  if (days >= 3) return "3D";
-  if (days === 1) return "1D";
-  return interval.toString();
+export interface Candle {
+  close: number;
+  high: number;
+  low: number;
+  time: number;
+  open: number;
+  volume: number;
+}
+
+export interface Trade {
+  price: string;
+  filled_amount: string;
+  buyer_is_taker: boolean;
+  created_at: string;
+  txid?: string;
 }

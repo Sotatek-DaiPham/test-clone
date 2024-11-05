@@ -16,8 +16,8 @@ import { Spin } from "antd";
 import { AxiosResponse } from "axios";
 import get from "lodash/get";
 import { useEffect, useState } from "react";
-import TabTitle from "../../TabTitle";
 import ProjectCard from "../../ProjectCard";
+import TabTitle from "../../TabTitle";
 
 const CoinCreatedTab = ({ walletAddress }: { walletAddress: string }) => {
   const { addEvent, isConnected, removeEvent } = useSocket();

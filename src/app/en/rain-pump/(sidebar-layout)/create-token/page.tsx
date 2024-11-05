@@ -309,6 +309,12 @@ const CreateTokenPage = () => {
     }
   };
 
+  const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === " ") {
+      event.preventDefault();
+    }
+  };
+
   return (
     <div className="create-token-page w-full mr-auto ml-auto">
       {!isDesktop ? (
@@ -327,14 +333,14 @@ const CreateTokenPage = () => {
         }}
       >
         <h5 className="text-16px-bold md:text-22px-bold mb-4 text-primary-main">
-          Coin Information
+          Token Information
         </h5>
         <div className="rounded-[24px] bg-neutral-2 backdrop-blur-[75px] md:p-6 p-4 mb-8">
           <div className="flex flex-col md:flex-row md:gap-6 gap-0">
             <Form.Item
               name={FIELD_NAMES.COIN_NAME}
               required={false}
-              label={<FormItemLabel label="Coin name" isRequired />}
+              label={<FormItemLabel label="Token name" isRequired />}
               className="w-full md:flex-1"
               rules={[
                 {
@@ -348,7 +354,7 @@ const CreateTokenPage = () => {
             <Form.Item
               name={FIELD_NAMES.COIN_TICKER}
               required={false}
-              label={<FormItemLabel label="Coint ticker" isRequired />}
+              label={<FormItemLabel label="Token ticker" isRequired />}
               className="w-full md:flex-1"
               rules={[
                 {
@@ -357,7 +363,11 @@ const CreateTokenPage = () => {
                 },
               ]}
             >
-              <AppInput placeholder="Enter token ticker" maxLength={10} />
+              <AppInput
+                placeholder="Enter token ticker"
+                maxLength={10}
+                onKeyDown={handleKeyPress}
+              />
             </Form.Item>
           </div>
           <Form.Item
@@ -373,7 +383,7 @@ const CreateTokenPage = () => {
           </Form.Item>
           <Form.Item
             name={FIELD_NAMES.LOGO_UPLOAD}
-            label={<FormItemLabel label="Logo Upload" isRequired />}
+            label={<FormItemLabel label="Icon" isRequired />}
             className="mb-0"
             rules={[
               {
@@ -458,7 +468,7 @@ const CreateTokenPage = () => {
               }}
               customClass="md:!w-fit !w-full"
             >
-              Create Coin
+              Create Token
             </AppButton>
           ) : (
             <ConnectWalletButton />

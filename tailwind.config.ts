@@ -24,6 +24,8 @@ const config: Config = {
           7: "var(--color-primary-7)",
           8: "var(--color-primary-8)",
           9: "var(--color-primary-9)",
+          10: "var(--color-primary-10)",
+          11: "var(--color-primary-11)",
         },
         error: {
           main: "var(--color-error-main)",

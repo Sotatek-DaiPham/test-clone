@@ -29,7 +29,15 @@ const AppInput = ({
 };
 
 AppInput.TextArea = (props: TextAreaProps) => (
-  <Input.TextArea className="app-input" {...props} />
+  <Input.TextArea
+    className="app-input scroll-text-area"
+    {...props}
+    onInput={(e) => {
+      const target = e.target as HTMLTextAreaElement;
+      target.style.height = "88px";
+      target.style.height = target.scrollHeight + "px";
+    }}
+  />
 );
 
 export default AppInput;

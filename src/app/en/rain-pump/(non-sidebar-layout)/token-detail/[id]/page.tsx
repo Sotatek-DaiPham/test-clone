@@ -14,7 +14,6 @@ import { postAPI } from "@/service";
 import { BackIcon } from "@public/assets";
 import { useMutation } from "@tanstack/react-query";
 import { AxiosResponse } from "axios";
-import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
@@ -23,10 +22,8 @@ import PriceSection from "../_components/PriceSection";
 import TabsSection from "../_components/TabsSection";
 import TokenInfoSection from "../_components/TokenInfoSection";
 import TradeSection from "../_components/TradeSection";
-
-const TradingView = dynamic(() => import("@/components/app-trading-view"), {
-  ssr: false,
-});
+import TradingView from "../_components/TradingView";
+import { PATH_ROUTER } from "@/constant/router";
 
 const TokenDetailPage = () => {
   const { isDesktop } = useWindowSize();
@@ -59,7 +56,7 @@ const TokenDetailPage = () => {
           data.data.tokenAddress === tokenDetail?.contractAddress &&
           data.data.userAddress.toLowerCase() === userAddress?.toLowerCase()
         ) {
-          console.log("buy event");
+          console.log("buy token event");
           refetchDetail();
         }
       });
@@ -68,15 +65,11 @@ const TokenDetailPage = () => {
           data.data.tokenAddress === tokenDetail?.contractAddress &&
           data.data.userAddress.toLowerCase() === userAddress?.toLowerCase()
         ) {
-          console.log("sell event");
+          console.log("sell token event");
           refetchDetail();
         }
       });
       addEvent(ESocketEvent.CREATE_TOKEN, (data: ISocketData) => {
-        console.log(
-          "buy event",
-          data.data.tokenAddress === tokenDetail?.contractAddress
-        );
         if (
           data.data.userAddress.toLowerCase() === userAddress?.toLowerCase()
         ) {
@@ -96,10 +89,10 @@ const TokenDetailPage = () => {
     <div className="m-auto p-2 max-w-[var(--width-content-sidebar-layout)]">
       <div
         className="flex gap-[9px] items-center mb-[26px] cursor-pointer w-fit"
-        onClick={() => router.back()}
+        onClick={() => router.push(PATH_ROUTER.DASHBOARD)}
       >
         <Image src={BackIcon} alt="back icon" />
-        <span className="text-white-neutral text-18px-bold">Coin Detail</span>
+        <span className="text-white-neutral text-18px-bold">Token Detail</span>
       </div>
 
       <div className="flex flex-col lg:flex-row gap-6">
@@ -111,7 +104,7 @@ const TokenDetailPage = () => {
           </div>
 
           {tokenDetail?.timeToListDex ? (
-            <div className="flex gap-6 mt-6 items-center">
+            <div className="flex gap-2 md:gap-6 mt-6 items-center flex-wrap">
               <div className="text-neutral-9 text-16px-normal">
                 This token is successfully listed on Uniswap at{" "}
                 {getTimeDDMMMYYYYHHMM(Number(tokenDetail?.timeToListDex))}

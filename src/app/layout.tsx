@@ -5,7 +5,7 @@ import SocketProvider from "@/libs/socket/SocketProvider";
 import { WagmiRainbowKitProvider } from "@/providers/WagmiProvider";
 import { AntdRegistry } from "@ant-design/nextjs-registry";
 import "@rainbow-me/rainbowkit/styles.css";
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import dynamic from "next/dynamic";
 
 const ReduxProviders = dynamic(() => import("@/providers/StoreProvider"), {
@@ -15,6 +15,15 @@ const ReduxProviders = dynamic(() => import("@/providers/StoreProvider"), {
 export const metadata: Metadata = {
   title: "RainMakr MemeCoin",
   description: "RainMakr MemeCoin",
+};
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+  // Also supported by less commonly used
+  // interactiveWidget: 'resizes-visual',
 };
 
 export default function RootLayout({
@@ -28,11 +37,11 @@ export default function RootLayout({
         <ReduxProviders>
           <WagmiRainbowKitProvider>
             <AntdRegistry>
-              <AppLayout>
-                <NotificationProvider>
+              <NotificationProvider>
+                <AppLayout>
                   <SocketProvider>{children}</SocketProvider>
-                </NotificationProvider>
-              </AppLayout>
+                </AppLayout>
+              </NotificationProvider>
             </AntdRegistry>
           </WagmiRainbowKitProvider>
         </ReduxProviders>

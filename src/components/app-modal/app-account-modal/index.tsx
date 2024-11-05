@@ -1,11 +1,10 @@
-import { formatAmount } from "@/helpers/formatNumber";
+import { nFormatterVer2 } from "@/helpers/formatNumber";
 import { shortenAddress } from "@/helpers/shorten";
 import useWalletAuth from "@/hooks/useWalletAuth";
 import { useAccountModal } from "@/providers/WagmiProvider";
 import { Modal, ModalProps } from "antd";
 import { useState } from "react";
 import { useAccount } from "wagmi";
-
 import "./styles.scss";
 
 interface IAccountModal extends ModalProps {
@@ -72,8 +71,8 @@ const AccountModal = ({ onClose, ...props }: IAccountModal) => {
           <div className="address text-white-neutral font-[600] text-center text-[18px] leading-[24px]">
             <span>{shortenAddress(address || "", 4, -4)}</span>
           </div>
-          <div className="balance text-white-neutral font-[600] text-center text-[#fff9] leading-[18px]">
-            <span>{formatAmount(userBalance)} USDT</span>
+          <div className="balance  font-[600] text-center text-[#fff9] leading-[18px]">
+            <span>{nFormatterVer2(userBalance)} USDT</span>
           </div>
         </div>
       </div>

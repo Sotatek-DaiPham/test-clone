@@ -8,6 +8,7 @@ import { CloseIcon } from "@public/assets";
 import { DEFAULT_AVATAR } from "@/constant";
 import { useRouter } from "next/navigation";
 import { PATH_ROUTER } from "@/constant/router";
+import { getTimeDDMMMYYYYHHMM } from "@/helpers/date-time";
 
 interface DiscussionThreadItem {
   comment_id: number;
@@ -116,7 +117,7 @@ const ReplySection: React.FC<ReplySectionProps> = ({
                     {reply.username || "-"}
                   </span>
                   <span className="text-neutral-7 text-14px-medium break-words">
-                    {new Date(reply.created_at).toLocaleString()}
+                    {getTimeDDMMMYYYYHHMM(reply.created_at)}
                   </span>
                 </div>
               </div>

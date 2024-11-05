@@ -1,5 +1,5 @@
 import AppButton from "@/components/app-button";
-import { nFormatter } from "@/helpers/formatNumber";
+import { nFormatterVer2 } from "@/helpers/formatNumber";
 import { shortenAddress } from "@/helpers/shorten";
 import useWalletAuth from "@/hooks/useWalletAuth";
 import useWindowSize from "@/hooks/useWindowSize";
@@ -94,19 +94,19 @@ const ConnectWalletButton = ({ customClass }: { customClass?: string }) => {
                           }}
                         >
                           {chain.iconUrl && (
+                            // eslint-disable-next-line @next/next/no-img-element
+
                             <Image
-                              alt={"Usdt icon"}
+                              alt={"USDT Icon"}
                               src={UsdtIcon}
-                              style={{
-                                width: isDesktop ? 32 : 24,
-                                height: isDesktop ? 32 : 24,
-                              }}
+                              width={isDesktop ? 32 : 24}
+                              height={isDesktop ? 32 : 24}
                             />
                           )}
                         </div>
                       )}
                       <div className="text-12px-medium">
-                        {nFormatter(userBalance, 2)} USDT
+                        {nFormatterVer2(userBalance)} USDT
                       </div>
                     </div>
 

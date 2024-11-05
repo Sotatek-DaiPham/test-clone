@@ -1,8 +1,9 @@
 import AppButton from "@/components/app-button";
 import AppModal from "@/components/app-modal";
-import AppPagination from "@/components/app-pagination";
+import AppNumberToolTip from "@/components/app-number-tooltip";
+import AppPaginationCustom from "@/components/app-pagination/app-pagination-custom";
 import AppTable from "@/components/app-table";
-import ShowingPage from "@/components/showing-page";
+import { LIMIT_COIN_ITEMS_TABLE, USDT_DECIMAL } from "@/constant";
 import { API_PATH } from "@/constant/api-path";
 import { envs } from "@/constant/envs";
 import { useTokenDetail } from "@/context/TokenDetailContext";
@@ -14,6 +15,7 @@ import { getAPI } from "@/service";
 import { ArrowExport } from "@public/assets";
 import { useQuery } from "@tanstack/react-query";
 import { ColumnType } from "antd/es/table";
+import BigNumber from "bignumber.js";
 import { get } from "lodash";
 import Image from "next/image";
 import Link from "next/link";
@@ -33,7 +35,7 @@ const HolderDistribute = () => {
         params: cleanParamObject({
           tokenAddress: tokenDetail?.contractAddress,
           page: searchParams.page,
-          limit: 100,
+          limit: LIMIT_COIN_ITEMS_TABLE,
         } as IGetTradeHistoryParams),
       });
     },
@@ -78,7 +80,15 @@ const HolderDistribute = () => {
       dataIndex: "value",
       key: "value",
       render(value, record, index) {
-        return <div>{nFormatter(value)}</div>;
+        return (
+          <div>
+            <AppNumberToolTip
+              decimal={6}
+              isFormatterK={false}
+              value={BigNumber(value).div(USDT_DECIMAL).toString()}
+            />
+          </div>
+        );
       },
     },
     {
@@ -115,19 +125,16 @@ const HolderDistribute = () => {
         loading={isFetching}
         pagination={false}
       />
-      <AppPagination
-        className="w-full !justify-end !mr-6"
-        hideOnSinglePage={true}
-        showTotal={(total, range) => (
-          <ShowingPage total={total} range={range} />
-        )}
-        current={searchParams?.page}
-        pageSize={100}
-        total={metadata?.total}
-        onChange={(page, size) => {
-          setSearchParams((prev: any) => ({ ...prev, page }));
-        }}
-      />
+      <div className="mt-4">
+        <AppPaginationCustom
+          label="holders"
+          total={metadata?.total}
+          page={searchParams.page}
+          limit={LIMIT_COIN_ITEMS_TABLE}
+          onChange={(page) => setSearchParams({ ...searchParams, page })}
+          hideOnSinglePage={true}
+        />
+      </div>
       <AppModal
         width={700}
         open={isOpenBubbleChart}

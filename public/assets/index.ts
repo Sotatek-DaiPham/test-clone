@@ -85,3 +85,5 @@ export { default as RainPumpRabbitIcon } from "./icons/rain-pump-rabbit.svg";
 export { default as RainPumpText } from "./icons/rain-pump-text-logo.svg";
 export { default as RainPumpTextWhite } from "./icons/rain-pump-text-logo-white.svg";
 export { default as BGEffect4Icon } from "./icons/bg-effect-4.svg";
+export { default as LogoMobileIcon } from "./icons/logo-mobile.svg";
+export { default as Logo1Icon } from "./icons/logo1.png";

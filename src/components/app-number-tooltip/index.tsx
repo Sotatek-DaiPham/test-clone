@@ -36,7 +36,7 @@ const AppNumberToolTip: React.FC<IAppNumberToolTipProps> = ({
         ? formatAmount(value)
         : isFormatterK
         ? nFormatterVer2(value)
-        : nFormatter(value)}
+        : nFormatter(value, decimal)}
     </AppTooltip>
   );
 };

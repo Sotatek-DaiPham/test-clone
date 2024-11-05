@@ -1,9 +1,7 @@
 import { API_PATH } from "@/constant/api-path";
-import { getStorageRefreshToken } from "@/helpers/storage";
-import { clearUser, setUser } from "@/libs/slices/userSlice";
+import { updateToken } from "@/libs/slices/userSlice";
 import makeStore from "@/libs/store";
 import axios, { AxiosRequestConfig } from "axios";
-import { get } from "lodash";
 import { toast } from "react-toastify";
 
 const axiosInstance = axios.create({
@@ -16,27 +14,23 @@ const axiosInstance = axios.create({
 // if the api no need token put it in here.
 // const whiteList = [API_PATH.AUTH.REFRESH_TOKEN];
 
-const refreshExpiredTokenClosure = () => {
-  let isCalled = false;
-  let runningPromise: any = undefined;
-  return () => {
-    if (isCalled) {
-      return runningPromise;
-    } else {
-      isCalled = true;
-      runningPromise = axiosInstance?.post(API_PATH.AUTH.REFRESH_TOKEN, {
-        refreshToken: getStorageRefreshToken(),
-      });
-      runningPromise.finally(() => {
-        isCalled = false;
-      });
-      return runningPromise;
-    }
-  };
-};
+let isRefreshing = false;
+let failedQueue: Array<{
+  resolve: (value?: unknown) => void;
+  reject: (reason?: unknown) => void;
+}> = [];
 
-// stores the function returned by refreshExpiredTokenClosure
-const refreshExpiredToken = refreshExpiredTokenClosure();
+const processQueue = (error: Error | null, token: string | null = null) => {
+  failedQueue.forEach((prom) => {
+    if (error) {
+      prom.reject(error);
+    } else {
+      prom.resolve(token);
+    }
+  });
+
+  failedQueue = [];
+};
 
 axiosInstance.interceptors.request.use(
   (config) => {
@@ -51,9 +45,9 @@ axiosInstance.interceptors.request.use(
       config.headers["Authorization"] = `Bearer ${accessToken}`;
     }
     // }
-    // if (config.url === API_PATH.AUTH.REFRESH_TOKEN || !accessToken) {
-    // delete config.headers["Authorization"];
-    // }
+    if (!accessToken) {
+      delete config.headers["Authorization"];
+    }
     return config;
   },
   (error) => {
@@ -93,27 +87,45 @@ axiosInstance.interceptors.response.use(
     // const isActiveUserDateValid: boolean =
     //   dayjs().diff(lastUserActiveDate, "m") <
     //   (import.meta.env.VITE_ACCESS_TOKEN_TIME || 1440); // mins
-
     if (message === "Unauthorized") {
-      try {
-        const response = await refreshExpiredToken();
-        const updateToken = get(response, "data.data.user.accessToken");
-        if (updateToken) {
-          const user = response.data.data;
-          originalConfig.headers[
-            "Authorization"
-          ] = `Bearer ${user.refresh_token}`;
-          return axiosInstance(originalConfig);
-        }
-        handleSesstionExpired();
-        return Promise.reject(err);
-      } catch (_error) {
-        handleSesstionExpired();
-        return Promise.reject(_error);
+      if (isRefreshing) {
+        return new Promise((resolve, reject) => {
+          failedQueue.push({ resolve, reject });
+        })
+          .then((token) => {
+            originalConfig.headers.Authorization = `Bearer ${token}`;
+            return axiosInstance(originalConfig);
+          })
+          .catch((err) => Promise.reject(err));
       }
-    } else if (httpStatus === 401) {
-      makeStore.dispatch(clearUser());
+
+      originalConfig._retry = true;
+      isRefreshing = true;
+
+      try {
+        const refreshToken = makeStore.getState().user.refreshToken;
+        const response = await axiosInstance.post(API_PATH.AUTH.REFRESH_TOKEN, {
+          refresh_token: refreshToken,
+        });
+        const { access_token, refresh_token } = response.data.data;
+        makeStore.dispatch(
+          updateToken({
+            accessToken: access_token,
+            refreshToken: refresh_token,
+          })
+        );
+
+        originalConfig.headers.Authorization = `Bearer ${access_token}`;
+        processQueue(null, access_token);
+        return axiosInstance(originalConfig);
+      } catch (error) {
+        processQueue(err as Error, null);
+        return Promise.reject(error);
+      } finally {
+        isRefreshing = false;
+      }
     }
+
     return Promise.reject(err);
   }
 );
