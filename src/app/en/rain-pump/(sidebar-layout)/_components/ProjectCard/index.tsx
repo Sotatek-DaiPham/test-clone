@@ -69,7 +69,7 @@ const ProjectCard = ({
                     }}
                     maxWidth="100%"
                     value={data?.username}
-                    className="text-primary-7 !text-12px-normal hover:!underline"
+                    className="text-primary-7 !text-12px-normal hover:!underline cursor-pointer"
                   />
                 </div>
               </div>

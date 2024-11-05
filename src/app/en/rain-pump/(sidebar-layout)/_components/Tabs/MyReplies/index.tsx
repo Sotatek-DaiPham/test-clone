@@ -48,7 +48,7 @@ const ReplyItem = ({ data }: { data: IMyRepliesResponse }) => {
         <div className="flex w-full flex-col grow max-w-[85%]">
           <div className="text-16px-bold">
             <EllipsisTextWithTooltip
-              className="text-16px-bold text-neutral-9 hover:!underline"
+              className="text-16px-bold text-neutral-9 hover:!underline cursor-pointer"
               value={data?.userName}
               maxWidth="100%"
             />
@@ -105,7 +105,7 @@ const MyRepliesTab = () => {
         params: {
           ...params,
           orderBy: "createdAt",
-          direction: EDirection.ASC,
+          direction: EDirection.DESC,
           keyword: debounceSearch?.trim(),
         },
       }) as Promise<
