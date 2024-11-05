@@ -39,7 +39,7 @@ const CoinCreatedTab = ({ walletAddress }: { walletAddress: string }) => {
         params: {
           ...params,
           orderBy: "createdAt",
-          direction: EDirection.ASC,
+          direction: EDirection.DESC,
           walletAddress: walletAddress,
           keyword: debounceSearch?.trim(),
         },

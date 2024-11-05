@@ -48,7 +48,7 @@ const ReplyItem = ({ data }: { data: IMyRepliesResponse }) => {
         <div className="flex w-full flex-col grow max-w-[85%]">
           <div className="text-16px-bold">
             <EllipsisTextWithTooltip
-              className="text-16px-bold text-neutral-9 hover:!underline"
+              className="text-16px-bold text-neutral-9 hover:!underline cursor-pointer"
               value={data?.userName}
               maxWidth="100%"
             />
@@ -67,7 +67,9 @@ const ReplyItem = ({ data }: { data: IMyRepliesResponse }) => {
         customClass="!w-fit !rounded-full"
         classChildren="!flex !flex-row !items-center !text-primary-main"
         onClick={() => {
-          const query = `?replyId=${data?.replyId}&replyUserId=${data?.replyUserId}`;
+          const query = `?replyId=${
+            data?.replyId ? data?.replyId : data?.id
+          }&replyUserId=${data?.replyUserId ? data?.replyUserId : data?.id}`;
           router.push(`${PATH_ROUTER.TOKEN_DETAIL(data?.tokenId)}${query}`, {
             scroll: true,
           });
@@ -103,7 +105,7 @@ const MyRepliesTab = () => {
         params: {
           ...params,
           orderBy: "createdAt",
-          direction: EDirection.ASC,
+          direction: EDirection.DESC,
           keyword: debounceSearch?.trim(),
         },
       }) as Promise<

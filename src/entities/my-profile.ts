@@ -26,6 +26,9 @@ export type TUpdateProfilePayload = {
 };
 
 export interface IMyRepliesResponse {
+  id: number;
+  deletedAt: any;
+  userId: number;
   tokenId: number;
   replyId: number;
   replyUserId: number;
@@ -79,7 +82,7 @@ export enum ETabsMyProfile {
   MY_REPLIES = "my-replies",
 }
 
-export interface  DiscussionThreadItem {
+export interface DiscussionThreadItem {
   comment_id: number;
   user_id: number;
   token_id: number;
@@ -94,7 +97,6 @@ export interface  DiscussionThreadItem {
   avatar: string | null;
   number_replies: number;
   mostRecentUserComments: IMostRecentUserComment[];
-  
 }
 
 export interface IMostRecentUserComment {
@@ -119,5 +121,4 @@ export interface IReplyThreadItem {
   user_id: number;
   username: string;
   wallet_address: string;
-
 }

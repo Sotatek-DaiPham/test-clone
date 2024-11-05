@@ -46,8 +46,8 @@ const FollowingTab = ({ walletAddress }: { walletAddress: string }) => {
       return getAPI(API_PATH.USER.FOLLOWINGS, {
         params: {
           ...params,
-          orderBy: "id",
-          direction: EDirection.ASC,
+          orderBy: "createdAt",
+          direction: EDirection.DESC,
           walletAddress: walletAddress,
           keyword: debounceSearch?.trim(),
           viewerId: userId,

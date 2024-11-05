@@ -44,7 +44,7 @@ const PortfolioTab = ({ walletAddress }: { walletAddress: string }) => {
         params: {
           ...params,
           orderBy: "valueUsdt",
-          direction: EDirection.ASC,
+          direction: EDirection.DESC,
           minAmountHeld: hideDustCoin ? "0.1" : "",
           walletAddress: walletAddress,
           keyword: debounceSearch?.trim(),
