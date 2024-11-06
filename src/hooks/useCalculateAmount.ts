@@ -43,10 +43,7 @@ const useCalculateAmount = ({
         return (data as any)?.[0];
     }
   }, [data, value, contractAddress]);
-  // console.log(
-  //   `${functionName}'s value`,
-  //   BigNumber(value).multipliedBy(decimalIn).toFixed()
-  // );
+
   useEffect(() => {
     if (!!contractAddress && !!value) {
       rest.refetch();

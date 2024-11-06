@@ -56,7 +56,6 @@ const TokenDetailPage = () => {
           data.data.tokenAddress === tokenDetail?.contractAddress &&
           data.data.userAddress.toLowerCase() === userAddress?.toLowerCase()
         ) {
-          console.log("buy token event");
           refetchDetail();
         }
       });
@@ -65,7 +64,6 @@ const TokenDetailPage = () => {
           data.data.tokenAddress === tokenDetail?.contractAddress &&
           data.data.userAddress.toLowerCase() === userAddress?.toLowerCase()
         ) {
-          console.log("sell token event");
           refetchDetail();
         }
       });
@@ -73,7 +71,6 @@ const TokenDetailPage = () => {
         if (
           data.data.userAddress.toLowerCase() === userAddress?.toLowerCase()
         ) {
-          console.log("create token event");
           refetchDetail();
         }
       });
