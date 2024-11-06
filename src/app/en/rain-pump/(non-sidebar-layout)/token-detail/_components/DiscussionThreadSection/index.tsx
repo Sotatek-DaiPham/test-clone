@@ -139,7 +139,7 @@ const DiscussionThread = () => {
       image: string;
     }) => postFormDataAPI(API_PATH.USER.POST_COMMENT, payload),
     onSuccess: () => {
-      message.success("Comment has been posted");
+      // message.success("Comment has been posted");
       form.resetFields();
       setShowInputComment(false);
       queryClient.invalidateQueries({ queryKey: ["discussionThreads"] });

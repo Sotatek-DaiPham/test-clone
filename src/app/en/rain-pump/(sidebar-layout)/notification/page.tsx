@@ -4,16 +4,10 @@ import AppImage from "@/components/app-image";
 import AppPaginationCustom from "@/components/app-pagination/app-pagination-custom";
 import EllipsisTextWithTooltip from "@/components/app-tooltip/EllipsisTextWithTooltip";
 import NoData from "@/components/no-data";
-import {
-  EEventNoti,
-  LIMIT_COIN_ITEMS_TABLE
-} from "@/constant";
+import { EEventNoti, LIMIT_COIN_ITEMS_TABLE } from "@/constant";
 import { API_PATH } from "@/constant/api-path";
 import { PATH_ROUTER } from "@/constant/router";
-import {
-  Information,
-  INotificationResponse
-} from "@/entities/notification";
+import { Information, INotificationResponse } from "@/entities/notification";
 import { BeSuccessResponse } from "@/entities/response";
 import { getTimeDDMMMYYYYHHMM } from "@/helpers/date-time";
 import { convertNumber, formatAmount } from "@/helpers/formatNumber";
@@ -141,6 +135,8 @@ const NotificationPage = () => {
         params: {
           ...params,
           keyword: debounceSearch?.trim(),
+          orderBy: "createdAt",
+          direction: "DESC",
         },
       }) as Promise<
         AxiosResponse<BeSuccessResponse<INotificationResponse[]>, any>
