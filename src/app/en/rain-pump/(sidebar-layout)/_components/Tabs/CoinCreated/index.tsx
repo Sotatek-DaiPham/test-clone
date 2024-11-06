@@ -75,7 +75,7 @@ const CoinCreatedTab = ({ walletAddress }: { walletAddress: string }) => {
   return (
     <div>
       <div className="w-full flex sm:flex-row flex-col sm:items-center justify-between">
-        <TabTitle title="Coin created" />
+        <TabTitle title="Token created" />
         <AppInput
           className="sm:!w-[400px] w-full h-[40px]"
           isSearch={true}

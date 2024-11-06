@@ -175,18 +175,18 @@ const CreateTokenPage = () => {
     router.push(PATH_ROUTER.TOKEN_DETAIL(tokenId || tokenCreatedId));
     if (isMint) {
       success({
-        message: "Initial buy transaction completed. Coin created succesfully",
+        message: "Initial buy transaction completed. Token created succesfully",
         key: "1",
       });
     } else {
       if (isWithoutBuy) {
         success({
-          message: "Coin created succesfully",
+          message: "Token created succesfully",
           key: "2",
         });
       } else {
         success({
-          message: "Initial buy transaction denied. Coin created succesfully",
+          message: "Initial buy transaction denied. Token created succesfully",
           key: "3",
         });
       }
