@@ -95,14 +95,7 @@ const ConnectWalletButton = ({ customClass }: { customClass?: string }) => {
                         >
                           {chain.iconUrl && (
                             // eslint-disable-next-line @next/next/no-img-element
-                            // <img
-                            //   alt={chain.name ?? "Chain icon"}
-                            //   src={chain.iconUrl}
-                            //   style={{
-                            //     width: isDesktop ? 32 : 24,
-                            //     height: isDesktop ? 32 : 24,
-                            //   }}
-                            // />
+
                             <Image
                               alt={"USDT Icon"}
                               src={UsdtIcon}

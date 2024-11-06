@@ -6,6 +6,7 @@ import Image from "next/image";
 import { CloseIcon, LinkHorizontalIcon } from "@public/assets";
 import AppRoundedInfo from "@/components/app-rounded-info";
 import { FileItem } from ".";
+import { ACCEPT_IMAGE_EXTENSION } from "@/constant";
 
 interface Props {
   showCancelButton: boolean;
@@ -21,7 +22,7 @@ const validateFile = (file: any) => {
   if (Number(file.size) > 5000000 && file.type.includes("image")) {
     throw new Error("Uploaded files should not exceed 5MB");
   } else if (!checkValidUploadFileType(file)) {
-    throw new Error("Please upload PNG, JPG, GIF only");
+    throw new Error("Please upload PNG, JPG, JPEG, GIF only");
   }
 };
 
@@ -120,7 +121,7 @@ const CustomCommentInput = forwardRef<HTMLAreaElement, Props>(function (
             ref={fileInputRef}
             onChange={handleUpload}
             style={{ display: "none" }}
-            accept=".png,.jpg,.gif"
+            accept={ACCEPT_IMAGE_EXTENSION}
           />
           {fileList.length > 0 && fileList[0].url && (
             <div className="uploaded-image relative">

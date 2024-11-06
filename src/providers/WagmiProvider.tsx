@@ -1,6 +1,6 @@
 "use client";
 import AccountModal from "@/components/app-modal/app-account-modal";
-import { DECIMAL_USDT } from "@/constant";
+import { USDT_DECIMAL } from "@/constant";
 import { envs } from "@/constant/envs";
 import useTokenBalance from "@/hooks/useTokenBalance";
 import { darkTheme, RainbowKitProvider, Theme } from "@rainbow-me/rainbowkit";
@@ -59,7 +59,7 @@ const AccountModalProvider = ({ children }: Props) => {
     balance,
     refetch: refetchUserBalance,
     isLoading,
-  } = useTokenBalance(address, envs.USDT_ADDRESS, DECIMAL_USDT);
+  } = useTokenBalance(address, envs.USDT_ADDRESS, USDT_DECIMAL);
 
   React.useEffect(() => {
     if (!address) {

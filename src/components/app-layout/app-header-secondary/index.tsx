@@ -1,7 +1,7 @@
 "use client";
 import ConnectWalletButton from "@/components/Button/ConnectWallet";
 import useWindowSize from "@/hooks/useWindowSize";
-import { Hamburgericon, RainmakrIcon } from "@public/assets";
+import { Hamburgericon, Logo1Icon, RainmakrIcon } from "@public/assets";
 import { Flex, Layout } from "antd";
 import clsx from "clsx";
 import Image from "next/image";
@@ -86,7 +86,7 @@ export default function AppHeaderSecondary() {
 
             <Link href="/" className={isOpenMenuMobile ? "ml-2" : ""}>
               <Image
-                src={RainmakrIcon}
+                src={Logo1Icon}
                 alt="rainmakr icon"
                 width={84}
                 height={24}

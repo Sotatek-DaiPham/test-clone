@@ -1,6 +1,7 @@
 import AppButton from "@/components/app-button";
 import AppImage from "@/components/app-image";
 import AppTruncateText from "@/components/app-truncate-text";
+import NoData from "@/components/no-data";
 import { ITokenDetailRes } from "@/interfaces/token";
 import {
   DiscordLinkIcon,
@@ -40,7 +41,7 @@ const TokenInfoSection = ({ tokenDetail }: ITokenInfoSectionProps) => {
             <span>({tokenDetail?.symbol})</span>
           </div>
           <div className="text-12px-normal text-neutral-7 mt-3 break-words">
-            {tokenDetail?.description}
+            {tokenDetail?.description ? tokenDetail?.description : <NoData />}
           </div>
 
           <div className="w-full">
