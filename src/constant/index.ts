@@ -34,6 +34,8 @@ export const PREDEFINE_PRIORITY_FEE = [
 
 export const AMOUNT_FIELD_NAME = "amount";
 
+export const ACCEPT_IMAGE_EXTENSION = ".png,.jpg,.jpeg,.gif";
+
 export enum ETradeAction {
   BUY = "BUY",
   SELL = "SELL",

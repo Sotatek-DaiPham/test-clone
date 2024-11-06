@@ -8,7 +8,11 @@ import ConfirmModal from "@/components/app-modal/app-confirm-modal";
 import InitialBuyModal from "@/components/app-modal/app-initial-buy-modal";
 import AppUpload from "@/components/app-upload";
 import ConnectWalletButton from "@/components/Button/ConnectWallet";
-import { AMOUNT_FIELD_NAME, USDT_DECIMAL } from "@/constant";
+import {
+  ACCEPT_IMAGE_EXTENSION,
+  AMOUNT_FIELD_NAME,
+  USDT_DECIMAL,
+} from "@/constant";
 import { API_PATH } from "@/constant/api-path";
 import { envs } from "@/constant/envs";
 import {
@@ -387,10 +391,7 @@ const CreateTokenPage = () => {
               },
             ]}
           >
-            <AppUpload
-              accept="image/png, image/jpeg, image/gif"
-              variant="secondary"
-            />
+            <AppUpload accept={ACCEPT_IMAGE_EXTENSION} variant="secondary" />
           </Form.Item>
         </div>
 

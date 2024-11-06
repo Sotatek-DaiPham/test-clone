@@ -21,7 +21,7 @@ export { default as WarningModalIcon } from "./icons/warning-modal-icon.svg";
 export { default as CloseIcon } from "./icons/x-close.svg";
 export { default as HowItWorksBackground } from "./icons/bg-how-it-work.svg";
 export { default as HowItWorks } from "./icons/how-it-work.svg";
-export { default as RainmakrIcon } from "./icons/rainmakr-icon.svg";
+export { default as RainmakrIcon } from "./images/rain-mark-logo.webp";
 export { default as UploadIcon } from "./icons/upload-icon.svg";
 export { default as SelectDropdownIcon } from "./icons/select-dropdown.svg";
 export { default as UsdtIcon } from "./icons/usdt-icon.svg";
