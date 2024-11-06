@@ -44,3 +44,10 @@ textarea.app-input {
     }
   }
 }
+.scroll-text-area::-webkit-scrollbar {
+  display: none;
+  resize: none;
+}
+.scroll-text-area {
+  overflow-y: hidden !important;
+}

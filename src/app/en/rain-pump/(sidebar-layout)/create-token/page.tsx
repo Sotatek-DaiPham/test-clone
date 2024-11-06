@@ -8,7 +8,11 @@ import ConfirmModal from "@/components/app-modal/app-confirm-modal";
 import InitialBuyModal from "@/components/app-modal/app-initial-buy-modal";
 import AppUpload from "@/components/app-upload";
 import ConnectWalletButton from "@/components/Button/ConnectWallet";
-import { AMOUNT_FIELD_NAME, USDT_DECIMAL } from "@/constant";
+import {
+  ACCEPT_IMAGE_EXTENSION,
+  AMOUNT_FIELD_NAME,
+  USDT_DECIMAL,
+} from "@/constant";
 import { API_PATH } from "@/constant/api-path";
 import { envs } from "@/constant/envs";
 import {
@@ -171,18 +175,18 @@ const CreateTokenPage = () => {
     router.push(PATH_ROUTER.TOKEN_DETAIL(tokenId || tokenCreatedId));
     if (isMint) {
       success({
-        message: "Initial buy transaction completed. Coin created succesfully",
+        message: "Initial buy transaction completed. Token created succesfully",
         key: "1",
       });
     } else {
       if (isWithoutBuy) {
         success({
-          message: "Coin created succesfully",
+          message: "Token created succesfully",
           key: "2",
         });
       } else {
         success({
-          message: "Initial buy transaction denied. Coin created succesfully",
+          message: "Initial buy transaction denied. Token created succesfully",
           key: "3",
         });
       }
@@ -311,6 +315,13 @@ const CreateTokenPage = () => {
     }
   };
 
+  const handlePaste = (event: React.ClipboardEvent<HTMLInputElement>) => {
+    const pastedData = event.clipboardData.getData("text");
+    if (pastedData.includes(" ")) {
+      event.preventDefault();
+    }
+  };
+
   return (
     <div className="create-token-page w-full mr-auto ml-auto">
       {!isDesktop ? (
@@ -363,6 +374,7 @@ const CreateTokenPage = () => {
                 placeholder="Enter token ticker"
                 maxLength={10}
                 onKeyDown={handleKeyPress}
+                onPaste={handlePaste}
               />
             </Form.Item>
           </div>
@@ -387,10 +399,7 @@ const CreateTokenPage = () => {
               },
             ]}
           >
-            <AppUpload
-              accept="image/png, image/jpeg, image/gif"
-              variant="secondary"
-            />
+            <AppUpload accept={ACCEPT_IMAGE_EXTENSION} variant="secondary" />
           </Form.Item>
         </div>
 

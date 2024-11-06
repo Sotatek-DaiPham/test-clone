@@ -16,8 +16,8 @@ import { Spin } from "antd";
 import { AxiosResponse } from "axios";
 import get from "lodash/get";
 import { useEffect, useState } from "react";
-import TabTitle from "../../TabTitle";
 import ProjectCard from "../../ProjectCard";
+import TabTitle from "../../TabTitle";
 
 const CoinCreatedTab = ({ walletAddress }: { walletAddress: string }) => {
   const { addEvent, isConnected, removeEvent } = useSocket();
@@ -75,7 +75,7 @@ const CoinCreatedTab = ({ walletAddress }: { walletAddress: string }) => {
   return (
     <div>
       <div className="w-full flex sm:flex-row flex-col sm:items-center justify-between">
-        <TabTitle title="Coin created" />
+        <TabTitle title="Token created" />
         <AppInput
           className="sm:!w-[400px] w-full h-[40px]"
           isSearch={true}

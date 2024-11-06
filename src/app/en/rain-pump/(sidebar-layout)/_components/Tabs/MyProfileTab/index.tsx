@@ -92,18 +92,24 @@ const MyProfileTab = ({ apiPath }: { apiPath: string }) => {
   return (
     <div>
       <div className="w-full flex flex-row items-center justify-between">
-        <TabTitle title="My profile" />
+        <TabTitle title="My Profile" />
         {id ? (
-          <AppButton
-            size="small"
-            typeButton={
-              accessToken && myProfile?.isFollowing ? "secondary" : "primary"
-            }
-            customClass="!w-[100px] !rounded-full"
-            onClick={!!accessToken ? handleFollow : openConnectModal}
-          >
-            {accessToken && myProfile?.isFollowing ? "Unfollow" : "Follow"}
-          </AppButton>
+          <>
+            {accessToken && (
+              <AppButton
+                size="small"
+                typeButton={
+                  accessToken && myProfile?.isFollowing
+                    ? "secondary"
+                    : "primary"
+                }
+                customClass="!w-[100px] !rounded-full"
+                onClick={!!accessToken ? handleFollow : openConnectModal}
+              >
+                {accessToken && myProfile?.isFollowing ? "Unfollow" : "Follow"}
+              </AppButton>
+            )}
+          </>
         ) : (
           <AppButton
             size="small"

@@ -1,10 +1,12 @@
 import AppDivider from "@/components/app-divider";
 import AppImage from "@/components/app-image";
+import AppNumberToolTip from "@/components/app-number-tooltip";
 import EllipsisTextWithTooltip from "@/components/app-tooltip/EllipsisTextWithTooltip";
 import { PATH_ROUTER } from "@/constant/router";
-import { convertNumber, formatAmount } from "@/helpers/formatNumber";
+import { convertNumber } from "@/helpers/formatNumber";
 import { shortenAddress } from "@/helpers/shorten";
 import useWindowSize from "@/hooks/useWindowSize";
+import { ImageDefaultIcon } from "@public/assets";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
@@ -32,29 +34,48 @@ const TopUser = ({
               className={`m-auto ${isMobile ? "w-[56px]" : ""}`}
             />
             <div className="text-center mt-2 text-white-neutral">
-              <AppImage
-                src={data?.avatar}
-                alt="avatar"
-                className={`border overflow-hidden border-white-neutral flex m-auto [&>img]:!object-cover rounded-full bg-primary-7 ${
-                  top1 && !isMobile
-                    ? "!w-[120px] !h-[120px]"
-                    : isMobile
-                    ? "w-[56px] h-[56px]"
-                    : "w-[80px] h-[80px]"
-                }`}
-              />
+              {data?.avatar ? (
+                <AppImage
+                  src={data?.avatar}
+                  alt="avatar"
+                  className={`border overflow-hidden border-white-neutral flex m-auto [&>img]:!object-cover rounded-full bg-primary-7 ${
+                    top1 && !isMobile
+                      ? "!w-[120px] !h-[120px]"
+                      : isMobile
+                      ? "w-[56px] h-[56px]"
+                      : "w-[80px] h-[80px]"
+                  }`}
+                />
+              ) : (
+                <Image
+                  className={`border overflow-hidden border-white-neutral flex m-auto [&>img]:!object-cover rounded-full bg-primary-7 ${
+                    top1 && !isMobile
+                      ? "!w-[120px] !h-[120px]"
+                      : isMobile
+                      ? "w-[56px] h-[56px]"
+                      : "w-[80px] h-[80px]"
+                  }`}
+                  src={ImageDefaultIcon}
+                  alt="avatar"
+                />
+              )}
               {!isMobile && (
                 <>
                   <div>
                     <EllipsisTextWithTooltip
                       value={data?.username || "-"}
-                      className={`mt-4 text-white-neutral mb-1 ${
+                      className={`mt-4 text-neutral-9 mb-1 ${
                         top1 ? "text-22px-bold" : "text-18px-bold"
                       }`}
                       width={200}
                     />
                   </div>
-                  <p className="text-16px-normal text-neutral-7">
+                  <p
+                    className="text-16px-normal text-neutral-7 hover:underline cursor-pointer"
+                    onClick={() =>
+                      router.push(PATH_ROUTER.USER_PROFILE(data?.walletAddress))
+                    }
+                  >
                     {shortenAddress(data?.walletAddress) || "-"}
                   </p>
                 </>
@@ -66,11 +87,11 @@ const TopUser = ({
               <div>
                 <EllipsisTextWithTooltip
                   value={data?.username || "-"}
-                  className="mt-4 text-white-neutral mb-1 text-18px-bold"
+                  className="mt-4 text-neutral-9 mb-1 text-18px-bold"
                   width={200}
                 />
                 <p
-                  className="text-14px-normal text-neutral-7 hover:underline"
+                  className="text-14px-normal text-neutral-7 hover:underline cursor-pointer"
                   onClick={() =>
                     router.push(PATH_ROUTER.USER_PROFILE(data?.walletAddress))
                   }
@@ -85,26 +106,53 @@ const TopUser = ({
         <div className="sm:grid sm:grid-cols-3 flex flex-col sm:gap-6 gap-2 text-neutral-7 text-14px-normal mt-4">
           <div className="w-full flex sm:flex-col flex-row items-center justify-between text-center">
             <span>Total</span>
-            <span className="text-16px-medium text-white-neutral mt-1">
-              {data?.total
-                ? `${formatAmount(convertNumber(data?.total, 6))} USDT`
-                : "-"}
+            <span className="text-16px-medium text-neutral-9 mt-1">
+              {data?.total ? (
+                <>
+                  <AppNumberToolTip
+                    value={convertNumber(data?.total, 6)}
+                    isNoFormatterKMB={false}
+                    isFormatterK={true}
+                  />{" "}
+                  USDT
+                </>
+              ) : (
+                "-"
+              )}
             </span>
           </div>
           <div className="w-full flex sm:flex-col flex-row items-center justify-between text-center">
             <span>Buy</span>
             <span className="text-16px-medium text-success-main mt-1">
-              {data?.buy
-                ? `${formatAmount(convertNumber(data?.buy, 6))} USDT`
-                : "-"}
+              {data?.buy ? (
+                <>
+                  <AppNumberToolTip
+                    value={convertNumber(data?.buy, 6)}
+                    isNoFormatterKMB={false}
+                    isFormatterK={true}
+                  />{" "}
+                  USDT
+                </>
+              ) : (
+                "-"
+              )}
             </span>
           </div>
           <div className="w-full flex sm:flex-col flex-row items-center justify-between text-center">
             <span>Sell</span>
             <span className="text-16px-medium text-error-main mt-1">
-              {data?.sell
-                ? `${formatAmount(convertNumber(data?.sell, 6))} USDT`
-                : "-"}
+              {data?.sell ? (
+                <>
+                  <AppNumberToolTip
+                    value={convertNumber(data?.sell, 6)}
+                    isNoFormatterKMB={false}
+                    isFormatterK={true}
+                  />{" "}
+                  USDT
+                </>
+              ) : (
+                "-"
+              )}
             </span>
           </div>
         </div>

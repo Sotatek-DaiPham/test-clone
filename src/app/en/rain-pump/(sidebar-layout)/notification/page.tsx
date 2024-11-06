@@ -1,20 +1,13 @@
 "use client";
 import AppDivider from "@/components/app-divider";
 import AppImage from "@/components/app-image";
-import AppInput from "@/components/app-input";
 import AppPaginationCustom from "@/components/app-pagination/app-pagination-custom";
 import EllipsisTextWithTooltip from "@/components/app-tooltip/EllipsisTextWithTooltip";
 import NoData from "@/components/no-data";
-import {
-  EEventNoti,
-  LIMIT_COIN_ITEMS_TABLE
-} from "@/constant";
+import { EEventNoti, LIMIT_COIN_ITEMS_TABLE } from "@/constant";
 import { API_PATH } from "@/constant/api-path";
 import { PATH_ROUTER } from "@/constant/router";
-import {
-  Information,
-  INotificationResponse
-} from "@/entities/notification";
+import { Information, INotificationResponse } from "@/entities/notification";
 import { BeSuccessResponse } from "@/entities/response";
 import { getTimeDDMMMYYYYHHMM } from "@/helpers/date-time";
 import { convertNumber, formatAmount } from "@/helpers/formatNumber";
@@ -142,6 +135,8 @@ const NotificationPage = () => {
         params: {
           ...params,
           keyword: debounceSearch?.trim(),
+          orderBy: "createdAt",
+          direction: "DESC",
         },
       }) as Promise<
         AxiosResponse<BeSuccessResponse<INotificationResponse[]>, any>
@@ -156,14 +151,14 @@ const NotificationPage = () => {
     <div className="m-auto max-w-[var(--width-content-sidebar-layout)]">
       <div className="w-full flex sm:flex-row flex-col sm:items-center justify-between">
         <TabTitle title="Notification" />
-        <AppInput
+        {/* <AppInput
           className="sm:!w-[400px] w-full h-[40px]"
           isSearch={true}
           iconPosition="left"
           placeholder="Search"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-        />
+        /> */}
       </div>
       {isPending ? (
         <Spin />

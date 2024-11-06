@@ -1,23 +1,26 @@
 "use client";
 import AppImage from "@/components/app-image";
 import AppInput from "@/components/app-input";
+import AppNumberToolTip from "@/components/app-number-tooltip";
 import AppPaginationCustom from "@/components/app-pagination/app-pagination-custom";
 import AppTable from "@/components/app-table";
 import AppTooltip from "@/components/app-tooltip";
 import EllipsisTextWithTooltip from "@/components/app-tooltip/EllipsisTextWithTooltip";
 import NoData from "@/components/no-data";
-import { LIMIT_ITEMS_TABLE } from "@/constant";
+import { LIMIT_COIN_ITEMS_TABLE } from "@/constant";
 import { API_PATH } from "@/constant/api-path";
 import { PATH_ROUTER } from "@/constant/router";
 import { MyRankResponse } from "@/entities/leaderboard";
 import { BeSuccessResponse } from "@/entities/response";
-import { convertNumber, formatAmount } from "@/helpers/formatNumber";
+import { convertNumber } from "@/helpers/formatNumber";
 import { shortenAddress } from "@/helpers/shorten";
 import useDebounce from "@/hooks/useDebounce";
+import useWalletAuth from "@/hooks/useWalletAuth";
 import useWindowSize from "@/hooks/useWindowSize";
 import { useAppSelector } from "@/libs/hooks";
 import { getAPI } from "@/service";
 import {
+  ImageDefaultIcon,
   TopLeaderBoardIcon,
   UserTop1,
   UserTop2,
@@ -33,7 +36,6 @@ import { useMemo, useState } from "react";
 import { useAccount } from "wagmi";
 import MyTopLine from "./components/MyTopLine";
 import TopUser from "./components/TopUser";
-import useWalletAuth from "@/hooks/useWalletAuth";
 
 const LeaderboardPage = () => {
   const { isMobile } = useWindowSize();
@@ -43,7 +45,7 @@ const LeaderboardPage = () => {
   const router = useRouter();
   const [params, setParams] = useState<any>({
     page: 1,
-    limit: LIMIT_ITEMS_TABLE,
+    limit: LIMIT_COIN_ITEMS_TABLE,
   });
   const [search, setSearch] = useState<string>("");
   const debounceSearch = useDebounce(search);
@@ -125,20 +127,29 @@ const LeaderboardPage = () => {
       render: (value: string, data: any) => {
         return (
           <div
-            className="flex flex-row items-center w-fit cursor-pointer hover:underline"
+            className="flex flex-row items-center w-fit cursor-pointer hover:underline cursor-pointer"
             onClick={(e) => {
               e.stopPropagation();
               router.push(PATH_ROUTER.USER_PROFILE(data?.walletAddress));
             }}
           >
-            <AppImage
-              src={data?.avatar}
-              alt="avatar"
-              className="w-[40px] min-w-[40px] h-[40px] rounded-full bg-primary-7 mr-3 flex overflow-hidden"
-            />
+            {data?.avatar ? (
+              <AppImage
+                src={data?.avatar}
+                alt="avatar"
+                className="w-[40px] min-w-[40px] h-[40px] rounded-full bg-primary-7 mr-3 flex overflow-hidden"
+              />
+            ) : (
+              <Image
+                alt="avatar"
+                className="w-[40px] min-w-[40px] h-[40px] rounded-full bg-primary-7 mr-3 flex overflow-hidden"
+                src={ImageDefaultIcon}
+              />
+            )}
             <EllipsisTextWithTooltip
               className="text-neutral-9 text-16px-normal"
               value={value}
+              width={150}
               maxWidth="100%"
             />
           </div>
@@ -150,8 +161,18 @@ const LeaderboardPage = () => {
       dataIndex: "walletAddress",
       key: "walletAddress",
       width: "15%",
-      render: (value: string) => {
-        return <AppTooltip title={value}>{shortenAddress(value)}</AppTooltip>;
+      render: (value: string, data: any) => {
+        return (
+          <div
+            className="cursor-pointer"
+            onClick={(e) => {
+              e.stopPropagation();
+              router.push(PATH_ROUTER.USER_PROFILE(data?.walletAddress));
+            }}
+          >
+            <AppTooltip title={value}>{shortenAddress(value)}</AppTooltip>
+          </div>
+        );
       },
     },
     // {
@@ -170,7 +191,14 @@ const LeaderboardPage = () => {
       key: "total",
       width: "15%",
       render: (value: string, data: any) => {
-        return <span>{formatAmount(convertNumber(value, 6))}</span>;
+        return (
+          <span>
+            <AppNumberToolTip
+              value={convertNumber(value, 6)}
+              isNoFormatterKMB={true}
+            />
+          </span>
+        );
       },
     },
     {
@@ -181,7 +209,10 @@ const LeaderboardPage = () => {
       render: (value: string, data: any) => {
         return (
           <span className="text-success-main">
-            {formatAmount(convertNumber(value, 6))}
+            <AppNumberToolTip
+              value={convertNumber(value, 6)}
+              isNoFormatterKMB={true}
+            />
           </span>
         );
       },
@@ -194,7 +225,10 @@ const LeaderboardPage = () => {
       render: (value: string, data: any) => {
         return (
           <span className="text-error-main">
-            {formatAmount(convertNumber(value, 6))}
+            <AppNumberToolTip
+              value={convertNumber(value, 6)}
+              isNoFormatterKMB={true}
+            />
           </span>
         );
       },
@@ -203,6 +237,11 @@ const LeaderboardPage = () => {
 
   return (
     <div className="m-auto max-w-[var(--width-content-sidebar-layout)]">
+      {isMobile && (
+        <div className="text-20px-bold text-white-neutral mb-4">
+          RainPump Leaderboard
+        </div>
+      )}
       {!debounceSearch?.trim() && (
         <div className="grid sm:grid-cols-3 grid-cols-1 gap-6 mb-6">
           {isMobile && leaderboardRes?.length > 0 && (
@@ -239,10 +278,12 @@ const LeaderboardPage = () => {
       )}
       <div
         className={`w-full flex sm:flex-row flex-col items-center ${
-          userId && !debounceSearch ? "justify-between" : "justify-end"
+          userId && !debounceSearch && myRankRes?.top
+            ? "justify-between"
+            : "justify-end"
         }`}
       >
-        {userId && !debounceSearch && (
+        {userId && !debounceSearch && myRankRes?.top && (
           <MyTopLine top={myRankRes?.top} total={myRankRes?.total} />
         )}
         <AppInput

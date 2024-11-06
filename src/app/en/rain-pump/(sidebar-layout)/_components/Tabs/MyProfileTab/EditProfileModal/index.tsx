@@ -3,6 +3,7 @@ import FormItemLabel from "@/components/app-form-label";
 import AppInput from "@/components/app-input";
 import AppModal from "@/components/app-modal";
 import AppUpload from "@/components/app-upload";
+import { ACCEPT_IMAGE_EXTENSION } from "@/constant";
 import { API_PATH } from "@/constant/api-path";
 import {
   TUpdateProfilePayload,
@@ -126,7 +127,7 @@ const EditProfileModal = ({ data, onOk, ...props }: IEditProfileModalProps) => {
                 <AppUpload
                   isShowSuggest={false}
                   className="upload-avatar w-full"
-                  accept="image/png, image/jpeg"
+                  accept={ACCEPT_IMAGE_EXTENSION}
                 />
               </Form.Item>
             </Flex>

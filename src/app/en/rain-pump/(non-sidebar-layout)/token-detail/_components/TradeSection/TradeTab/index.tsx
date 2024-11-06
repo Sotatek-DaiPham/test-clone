@@ -15,6 +15,7 @@ import {
   PREDEFINE_SELL_PERCENT,
   TOKEN_DECIMAL,
   USDT_DECIMAL,
+  USDT_THRESHOLD,
 } from "@/constant";
 import { envs } from "@/constant/envs";
 import { REGEX_INPUT_DECIMAL } from "@/constant/regex";
@@ -74,13 +75,23 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
   const [openSettingModal, setOpenSettingModal] = useState(false);
   const [formSetting] = Form.useForm<FormSetting>();
   const [form] = Form.useForm<{ amount: string }>();
-  const { tokenDetail, refetchDetail } = useTokenDetail();
+  const { tokenDetail, refetchDetail, tokenDetailSC } = useTokenDetail();
   const [loadingStatus, setLoadingStatus] = useState({
     buyToken: false,
     sellToken: false,
     approve: false,
   });
 
+  const {
+    balance: userUSDTBalance,
+    refetch: refetchUserUSDTBalance,
+    isLoading: isLoadingUserUSDTBalance,
+  } = useTokenBalance(address, envs.USDT_ADDRESS, USDT_DECIMAL);
+
+  const { balance, refetch: refetchUserBalance } = useTokenBalance(
+    address,
+    tokenDetail?.contractAddress
+  );
   const { tradeSettings } = useTradeSettings();
 
   const [coinType, setCoinType] = useState(ECoinType.StableCoin);
@@ -122,11 +133,6 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
     functionName: "calculateSellAmountOut",
     coinType: coinType,
   });
-
-  const { balance, refetch: refetchUserBalance } = useTokenBalance(
-    address,
-    tokenDetail?.contractAddress
-  );
 
   const usdtShouldPay: any = useMemo(() => {
     if (amountValue && coinType === ECoinType.MemeCoin) {
@@ -193,6 +199,8 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
     form.resetFields();
     setIsOpenApproveModal(false);
     refetchDetail();
+    refetchUserUSDTBalance();
+    refetchUserBalance();
     refetchAllownce();
     success({
       message: "Transaction completed",
@@ -204,7 +212,10 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
     setLoadingStatus((prev) => ({ ...prev, buyToken: true }));
     const contract = await tokenFactoryContract;
     const minTokenOut = Number(tradeSettings?.slippage)
-      ? decreaseByPercent(tokenWillReceive, tradeSettings?.slippage)
+      ? decreaseByPercent(
+          coinType === ECoinType.MemeCoin ? usdtShouldPay : tokenWillReceive,
+          tradeSettings?.slippage
+        )
       : 0;
 
     const gasLimit = Number(tradeSettings?.priorityFee)
@@ -225,7 +236,7 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
         tokenDetail?.symbol,
         tokenDetail?.name,
         BigNumber(usdtAmount).multipliedBy(USDT_DECIMAL).toFixed(),
-        BigNumber(minTokenOut).multipliedBy(TOKEN_DECIMAL).toFixed(0),
+        0,
         address,
         tokenDetail.idx,
         address,
@@ -470,6 +481,50 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
   };
 
   const handleError = (e: any) => {
+    if (tabKey === TabKey.BUY) {
+      // const remainingUSDT = BigNumber(USDT_THRESHOLD).minus(
+      //   tokenDetailSC?.usdtRaised || "0"
+      // );
+
+      if (coinType === ECoinType.MemeCoin) {
+        // if (BigNumber(usdtShouldPay).gt(remainingUSDT)) {
+        //   error({
+        //     message: `There are no ${tokenDetail?.symbol} left for sale`,
+        //   });
+        //   return;
+        // }
+
+        if (BigNumber(userUSDTBalance).lt(usdtShouldPay)) {
+          error({
+            message: "Insufficient fee",
+          });
+          return;
+        }
+      } else {
+        // if (BigNumber(amountValue).gt(remainingUSDT)) {
+        //   error({
+        //     message: `There are no ${tokenDetail?.symbol} left for sale`,
+        //   });
+        //   return;
+        // }
+
+        if (BigNumber(userUSDTBalance).lt(amountValue)) {
+          error({
+            message: "Insufficient fee",
+          });
+          return;
+        }
+      }
+    } else {
+      if (BigNumber(balance).lt(amountValue)) {
+        error({
+          message:
+            "The current token balance is lower than the input sell amount",
+        });
+        return;
+      }
+    }
+
     if (e?.code === ErrorCode.MetamaskDeniedTx) {
       error({
         message: "Transaction denied",
@@ -485,16 +540,16 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
       return;
     }
 
-    if (e?.action === "estimateGas") {
+    if (e?.reason === ErrorCode.TOKEN_ALREADY_MINTED) {
       error({
-        message: "Insufficient fee",
+        message: e?.reason,
       });
       return;
     }
 
-    if (e?.shortMessage === ErrorCode.TRANSACTION_REVERTED) {
+    if (e?.action === "estimateGas") {
       error({
-        message: `There are no ${tokenDetail?.symbol} left for sale`,
+        message: "Insufficient fee",
       });
       return;
     }
@@ -531,7 +586,6 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
         initialValues={{
           amount: "",
         }}
-        onValuesChange={(_, values) => console.log("formValues", values)}
       >
         <Form.Item
           name={AMOUNT_FIELD_NAME}

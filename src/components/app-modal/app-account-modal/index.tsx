@@ -3,6 +3,7 @@ import { shortenAddress } from "@/helpers/shorten";
 import useWalletAuth from "@/hooks/useWalletAuth";
 import { useAccountModal } from "@/providers/WagmiProvider";
 import { Modal, ModalProps } from "antd";
+import Image from "next/image";
 import { useState } from "react";
 import { useAccount } from "wagmi";
 import "./styles.scss";
@@ -66,7 +67,13 @@ const AccountModal = ({ onClose, ...props }: IAccountModal) => {
       </button>
 
       <div className="account-modal__info">
-        <img src="https://nft-ticket-the-bucket.s3.ap-southeast-1.amazonaws.com/images/1d117d1338-t%C3%A1%C2%BA%C2%A3i%20xu%C3%A1%C2%BB%C2%91ng.png" />
+        <Image
+          src="https://nft-ticket-the-bucket.s3.ap-southeast-1.amazonaws.com/images/1d117d1338-t%C3%A1%C2%BA%C2%A3i%20xu%C3%A1%C2%BB%C2%91ng.png"
+          alt="avatar"
+          width={74}
+          height={74}
+          className="rounded-full object-cover"
+        />
         <div>
           <div className="address text-white-neutral font-[600] text-center text-[18px] leading-[24px]">
             <span>{shortenAddress(address || "", 4, -4)}</span>

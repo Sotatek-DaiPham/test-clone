@@ -1,4 +1,5 @@
 "use client";
+import NoData from "@/components/no-data";
 import { API_PATH } from "@/constant/api-path";
 import { useTokenDetail } from "@/context/TokenDetailContext";
 import useSocket from "@/hooks/useSocket";
@@ -28,7 +29,7 @@ import BigNumber from "bignumber.js";
 import dayjs from "dayjs";
 import { get, isEmpty } from "lodash";
 import dynamic from "next/dynamic";
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useRef } from "react";
 
 const AppTradingView = dynamic(() => import("@/components/app-trading-view"), {
   ssr: false,
@@ -77,6 +78,7 @@ async function getData({ resolution, tokenAddress, endTime }: IDataChart) {
 const TradingView = () => {
   const chartRef = useRef<IChartingLibraryWidget>();
   const lastCandleRef = useRef<Candle>({} as Candle);
+  const timeRef = useRef<number>(0);
   const chartRealtimeCallback = useRef<any>();
   const chartResetCacheNeededCallback = useRef<() => void>();
   const { isConnected, socket } = useSocket();
@@ -114,31 +116,35 @@ const TradingView = () => {
         return onResult([], { noData: true });
       }
       if (tokenDetail?.contractAddress) {
-        const startTime = from * 1000;
-        const endTime = to * 1000;
-        const time = isFirstCall ? endTime : startTime;
-        const bars = await getData({
-          resolution,
-          tokenAddress: tokenDetail?.contractAddress,
-          endTime: time,
-        });
-        if (!isEmpty(bars)) {
-          if (!bars[0]?.time) {
-            onResult([], { noData: true });
-            return;
-          }
-          lastCandleRef.current = bars[bars.length - 1];
-          onResult(bars, { noData: false });
-        } else {
-          onResult([], {
-            noData: true,
+        try {
+          const endTime = to * 1000;
+          const time = isFirstCall ? endTime : timeRef.current;
+          const bars = await getData({
+            resolution,
+            tokenAddress: tokenDetail?.contractAddress,
+            endTime: time,
           });
+          if (!isEmpty(bars)) {
+            if (!bars[0]?.time) {
+              onResult([], { noData: true });
+              return;
+            }
+            timeRef.current = bars[0]?.time;
+            lastCandleRef.current = bars[bars.length - 1];
+            onResult(bars, { noData: false });
+          } else {
+            onResult([], {
+              noData: true,
+            });
+          }
+        } catch (error) {
+          onResult([], { noData: true });
         }
       } else {
         onResult([], { noData: true });
       }
     },
-    [tokenDetail]
+    [tokenDetail, timeRef.current]
   );
 
   const resolveSymbol = useCallback(
@@ -200,18 +206,26 @@ const TradingView = () => {
 
   return (
     <div className="w-full h-full flex flex-col">
-      <AppTradingView
-        onLoad={(chart: any) => {
-          chartRef.current = chart;
-        }}
-        resolveSymbol={resolveSymbol}
-        subscribeBars={subscribeBars}
-        getBars={getBars}
-        containerId={ID_TRADING_VIEW}
-        isConnected={isConnected}
-        symbol={tokenDetail?.symbol}
-        tokenAddress={tokenDetail?.contractAddress}
-      />
+      {!tokenDetail?.contractAddress ? (
+        <div className="w-full h-[var(--height-trading-view)] flex items-center justify-center">
+          <div>
+            <NoData />
+          </div>
+        </div>
+      ) : (
+        <AppTradingView
+          onLoad={(chart: any) => {
+            chartRef.current = chart;
+          }}
+          resolveSymbol={resolveSymbol}
+          subscribeBars={subscribeBars}
+          getBars={getBars}
+          containerId={ID_TRADING_VIEW}
+          isConnected={isConnected}
+          symbol={tokenDetail?.symbol}
+          tokenAddress={tokenDetail?.contractAddress}
+        />
+      )}
     </div>
   );
 };

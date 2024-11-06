@@ -76,7 +76,6 @@ const FollowersTab = ({ walletAddress }: { walletAddress: string }) => {
       refetch();
     },
     onFollowFailed: (message: string) => {
-      console.log("message", message);
       error({
         message: `${
           followData?.isFollow === EFollow.FOLLOW ? "Follow" : "Unfollow"

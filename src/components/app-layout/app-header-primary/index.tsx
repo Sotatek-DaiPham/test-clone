@@ -2,7 +2,7 @@
 import ConnectWalletButton from "@/components/Button/ConnectWallet";
 import { PATH_ROUTER } from "@/constant/router";
 import useWindowSize from "@/hooks/useWindowSize";
-import { Hamburgericon, RainmakrIcon } from "@public/assets";
+import { Hamburgericon, Logo1Icon } from "@public/assets";
 import { Flex, Layout } from "antd";
 import clsx from "clsx";
 import Image from "next/image";
@@ -19,7 +19,7 @@ const routeTitles: { [key: string]: string } = {
   [PATH_ROUTER.MY_TOKENS]: "My Tokens",
   [PATH_ROUTER.NOTIFICATION]: "Notification",
   [PATH_ROUTER.LEADER_BOARD]: "RainPump Leaderboard",
-  [PATH_ROUTER.CREATE_TOKEN]: "Create A New Coin",
+  [PATH_ROUTER.CREATE_TOKEN]: "Create A New Token",
 };
 
 export default function AppHeaderPrimary() {
@@ -88,8 +88,9 @@ export default function AppHeaderPrimary() {
 
           <Link href="/" className={isOpenMenuMobile ? "ml-2" : ""}>
             <Image
-              src={RainmakrIcon}
-              alt="rainmakr icon"
+              // src={LogoMobileIcon}
+              src={Logo1Icon}
+              alt="rainmakr-icon"
               width={84}
               height={24}
               className="my-auto"
@@ -103,15 +104,18 @@ export default function AppHeaderPrimary() {
             }`}
           ></div>
           {/* Sidebar */}
+
           <div
             ref={sidebarRef}
-            className={`fixed top-14 left-0 p-6 h-full w-[90%] bg-neutral-2 shadow-lg transform transition-transform duration-300 overflow-y-auto ${
+            className={`fixed top-14 left-0 h-full w-[100%] !z-50 bg-transparent transform transition-transform duration-300  ${
               isOpenMenuMobile ? "translate-x-0" : "-translate-x-full"
             }`}
           >
-            <Flex vertical>
-              <AppMenu className="bg-neutral-2 !p-0" />
-            </Flex>
+            <div className="w-[90%] bg-neutral-2 p-6 h-full overflow-y-auto shadow-lg">
+              <Flex vertical>
+                <AppMenu className="bg-neutral-2 !p-0" />
+              </Flex>
+            </div>
           </div>
         </div>
       ) : (

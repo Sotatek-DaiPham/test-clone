@@ -139,7 +139,7 @@ const DiscussionThread = () => {
       image: string;
     }) => postFormDataAPI(API_PATH.USER.POST_COMMENT, payload),
     onSuccess: () => {
-      message.success("Comment has been posted");
+      // message.success("Comment has been posted");
       form.resetFields();
       setShowInputComment(false);
       queryClient.invalidateQueries({ queryKey: ["discussionThreads"] });
@@ -210,7 +210,7 @@ const DiscussionThread = () => {
             replyTo?.commentId || !isMobile ? "w-full" : "w-1/2"
           }`}
         >
-          {dataLength > 0 ? (
+          {dataLength > 0 && (
             <InfiniteScroll
               dataLength={dataLength}
               next={fetchNextPage}
@@ -269,10 +269,6 @@ const DiscussionThread = () => {
                 ))
               )}
             </InfiniteScroll>
-          ) : (
-            <div>
-              <NoData mode="secondary" />
-            </div>
           )}
           {isAuthenticated && !showInputComment && (
             <AppRoundedInfo
@@ -283,6 +279,11 @@ const DiscussionThread = () => {
                 setShowInputComment(true);
               }}
             />
+          )}
+          {dataLength <= 0 && !showInputComment && (
+            <div>
+              <NoData mode="secondary" />
+            </div>
           )}
 
           {isAuthenticated && showInputComment && (

@@ -1,6 +1,7 @@
 import AppButton from "@/components/app-button";
 import AppImage from "@/components/app-image";
 import AppTruncateText from "@/components/app-truncate-text";
+import NoData from "@/components/no-data";
 import { ITokenDetailRes } from "@/interfaces/token";
 import {
   DiscordLinkIcon,
@@ -25,11 +26,12 @@ const TokenInfoSection = ({ tokenDetail }: ITokenInfoSectionProps) => {
     <>
       <div className="px-4 md:px-14 py-6 bg-neutral-2 rounded-[16px] shadow-[0px_40px_32px_-24px_rgba(15,15,15,0.12)] mt-6">
         <div className="flex flex-col">
-          <div className="flex justify-center">
+          <div className="flex justify-center h-[202px]">
             <AppImage
-              className="h-auto max-w-[278px] object-cover"
+              className="max-w-[278px] [&>img]:object-cover w-full [&>img]:!h-full [&>img]:!w-full"
               src={tokenDetail?.avatar}
               alt="token image"
+              preview={true}
             />
           </div>
 
@@ -40,7 +42,7 @@ const TokenInfoSection = ({ tokenDetail }: ITokenInfoSectionProps) => {
             <span>({tokenDetail?.symbol})</span>
           </div>
           <div className="text-12px-normal text-neutral-7 mt-3 break-words">
-            {tokenDetail?.description}
+            {tokenDetail?.description ? tokenDetail?.description : <NoData />}
           </div>
 
           <div className="w-full">

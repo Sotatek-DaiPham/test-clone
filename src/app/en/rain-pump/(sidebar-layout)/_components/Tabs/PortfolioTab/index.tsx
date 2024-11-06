@@ -19,8 +19,8 @@ import { AxiosResponse } from "axios";
 import get from "lodash/get";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import TabTitle from "../../TabTitle";
 import ProjectCard from "../../ProjectCard";
+import TabTitle from "../../TabTitle";
 
 const PortfolioTab = ({ walletAddress }: { walletAddress: string }) => {
   const { addEvent, isConnected, removeEvent } = useSocket();
@@ -43,9 +43,9 @@ const PortfolioTab = ({ walletAddress }: { walletAddress: string }) => {
       return getAPI(API_PATH.TOKEN.PORTFOLIO, {
         params: {
           ...params,
-          orderBy: "amount",
+          orderBy: "valueUsdt",
           direction: EDirection.DESC,
-          minAmountHeld: hideDustCoin ? "0.1" : "",
+          minAmountHeld: hideDustCoin ? 0.1 * (10 ^ 6) : "",
           walletAddress: walletAddress,
           keyword: debounceSearch?.trim(),
         },

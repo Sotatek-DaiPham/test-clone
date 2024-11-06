@@ -46,7 +46,7 @@ const FollowingTab = ({ walletAddress }: { walletAddress: string }) => {
       return getAPI(API_PATH.USER.FOLLOWINGS, {
         params: {
           ...params,
-          orderBy: "id",
+          orderBy: "createdAt",
           direction: EDirection.DESC,
           walletAddress: walletAddress,
           keyword: debounceSearch?.trim(),
@@ -76,7 +76,6 @@ const FollowingTab = ({ walletAddress }: { walletAddress: string }) => {
       refetch();
     },
     onFollowFailed: (message: string) => {
-      console.log("message", message);
       error({
         message: `${
           followData?.isFollow === EFollow.FOLLOW ? "Follow" : "Unfollow"

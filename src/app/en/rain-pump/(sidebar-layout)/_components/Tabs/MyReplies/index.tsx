@@ -4,6 +4,7 @@ import AppDivider from "@/components/app-divider";
 import AppImage from "@/components/app-image";
 import AppInput from "@/components/app-input";
 import AppPaginationCustom from "@/components/app-pagination/app-pagination-custom";
+import EllipsisTextWithTooltip from "@/components/app-tooltip/EllipsisTextWithTooltip";
 import NoData from "@/components/no-data";
 import { EDirection, LIMIT_COIN_ITEMS_TABLE } from "@/constant";
 import { API_PATH } from "@/constant/api-path";
@@ -44,8 +45,14 @@ const ReplyItem = ({ data }: { data: IMyRepliesResponse }) => {
             />
           )}
         </div>
-        <div className="flex w-full flex-col">
-          <div className="text-16px-bold truncate-1-line">{data?.userName}</div>
+        <div className="flex w-full flex-col grow max-w-[85%]">
+          <div className="text-16px-bold">
+            <EllipsisTextWithTooltip
+              className="text-16px-bold text-neutral-9 hover:!underline cursor-pointer"
+              value={data?.userName}
+              maxWidth="100%"
+            />
+          </div>
           <span className="text-14px-normal text-neutral-7">
             {getTimeDDMMMYYYYHHMM(data?.createdAt)}
           </span>
@@ -60,7 +67,9 @@ const ReplyItem = ({ data }: { data: IMyRepliesResponse }) => {
         customClass="!w-fit !rounded-full"
         classChildren="!flex !flex-row !items-center !text-primary-main"
         onClick={() => {
-          const query = `?replyId=${data?.replyId}&replyUserId=${data?.replyUserId}`;
+          const query = `?replyId=${
+            data?.replyId ? data?.replyId : data?.id
+          }&replyUserId=${data?.replyUserId ? data?.replyUserId : data?.id}`;
           router.push(`${PATH_ROUTER.TOKEN_DETAIL(data?.tokenId)}${query}`, {
             scroll: true,
           });

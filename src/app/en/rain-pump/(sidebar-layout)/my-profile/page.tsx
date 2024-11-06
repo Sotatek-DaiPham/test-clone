@@ -43,7 +43,7 @@ const MyProfilePage = () => {
       icon: <Image src={PortfolioIcon} alt="my-portfolio" />,
     },
     {
-      label: "Coin Created",
+      label: "Token Created",
       key: ETabsMyProfile.COIN_CREATED,
       children: <CoinCreatedTab walletAddress={userAddress as string} />,
       icon: <Image src={DollarCircleUpIcon} alt="coin-created" />,
