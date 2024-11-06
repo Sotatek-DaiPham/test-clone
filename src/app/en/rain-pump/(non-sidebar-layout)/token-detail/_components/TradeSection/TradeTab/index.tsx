@@ -22,6 +22,7 @@ import { REGEX_INPUT_DECIMAL } from "@/constant/regex";
 import { useTokenDetail } from "@/context/TokenDetailContext";
 import {
   calculateTokenReceive,
+  calculateTokenReceiveWithoutFee,
   calculateUsdtShouldPay,
   decreaseByPercent,
   increaseByPercent,
@@ -75,7 +76,12 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
   const [openSettingModal, setOpenSettingModal] = useState(false);
   const [formSetting] = Form.useForm<FormSetting>();
   const [form] = Form.useForm<{ amount: string }>();
-  const { tokenDetail, refetchDetail, tokenDetailSC } = useTokenDetail();
+  const {
+    tokenDetail,
+    refetchDetail,
+    tokenDetailSC,
+    refetch: refetchDetailSC,
+  } = useTokenDetail();
   const [loadingStatus, setLoadingStatus] = useState({
     buyToken: false,
     sellToken: false,
@@ -149,7 +155,7 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
   const tokenWillReceive: any = useMemo(() => {
     if (amountValue && coinType === ECoinType.StableCoin) {
       if (isTokenMint) {
-        return buyAmountOut;
+        return isExceedAvailableToken ? availableToken : buyAmountOut;
       } else {
         return calculateTokenReceive(amountValue);
       }
@@ -187,8 +193,8 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
 
     const sellValue = BigNumber(balance)
       .multipliedBy(BigNumber(percentNumber).div(100))
-      .toFixed(2);
-    if (Number(balance)) {
+      .toFixed(6, BigNumber.ROUND_DOWN);
+    if (BigNumber(balance).gt(0.000001)) {
       form.setFieldValue(AMOUNT_FIELD_NAME, sellValue);
     } else {
       return;
@@ -202,6 +208,7 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
     refetchUserUSDTBalance();
     refetchUserBalance();
     refetchAllownce();
+    refetchDetailSC();
     success({
       message: "Transaction completed",
       key: "1",
@@ -292,6 +299,20 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
     }
   };
 
+  const availableToken = useMemo(() => {
+    const tokenThreshold = calculateTokenReceiveWithoutFee(
+      USDT_THRESHOLD.toString()
+    );
+    return BigNumber(tokenThreshold).minus(tokenDetailSC?.tokensSold || "0");
+  }, [tokenDetailSC]);
+
+  const isExceedAvailableToken = useMemo(() => {
+    return (
+      coinType === ECoinType.MemeCoin &&
+      BigNumber(amountValue).gt(availableToken)
+    );
+  }, [amountValue, availableToken, coinType]);
+
   const handleBuyTokenExactOut = async () => {
     const contract = await tokenFactoryContract;
     setLoadingStatus((prev) => ({ ...prev, buyToken: true }));
@@ -302,23 +323,44 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
       ? BigNumber(tradeSettings?.priorityFee).multipliedBy(1e10).toString()
       : 0;
 
+    let tx;
     try {
-      console.log(
-        "buyExactOutParam",
-        tokenDetail?.contractAddress,
-        BigNumber(amountValue).multipliedBy(TOKEN_DECIMAL).toFixed(),
-        BigNumber(maxUSDTOut).multipliedBy(USDT_DECIMAL).toFixed(0),
-        address
-      );
-      const tx = await contract?.buyExactOut(
-        tokenDetail?.contractAddress,
-        BigNumber(amountValue).multipliedBy(TOKEN_DECIMAL).toFixed(),
-        BigNumber(maxUSDTOut).multipliedBy(USDT_DECIMAL).toFixed(0),
-        address,
-        {
-          gasLimit: gasLimit || undefined,
-        }
-      );
+      if (!isExceedAvailableToken) {
+        console.log(
+          "buyExactOutParam",
+          tokenDetail?.contractAddress,
+          BigNumber(amountValue).multipliedBy(TOKEN_DECIMAL).toFixed(),
+          BigNumber(maxUSDTOut).multipliedBy(USDT_DECIMAL).toFixed(0),
+          address
+        );
+        tx = await contract?.buyExactOut(
+          tokenDetail?.contractAddress,
+          BigNumber(amountValue).multipliedBy(TOKEN_DECIMAL).toFixed(),
+          BigNumber(maxUSDTOut).multipliedBy(USDT_DECIMAL).toFixed(0),
+          address,
+          {
+            gasLimit: gasLimit || undefined,
+          }
+        );
+      } else {
+        console.log(
+          "buyExactInParam",
+          tokenDetail?.contractAddress,
+          BigNumber(USDT_THRESHOLD).multipliedBy(USDT_DECIMAL).toFixed(),
+          0,
+          address
+        );
+
+        tx = await contract?.buyExactIn(
+          tokenDetail?.contractAddress,
+          BigNumber(USDT_THRESHOLD).multipliedBy(USDT_DECIMAL).toFixed(),
+          0,
+          address,
+          {
+            gasLimit: gasLimit || undefined,
+          }
+        );
+      }
       await tx.wait();
       handleTransactionSuccess();
       setLoadingStatus((prev) => ({ ...prev, buyToken: false }));
@@ -330,6 +372,14 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
   };
 
   const handleSellToken = async () => {
+    if (BigNumber(balance).lt(amountValue)) {
+      error({
+        message:
+          "The current token balance is lower than the input sell amount",
+      });
+      return;
+    }
+
     setLoadingStatus((prev) => ({ ...prev, sellToken: true }));
     const contract = await tokenFactoryContract;
     const minUSDTOut = Number(tradeSettings?.slippage)
@@ -554,9 +604,9 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
       return;
     }
 
-    if (e?.info?.error?.message) {
+    if (e) {
       error({
-        message: e?.info?.error?.message,
+        message: "Transaction Error",
       });
     }
   };

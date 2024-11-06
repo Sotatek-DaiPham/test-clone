@@ -341,9 +341,9 @@ const TradeTabAfterListed = ({ tabKey }: { tabKey: TabKey }) => {
       return;
     }
 
-    if (e?.info?.error?.message) {
+    if (e) {
       error({
-        message: e?.info?.error?.message,
+        message: "Transaction Error",
       });
     }
   };
