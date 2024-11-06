@@ -42,7 +42,7 @@ export default function AppMenu({ className }: AppMenuProps) {
       icon: <Image src={BrowseIcon} alt="menu icon" />,
     },
     {
-      label: "Start a new coin",
+      label: "Start a new token",
       key: PATH_ROUTER.CREATE_TOKEN,
       icon: <Image src={CoinsIcon} alt="menu icon" />,
       onClick: () => {

@@ -21,15 +21,15 @@ const ModalHowItsWork = ({ onOk, ...props }: IModalHowItsWorkProps) => {
         <div className="mt-[50px] max-w-[346px] m-auto">
           <span className="text-white-neutral text-[20px] font-normal leading-6">
             RainPump prevents rugs by making sure that all created tokens are
-            safe. Each coin on RainPump is a&nbsp;
+            safe. Each token on RainPump is a&nbsp;
             <span className="text-primary-main">fair-launch</span> with no&nbsp;
             <span className="text-primary-main">presale</span> and&nbsp;
             <span className="text-primary-main">no team allocation</span>
           </span>
         </div>
         <div className="flex flex-col m-auto gap-6 my-[50px] text-[#B1B5C3] text-[20px] font-normal leading-6">
-          <p>step 1: pick a coin that you like</p>
-          <p>step 2: buy the coin on the bonding curve</p>
+          <p>step 1: pick a token that you like</p>
+          <p>step 2: buy the token on the bonding curve</p>
           <p>step 3: sell at any time to lock in your profits or losses</p>
           <p>
             step 4: when enough people buy on the bonding
