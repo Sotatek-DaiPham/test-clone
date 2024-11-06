@@ -74,6 +74,7 @@ export const NotificationProvider = ({
         icon,
         message: message ?? "info",
         duration: Notification_Duration,
+        pauseOnHover: false,
         // closeIcon: <CloseIcon />,
         ...props,
       });

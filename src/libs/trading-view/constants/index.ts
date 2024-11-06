@@ -51,7 +51,7 @@ export const disabledFeatures = [
   // "use_localstorage_for_settings",
   // "context_menus",
   // "display_market_status",
-  // "timeframes_toolbar",
+  "timeframes_toolbar",
   // "header_undo_redo",
   // "header_interval_dialog_button",
   // "control_bar",
