@@ -315,6 +315,13 @@ const CreateTokenPage = () => {
     }
   };
 
+  const handlePaste = (event: React.ClipboardEvent<HTMLInputElement>) => {
+    const pastedData = event.clipboardData.getData("text");
+    if (pastedData.includes(" ")) {
+      event.preventDefault();
+    }
+  };
+
   return (
     <div className="create-token-page w-full mr-auto ml-auto">
       {!isDesktop ? (
@@ -367,6 +374,7 @@ const CreateTokenPage = () => {
                 placeholder="Enter token ticker"
                 maxLength={10}
                 onKeyDown={handleKeyPress}
+                onPaste={handlePaste}
               />
             </Form.Item>
           </div>

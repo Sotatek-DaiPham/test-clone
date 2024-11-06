@@ -96,7 +96,8 @@ const TradeSettingModal = ({
             </label>
             <Form.Item name={SETTINGS_FIELD_NAMES.SLIPPAGE}>
               <AppInputBalance
-                tokenSymbol="Slippage (%)"
+                tokenSymbol=""
+                label="Slippage (%)"
                 regex={REGEX_INPUT_DECIMAL(0, 6)}
                 maxValue={25}
               />

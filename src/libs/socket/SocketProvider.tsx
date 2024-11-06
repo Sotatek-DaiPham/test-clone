@@ -66,7 +66,7 @@ const SocketProvider = ({ children }: Props) => {
         autoConnect: false,
         transports: ["websocket", "polling"],
         query: {
-          // authorization: accessToken,
+          authorization: accessToken,
         },
       });
     }

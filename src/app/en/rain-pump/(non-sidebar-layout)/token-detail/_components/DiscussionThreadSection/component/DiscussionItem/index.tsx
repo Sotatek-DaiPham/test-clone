@@ -50,7 +50,9 @@ const DiscussionItem: React.FC<DiscussionItemProps> = ({
             </span>
           </div>
         </div>
-        <p className="text-neutral-9 text-14px-normal">{data.content}</p>
+        <p className="text-neutral-9 text-14px-normal break-words">
+          {data.content}
+        </p>
         {data.image && (
           <AppImage
             className="comment-image rounded-[12px] overflow-hidden w-[80px] h-[80px] object-cover"

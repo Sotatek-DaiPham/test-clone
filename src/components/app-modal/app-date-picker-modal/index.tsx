@@ -72,9 +72,7 @@ const DatePickerModal = ({
         </div>
         <Form
           form={form}
-          onValuesChange={(_, values) => {
-            console.log("values", values);
-          }}
+          onValuesChange={(_, values) => {}}
           onFinish={(values) => {
             setSearchParams((prev) => ({
               ...prev,
