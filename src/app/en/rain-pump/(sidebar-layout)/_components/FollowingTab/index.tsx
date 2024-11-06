@@ -54,10 +54,14 @@ const FollowingTab = () => {
         direction: EDirection.DESC,
         keyword: debounceSearch?.trim(),
       },
-    }).then((data) => {
-      setIsPending(false);
-      return data;
-    });
+    })
+      .then((data) => {
+        setIsPending(false);
+        return data;
+      })
+      .catch(() => {
+        setIsPending(false);
+      });
     const tokenList = get(
       response,
       "data.data",
@@ -77,10 +81,14 @@ const FollowingTab = () => {
         direction: EDirection.DESC,
         keyword: debounceSearch?.trim(),
       },
-    }).then((data) => {
-      setIsPending(false);
-      return data;
-    });
+    })
+      .then((data) => {
+        setIsPending(false);
+        return data;
+      })
+      .catch(() => {
+        setIsPending(false);
+      });
     const tokenList = get(
       response,
       "data.data",

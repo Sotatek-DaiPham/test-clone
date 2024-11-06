@@ -1,3 +1,4 @@
+import AppTruncateText from "@/components/app-truncate-text";
 import { ECoinType } from "@/interfaces/token";
 import { SelectDropdownIcon, UsdtIcon } from "@public/assets";
 import { Input, InputProps, Select } from "antd";
@@ -15,6 +16,7 @@ interface Props extends InputProps {
   regex?: RegExp;
   isSwap?: boolean;
   maxValue?: number;
+  label?: string;
 }
 
 const AppInputBalance = ({
@@ -26,6 +28,7 @@ const AppInputBalance = ({
   isSwap,
   onTokenChange,
   maxValue,
+  label,
   ...restProps
 }: Props) => {
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -80,7 +83,7 @@ const AppInputBalance = ({
                   />
                 )}
                 <span className="text-neutral-9 text-16px-medium">
-                  {tokenSymbol}
+                  <AppTruncateText text={tokenSymbol} maxLength={5} />
                 </span>
               </div>
             </Select.Option>
@@ -109,7 +112,9 @@ const AppInputBalance = ({
               className="rounded-full object-cover h-5"
             />
           )}
-          <span className="text-neutral-9 text-16px-medium">{tokenSymbol}</span>
+          <span className="text-neutral-9 text-16px-medium">
+            {label || <AppTruncateText text={tokenSymbol} maxLength={5} />}
+          </span>
         </div>
       )}
 

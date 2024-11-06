@@ -52,27 +52,20 @@ const TokenDetailPage = () => {
   useEffect(() => {
     if (isConnected) {
       addEvent(ESocketEvent.BUY, (data: ISocketData) => {
-        if (
-          data.data.tokenAddress === tokenDetail?.contractAddress &&
-          data.data.userAddress.toLowerCase() === userAddress?.toLowerCase()
-        ) {
+        console.log("buy token event");
+        if (data.data.tokenAddress === tokenDetail?.contractAddress) {
           refetchDetail();
         }
       });
       addEvent(ESocketEvent.SELL, (data: ISocketData) => {
-        if (
-          data.data.tokenAddress === tokenDetail?.contractAddress &&
-          data.data.userAddress.toLowerCase() === userAddress?.toLowerCase()
-        ) {
+        console.log("sell token event");
+        if (data.data.tokenAddress === tokenDetail?.contractAddress) {
           refetchDetail();
         }
       });
       addEvent(ESocketEvent.CREATE_TOKEN, (data: ISocketData) => {
-        if (
-          data.data.userAddress.toLowerCase() === userAddress?.toLowerCase()
-        ) {
-          refetchDetail();
-        }
+        console.log("create token event");
+        refetchDetail();
       });
     }
     return () => {
