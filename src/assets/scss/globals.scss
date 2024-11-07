@@ -279,6 +279,7 @@ img.active-primary-icon {
   display: flex;
   flex-direction: row;
   width: 700%; // Double the width to accommodate duplicated content
+  background-repeat: repeat-x;
   animation: slide 30s linear infinite;
   height: 31px;
 
