@@ -111,6 +111,9 @@ const CreateTokenPage = () => {
       return postFormDataAPI(API_PATH.UPLOAD_IMAGE, payload);
     },
     mutationKey: ["upload-images"],
+    onError: (err) => {
+      alert(err);
+    },
   });
 
   const { allowance } = useUsdtAllowance(address);
@@ -123,6 +126,7 @@ const CreateTokenPage = () => {
     },
     onError: (err) => {
       error({ message: "Create Failed" });
+      alert(err);
     },
     mutationKey: ["create-token"],
   });

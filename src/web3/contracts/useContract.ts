@@ -22,7 +22,7 @@ export const useContract = (
   address: string,
   chainId?: number
 ): Promise<Contract | null> => {
-  const { connector } = useAccount();
+  const { connector, isConnected } = useAccount();
 
   const RPC = process.env.NEXT_PUBLIC_ARBITRUM_RPC_URL;
   return useMemo(async () => {
@@ -40,7 +40,7 @@ export const useContract = (
       address,
       (await provider?.getSigner()) || new ethers.JsonRpcProvider(RPC)
     );
-  }, [abi, address, connector, RPC]);
+  }, [abi, address, connector, RPC, isConnected]);
 };
 
 export const useReadContract = (
