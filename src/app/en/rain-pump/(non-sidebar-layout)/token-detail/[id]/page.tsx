@@ -52,14 +52,14 @@ const TokenDetailPage = () => {
   useEffect(() => {
     if (isConnected) {
       addEvent(ESocketEvent.BUY, (data: ISocketData) => {
-        console.log("buy token event");
         if (data.data.tokenAddress === tokenDetail?.contractAddress) {
+          console.log("buy token event");
           refetchDetail();
         }
       });
       addEvent(ESocketEvent.SELL, (data: ISocketData) => {
-        console.log("sell token event");
         if (data.data.tokenAddress === tokenDetail?.contractAddress) {
+          console.log("sell token event");
           refetchDetail();
         }
       });
@@ -75,11 +75,19 @@ const TokenDetailPage = () => {
     };
   }, [isConnected]);
 
+  const handleNavigateBack = () => {
+    if (typeof window !== "undefined" && window.history.length > 2) {
+      router.back();
+    } else {
+      router.push(PATH_ROUTER.DASHBOARD);
+    }
+  };
+
   return (
     <div className="m-auto p-2 max-w-[var(--width-content-sidebar-layout)]">
       <div
         className="flex gap-[9px] items-center mb-[26px] cursor-pointer w-fit"
-        onClick={() => router.push(PATH_ROUTER.DASHBOARD)}
+        onClick={handleNavigateBack}
       >
         <Image src={BackIcon} alt="back icon" />
         <span className="text-white-neutral text-18px-bold">Token Detail</span>
