@@ -41,6 +41,7 @@ export interface ITradeHistoryResponse {
   created_at: string;
   decimal: number;
   symbol: string;
+  token_id: number;
   token_address: string;
   token_avatar: string;
   token_name: string;

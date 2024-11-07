@@ -10,7 +10,7 @@ interface ITooltipProps extends TooltipPropsWithOverlay {
 const AppTooltip = ({ children, ...props }: ITooltipProps) => {
   return (
     <Tooltip
-      overlayClassName={`app-tooltip ${props.overlayClassName || ""}`}
+      overlayClassName={`app-tooltip app-tooltip-ellipsis ${props.overlayClassName || ""}`}
       {...props}
     >
       {/* {children || <Image src={TooltipIcon} alt="tooltip-icon" />} */}
