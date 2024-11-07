@@ -4,7 +4,7 @@ import AppImage from "@/components/app-image";
 import AppPaginationCustom from "@/components/app-pagination/app-pagination-custom";
 import EllipsisTextWithTooltip from "@/components/app-tooltip/EllipsisTextWithTooltip";
 import NoData from "@/components/no-data";
-import { EEventNoti, LIMIT_COIN_ITEMS_TABLE } from "@/constant";
+import { EDirection, EEventNoti, LIMIT_COIN_ITEMS_TABLE } from "@/constant";
 import { API_PATH } from "@/constant/api-path";
 import { PATH_ROUTER } from "@/constant/router";
 import { Information, INotificationResponse } from "@/entities/notification";
@@ -109,7 +109,7 @@ const NotificationItem = ({ data }: { data: INotificationResponse }) => {
             );
           }}
           value={get(data, "information.token.name", "-")}
-          maxWidth={100}
+          maxWidth={isMobile ? 100 : "100%"}
         />
       </div>
       <div className="text-12px-medium text-neutral-7 mb-3">
@@ -136,7 +136,7 @@ const NotificationPage = () => {
           ...params,
           keyword: debounceSearch?.trim(),
           orderBy: "createdAt",
-          direction: "DESC",
+          direction: EDirection.DESC,
         },
       }) as Promise<
         AxiosResponse<BeSuccessResponse<INotificationResponse[]>, any>

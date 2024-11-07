@@ -1,5 +1,4 @@
-import { convertNumber } from "./../../../helpers/formatNumber";
-import { BigNumber } from "bignumber.js";
+import { convertNumber } from "@/helpers/formatNumber";
 import { Timezone, Trade } from "@public/charting_library/charting_library.min";
 import { Candle } from "../constants";
 
@@ -86,9 +85,9 @@ export const addTradeToLastCandle = (
   chartRealtimeCallback: (candle: Candle) => void
 ): Candle => {
   const lastCandleEndTime = lastCandle?.time + intervalInMilliseconds;
-  const tradePrice = Number(convertNumber(trade.price, 6));
+  const tradePrice = Number(convertNumber(trade?.nextPrice, 6));
   const tradeTime = round(
-    new Date(trade.createdAt).getTime(),
+    new Date(trade?.createdAt).getTime(),
     intervalInMilliseconds
   );
   if (tradeTime >= lastCandleEndTime) {
@@ -105,13 +104,36 @@ export const addTradeToLastCandle = (
   } else {
     lastCandle.low = Math.min(tradePrice, lastCandle?.low);
     lastCandle.high = Math.max(tradePrice, lastCandle?.high);
-    lastCandle.close = Number(convertNumber(trade.price, 6));
-    lastCandle.volume += Number(convertNumber(trade?.amount, 18));
-    lastCandle.time = round(
-      new Date(trade?.createdAt).getTime(),
-      intervalInMilliseconds
-    );
+    lastCandle.close = Number(convertNumber(trade?.nextPrice, 6));
+    lastCandle.volume += Number(convertNumber(trade?.usdtAmount, 6));
     chartRealtimeCallback(lastCandle);
+    return lastCandle;
+  }
+};
+
+export const createEmptyCandleIfNeeded = (
+  lastCandle: Candle,
+  intervalInMilliseconds: number,
+  chartRealtimeCallback: (candle: Candle) => void
+): Candle => {
+  const lastCandleEndTime = lastCandle?.time + intervalInMilliseconds;
+  const tradePrice = lastCandle?.close;
+  const tradeTime = round(Date.now(), intervalInMilliseconds);
+
+  if (tradeTime >= lastCandleEndTime) {
+    const newCandle: Candle = {
+      open: tradePrice,
+      close: tradePrice,
+      high: tradePrice,
+      low: tradePrice,
+      time: tradeTime,
+      volume: 0,
+    };
+    if (chartRealtimeCallback) {
+      chartRealtimeCallback(lastCandle);
+    }
+    return newCandle;
+  } else {
     return lastCandle;
   }
 };

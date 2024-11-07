@@ -1,5 +1,3 @@
-// src/components/app-long-text/TruncatedName.tsx
-
 import AppTooltip from "../app-tooltip";
 
 interface AppTruncateTextProps {

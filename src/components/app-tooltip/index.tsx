@@ -5,16 +5,20 @@ import Image from "next/image";
 
 interface ITooltipProps extends TooltipPropsWithOverlay {
   overlayClassName?: string;
+  isShowIcon?: boolean;
 }
 
-const AppTooltip = ({ children, ...props }: ITooltipProps) => {
+const AppTooltip = ({
+  children,
+  isShowIcon = false,
+  ...props
+}: ITooltipProps) => {
   return (
     <Tooltip
-      overlayClassName={`app-tooltip ${props.overlayClassName || ""}`}
+      overlayClassName={`app-tooltip app-tooltip-ellipsis ${props.overlayClassName || ""}`}
       {...props}
     >
-      {/* {children || <Image src={TooltipIcon} alt="tooltip-icon" />} */}
-      {children}
+      {isShowIcon ? <Image src={TooltipIcon} alt="tooltip-icon" /> : children}
     </Tooltip>
   );
 };

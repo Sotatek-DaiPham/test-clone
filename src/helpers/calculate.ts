@@ -33,6 +33,12 @@ export const calculateTokenReceive = (x: string): string => {
   return result.toFixed();
 };
 
+export const calculateTokenReceiveWithoutFee = (x: string): string => {
+  const denominator = BASE.plus(x);
+  const result = ONE_BILLION.minus(TARGET.dividedBy(denominator));
+  return result.toFixed();
+};
+
 export const countAgeToken = (createdAt: any): string => {
   const data = dayjs(new Date());
   const diffMinute = data.diff(

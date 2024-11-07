@@ -111,11 +111,14 @@ const PriceSection = () => {
           <div className="text-14px-normal text-neutral-7">
             Bonding curve progress
           </div>
-          <AppTooltip title="When the market cap reaches $60.000 all the liquidity from the bonding curve will be deposited into Uniswap." />
+          <AppTooltip
+            title="When the market cap reaches $60.000 all the liquidity from the bonding curve will be deposited into Uniswap."
+            isShowIcon={true}
+          />
         </div>
         <div className="text-14px-medium text-white-neutral">
           <AppTextLoading
-            text={nFormatter(tokenDetail?.progressToListDex)}
+            text={nFormatter(tokenDetail?.progressToListDex, 2)}
             loading={textLoading}
           />{" "}
           %

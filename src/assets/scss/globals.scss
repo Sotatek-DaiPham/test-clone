@@ -277,8 +277,9 @@ img.active-primary-icon {
 
 .loop-slide {
   display: flex;
+  flex-direction: row;
   width: 700%; // Double the width to accommodate duplicated content
-  animation: slide 30s linear infinite;
+  // animation: slide 30s linear infinite;
   height: 31px;
 
   &:hover {

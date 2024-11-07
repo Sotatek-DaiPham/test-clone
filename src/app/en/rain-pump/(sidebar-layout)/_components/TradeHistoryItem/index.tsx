@@ -1,17 +1,16 @@
 import AppImage from "@/components/app-image";
 import AppTooltip from "@/components/app-tooltip";
-import AppTruncateText from "@/components/app-truncate-text";
+import EllipsisTextWithTooltip from "@/components/app-tooltip/EllipsisTextWithTooltip";
 import { PATH_ROUTER } from "@/constant/router";
 import { ITradeHistoryResponse } from "@/entities/dashboard";
 import { convertNumber, formatAmount } from "@/helpers/formatNumber";
 import { shortenAddress } from "@/helpers/shorten";
 import { useRouter } from "next/navigation";
-import React from "react";
 
 const TradeHistoryItem = ({ item }: { item: ITradeHistoryResponse }) => {
   const router = useRouter();
   return (
-    <div className="flex flex-row items-center text-14px-normal text-neutral-9 border-r border-neutral-4 px-3">
+    <div className="flex w-full flex-row items-center text-14px-normal text-neutral-9 border-r border-neutral-4 px-3">
       <AppTooltip title={item?.user_address}>
         <span
           className="mr-2 cursor-pointer hover:!underline"
@@ -41,11 +40,20 @@ const TradeHistoryItem = ({ item }: { item: ITradeHistoryResponse }) => {
       <AppImage
         src={item?.token_avatar}
         alt="logo"
-        className="!w-[24px] !h-[24px] rounded-full flex justify-center items-center mx-3"
+        className="!w-[24px] !min-w-[24px] !h-[24px] rounded-full flex justify-center items-center mx-3"
       />
-      <span className="text-14px-bold text-primary-6 hover:underline">
-        <AppTruncateText text={item?.token_name} maxLength={5} />
-      </span>
+      <div
+        onClick={(e) => {
+          e.stopPropagation();
+          router.push(PATH_ROUTER.TOKEN_DETAIL(item?.token_id));
+        }}
+      >
+        <EllipsisTextWithTooltip
+          className="text-14px-bold w-full text-primary-6 hover:underline cursor-pointer"
+          value={item?.token_name}
+          maxWidth={70}
+        />
+      </div>
     </div>
   );
 };
