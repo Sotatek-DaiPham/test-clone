@@ -15,7 +15,7 @@ const AppTooltip = ({
 }: ITooltipProps) => {
   return (
     <Tooltip
-      overlayClassName={`app-tooltip ${props.overlayClassName || ""}`}
+      overlayClassName={`app-tooltip app-tooltip-ellipsis ${props.overlayClassName || ""}`}
       {...props}
     >
       {isShowIcon ? <Image src={TooltipIcon} alt="tooltip-icon" /> : children}

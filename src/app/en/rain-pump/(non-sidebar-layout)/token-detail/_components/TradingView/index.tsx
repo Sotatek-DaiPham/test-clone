@@ -8,10 +8,12 @@ import { ESocketEvent } from "@/libs/socket/constants";
 import {
   Candle,
   configurationData,
+  DEFAULT_TRADING_VIEW_INTERVAL,
   ID_TRADING_VIEW,
 } from "@/libs/trading-view/constants";
 import {
   addTradeToLastCandle,
+  createEmptyCandleIfNeeded,
   getClientTimezone,
   getInterval,
 } from "@/libs/trading-view/helpers";
@@ -29,7 +31,7 @@ import BigNumber from "bignumber.js";
 import dayjs from "dayjs";
 import { get, isEmpty } from "lodash";
 import dynamic from "next/dynamic";
-import { useCallback, useRef } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 const AppTradingView = dynamic(() => import("@/components/app-trading-view"), {
   ssr: false,
@@ -68,10 +70,9 @@ async function getData({ resolution, tokenAddress, endTime }: IDataChart) {
       new BigNumber(bar.low).div(new BigNumber(10).pow(6))?.toString()
     ),
     volume: parseFloat(
-      new BigNumber(bar.volume).div(new BigNumber(10).pow(18))?.toString()
+      new BigNumber(bar.volume).div(new BigNumber(10).pow(6))?.toString()
     ),
   }));
-
   return bars;
 }
 
@@ -79,10 +80,20 @@ const TradingView = () => {
   const chartRef = useRef<IChartingLibraryWidget>();
   const lastCandleRef = useRef<Candle>({} as Candle);
   const timeRef = useRef<number>(0);
-  const chartRealtimeCallback = useRef<any>();
   const chartResetCacheNeededCallback = useRef<() => void>();
   const { isConnected, socket } = useSocket();
   const { tokenDetail } = useTokenDetail();
+
+  const intervalInMillisecondsRef = useRef<number>(
+    getInterval(DEFAULT_TRADING_VIEW_INTERVAL) * 60 * 1000
+  );
+  const [intervalState, setIntervalState] = useState(
+    getInterval(DEFAULT_TRADING_VIEW_INTERVAL)
+  );
+
+  const chartRealtimeCallback = useRef<any>();
+
+  intervalInMillisecondsRef.current = intervalState * 60 * 1000;
 
   // Handle trade event
   const handleTradeEvent = useCallback(
@@ -92,10 +103,10 @@ const TradingView = () => {
         data,
         lastCandleRef.current,
         intervalInMilliseconds,
-        chartRealtimeCallback.current
+        chartRealtimeCallback?.current
       );
     },
-    [tokenDetail]
+    [tokenDetail, chartRealtimeCallback?.current]
   );
 
   const getBars = useCallback(
@@ -129,6 +140,7 @@ const TradingView = () => {
               onResult([], { noData: true });
               return;
             }
+            setIntervalState(resolution);
             timeRef.current = bars[0]?.time;
             lastCandleRef.current = bars[bars.length - 1];
             onResult(bars, { noData: false });
@@ -203,6 +215,26 @@ const TradingView = () => {
     },
     [tokenDetail, isConnected]
   );
+
+  const CreteEmptyCandle = () => {
+    const lastCandle = lastCandleRef.current;
+    const intervalInMilliseconds = intervalInMillisecondsRef.current;
+    lastCandleRef.current = createEmptyCandleIfNeeded(
+      lastCandle,
+      intervalInMilliseconds,
+      chartRealtimeCallback.current
+    );
+  };
+
+  useEffect(() => {
+    let interval: any;
+    interval = setInterval(CreteEmptyCandle, 5000);
+    return () => {
+      if (interval) {
+        clearInterval(interval);
+      }
+    };
+  }, []);
 
   return (
     <div className="w-full h-full flex flex-col">
