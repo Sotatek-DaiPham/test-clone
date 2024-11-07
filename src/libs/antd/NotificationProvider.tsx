@@ -95,6 +95,7 @@ export const NotificationProvider = ({
         icon,
         message: message ?? "warning",
         duration: Notification_Duration,
+        pauseOnHover: false,
         // closeIcon: <CloseIcon />,
         ...props,
       });
@@ -125,6 +126,7 @@ export const NotificationProvider = ({
           <div className="text-text-secondary text-[14px]">{description}</div>
         ),
         duration: Notification_Duration,
+        pauseOnHover: false,
         // closeIcon: <CloseIcon />,
         ...props,
       });

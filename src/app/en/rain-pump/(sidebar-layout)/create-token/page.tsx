@@ -12,6 +12,7 @@ import {
   ACCEPT_IMAGE_EXTENSION,
   AMOUNT_FIELD_NAME,
   USDT_DECIMAL,
+  USDT_THRESHOLD,
 } from "@/constant";
 import { API_PATH } from "@/constant/api-path";
 import { envs } from "@/constant/envs";
@@ -46,7 +47,7 @@ import { AxiosResponse } from "axios";
 import BigNumber from "bignumber.js";
 import { get } from "lodash";
 import { useRouter } from "next/navigation";
-import { useContext, useEffect, useState } from "react";
+import { useContext, useMemo, useState } from "react";
 
 const FIELD_NAMES = {
   COIN_NAME: "coinName",
@@ -131,15 +132,27 @@ const CreateTokenPage = () => {
   const uploadImage = useWatch(FIELD_NAMES.LOGO_UPLOAD, form);
   const initialBuyAmount = useWatch(AMOUNT_FIELD_NAME, amountForm);
 
-  const usdtShouldPay =
-    coinType === ECoinType.MemeCoin && initialBuyAmount
-      ? calculateUsdtShouldPay(initialBuyAmount)
-      : "";
+  // const usdtShouldPay =
+  //   coinType === ECoinType.MemeCoin && initialBuyAmount
+  //     ? calculateUsdtShouldPay(initialBuyAmount)
+  //     : "";
 
   const tokenWillReceive =
     coinType === ECoinType.StableCoin && initialBuyAmount
       ? calculateTokenReceive(initialBuyAmount)
       : "";
+
+  const usdtShouldPay = useMemo(() => {
+    if (coinType === ECoinType.MemeCoin && initialBuyAmount) {
+      const calculatedUsdtShouldPay = calculateUsdtShouldPay(initialBuyAmount);
+      return BigNumber(calculatedUsdtShouldPay).gt(0) &&
+        BigNumber(calculatedUsdtShouldPay).isFinite()
+        ? calculatedUsdtShouldPay
+        : USDT_THRESHOLD.toString();
+    }
+    return "";
+  }, [coinType, initialBuyAmount]);
+
   const buyAmount =
     coinType === ECoinType.MemeCoin
       ? BigNumber(usdtShouldPay)
@@ -369,6 +382,7 @@ const CreateTokenPage = () => {
                   message: "Token ticker is required",
                 },
               ]}
+              normalize={(value) => value.toUpperCase()}
             >
               <AppInput
                 placeholder="Enter token ticker"

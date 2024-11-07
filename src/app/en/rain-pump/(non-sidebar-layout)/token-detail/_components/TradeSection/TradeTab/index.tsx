@@ -140,12 +140,28 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
     coinType: coinType,
   });
 
+  const availableToken = useMemo(() => {
+    const tokenThreshold = calculateTokenReceiveWithoutFee(
+      USDT_THRESHOLD.toString()
+    );
+    return BigNumber(tokenThreshold).minus(tokenDetailSC?.tokensSold || "0");
+  }, [tokenDetailSC]);
+
+  console.log({ availableToken: availableToken.toString() });
+  const isExceedAvailableToken = useMemo(() => {
+    return (
+      coinType === ECoinType.MemeCoin &&
+      BigNumber(amountValue).gt(availableToken)
+    );
+  }, [amountValue, availableToken, coinType]);
+
   const usdtShouldPay: any = useMemo(() => {
     if (amountValue && coinType === ECoinType.MemeCoin) {
       if (isTokenMint) {
-        return buyAmountIn;
+        return isExceedAvailableToken ? USDT_THRESHOLD : buyAmountIn;
       } else {
-        return calculateUsdtShouldPay(amountValue);
+        const usdtShouldPay = calculateUsdtShouldPay(amountValue);
+        return BigNumber(usdtShouldPay).lt(0) ? USDT_THRESHOLD : usdtShouldPay;
       }
     } else {
       return "";
@@ -155,7 +171,7 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
   const tokenWillReceive: any = useMemo(() => {
     if (amountValue && coinType === ECoinType.StableCoin) {
       if (isTokenMint) {
-        return isExceedAvailableToken ? availableToken : buyAmountOut;
+        return buyAmountOut;
       } else {
         return calculateTokenReceive(amountValue);
       }
@@ -228,6 +244,7 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
     const gasLimit = Number(tradeSettings?.priorityFee)
       ? BigNumber(tradeSettings?.priorityFee).multipliedBy(1e10).toString()
       : 0;
+
     try {
       console.log(
         "buyAndCreateToken",
@@ -237,7 +254,7 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
         BigNumber(minTokenOut).multipliedBy(TOKEN_DECIMAL).toFixed(0),
         address,
         tokenDetail.idx,
-        address
+        tokenDetail?.userWalletAddress
       );
       const tx = await contract?.buyAndCreateToken(
         tokenDetail?.symbol,
@@ -246,7 +263,7 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
         0,
         address,
         tokenDetail.idx,
-        address,
+        tokenDetail?.userWalletAddress,
         {
           gasLimit: gasLimit || undefined,
         }
@@ -298,20 +315,6 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
       handleError(e);
     }
   };
-
-  const availableToken = useMemo(() => {
-    const tokenThreshold = calculateTokenReceiveWithoutFee(
-      USDT_THRESHOLD.toString()
-    );
-    return BigNumber(tokenThreshold).minus(tokenDetailSC?.tokensSold || "0");
-  }, [tokenDetailSC]);
-
-  const isExceedAvailableToken = useMemo(() => {
-    return (
-      coinType === ECoinType.MemeCoin &&
-      BigNumber(amountValue).gt(availableToken)
-    );
-  }, [amountValue, availableToken, coinType]);
 
   const handleBuyTokenExactOut = async () => {
     const contract = await tokenFactoryContract;
@@ -592,7 +595,7 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
 
     if (e?.reason === ErrorCode.TOKEN_ALREADY_MINTED) {
       error({
-        message: e?.reason,
+        message: "Transaction Error",
       });
       return;
     }
