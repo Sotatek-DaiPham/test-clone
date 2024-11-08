@@ -1,8 +1,8 @@
-import { useTradeSettings } from "@/app/en/rain-pump/(non-sidebar-layout)/token-detail/_components/TradeSection";
+import { useTradeSettings } from "@/app/(non-sidebar-layout)/token-detail/_components/TradeSection";
 import {
   FormSetting,
   SETTINGS_FIELD_NAMES,
-} from "@/app/en/rain-pump/(non-sidebar-layout)/token-detail/_components/TradeSection/TradeTab";
+} from "@/app/(non-sidebar-layout)/token-detail/_components/TradeSection/TradeTab";
 import AppAmountSelect from "@/components/app-amount-select";
 import AppButton from "@/components/app-button";
 import AppCheckbox from "@/components/app-checkbox";
