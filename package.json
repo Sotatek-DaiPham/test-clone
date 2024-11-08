@@ -2,7 +2,6 @@
   "name": "rainmakr-memecoin-fe",
   "version": "0.1.0",
   "private": true,
-  "homepage": "/en/rain-pump ",
   "scripts": {
     "dev": "next dev",
     "start:dev": "next start -p 8005",
