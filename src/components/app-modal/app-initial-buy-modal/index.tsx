@@ -91,7 +91,7 @@ const InitialBuyModal = ({
         <div className="text-20px-bold md:text-26px-bold text-white-neutral">
           Initial buy (Optional)
         </div>
-        <div className="bg-[#16181C] p-6 rounded-[12px] flex flex-col ">
+        <div className="bg-neutral-1 p-6 rounded-[12px] flex flex-col ">
           <div className="flex justify-between items-center mb-2.5">
             <label className="text-14px-medium text-neutral-7">
               Buy Amount
@@ -138,7 +138,7 @@ const InitialBuyModal = ({
             />
           ) : null}
 
-          <div className="text-14px-normal text-neutral-7 mb-7">
+          <div className="text-16px-normal text-neutral-7 mb-7">
             {coinType === ECoinType.MemeCoin
               ? "You must pay "
               : "You will receive "}
@@ -148,7 +148,7 @@ const InitialBuyModal = ({
                 : `${nFormatter(tokenWillReceive) || 0} ${tokenSymbol}`}
             </span>
           </div>
-          <div className="text-14px-normal text-neutral-7">
+          <div className="text-16px-normal text-[#D1D1D2]">
             Enter your initial buy amount. Leave blank if you don’t want to buy
             any.
           </div>
