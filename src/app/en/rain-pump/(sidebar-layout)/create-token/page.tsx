@@ -386,12 +386,11 @@ const CreateTokenPage = () => {
                   message: "Token ticker is required",
                 },
               ]}
-              normalize={(value) => value.toUpperCase()}
+              normalize={(value) => value.replace(/\s/g, "").toUpperCase()}
             >
               <AppInput
                 placeholder="Enter token ticker"
                 maxLength={10}
-                onKeyDown={handleKeyPress}
                 onPaste={handlePaste}
               />
             </Form.Item>
