@@ -1,3 +1,4 @@
+import AppTooltip from "@/components/app-tooltip";
 import AppTruncateText from "@/components/app-truncate-text";
 import { envs } from "@/constant/envs";
 import { DATE_FORMAT } from "@/constant/format";
@@ -39,14 +40,19 @@ const GeneralInfo = () => {
         <div className="text-12px-normal md:text-14px-normal text-neutral-7">
           Contract Address
         </div>
-        <Link
-          href={`${envs.SCAN_URL}/address/${tokenDetail?.contractAddress}`}
-          target="_blank"
-          className="text-12px-medium md:text-14px-medium text-white-neutral flex gap-1"
-        >
-          <div>{shortenAddress(tokenDetail?.contractAddress || "") || "-"}</div>
-          <Image src={ArrowExport} alt="arrow-export" />
-        </Link>
+        <div className="flex gap-1">
+          <div className="text-12px-medium md:text-14px-medium text-white-neutral flex gap-1">
+            {shortenAddress(tokenDetail?.contractAddress || "") || "-"}
+          </div>
+          <Link
+            href={`${envs.SCAN_URL}/address/${tokenDetail?.contractAddress}`}
+            target="_blank"
+          >
+            <AppTooltip title="View on Block Explorer">
+              <Image src={ArrowExport} alt="arrow-export" />
+            </AppTooltip>
+          </Link>
+        </div>
       </div>
     </div>
   );

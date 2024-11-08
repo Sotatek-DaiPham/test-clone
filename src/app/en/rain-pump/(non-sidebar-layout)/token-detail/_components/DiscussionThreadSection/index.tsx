@@ -57,7 +57,8 @@ const DiscussionThread = () => {
   const fetchDiscussionThreads = async ({ pageParam = 1 }) => {
     const response = await getAPI(API_PATH.TOKEN.DISCUSSION_THREADS, {
       params: {
-        direction: "ASC",
+        direction: "DESC",
+        orderBy: "created_at",
         page: pageParam,
         limit: 4,
         tokenId: Number(tokenId),
@@ -70,6 +71,7 @@ const DiscussionThread = () => {
     const response = await getAPI(API_PATH.TOKEN.DISCUSSION_THREADS, {
       params: {
         direction: "ASC",
+        orderBy: "created_at",
         page: pageParam,
         limit: 4,
         tokenId: Number(tokenId),

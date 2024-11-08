@@ -112,7 +112,7 @@ const CreateTokenPage = () => {
     },
     mutationKey: ["upload-images"],
     onError: (err) => {
-      alert(err);
+      error({ message: "Upload image failed" });
     },
   });
 
@@ -126,7 +126,6 @@ const CreateTokenPage = () => {
     },
     onError: (err) => {
       error({ message: "Create Failed" });
-      alert(err);
     },
     mutationKey: ["create-token"],
   });
@@ -317,6 +316,7 @@ const CreateTokenPage = () => {
       );
     } catch (e) {
       console.log({ e });
+      error({ message: "Create token failed" });
     } finally {
       if (withoutBuy) {
         setLoadingStatus((prev) => ({ ...prev, createTokenWithoutBuy: false }));
