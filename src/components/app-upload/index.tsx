@@ -83,15 +83,19 @@ const AppUpload = (props: AppUploadProps) => {
       {props.value?.src && variant === "secondary" ? (
         <div className="px-2 py-1.5 bg-neutral-3 rounded-[8px] flex justify-between items-center w-full md:w-[460px] mt-2">
           <div className="flex gap-3 items-center">
-            <Image
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
               src={props?.value?.src}
-              className="rounded-[10px] object-cover  w-9 h-9"
+              className="rounded-[10px] object-cover w-9 h-9"
               alt="image upload"
-              width={36}
-              height={36}
             />
             <div className="flex flex-col gap-1">
-              <div className="text-14px-normal text-neutral-9">
+              <div
+                className="text-14px-normal text-neutral-9"
+                style={{
+                  wordBreak: "break-word",
+                }}
+              >
                 {props.value?.file?.name}
               </div>
               <div className="text-12px-normal text-neutral-7">
