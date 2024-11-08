@@ -21,6 +21,7 @@ const nextConfig = {
       },
     ];
   },
+  basePath: "/en/rain-pump",
 };
 
 export default nextConfig;
