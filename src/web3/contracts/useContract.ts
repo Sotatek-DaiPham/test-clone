@@ -1,3 +1,4 @@
+import useWalletAuth from "@/hooks/useWalletAuth";
 import {
   Contract,
   Eip1193Provider,
@@ -22,8 +23,7 @@ export const useContract = (
   address: string,
   chainId?: number
 ): Promise<Contract | null> => {
-  const { connector } = useAccount();
-
+  const { connector, isConnected, address: userAddress } = useAccount();
   const RPC = process.env.NEXT_PUBLIC_ARBITRUM_RPC_URL;
   return useMemo(async () => {
     if (!ethers.isAddress(address)) {
@@ -38,9 +38,10 @@ export const useContract = (
     return getContract(
       abi,
       address,
-      (await provider?.getSigner()) || new ethers.JsonRpcProvider(RPC)
+      (await provider?.getSigner(userAddress)) ||
+        new ethers.JsonRpcProvider(RPC)
     );
-  }, [abi, address, connector, RPC]);
+  }, [abi, address, connector, RPC, isConnected, userAddress]);
 };
 
 export const useReadContract = (

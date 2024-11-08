@@ -111,6 +111,9 @@ const CreateTokenPage = () => {
       return postFormDataAPI(API_PATH.UPLOAD_IMAGE, payload);
     },
     mutationKey: ["upload-images"],
+    onError: (err) => {
+      error({ message: "Upload image failed" });
+    },
   });
 
   const { allowance } = useUsdtAllowance(address);
@@ -313,6 +316,7 @@ const CreateTokenPage = () => {
       );
     } catch (e) {
       console.log({ e });
+      error({ message: "Create token failed" });
     } finally {
       if (withoutBuy) {
         setLoadingStatus((prev) => ({ ...prev, createTokenWithoutBuy: false }));
