@@ -658,6 +658,7 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
               tokenSymbol={tokenDetail?.symbol}
               onTokenChange={(token) => setCoinType(token)}
               regex={REGEX_INPUT_DECIMAL(0, 6)}
+              placeholder="Enter buy amount"
               isSwap
             />
           ) : (
@@ -665,6 +666,7 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
               tokenImageSrc={tokenDetail?.avatar}
               tokenSymbol={tokenDetail?.symbol}
               regex={REGEX_INPUT_DECIMAL(0, 6)}
+              placeholder="Enter sell amount"
             />
           )}
         </Form.Item>

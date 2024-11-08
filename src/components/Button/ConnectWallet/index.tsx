@@ -106,7 +106,8 @@ const ConnectWalletButton = ({ customClass }: { customClass?: string }) => {
                         </div>
                       )}
                       <div className="text-12px-medium">
-                        {nFormatterVer2(userBalance)} USDT
+                        {nFormatterVer2(userBalance)}{" "}
+                        {isDesktop ? "USDT" : null}
                       </div>
                     </div>
 

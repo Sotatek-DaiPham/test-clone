@@ -17,6 +17,7 @@ import { Menu, MenuProps } from "antd";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import "./styles.scss";
+import { envs } from "@/constant/envs";
 
 type MenuItem = Required<MenuProps>["items"][number];
 
@@ -42,7 +43,7 @@ export default function AppMenu({ className }: AppMenuProps) {
       icon: <Image src={BrowseIcon} alt="menu icon" />,
     },
     {
-      label: "Start a new token",
+      label: "Start a New Token",
       key: PATH_ROUTER.CREATE_TOKEN,
       icon: <Image src={CoinsIcon} alt="menu icon" />,
       onClick: () => {
@@ -83,17 +84,26 @@ export default function AppMenu({ className }: AppMenuProps) {
     {
       label: "RainLaunch",
       key: "rainlaunch",
+      onClick: () => {
+        window.open(envs.RAINLAUNCH_URL, "_blank");
+      },
       icon: <Image src={RainLaunchIcon} alt="menu icon" />,
     },
     {
       label: "RainBoost",
       key: "rainboost",
       icon: <Image src={RainboostIcon} alt="menu icon" />,
+      onClick: () => {
+        window.open(envs.RAINBOOST_URL, "_blank");
+      },
     },
     {
       label: "RainDrop",
       key: "raindrop",
       icon: <Image src={RainDropIcon} alt="menu icon" />,
+      onClick: () => {
+        window.open(envs.RAINDROP_URL, "_blank");
+      },
     },
     {
       type: "divider",
@@ -102,11 +112,17 @@ export default function AppMenu({ className }: AppMenuProps) {
       label: "X",
       key: "x",
       icon: <Image src={XIcon} alt="menu icon" />,
+      onClick: () => {
+        window.open(envs.X_URL, "_blank");
+      },
     },
     {
       label: "Telegram",
       key: "telegram",
       icon: <Image src={TelegramIcon} alt="menu icon" />,
+      onClick: () => {
+        window.open(envs.DISCORD_URL, "_blank");
+      },
     },
   ];
 
