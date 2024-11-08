@@ -111,13 +111,13 @@ const HolderDistribute = () => {
 
   return (
     <div>
-      <AppButton
+      {/* <AppButton
         typeButton="secondary"
         onClick={() => setisOpenBubbleChart(true)}
         customClass="!w-fit my-6"
       >
         Generate bubble map
-      </AppButton>
+      </AppButton> */}
       <AppTable
         scroll={{ x: 900 }}
         columns={columns}

@@ -127,7 +127,7 @@ const LeaderboardPage = () => {
       render: (value: string, data: any) => {
         return (
           <div
-            className="flex flex-row items-center w-fit cursor-pointer hover:underline cursor-pointer"
+            className="flex flex-row items-center w-fit cursor-pointer hover:underline"
             onClick={(e) => {
               e.stopPropagation();
               router.push(PATH_ROUTER.USER_PROFILE(data?.walletAddress));
