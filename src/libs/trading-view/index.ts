@@ -84,7 +84,7 @@ export default async function onInitTradingView({
     enabled_features: ["study_templates"],
     interval: DEFAULT_TRADING_VIEW_INTERVAL,
     container_id: ID_TRADING_VIEW,
-    library_path: "/charting_library/",
+    library_path: "/en/rain-pump/charting_library/",
     charts_storage_url: "https://saveload.tradingview.com",
     charts_storage_api_version: "1.1",
     client_id: "tradingview.com",
