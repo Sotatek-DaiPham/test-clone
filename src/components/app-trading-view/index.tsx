@@ -101,7 +101,7 @@ const AppTradingView = (props: ChartContainerProps) => {
         datafeed: datafeed,
         interval: DEFAULT_TRADING_VIEW_INTERVAL,
         container_id: props.containerId || "",
-        library_path: "/en/rain_pump/charting_library/",
+        library_path: "/en/rain-pump/charting_library/",
         locale: "en",
         disabled_features: disabledFeatures,
         enabled_features: [
