@@ -1,5 +1,5 @@
 export const PATH_ROUTER = {
-  DASHBOARD: "",
+  DASHBOARD: "/",
   MY_PROFILE: "/my-profile",
   NOTIFICATION: "/notification",
   MY_TOKENS: "/my-tokens",

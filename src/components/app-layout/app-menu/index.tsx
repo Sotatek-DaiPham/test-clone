@@ -12,7 +12,7 @@ import {
   RainboostIcon,
   RainDropIcon,
   RainLaunchIcon,
-  XIcon
+  XIcon,
 } from "@public/assets";
 import { Menu, MenuProps } from "antd";
 import Image from "next/image";
@@ -30,7 +30,7 @@ export default function AppMenu({ className }: AppMenuProps) {
   const pathname = usePathname();
   const router = useRouter();
   // Split the pathname to get segments
-  const segments = pathname.split("").filter(Boolean);
+  const segments = pathname.split(" ").filter(Boolean);
   const selectedSegment = segments.length > 0 ? segments[0] : "";
 
   const items: MenuItem[] = [
