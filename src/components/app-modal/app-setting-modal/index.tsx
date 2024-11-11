@@ -70,7 +70,7 @@ const TradeSettingModal = ({
 
   useEffect(() => {
     form.setFieldsValue(tradeSettings);
-  }, [tradeSettings]);
+  }, [tradeSettings, props.open]);
 
   return (
     <AppModal
@@ -94,12 +94,13 @@ const TradeSettingModal = ({
             <label className="text-14px-medium text-neutral-7">
               Max Slippage
             </label>
-            <Form.Item name={SETTINGS_FIELD_NAMES.SLIPPAGE}>
+            <Form.Item name={SETTINGS_FIELD_NAMES.SLIPPAGE} initialValue={0}>
               <AppInputBalance
                 tokenSymbol=""
                 label="Slippage (%)"
                 regex={REGEX_INPUT_DECIMAL(0, 6)}
                 maxValue={25}
+                placeholder="Enter slippage amount"
               />
             </Form.Item>
 
@@ -140,11 +141,15 @@ const TradeSettingModal = ({
               <label className="text-14px-medium text-neutral-7">
                 Priority fee
               </label>
-              <Form.Item name={SETTINGS_FIELD_NAMES.PRIORITY_FEE}>
+              <Form.Item
+                name={SETTINGS_FIELD_NAMES.PRIORITY_FEE}
+                initialValue={0}
+              >
                 <AppInputBalance
                   tokenImageSrc={EthIcon}
                   tokenSymbol="ETH"
                   regex={REGEX_INPUT_DECIMAL(0, 6)}
+                  placeholder="Enter priority fee amount"
                 />
               </Form.Item>
               <AppAmountSelect

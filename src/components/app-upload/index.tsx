@@ -70,7 +70,7 @@ const AppUpload = (props: AppUploadProps) => {
                   Drag And Drop A File
                 </div>
                 <div className="text-[#7A7F86] text-12px-medium">
-                  Max size - 5Mb. Jpg, Png, Gif
+                  Max size - 5Mb. Jpg, Png, Jfif, Gif
                 </div>
               </div>
             </div>

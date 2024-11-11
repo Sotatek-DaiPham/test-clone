@@ -13,7 +13,7 @@ export const ImageValidator = (
     }
 
     if (!checkValidUploadFileType(value.file)) {
-      return Promise.reject("Please upload PNG, JPG, JPEG, GIF only");
+      return Promise.reject("Please upload PNG, JPG, JPEG, JFIF, GIF only");
     }
   }
 
@@ -31,7 +31,7 @@ export const ImageLogoValidator = (
     }
 
     if (!checkValidUploadFileType(value.file)) {
-      return Promise.reject("Please upload PNG, JPG, JPEG, GIF only");
+      return Promise.reject("Please upload PNG, JPG, JPEG, JFIF, GIF only");
     }
   }
 

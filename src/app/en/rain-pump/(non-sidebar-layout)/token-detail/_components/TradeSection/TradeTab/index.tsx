@@ -25,6 +25,7 @@ import {
   calculateTokenReceiveWithoutFee,
   calculateUsdtShouldPay,
   decreaseByPercent,
+  DISCOUNT_FACTOR,
   increaseByPercent,
 } from "@/helpers/calculate";
 import useCalculateAmount from "@/hooks/useCalculateAmount";
@@ -384,8 +385,12 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
 
     setLoadingStatus((prev) => ({ ...prev, sellToken: true }));
     const contract = await tokenFactoryContract;
+    const sellAmountOutDiscount = BigNumber(sellAmountOut)
+      .multipliedBy(DISCOUNT_FACTOR)
+      .toString();
+
     const minUSDTOut = Number(tradeSettings?.slippage)
-      ? decreaseByPercent(sellAmountOut, tradeSettings?.slippage)
+      ? decreaseByPercent(sellAmountOutDiscount, tradeSettings?.slippage)
       : 0;
 
     const gasLimit = Number(tradeSettings?.priorityFee)
@@ -523,7 +528,9 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
             <AppNumberToolTip
               decimal={6}
               isFormatterK={false}
-              value={BigNumber(sellAmountOut).toString()}
+              value={BigNumber(sellAmountOut)
+                .multipliedBy(DISCOUNT_FACTOR)
+                .toString()}
             />{" "}
             USDT
           </span>
