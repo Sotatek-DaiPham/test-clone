@@ -28,7 +28,7 @@ const checkType = (type: string, data: Information) => {
     case EEventNoti.BUY:
       return (
         <>
-          <span className="text-success-main mr-2">{type || "-"}</span>
+          <span className="text-success-main mr-2">Bought</span>
           <span className="text-neutral-9">
             {formatAmount(
               convertNumber(data?.amount, get(data, "token.decimal", 0))
@@ -44,7 +44,7 @@ const checkType = (type: string, data: Information) => {
     case EEventNoti.SELL:
       return (
         <>
-          <span className="text-error-main mr-2">{type || "-"}</span>
+          <span className="text-error-main mr-2">Sold</span>
           <span className="text-neutral-9">
             {formatAmount(
               convertNumber(data?.amount, get(data, "token.decimal", 0))

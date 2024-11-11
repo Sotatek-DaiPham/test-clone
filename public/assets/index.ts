@@ -87,3 +87,4 @@ export { default as RainPumpTextWhite } from "./icons/rain-pump-text-logo-white.
 export { default as BGEffect4Icon } from "./icons/bg-effect-4.svg";
 export { default as LogoMobileIcon } from "./icons/logo-mobile.svg";
 export { default as Logo1Icon } from "./icons/logo1.png";
+export { default as DiscordIcon } from "./icons/discord-icon.svg";

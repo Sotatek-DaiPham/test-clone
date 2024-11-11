@@ -211,6 +211,9 @@ const AllTab = () => {
     (value: any, queryKey: string, subValue?: any, subQueryKey?: any) => {
       const newParams = {
         tab: searchParams.tab ?? "all",
+        age: searchParams?.age ?? "",
+        minProgress: searchParams?.minProgress ?? "",
+        maxProgress: searchParams?.maxProgress ?? "",
       };
       setSearchParams({
         ...newParams,

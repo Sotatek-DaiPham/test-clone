@@ -38,6 +38,20 @@
     font-display: swap;
     src: url(../fonts/SFProText-Light.ttf) format("woff2");
   }
+  @font-face {
+    font-family: "Montserrat";
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url(../fonts/Montserrat-Regular.ttf) format("woff2");
+  }
+  @font-face {
+    font-family: "Kanit";
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url(../fonts/Kanit-Regular.ttf) format("woff2");
+  }
 }
 
 ::-webkit-scrollbar {
@@ -69,6 +83,8 @@
 // }
 
 :root {
+  --kanit: "Kanit";
+  --montserrat: "Montserrat";
   --font-sf-pro: "SF Pro";
   --width-content-sidebar-layout: 1444px;
   --radius-rounded: 256px;

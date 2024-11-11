@@ -112,6 +112,7 @@ const AppTradingView = (props: ChartContainerProps) => {
         toolbar_bg: "#171717",
         overrides: {
           "paneProperties.background": "#171717",
+          volumePaneSize: "medium",
         },
         studies_overrides: {
           "volume.show ma": true,
@@ -120,9 +121,9 @@ const AppTradingView = (props: ChartContainerProps) => {
         timezone: getClientTimezone(),
         charts_storage_url: "https://saveload.tradingview.com",
         charts_storage_api_version: "1.1",
-        client_id: "Vcc",
+        client_id: "tradingview.com",
         user_id: "public_user_id",
-        fullscreen: false,
+        fullscreen: true,
         autosize: true,
         theme: "Dark",
         widgetbar: {
@@ -148,7 +149,7 @@ const AppTradingView = (props: ChartContainerProps) => {
       if (onResetCacheNeededCallback) onResetCacheNeededCallback();
       widgetCom?.chart().resetData();
     }
-  }, []);
+  }, [isChartReady]);
 
   return (
     <div className="w-full h-full flex flex-col">
