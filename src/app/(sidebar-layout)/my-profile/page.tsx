@@ -99,7 +99,7 @@ const MyProfilePage = () => {
     <div className="m-auto max-w-[var(--width-content-sidebar-layout)]">
       <AppTabs
         items={tabs}
-        className="app-tabs-primary"
+        className="app-tabs-primary active-tab-new"
         activeKey={activeTab}
         onChange={handleChangeTab}
         destroyInactiveTabPane={true}

@@ -107,7 +107,7 @@ const LeaderboardPage = () => {
                 }
               />
               <span className="text-primary-main text-22px-bold absolute inset-0 flex items-center justify-center">
-                {value}
+                {Number(value) > 500 ? "500+" : value}
               </span>
             </div>
             {userAddress === data?.walletAddress && userId && (

@@ -71,6 +71,7 @@
       }
     }
   }
+
   .ant-tabs-tab-btn:active {
     color: var(--color-neutral-white) !important;
   }
@@ -86,4 +87,18 @@
 
 .ant-tabs-nav-more.ant-tabs-dropdown-open {
   display: none !important;
+}
+
+.app-tabs-primary.ant-tabs.app-tabs.active-tab-new {
+  .ant-tabs-tab.ant-tabs-tab-active {
+    .ant-tabs-tab-btn {
+      color: var(--color-neutral-1) !important;
+      .ant-tabs-tab-icon {
+        img {
+          filter: invert(0%) sepia(0%) saturate(0%) hue-rotate(322deg)
+            brightness(40%) contrast(102%) !important;
+        }
+      }
+    }
+  }
 }
