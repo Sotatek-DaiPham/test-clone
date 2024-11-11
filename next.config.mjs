@@ -12,15 +12,7 @@ const nextConfig = {
       },
     ],
   },
-  async redirects() {
-    return [
-      {
-        source: "/",
-        destination: "/en/rain-pump",
-        permanent: true,
-      },
-    ];
-  },
+  basePath: process.env.NODE_ENV === "development" ? "" : "/en/rain-pump",
 };
 
 export default nextConfig;
