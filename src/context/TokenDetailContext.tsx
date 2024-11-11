@@ -76,7 +76,7 @@ export const TokenDetailProvider: React.FC<{ children: React.ReactNode }> = ({
     queryFn: () => {
       return getAPI(API_PATH.TOKEN.TOKEN_DETAIL, {
         params: {
-          tokenId: id,
+          tokenId: id || null,
         },
       });
     },

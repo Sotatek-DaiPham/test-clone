@@ -134,7 +134,7 @@ const NotificationPage = () => {
       return getAPI(API_PATH.USER.NOTIFICATION, {
         params: {
           ...params,
-          keyword: debounceSearch?.trim(),
+          keyword: debounceSearch?.trim() || null,
           orderBy: "createdAt",
           direction: EDirection.DESC,
         },

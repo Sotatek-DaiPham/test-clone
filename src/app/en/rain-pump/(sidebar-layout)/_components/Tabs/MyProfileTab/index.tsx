@@ -43,7 +43,7 @@ const MyProfileTab = ({ apiPath }: { apiPath: string }) => {
     queryFn: async () => {
       return getAPI(apiPath, {
         params: {
-          currentUserId: userId,
+          currentUserId: userId || null,
         },
       }) as Promise<AxiosResponse<BeSuccessResponse<MyProfileResponse>, any>>;
     },

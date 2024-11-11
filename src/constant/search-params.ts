@@ -17,6 +17,7 @@ export const SEARCH_PARAMS = {
     replyId: "replyId",
     replyUserId: "replyUserId",
   },
+  howItsWork: "how-its-work",
 } as const;
 
 export type ExtractKeyType<T, K extends keyof T> = T[K][keyof T[K]];

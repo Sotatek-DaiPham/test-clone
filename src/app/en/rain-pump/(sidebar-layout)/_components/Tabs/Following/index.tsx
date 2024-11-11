@@ -48,9 +48,9 @@ const FollowingTab = ({ walletAddress }: { walletAddress: string }) => {
           ...params,
           orderBy: "createdAt",
           direction: EDirection.DESC,
-          walletAddress: walletAddress,
-          keyword: debounceSearch?.trim(),
-          viewerId: userId,
+          walletAddress: walletAddress || null,
+          keyword: debounceSearch?.trim() || null,
+          viewerId: userId || null,
         },
       }) as Promise<AxiosResponse<BeSuccessResponse<IFollowerResponse[]>, any>>;
     },

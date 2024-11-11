@@ -19,12 +19,12 @@ import ProjectCard from "../ProjectCard";
 
 const FILTER_TERMINAL = [
   {
-    label: "Activity",
+    label: "Activities",
     value: "activity",
     icon: TrendUpIcon,
   },
   {
-    label: "Created tokens",
+    label: "Created Tokens",
     value: "created",
     icon: DollarCircleUpIcon,
   },
@@ -52,7 +52,7 @@ const FollowingTab = () => {
         ...params,
         orderBy: "createdAt",
         direction: EDirection.DESC,
-        keyword: debounceSearch?.trim(),
+        keyword: debounceSearch?.trim() || null,
       },
     })
       .then((data) => {
@@ -79,7 +79,7 @@ const FollowingTab = () => {
         ...params,
         orderBy: "createdAt",
         direction: EDirection.DESC,
-        keyword: debounceSearch?.trim(),
+        keyword: debounceSearch?.trim() || null,
       },
     })
       .then((data) => {

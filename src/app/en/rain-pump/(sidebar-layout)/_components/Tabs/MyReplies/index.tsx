@@ -106,7 +106,7 @@ const MyRepliesTab = () => {
           ...params,
           orderBy: "createdAt",
           direction: EDirection.DESC,
-          keyword: debounceSearch?.trim(),
+          keyword: debounceSearch?.trim() || null,
         },
       }) as Promise<
         AxiosResponse<BeSuccessResponse<IMyRepliesResponse[]>, any>
