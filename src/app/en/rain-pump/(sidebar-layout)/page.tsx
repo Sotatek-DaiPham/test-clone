@@ -54,14 +54,14 @@ const HowItWorkMain = ({ onClick }: { onClick: (show: boolean) => void }) => {
               <div>
                 <Image src={RainPumpTextWhite} alt="rain-pump-text" />
               </div>
-              <div className="mx-auto my-4 !mb-10 text-white-neutral text-16px-normal">
+              <div className="mx-auto my-4 !mb-10 text-white-neutral text-16px-normal !font-['Montserrat']">
                 The Most Liquid Fair Launch Platform
               </div>
             </div>
             <AppButton
               onClick={() => onClick(true)}
               customClass="!rounded-3xl !w-fit px-8 py-6 mx-auto"
-              classChildren="!text-neutral-1 !text-14px-bold"
+              classChildren="!text-neutral-1 !text-16px-bold"
             >
               How it works?
             </AppButton>
@@ -211,7 +211,7 @@ export default function Home() {
                   <div>
                     <Image src={RainPumpText} alt="rain-pump-text" />
                   </div>
-                  <div className="truncate-4-line sm:my-3 my-4 text-white-neutral text-16px-normal">
+                  <div className="truncate-4-line sm:my-3 my-4 text-white-neutral text-16px-normal !font-['Montserrat']">
                     The Most Liquid Fair
                     <br />
                     Launch Platform
@@ -237,7 +237,7 @@ export default function Home() {
           {Boolean(kingOfTheSky?.contractAddress) && (
             <div className="h-full">
               <div className="bg-neutral-2 rounded-3xl sm:p-6 px-2 pt-6 pb-2">
-                <span className="text-primary-main italic text-32px-bold flex w-full justify-center">
+                <span className="text-primary-main italic text-32px-bold flex w-full justify-center !font-['Kanit']">
                   King of The Sky
                 </span>
                 <ProjectCard className="p-0" data={kingOfTheSky} />

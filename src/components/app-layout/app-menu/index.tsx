@@ -1,23 +1,23 @@
 "use client";
+import { envs } from "@/constant/envs";
 import { PATH_ROUTER } from "@/constant/router";
 import useWalletAuth from "@/hooks/useWalletAuth";
 import {
   BrowseIcon,
   CoinsIcon,
+  DiscordIcon,
   LeaderboardIcon,
   NotificationsIcon,
   ProfileIcon,
   RainboostIcon,
   RainDropIcon,
   RainLaunchIcon,
-  TelegramIcon,
-  XIcon,
+  XIcon
 } from "@public/assets";
 import { Menu, MenuProps } from "antd";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import "./styles.scss";
-import { envs } from "@/constant/envs";
 
 type MenuItem = Required<MenuProps>["items"][number];
 
@@ -35,7 +35,7 @@ export default function AppMenu({ className }: AppMenuProps) {
 
   const items: MenuItem[] = [
     {
-      label: "Browser",
+      label: "Browse",
       key: PATH_ROUTER.DASHBOARD,
       onClick: () => {
         router.push(PATH_ROUTER.DASHBOARD);
@@ -117,9 +117,9 @@ export default function AppMenu({ className }: AppMenuProps) {
       },
     },
     {
-      label: "Telegram",
-      key: "telegram",
-      icon: <Image src={TelegramIcon} alt="menu icon" />,
+      label: "Discord",
+      key: "discord",
+      icon: <Image src={DiscordIcon} alt="menu icon" />,
       onClick: () => {
         window.open(envs.DISCORD_URL, "_blank");
       },
