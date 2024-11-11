@@ -12,7 +12,7 @@ const nextConfig = {
       },
     ],
   },
-  basePath: process.env.NODE_ENV === "development" ? "" : "/en/rain-pump",
+  basePath: process.env.MODE === "development" ? "" : "/en/rain-pump",
 };
 
 export default nextConfig;
