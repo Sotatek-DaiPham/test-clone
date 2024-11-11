@@ -22,7 +22,7 @@ const PriceSection = () => {
       const tokenPrice = BigNumber(tokenDetailSC?.usdtVirtualReserve)
         .div(tokenDetailSC?.tokenVirtualReserve)
         .toString();
-      const marketCap = BigNumber(tokenPrice)
+      const marketCap = BigNumber(tokenDetail.price)
         .multipliedBy(BigNumber(tokenDetail.total_supply).div(TOKEN_DECIMAL))
         .toString();
       const volume = BigNumber(tokenDetail.volume).div(USDT_DECIMAL).toString();

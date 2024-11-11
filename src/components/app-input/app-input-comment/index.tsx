@@ -1,4 +1,5 @@
-import { Form, Input, message } from "antd";
+import { Form, Input } from "antd";
+import { useWatch } from "antd/es/form/Form";
 import React, { useEffect, useRef, useState } from "react";
 import CustomCommentInput from "./CustomCommentInput";
 import "./styles.scss";
@@ -44,6 +45,10 @@ const AppInputComment: React.FC<AppInputCommentProps> = ({
     fileTextAreaRef.current?.focus();
   }, []);
 
+  const commentValue = useWatch("comment", form);
+
+  const isDisabledPostButton = !commentValue;
+
   return (
     <Form form={form} onFinish={handleSubmit}>
       <Form.Item
@@ -62,6 +67,7 @@ const AppInputComment: React.FC<AppInputCommentProps> = ({
           showCancelButton={showCancelButton}
           fileList={fileList}
           onFileListChange={setFileList}
+          isDisabledPostButton={isDisabledPostButton}
         />
       </Form.Item>
     </Form>

@@ -16,7 +16,7 @@ declare module "dayjs" {
 const TARGET = new BigNumber("3450000000000");
 const ONE_BILLION = new BigNumber("1000000000");
 const BASE = new BigNumber("3450");
-const DISCOUNT_FACTOR = new BigNumber("0.99");
+export const DISCOUNT_FACTOR = new BigNumber("0.99");
 
 export const calculateUsdtShouldPay = (y: string): string => {
   const denominator = ONE_BILLION.minus(new BigNumber(y));

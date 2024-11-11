@@ -70,6 +70,41 @@ const AppInputBalance = ({
             }
             popupClassName="select-token-modal"
             onChange={onTokenChange}
+            labelRender={(item) => {
+              if (item.value === ECoinType.MemeCoin) {
+                return (
+                  <div className="flex items-center gap-1">
+                    {tokenImageSrc && (
+                      <Image
+                        alt="token"
+                        width={20}
+                        height={20}
+                        className="rounded-full object-cover h-5"
+                        src={tokenImageSrc}
+                      />
+                    )}
+                    <span className="text-neutral-9 text-16px-medium">
+                      <AppTruncateText text={tokenSymbol} maxLength={5} />
+                    </span>
+                  </div>
+                );
+              } else {
+                return (
+                  <div className="flex items-center gap-1">
+                    <Image
+                      alt="token"
+                      width={20}
+                      height={20}
+                      src={UsdtIcon}
+                      className="rounded-full object-cover h-5"
+                    />
+                    <span className="text-neutral-9 text-16px-medium">
+                      USDT
+                    </span>
+                  </div>
+                );
+              }
+            }}
           >
             <Select.Option value={ECoinType.MemeCoin}>
               <div className="flex items-center gap-1">
@@ -83,7 +118,7 @@ const AppInputBalance = ({
                   />
                 )}
                 <span className="text-neutral-9 text-16px-medium">
-                  <AppTruncateText text={tokenSymbol} maxLength={5} />
+                  {tokenSymbol}
                 </span>
               </div>
             </Select.Option>

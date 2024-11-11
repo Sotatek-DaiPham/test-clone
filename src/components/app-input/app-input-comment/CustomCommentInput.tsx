@@ -16,13 +16,14 @@ interface Props {
   onFileListChange?: (values: FileItem[]) => void;
   fileList: FileItem[];
   ref?: any;
+  isDisabledPostButton?: boolean;
 }
 
 const validateFile = (file: any) => {
   if (Number(file.size) > 5000000 && file.type.includes("image")) {
     throw new Error("Uploaded files should not exceed 5MB");
   } else if (!checkValidUploadFileType(file)) {
-    throw new Error("Please upload PNG, JPG, JPEG, GIF only");
+    throw new Error("Please upload PNG, JPG, JPEG, JFIF, GIF only");
   }
 };
 
@@ -34,6 +35,7 @@ const CustomCommentInput = forwardRef<HTMLAreaElement, Props>(function (
     onChange,
     onFileListChange,
     fileList,
+    isDisabledPostButton,
   },
   fileTextAreaRef
 ) {
@@ -164,6 +166,7 @@ const CustomCommentInput = forwardRef<HTMLAreaElement, Props>(function (
             text="Post"
             onClick={() => onSubmit()}
             customClassName="w-fit cursor-pointer"
+            disabled={isDisabledPostButton}
           />
         </div>
       </div>
