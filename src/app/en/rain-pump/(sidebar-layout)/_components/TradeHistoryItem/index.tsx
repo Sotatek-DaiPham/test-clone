@@ -5,6 +5,8 @@ import { PATH_ROUTER } from "@/constant/router";
 import { ITradeHistoryResponse } from "@/entities/dashboard";
 import { convertNumber, formatAmount } from "@/helpers/formatNumber";
 import { shortenAddress } from "@/helpers/shorten";
+import { ImageDefaultIcon } from "@public/assets";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 
 const TradeHistoryItem = ({ item }: { item: ITradeHistoryResponse }) => {
@@ -37,11 +39,19 @@ const TradeHistoryItem = ({ item }: { item: ITradeHistoryResponse }) => {
         {formatAmount(convertNumber(item?.amount, item?.decimal)) || "-"}
       </span>
       <span className="text-14px-normal">of</span>
-      <AppImage
-        src={item?.token_avatar}
-        alt="logo"
-        className="!w-[24px] !min-w-[24px] !h-[24px] rounded-full flex justify-center items-center mx-3"
-      />
+      {item?.token_avatar ? (
+        <AppImage
+          src={item?.token_avatar}
+          alt="logo"
+          className="!w-[24px] !min-w-[24px] !h-[24px] rounded-full flex justify-center items-center mx-3"
+        />
+      ) : (
+        <Image
+          src={ImageDefaultIcon}
+          alt="logo"
+          className="!w-[24px] !min-w-[24px] !h-[24px] rounded-full flex justify-center items-center mx-3"
+        />
+      )}
       <div
         onClick={(e) => {
           e.stopPropagation();

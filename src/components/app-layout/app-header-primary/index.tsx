@@ -44,12 +44,15 @@ export default function AppHeaderPrimary() {
 
     if (isOpenMenuMobile) {
       document.addEventListener("mousedown", handleClickOutside);
+      document.body.classList.add("disable-scroll");
     } else {
       document.removeEventListener("mousedown", handleClickOutside);
+      document.body.classList.remove("disable-scroll");
     }
 
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
+      document.body.classList.remove("disable-scroll");
     };
   }, [isOpenMenuMobile]);
 

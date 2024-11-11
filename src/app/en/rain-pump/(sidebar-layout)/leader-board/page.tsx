@@ -56,7 +56,7 @@ const LeaderboardPage = () => {
       return getAPI(API_PATH.TRADING.LEADERBOARD, {
         params: {
           ...params,
-          keyword: debounceSearch?.trim(),
+          keyword: debounceSearch?.trim() || null,
         },
       }) as Promise<AxiosResponse<BeSuccessResponse<MyRankResponse[]>, any>>;
     },

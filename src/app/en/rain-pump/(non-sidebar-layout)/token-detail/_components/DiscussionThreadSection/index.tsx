@@ -61,7 +61,7 @@ const DiscussionThread = () => {
         orderBy: "created_at",
         page: pageParam,
         limit: 4,
-        tokenId: Number(tokenId),
+        tokenId: Number(tokenId) || null,
       },
     });
     return response.data;
@@ -74,8 +74,8 @@ const DiscussionThread = () => {
         orderBy: "created_at",
         page: pageParam,
         limit: 4,
-        tokenId: Number(tokenId),
-        replyId: replyTo.commentId,
+        tokenId: Number(tokenId) || null,
+        replyId: replyTo.commentId || null,
       },
     });
     return response.data;

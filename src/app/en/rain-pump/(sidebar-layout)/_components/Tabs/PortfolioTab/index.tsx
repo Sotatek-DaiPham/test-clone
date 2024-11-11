@@ -45,9 +45,9 @@ const PortfolioTab = ({ walletAddress }: { walletAddress: string }) => {
           ...params,
           orderBy: "valueUsdt",
           direction: EDirection.DESC,
-          minAmountHeld: hideDustCoin ? 0.1 * (10 ^ 6) : "",
-          walletAddress: walletAddress,
-          keyword: debounceSearch?.trim(),
+          minAmountHeld: hideDustCoin ? 0.1 * (10 ^ 6) : null,
+          walletAddress: walletAddress || null,
+          keyword: debounceSearch?.trim() || null,
         },
       }) as Promise<
         AxiosResponse<BeSuccessResponse<IProjectCardResponse[]>, any>

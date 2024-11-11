@@ -54,7 +54,7 @@ const HowItWorkMain = ({ onClick }: { onClick: (show: boolean) => void }) => {
               <div>
                 <Image src={RainPumpTextWhite} alt="rain-pump-text" />
               </div>
-              <div className="mx-auto my-4 !mb-10 text-white-neutral text-16px-normal !font-['Montserrat']">
+              <div className="mx-auto my-4 !mb-10 text-white-neutral text-16px-normal text-center !font-['Montserrat']">
                 The Most Liquid Fair Launch Platform
               </div>
             </div>
@@ -88,8 +88,15 @@ export default function Home() {
   const { addEvent, isConnected, removeEvent } = useSocket();
   const { accessToken } = useWalletAuth();
   const { searchParams, setSearchParams } = useAppSearchParams("terminal");
+  const {
+    searchParams: howItsWork,
+    setSearchParams: setSearchParamsHowItsWork,
+  } = useAppSearchParams("howItsWork");
+
   const [activeTab, setActiveTab] = useState<string>(ETabsTerminal.ALL);
-  const [isShowModal, setIsShowModal] = useState<boolean>(false);
+  const [isShowModal, setIsShowModal] = useState<boolean>(
+    Boolean(howItsWork?.["how-its-work"]) || false
+  );
   const { isMobile } = useWindowSize();
 
   const {
@@ -190,6 +197,11 @@ export default function Home() {
     };
   }, [isConnected]);
 
+  const handleCloseModal = () => {
+    setIsShowModal(false);
+    setSearchParamsHowItsWork("");
+  };
+
   return (
     <div className="h-full !m-[-24px]">
       <div className="m-auto p-6 max-w-[var(--width-content-sidebar-layout)]">
@@ -267,10 +279,8 @@ export default function Home() {
       </div>
       <ModalHowItsWork
         open={isShowModal}
-        onOk={() => {
-          setIsShowModal(false);
-        }}
-        onCancel={() => setIsShowModal(false)}
+        onOk={handleCloseModal}
+        onCancel={handleCloseModal}
         destroyOnClose={true}
       />
     </div>

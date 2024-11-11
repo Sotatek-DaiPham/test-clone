@@ -32,13 +32,16 @@ export default function AppHeaderSecondary() {
     };
 
     if (isOpenMenuMobile) {
+      document.body.classList.add("disable-scroll");
       document.addEventListener("mousedown", handleClickOutside);
     } else {
       document.removeEventListener("mousedown", handleClickOutside);
+      document.body.classList.remove("disable-scroll");
     }
 
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
+      document.body.classList.remove("disable-scroll");
     };
   }, [isOpenMenuMobile]);
 

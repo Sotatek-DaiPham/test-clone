@@ -1,8 +1,8 @@
-import AppHeaderSecondary from "../app-header-secondary";
+import useWindowSize from "@/hooks/useWindowSize";
+import { BackgounrdEffect5 } from "@public/assets";
 import { Content } from "antd/es/layout/layout";
 import Image from "next/image";
-import { BackgounrdEffect4, BackgounrdEffect5 } from "@public/assets";
-import useWindowSize from "@/hooks/useWindowSize";
+import AppHeaderSecondary from "../app-header-secondary";
 
 export default function AppLayoutSecondary({
   children,
