@@ -158,11 +158,7 @@ const CreateTokenPage = () => {
 
   const buyAmount =
     coinType === ECoinType.MemeCoin
-      ? BigNumber(usdtShouldPay)
-          .multipliedBy(USDT_DECIMAL)
-          .integerValue(BigNumber.ROUND_DOWN)
-          .dividedBy(USDT_DECIMAL)
-          .toFixed(6)
+      ? BigNumber(usdtShouldPay).toFixed(6, BigNumber.ROUND_CEIL)
       : initialBuyAmount;
 
   const tokenFactoryContract = useContract(
@@ -239,10 +235,7 @@ const CreateTokenPage = () => {
         "create params",
         values[FIELD_NAMES.COIN_TICKER],
         values[FIELD_NAMES.COIN_NAME],
-        BigNumber(buyAmount)
-          .multipliedBy(USDT_DECIMAL)
-          .integerValue(BigNumber.ROUND_DOWN)
-          .toString(),
+        BigNumber(buyAmount).multipliedBy(USDT_DECIMAL).toFixed(),
         0,
         address,
         idx,
@@ -252,10 +245,7 @@ const CreateTokenPage = () => {
       const tx = await contract?.buyAndCreateToken(
         values[FIELD_NAMES.COIN_TICKER],
         values[FIELD_NAMES.COIN_NAME],
-        BigNumber(buyAmount)
-          .multipliedBy(USDT_DECIMAL)
-          .integerValue(BigNumber.ROUND_DOWN)
-          .toString(),
+        BigNumber(buyAmount).multipliedBy(USDT_DECIMAL).toFixed(),
         0,
         address,
         idx,
@@ -514,7 +504,7 @@ const CreateTokenPage = () => {
         skipLoading={loadingStatus.createTokenWithoutBuy}
         initialBuyAmount={initialBuyAmount}
         tokenSymbol={coinTickerValue}
-        usdtShouldPay={usdtShouldPay}
+        usdtShouldPay={buyAmount}
         tokenWillReceive={tokenWillReceive}
         coinType={coinType}
         setCoinType={setCoinType}
