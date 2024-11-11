@@ -24,7 +24,7 @@ const FILTER_TERMINAL = [
     icon: TrendUpIcon,
   },
   {
-    label: "Created coins",
+    label: "Created tokens",
     value: "created",
     icon: DollarCircleUpIcon,
   },

@@ -147,7 +147,6 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
     return BigNumber(tokenThreshold).minus(tokenDetailSC?.tokensSold || "0");
   }, [tokenDetailSC]);
 
-  console.log({ availableToken: availableToken.toString() });
   const isExceedAvailableToken = useMemo(() => {
     return (
       coinType === ECoinType.MemeCoin &&
