@@ -50,22 +50,31 @@ const TokenDetailPage = () => {
   }, [tokenDetail?.id, accessToken]);
 
   useEffect(() => {
+    let timeoutId: NodeJS.Timeout;
+
+    const delayedRefetch = () => {
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        refetchDetail();
+      }, 1000);
+    };
+
     if (isConnected) {
       addEvent(ESocketEvent.BUY, (data: ISocketData) => {
         if (data.data.tokenAddress === tokenDetail?.contractAddress) {
           console.log("buy token event");
-          refetchDetail();
+          delayedRefetch();
         }
       });
       addEvent(ESocketEvent.SELL, (data: ISocketData) => {
         if (data.data.tokenAddress === tokenDetail?.contractAddress) {
           console.log("sell token event");
-          refetchDetail();
+          delayedRefetch();
         }
       });
       addEvent(ESocketEvent.CREATE_TOKEN, (data: ISocketData) => {
         console.log("create token event");
-        refetchDetail();
+        delayedRefetch();
       });
     }
     return () => {
