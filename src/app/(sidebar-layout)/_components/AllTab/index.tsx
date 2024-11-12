@@ -267,7 +267,9 @@ const AllTab = () => {
       {isPending ? (
         <Spin />
       ) : !tokenList?.length && !isPending ? (
-        <NoData></NoData>
+        <div className="mt-14">
+          <NoData></NoData>
+        </div>
       ) : (
         <div>
           <div className="grid xl:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-6 my-9">
