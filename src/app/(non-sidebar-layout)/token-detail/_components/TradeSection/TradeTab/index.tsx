@@ -16,6 +16,7 @@ import {
   TOKEN_DECIMAL,
   USDT_DECIMAL,
   USDT_THRESHOLD,
+  USDT_THRESHOLD_WITH_FEE,
 } from "@/constant";
 import { envs } from "@/constant/envs";
 import { REGEX_INPUT_DECIMAL } from "@/constant/regex";
@@ -160,8 +161,11 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
       if (isTokenMint) {
         return isExceedAvailableToken ? USDT_THRESHOLD : buyAmountIn;
       } else {
-        const usdtShouldPay = calculateUsdtShouldPay(amountValue);
-        return BigNumber(usdtShouldPay).lt(0) ? USDT_THRESHOLD : usdtShouldPay;
+        const calculatedUsdtShouldPay = calculateUsdtShouldPay(amountValue);
+        return BigNumber(calculatedUsdtShouldPay).lt(0) ||
+          !BigNumber(calculatedUsdtShouldPay).isFinite()
+          ? USDT_THRESHOLD_WITH_FEE.toString()
+          : calculatedUsdtShouldPay;
       }
     } else {
       return "";
@@ -173,7 +177,15 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
       if (isTokenMint) {
         return buyAmountOut;
       } else {
-        return calculateTokenReceive(amountValue);
+        const calculatedTokenWillReceive = calculateTokenReceive(amountValue);
+
+        const maxTokenWillReceive = calculateTokenReceive(
+          USDT_THRESHOLD_WITH_FEE.toString()
+        );
+
+        return BigNumber(amountValue).gt(USDT_THRESHOLD_WITH_FEE)
+          ? maxTokenWillReceive
+          : calculatedTokenWillReceive;
       }
     } else {
       return "";
@@ -182,11 +194,7 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
 
   const usdtAmount =
     coinType === ECoinType.MemeCoin
-      ? BigNumber(usdtShouldPay)
-          .multipliedBy(USDT_DECIMAL)
-          .integerValue(BigNumber.ROUND_CEIL)
-          .dividedBy(USDT_DECIMAL)
-          .toFixed(6)
+      ? BigNumber(usdtShouldPay).toFixed(6, BigNumber.ROUND_CEIL)
       : amountValue;
 
   const isDisableBuyButton =

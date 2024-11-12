@@ -19,7 +19,7 @@ export const TOKEN_DECIMAL = 1e18;
 
 export const USDT_THRESHOLD = 12000;
 
-export const USDT_THRESHOLD_FOR_BUY_EXACT_IN = 13000;
+export const USDT_THRESHOLD_WITH_FEE = 12120;
 
 export const PREDEFINE_AMOUNT = ["05", "10", "20", "50", "100"];
 

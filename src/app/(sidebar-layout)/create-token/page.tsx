@@ -12,7 +12,7 @@ import {
   ACCEPT_IMAGE_EXTENSION,
   AMOUNT_FIELD_NAME,
   USDT_DECIMAL,
-  USDT_THRESHOLD,
+  USDT_THRESHOLD_WITH_FEE,
 } from "@/constant";
 import { API_PATH } from "@/constant/api-path";
 import { envs } from "@/constant/envs";
@@ -140,18 +140,34 @@ const CreateTokenPage = () => {
   //     ? calculateUsdtShouldPay(initialBuyAmount)
   //     : "";
 
-  const tokenWillReceive =
-    coinType === ECoinType.StableCoin && initialBuyAmount
-      ? calculateTokenReceive(initialBuyAmount)
-      : "";
+  // const tokenWillReceive =
+  //   coinType === ECoinType.StableCoin && initialBuyAmount
+  //     ? calculateTokenReceive(initialBuyAmount)
+  //     : "";
+
+  const tokenWillReceive = useMemo(() => {
+    if (coinType === ECoinType.StableCoin && initialBuyAmount) {
+      const calculatedTokenWillReceive =
+        calculateTokenReceive(initialBuyAmount);
+
+      const maxTokenWillReceive = calculateTokenReceive(
+        USDT_THRESHOLD_WITH_FEE.toString()
+      );
+
+      return BigNumber(initialBuyAmount).gt(USDT_THRESHOLD_WITH_FEE)
+        ? maxTokenWillReceive
+        : calculatedTokenWillReceive;
+    }
+    return "";
+  }, [coinType, initialBuyAmount]);
 
   const usdtShouldPay = useMemo(() => {
     if (coinType === ECoinType.MemeCoin && initialBuyAmount) {
       const calculatedUsdtShouldPay = calculateUsdtShouldPay(initialBuyAmount);
-      return BigNumber(calculatedUsdtShouldPay).gt(0) &&
-        BigNumber(calculatedUsdtShouldPay).isFinite()
-        ? calculatedUsdtShouldPay
-        : USDT_THRESHOLD.toString();
+      return BigNumber(calculatedUsdtShouldPay).lt(0) ||
+        !BigNumber(calculatedUsdtShouldPay).isFinite()
+        ? USDT_THRESHOLD_WITH_FEE.toString()
+        : calculatedUsdtShouldPay;
     }
     return "";
   }, [coinType, initialBuyAmount]);
