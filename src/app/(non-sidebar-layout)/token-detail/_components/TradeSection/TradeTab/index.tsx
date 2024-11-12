@@ -194,7 +194,7 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
 
   const usdtAmount =
     coinType === ECoinType.MemeCoin
-      ? BigNumber(usdtShouldPay).toFixed(6, BigNumber.ROUND_CEIL)
+      ? BigNumber(usdtShouldPay).toFixed(6, BigNumber.ROUND_DOWN)
       : amountValue;
 
   const isDisableBuyButton =
