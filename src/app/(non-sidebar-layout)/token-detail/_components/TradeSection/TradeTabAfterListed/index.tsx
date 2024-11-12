@@ -44,6 +44,7 @@ import Image from "next/image";
 import { useContext, useEffect, useMemo, useState } from "react";
 import { useReadContract } from "wagmi";
 import { TabKey, useTradeSettings } from "..";
+import { routerContractV2ABI } from "@/abi/routerContractV2";
 
 export const SETTINGS_FIELD_NAMES = {
   FONT_RUNNING: "fontRunning",
@@ -120,7 +121,10 @@ const TradeTabAfterListed = ({ tabKey }: { tabKey: TabKey }) => {
   const USDTContract = useContract(usdtABI, usdtAddress as string);
   const MemeTokenContract = useContract(usdtABI, memeTokenAddress as string);
 
-  const routerContract = useContract(routerContactAbi, CONTRACT_ROUTER);
+  const routerContract = useContract(
+    envs.MODE === "development" ? routerContactAbi : routerContractV2ABI,
+    CONTRACT_ROUTER
+  );
 
   const amountValue = useWatch(AMOUNT_FIELD_NAME, form);
 
@@ -378,20 +382,41 @@ const TradeTabAfterListed = ({ tabKey }: { tabKey: TabKey }) => {
     );
 
     try {
-      const tx =
-        await contract?.swapExactTokensForTokensSupportingFeeOnTransferTokens(
-          swapAmount,
-          BigNumber(minTokenOut)
-            .multipliedBy(tabKey === TabKey.BUY ? TOKEN_DECIMAL : USDT_DECIMAL)
-            .toFixed(0),
-          path,
-          address,
-          address,
-          9999999999999,
-          {
-            gasLimit: gasLimit || undefined,
-          }
-        );
+      let tx;
+      if (envs.MODE === "development") {
+        tx =
+          await contract?.swapExactTokensForTokensSupportingFeeOnTransferTokens(
+            swapAmount,
+            BigNumber(minTokenOut)
+              .multipliedBy(
+                tabKey === TabKey.BUY ? TOKEN_DECIMAL : USDT_DECIMAL
+              )
+              .toFixed(0),
+            path,
+            address,
+            address,
+            9999999999999,
+            {
+              gasLimit: gasLimit || undefined,
+            }
+          );
+      } else {
+        tx =
+          await contract?.swapExactTokensForTokensSupportingFeeOnTransferTokens(
+            swapAmount,
+            BigNumber(minTokenOut)
+              .multipliedBy(
+                tabKey === TabKey.BUY ? TOKEN_DECIMAL : USDT_DECIMAL
+              )
+              .toFixed(0),
+            path,
+            address,
+            9999999999999,
+            {
+              gasLimit: gasLimit || undefined,
+            }
+          );
+      }
 
       await tx.wait();
       const txHash = tx?.hash;

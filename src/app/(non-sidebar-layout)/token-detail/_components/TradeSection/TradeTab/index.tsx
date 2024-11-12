@@ -115,6 +115,28 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
 
   const amountValue = useWatch(AMOUNT_FIELD_NAME, form);
 
+  const availableToken = useMemo(() => {
+    const tokenThreshold = calculateTokenReceiveWithoutFee(
+      USDT_THRESHOLD.toString()
+    );
+    return BigNumber(tokenThreshold).minus(tokenDetailSC?.tokensSold || "0");
+  }, [tokenDetailSC]);
+
+  console.log("availableToken", availableToken.toString());
+
+  const isExceedAvailableToken = useMemo(() => {
+    if (coinType === ECoinType.MemeCoin) {
+      return BigNumber(amountValue).gt(availableToken);
+    } else {
+      const usdtShouldPayForRemainToken = calculateUsdtShouldPay(
+        availableToken.toString()
+      );
+      return BigNumber(amountValue).gt(usdtShouldPayForRemainToken);
+    }
+  }, [amountValue, availableToken, coinType]);
+
+  console.log("isExceedAvailableToken", isExceedAvailableToken);
+
   const { amount: buyAmountOut } = useCalculateAmount({
     contractAddress: tokenDetail?.contractAddress,
     value: amountValue,
@@ -126,7 +148,9 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
 
   const { amount: buyAmountIn } = useCalculateAmount({
     contractAddress: tokenDetail?.contractAddress,
-    value: amountValue,
+    value: isExceedAvailableToken
+      ? BigNumber(availableToken).toFixed(6, BigNumber.ROUND_DOWN)
+      : amountValue,
     decimalIn: TOKEN_DECIMAL,
     decimalOut: USDT_DECIMAL,
     functionName: "calculateBuyAmountIn",
@@ -142,24 +166,11 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
     coinType: coinType,
   });
 
-  const availableToken = useMemo(() => {
-    const tokenThreshold = calculateTokenReceiveWithoutFee(
-      USDT_THRESHOLD.toString()
-    );
-    return BigNumber(tokenThreshold).minus(tokenDetailSC?.tokensSold || "0");
-  }, [tokenDetailSC]);
-
-  const isExceedAvailableToken = useMemo(() => {
-    return (
-      coinType === ECoinType.MemeCoin &&
-      BigNumber(amountValue).gt(availableToken)
-    );
-  }, [amountValue, availableToken, coinType]);
-
   const usdtShouldPay: any = useMemo(() => {
     if (amountValue && coinType === ECoinType.MemeCoin) {
       if (isTokenMint) {
-        return isExceedAvailableToken ? USDT_THRESHOLD : buyAmountIn;
+        return buyAmountIn;
+        // return isExceedAvailableToken ? USDT_THRESHOLD : buyAmountIn;
       } else {
         const calculatedUsdtShouldPay = calculateUsdtShouldPay(amountValue);
         return BigNumber(calculatedUsdtShouldPay).lt(0) ||
@@ -175,7 +186,9 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
   const tokenWillReceive: any = useMemo(() => {
     if (amountValue && coinType === ECoinType.StableCoin) {
       if (isTokenMint) {
-        return buyAmountOut;
+        return isExceedAvailableToken
+          ? BigNumber(availableToken).toFixed(6, BigNumber.ROUND_DOWN)
+          : buyAmountOut;
       } else {
         const calculatedTokenWillReceive = calculateTokenReceive(amountValue);
 
@@ -190,7 +203,14 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
     } else {
       return "";
     }
-  }, [amountValue, buyAmountOut, isTokenMint, coinType]);
+  }, [
+    amountValue,
+    buyAmountOut,
+    isTokenMint,
+    coinType,
+    isExceedAvailableToken,
+    availableToken,
+  ]);
 
   const usdtAmount =
     coinType === ECoinType.MemeCoin
@@ -599,13 +619,13 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
       return;
     }
 
-    if (e?.reason === ErrorCode.SLIPPAGE_ERROR) {
-      error({
-        message:
-          "The transaction is cancelled due to the price goes out of the slippage range",
-      });
-      return;
-    }
+    // if (e?.reason === ErrorCode.SLIPPAGE_ERROR) {
+    //   error({
+    //     message:
+    //       "The transaction is cancelled due to the price goes out of the slippage range",
+    //   });
+    //   return;
+    // }
 
     if (e?.reason === ErrorCode.TOKEN_ALREADY_MINTED) {
       error({
