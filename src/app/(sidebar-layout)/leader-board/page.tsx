@@ -21,6 +21,7 @@ import { useAppSelector } from "@/libs/hooks";
 import { getAPI } from "@/service";
 import {
   ImageDefaultIcon,
+  Top1Png,
   TopLeaderBoardIcon,
   UserTop1,
   UserTop2,
@@ -261,7 +262,7 @@ const LeaderboardPage = () => {
           )}
           {!isMobile && leaderboardRes?.length > 0 && (
             <TopUser
-              image={UserTop1}
+              image={Top1Png}
               top1={true}
               className="!bg-gradient-to-b from-[var(--color-top-1-from)] to-[var(--color-top-1-to)]"
               data={leaderboardRes[0]}
