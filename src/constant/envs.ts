@@ -9,4 +9,5 @@ export const envs = {
   RAINDROP_URL: process.env.NEXT_PUBLIC_RAINDROP_URL!,
   X_URL: process.env.NEXT_PUBLIC_X_URL!,
   DISCORD_URL: process.env.NEXT_PUBLIC_DISCORD_URL!,
+  MODE: process.env.NEXT_PUBLIC_MODE!,
 };

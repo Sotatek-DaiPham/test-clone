@@ -84,6 +84,7 @@ export interface ITradeHistoryRes {
   username: string;
   user_avatar: string | null;
   txh: string;
+  timestamp_created: string;
 }
 
 export interface IGetTradeHistoryParams {

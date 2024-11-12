@@ -177,10 +177,10 @@ const TradeHistory = () => {
           />
         </div>
       ),
-      dataIndex: "created_at",
-      key: "created_at",
+      dataIndex: "timestamp_created",
+      key: "timestamp_created",
       render(value, record, index) {
-        return <div>{getTimeDDMMMYYYYHHMM(value)}</div>;
+        return <div>{getTimeDDMMMYYYYHHMM(Number(value))}</div>;
       },
     },
     {
