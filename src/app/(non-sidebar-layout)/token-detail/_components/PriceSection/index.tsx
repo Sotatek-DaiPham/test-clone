@@ -19,11 +19,14 @@ const PriceSection = () => {
 
   const tokenInfo = useMemo(() => {
     if (tokenDetail && tokenDetailSC) {
-      const tokenPrice = BigNumber(tokenDetailSC?.usdtVirtualReserve)
-        .div(tokenDetailSC?.tokenVirtualReserve)
-        .toString();
-      const marketCap = BigNumber(tokenDetail.price)
-        .multipliedBy(BigNumber(tokenDetail.total_supply).div(TOKEN_DECIMAL))
+      const tokenPrice = BigNumber(tokenDetail?.price).div(USDT_DECIMAL);
+
+      const tokenTotalSupply = BigNumber(tokenDetail.total_supply).div(
+        TOKEN_DECIMAL
+      );
+
+      const marketCap = BigNumber(tokenPrice)
+        .multipliedBy(tokenTotalSupply)
         .toString();
       const volume = BigNumber(tokenDetail.volume).div(USDT_DECIMAL).toString();
       const raisedAmount = tokenDetailSC.usdtRaised;
