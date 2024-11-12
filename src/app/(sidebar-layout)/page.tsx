@@ -63,7 +63,7 @@ const HowItWorkMain = ({ onClick }: { onClick: (show: boolean) => void }) => {
               customClass="!rounded-3xl !w-fit px-8 py-6 mx-auto"
               classChildren="!text-neutral-1 !text-16px-bold"
             >
-              How it works?
+              How It Works?
             </AppButton>
           </div>
           <Image
@@ -89,13 +89,13 @@ export default function Home() {
   const { accessToken } = useWalletAuth();
   const { searchParams, setSearchParams } = useAppSearchParams("terminal");
   const {
-    searchParams: howItsWork,
+    searchParams: howItWorks,
     setSearchParams: setSearchParamsHowItsWork,
-  } = useAppSearchParams("howItsWork");
+  } = useAppSearchParams("howItWorks");
 
   const [activeTab, setActiveTab] = useState<string>(ETabsTerminal.ALL);
   const [isShowModal, setIsShowModal] = useState<boolean>(
-    Boolean(howItsWork?.["how-its-work"]) || false
+    Boolean(howItWorks?.["how-it-works"]) || false
   );
   const { isMobile } = useWindowSize();
 
@@ -234,7 +234,7 @@ export default function Home() {
                   customClass="!rounded-3xl !w-fit sm:mb-2 sm:!p-6 !px-3"
                   classChildren="!text-neutral-1 !text-14px-bold"
                 >
-                  How it works?
+                  How It Works?
                 </AppButton>
               </div>
               <div className="col-span-1 relative">
