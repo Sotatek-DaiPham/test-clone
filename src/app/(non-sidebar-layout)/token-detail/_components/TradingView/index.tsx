@@ -58,16 +58,28 @@ async function getData({ resolution, tokenAddress, endTime }: IDataChart) {
   const bars: any = dataTradingView.map((bar: any) => ({
     time: bar.startTimeFrame,
     close: parseFloat(
-      new BigNumber(bar.close).div(new BigNumber(10).pow(6))?.toString()
+      new BigNumber(bar.close)
+        .div(new BigNumber(10).pow(6))
+        .toFixed(8, BigNumber.ROUND_DOWN)
+        ?.toString()
     ),
     open: parseFloat(
-      new BigNumber(bar.open).div(new BigNumber(10).pow(6))?.toString()
+      new BigNumber(bar.open)
+        .div(new BigNumber(10).pow(6))
+        .toFixed(8, BigNumber.ROUND_DOWN)
+        ?.toString()
     ),
     high: parseFloat(
-      new BigNumber(bar.high).div(new BigNumber(10).pow(6))?.toString()
+      new BigNumber(bar.high)
+        .div(new BigNumber(10).pow(6))
+        .toFixed(8, BigNumber.ROUND_DOWN)
+        ?.toString()
     ),
     low: parseFloat(
-      new BigNumber(bar.low).div(new BigNumber(10).pow(6))?.toString()
+      new BigNumber(bar.low)
+        .div(new BigNumber(10).pow(6))
+        .toFixed(8, BigNumber.ROUND_DOWN)
+        ?.toString()
     ),
     volume: parseFloat(
       new BigNumber(bar.volume).div(new BigNumber(10).pow(6))?.toString()

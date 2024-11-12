@@ -23,7 +23,7 @@ import { useQuery } from "@tanstack/react-query";
 import { Spin } from "antd";
 import { AxiosResponse } from "axios";
 import { get } from "lodash";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import FilterTerminal from "../FilterTerminal";
 import ProjectCard from "../ProjectCard";
 
@@ -169,33 +169,36 @@ const AllTab = () => {
 
   const debounceSearch = useDebounce(search);
 
+  const paramsAPI = useMemo(() => {
+    return {
+      ...params,
+      keyword: debounceSearch?.trim() || null,
+      typeFilterAge: getAgeType(searchParams?.age) || null,
+      age: getAge(searchParams?.age) || null,
+      minProgress: searchParams?.minProgress || null,
+      maxProgress: searchParams?.maxProgress || null,
+      mainFilterToken:
+        searchParams?.filter === "top" && searchParams?.top === "volume"
+          ? "TOP_VOLUME"
+          : searchParams.top === "txns"
+          ? "TOP_TRANSACTION"
+          : searchParams?.filter?.toUpperCase() || "TRENDING",
+    };
+  }, [
+    params,
+    debounceSearch,
+    searchParams.filter,
+    searchParams.top,
+    searchParams.age,
+    searchParams.minProgress,
+    searchParams.maxProgress,
+  ]);
+
   const { data, isPending, isError, refetch } = useQuery({
-    queryKey: [
-      "all-tab",
-      params,
-      debounceSearch,
-      searchParams.filter,
-      searchParams.top,
-      searchParams.age,
-      searchParams.minProgress,
-      searchParams.maxProgress,
-    ],
+    queryKey: ["all-tab", paramsAPI],
     queryFn: async () => {
       return getAPI(API_PATH.TOKEN.LIST, {
-        params: {
-          ...params,
-          keyword: debounceSearch?.trim() || null,
-          typeFilterAge: getAgeType(searchParams?.age) || null,
-          age: getAge(searchParams?.age) || null,
-          minProgress: searchParams?.minProgress || null,
-          maxProgress: searchParams?.maxProgress || null,
-          mainFilterToken:
-            searchParams?.filter === "top" && searchParams?.top === "volume"
-              ? "TOP_VOLUME"
-              : searchParams.top === "txns"
-              ? "TOP_TRANSACTION"
-              : searchParams?.filter?.toUpperCase() || "TRENDING",
-        },
+        params: { ...paramsAPI },
       }) as Promise<
         AxiosResponse<BeSuccessResponse<ITokenDashboardResponse[]>, any>
       >;

@@ -1,12 +1,22 @@
+import { API_PATH } from "@/constant/api-path";
+import { MyProfileResponse } from "@/entities/my-profile";
+import { BeSuccessResponse } from "@/entities/response";
 import { nFormatterVer2 } from "@/helpers/formatNumber";
 import { shortenAddress } from "@/helpers/shorten";
 import useWalletAuth from "@/hooks/useWalletAuth";
+import { useAppSelector } from "@/libs/hooks";
 import { useAccountModal } from "@/providers/WagmiProvider";
+import { getAPI } from "@/service";
+import { useQuery } from "@tanstack/react-query";
 import { Modal, ModalProps } from "antd";
+import { AxiosResponse } from "axios";
+import get from "lodash/get";
 import Image from "next/image";
 import { useState } from "react";
 import { useAccount } from "wagmi";
 import "./styles.scss";
+import AppImage from "@/components/app-image";
+import { ImageDefaultIcon } from "@public/assets";
 
 interface IAccountModal extends ModalProps {
   onClose: () => void;
@@ -17,6 +27,17 @@ const AccountModal = ({ onClose, ...props }: IAccountModal) => {
   const { address } = useAccount();
   const { userBalance } = useAccountModal();
   const { logout } = useWalletAuth();
+  const { data } = useQuery({
+    queryKey: ["my-profile"],
+    queryFn: async () => {
+      return getAPI(API_PATH.USER.PROFILE(address as string)) as Promise<
+        AxiosResponse<BeSuccessResponse<MyProfileResponse>, any>
+      >;
+    },
+    enabled: true,
+  });
+
+  const myProfile = get(data, "data.data", {}) as MyProfileResponse;
 
   const handleCopy = () => {
     if (isCopied) {
@@ -67,13 +88,23 @@ const AccountModal = ({ onClose, ...props }: IAccountModal) => {
       </button>
 
       <div className="account-modal__info">
-        <Image
-          src="https://nft-ticket-the-bucket.s3.ap-southeast-1.amazonaws.com/images/1d117d1338-t%C3%A1%C2%BA%C2%A3i%20xu%C3%A1%C2%BB%C2%91ng.png"
-          alt="avatar"
-          width={74}
-          height={74}
-          className="rounded-full object-cover"
-        />
+        {myProfile?.avatar ? (
+          <AppImage
+            src={myProfile?.avatar}
+            alt="avatar"
+            width={74}
+            height={74}
+            className="rounded-full object-cover"
+          />
+        ) : (
+          <Image
+            src={ImageDefaultIcon}
+            alt="avatar"
+            width={74}
+            height={74}
+            className="rounded-full object-cover"
+          />
+        )}
         <div>
           <div className="address text-white-neutral font-[600] text-center text-[18px] leading-[24px]">
             <span>{shortenAddress(address || "", 4, -4)}</span>

@@ -13,9 +13,16 @@ import { DollarCircleUpIcon, TrendUpIcon } from "@public/assets";
 import { Spin } from "antd";
 import get from "lodash/get";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useState,
+} from "react";
 import FilterTerminal from "../FilterTerminal";
 import ProjectCard from "../ProjectCard";
+import { debounce } from "lodash";
 
 const FILTER_TERMINAL = [
   {
@@ -45,68 +52,73 @@ const FollowingTab = () => {
 
   const debounceSearch = useDebounce(search);
 
-  const fetchActivityTab = async () => {
-    setIsPending(true);
-    const response = await getAPI(API_PATH.TRADING.ACTIVITY, {
-      params: {
-        ...params,
-        orderBy: "createdAt",
-        direction: EDirection.DESC,
-        keyword: debounceSearch?.trim() || null,
-      },
-    })
-      .then((data) => {
-        setIsPending(false);
-        return data;
-      })
-      .catch(() => {
-        setIsPending(false);
-      });
-    const tokenList = get(
-      response,
-      "data.data",
-      []
-    ) as ITokenDashboardResponse[];
-    const total = get(response, "data.metadata.total", 0) as number;
-    setData(tokenList);
-    setTotal(total);
-  };
+  const paramsAPI = useMemo(() => {
+    return {
+      ...params,
+      orderBy: "createdAt",
+      direction: EDirection.DESC,
+      keyword: debounceSearch?.trim() || null,
+    };
+  }, [debounceSearch, params]);
 
-  const fetchCreatedTab = async () => {
-    setIsPending(true);
-    const response = await getAPI(API_PATH.TOKEN.FOLLOWING_TOKEN_CREATED, {
-      params: {
-        ...params,
-        orderBy: "createdAt",
-        direction: EDirection.DESC,
-        keyword: debounceSearch?.trim() || null,
-      },
-    })
-      .then((data) => {
-        setIsPending(false);
-        return data;
+  const fetchActivityTab = useCallback(async () => {
+    try {
+      setIsPending(true);
+      await getAPI(API_PATH.TRADING.ACTIVITY, {
+        params: {
+          ...paramsAPI,
+        },
       })
-      .catch(() => {
-        setIsPending(false);
-      });
-    const tokenList = get(
-      response,
-      "data.data",
-      []
-    ) as ITokenDashboardResponse[];
-    const total = get(response, "data.metadata.total", 0) as number;
-    setData(tokenList);
-    setTotal(total);
-  };
+        .then((data) => {
+          setIsPending(false);
+          const tokenList = get(
+            data,
+            "data.data",
+            []
+          ) as ITokenDashboardResponse[];
+          const total = get(data, "data.metadata.total", 0) as number;
+          setData(tokenList);
+          setTotal(total);
+        })
+        .catch(() => {
+          setIsPending(false);
+        });
+    } catch (error) {}
+  }, [debounceSearch?.trim()]);
 
-  useEffect(() => {
+  const fetchCreatedTab = useCallback(async () => {
+    try {
+      setIsPending(true);
+      await getAPI(API_PATH.TOKEN.FOLLOWING_TOKEN_CREATED, {
+        params: {
+          ...paramsAPI,
+        },
+      })
+        .then((data) => {
+          setIsPending(false);
+          const tokenList = get(
+            data,
+            "data.data",
+            []
+          ) as ITokenDashboardResponse[];
+          const total = get(data, "data.metadata.total", 0) as number;
+          setData(tokenList);
+          setTotal(total);
+        })
+        .catch(() => {
+          setIsPending(false);
+        });
+    } catch (error) {}
+  }, [debounceSearch?.trim()]);
+
+  useLayoutEffect(() => {
     if (searchParams?.filter === "created") {
       fetchCreatedTab();
     }
     if (searchParams?.filter === "activity") {
       fetchActivityTab();
     }
-  }, [searchParams?.filter, debounceSearch, params]);
+  }, [searchParams?.filter, fetchCreatedTab, fetchActivityTab]);
 
   const handleClickFilter = useCallback(
     (value: any, queryKey: string) => {
