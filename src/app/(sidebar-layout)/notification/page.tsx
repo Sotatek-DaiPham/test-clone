@@ -10,7 +10,7 @@ import { PATH_ROUTER } from "@/constant/router";
 import { Information, INotificationResponse } from "@/entities/notification";
 import { BeSuccessResponse } from "@/entities/response";
 import { getTimeDDMMMYYYYHHMM } from "@/helpers/date-time";
-import { convertNumber, formatAmount } from "@/helpers/formatNumber";
+import { convertNumber, nFormatter } from "@/helpers/formatNumber";
 import isAuth from "@/helpers/isAuth";
 import useDebounce from "@/hooks/useDebounce";
 import useWindowSize from "@/hooks/useWindowSize";
@@ -30,7 +30,7 @@ const checkType = (type: string, data: Information) => {
         <>
           <span className="text-success-main mr-2">Bought</span>
           <span className="text-neutral-9">
-            {formatAmount(
+            {nFormatter(
               convertNumber(data?.amount, get(data, "token.decimal", 0))
             )}
           </span>
@@ -46,7 +46,7 @@ const checkType = (type: string, data: Information) => {
         <>
           <span className="text-error-main mr-2">Sold</span>
           <span className="text-neutral-9">
-            {formatAmount(
+            {nFormatter(
               convertNumber(data?.amount, get(data, "token.decimal", 0))
             )}
             &nbsp;Of&nbsp;
