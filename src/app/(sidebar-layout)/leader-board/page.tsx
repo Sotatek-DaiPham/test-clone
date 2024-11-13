@@ -21,11 +21,11 @@ import { useAppSelector } from "@/libs/hooks";
 import { getAPI } from "@/service";
 import {
   ImageDefaultIcon,
-  Top1Png,
+  Top1Webp,
   TopLeaderBoardIcon,
   UserTop1,
   UserTop2,
-  UserTop3,
+  UserTop3
 } from "@public/assets";
 import { useQuery } from "@tanstack/react-query";
 import { Spin } from "antd";
@@ -247,7 +247,7 @@ const LeaderboardPage = () => {
         <div className="grid sm:grid-cols-3 grid-cols-1 gap-6 mb-6">
           {isMobile && leaderboardRes?.length > 0 && (
             <TopUser
-              image={UserTop1}
+              image={Top1Webp}
               top1={true}
               className="!bg-gradient-to-b from-[var(--color-top-1-from)] to-[var(--color-top-1-to)]"
               data={leaderboardRes[0]}
@@ -262,7 +262,7 @@ const LeaderboardPage = () => {
           )}
           {!isMobile && leaderboardRes?.length > 0 && (
             <TopUser
-              image={Top1Png}
+              image={UserTop1}
               top1={true}
               className="!bg-gradient-to-b from-[var(--color-top-1-from)] to-[var(--color-top-1-to)]"
               data={leaderboardRes[0]}

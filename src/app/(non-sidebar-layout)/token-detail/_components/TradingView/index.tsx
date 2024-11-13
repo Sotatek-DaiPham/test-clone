@@ -42,6 +42,11 @@ interface IDataChart {
   tokenAddress: string;
   endTime?: number;
 }
+
+BigNumber.config({
+  ROUNDING_MODE: BigNumber.ROUND_DOWN,
+});
+
 async function getData({ resolution, tokenAddress, endTime }: IDataChart) {
   if (!tokenAddress) return [];
   const intervalInSeconds = getInterval(resolution) * 60 * 1000;
@@ -58,28 +63,16 @@ async function getData({ resolution, tokenAddress, endTime }: IDataChart) {
   const bars: any = dataTradingView.map((bar: any) => ({
     time: bar.startTimeFrame,
     close: parseFloat(
-      new BigNumber(bar.close)
-        .div(new BigNumber(10).pow(6))
-        .toFixed(8, BigNumber.ROUND_DOWN)
-        ?.toString()
+      new BigNumber(bar.close).div(new BigNumber(10).pow(6))?.toString()
     ),
     open: parseFloat(
-      new BigNumber(bar.open)
-        .div(new BigNumber(10).pow(6))
-        .toFixed(8, BigNumber.ROUND_DOWN)
-        ?.toString()
+      new BigNumber(bar.open).div(new BigNumber(10).pow(6))?.toString()
     ),
     high: parseFloat(
-      new BigNumber(bar.high)
-        .div(new BigNumber(10).pow(6))
-        .toFixed(8, BigNumber.ROUND_DOWN)
-        ?.toString()
+      new BigNumber(bar.high).div(new BigNumber(10).pow(6))?.toString()
     ),
     low: parseFloat(
-      new BigNumber(bar.low)
-        .div(new BigNumber(10).pow(6))
-        .toFixed(8, BigNumber.ROUND_DOWN)
-        ?.toString()
+      new BigNumber(bar.low).div(new BigNumber(10).pow(6))?.toString()
     ),
     volume: parseFloat(
       new BigNumber(bar.volume).div(new BigNumber(10).pow(6))?.toString()

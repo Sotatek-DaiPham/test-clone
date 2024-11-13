@@ -15,10 +15,12 @@ import isAuth from "@/helpers/isAuth";
 import useDebounce from "@/hooks/useDebounce";
 import useWindowSize from "@/hooks/useWindowSize";
 import { getAPI } from "@/service";
+import { ImageDefaultIcon } from "@public/assets";
 import { useQuery } from "@tanstack/react-query";
 import { Spin } from "antd";
 import { AxiosResponse } from "axios";
 import { get } from "lodash";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import TabTitle from "../_components/TabTitle";
@@ -31,14 +33,23 @@ const checkType = (type: string, data: Information) => {
           <span className="text-success-main mr-2">Bought</span>
           <span className="text-neutral-9">
             {nFormatter(
-              convertNumber(data?.amount, get(data, "token.decimal", 0))
+              convertNumber(data?.amount, get(data, "token.decimal", 0)),
+              2
             )}
           </span>
-          <AppImage
-            src={get(data, "token.avatar", "")}
-            className="w-[24px] min-w-[24px] h-[24px] [&>img]:!object-cover rounded-full mx-2"
-          />
-          <span></span>
+          {get(data, "token.avatar", "") ? (
+            <AppImage
+              alt="avatar"
+              src={get(data, "token.avatar", "")}
+              className="w-[24px] min-w-[24px] h-[24px] [&>img]:!object-cover overflow-hidden rounded-full mx-2"
+            />
+          ) : (
+            <Image
+              alt="avatar"
+              src={ImageDefaultIcon}
+              className="w-[24px] min-w-[24px] h-[24px] [&>img]:!object-cover rounded-full mx-2"
+            />
+          )}
         </>
       );
     case EEventNoti.SELL:
@@ -47,14 +58,24 @@ const checkType = (type: string, data: Information) => {
           <span className="text-error-main mr-2">Sold</span>
           <span className="text-neutral-9">
             {nFormatter(
-              convertNumber(data?.amount, get(data, "token.decimal", 0))
+              convertNumber(data?.amount, get(data, "token.decimal", 0)),
+              2
             )}
             &nbsp;Of&nbsp;
           </span>
-          <AppImage
-            src={get(data, "token.avatar", "")}
-            className="w-[24px] min-w-[24px] h-[24px] [&>img]:!object-cover rounded-full mx-2"
-          />
+          {get(data, "token.avatar", "") ? (
+            <AppImage
+              alt="avatar"
+              src={get(data, "token.avatar", "")}
+              className="w-[24px] min-w-[24px] h-[24px] [&>img]:!object-cover overflow-hidden rounded-full mx-2"
+            />
+          ) : (
+            <Image
+              alt="avatar"
+              src={ImageDefaultIcon}
+              className="w-[24px] min-w-[24px] h-[24px] [&>img]:!object-cover rounded-full mx-2"
+            />
+          )}
         </>
       );
 
@@ -69,10 +90,19 @@ const checkType = (type: string, data: Information) => {
               ? "Listed"
               : "-"}
           </span>
-          <AppImage
-            src={get(data, "token.avatar", "")}
-            className="w-[24px] min-w-[24px] h-[24px] [&>img]:!object-cover rounded-full mx-2"
-          />
+          {get(data, "token.avatar", "") ? (
+            <AppImage
+              alt="avatar"
+              src={get(data, "token.avatar", "")}
+              className="w-[24px] min-w-[24px] h-[24px] [&>img]:!object-cover overflow-hidden rounded-full mx-2"
+            />
+          ) : (
+            <Image
+              alt="avatar"
+              src={ImageDefaultIcon}
+              className="w-[24px] min-w-[24px] h-[24px] [&>img]:!object-cover rounded-full mx-2"
+            />
+          )}
         </>
       );
     default:
