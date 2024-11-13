@@ -124,19 +124,6 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
 
   console.log("availableToken", availableToken.toString());
 
-  const isExceedAvailableToken = useMemo(() => {
-    if (coinType === ECoinType.MemeCoin) {
-      return BigNumber(amountValue).gt(availableToken);
-    } else {
-      const usdtShouldPayForRemainToken = calculateUsdtShouldPay(
-        availableToken.toString()
-      );
-      return BigNumber(amountValue).gt(usdtShouldPayForRemainToken);
-    }
-  }, [amountValue, availableToken, coinType]);
-
-  console.log("isExceedAvailableToken", isExceedAvailableToken);
-
   const { amount: buyAmountOut } = useCalculateAmount({
     contractAddress: tokenDetail?.contractAddress,
     value: amountValue,
@@ -145,6 +132,16 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
     functionName: "calculateBuyAmountOut",
     coinType: coinType,
   });
+
+  const isExceedAvailableToken = useMemo(() => {
+    if (coinType === ECoinType.MemeCoin) {
+      return BigNumber(amountValue).gt(availableToken);
+    } else {
+      return BigNumber(buyAmountOut).gt(availableToken);
+    }
+  }, [amountValue, availableToken, coinType, buyAmountOut]);
+
+  console.log("isExceedAvailableToken", isExceedAvailableToken);
 
   const { amount: buyAmountIn } = useCalculateAmount({
     contractAddress: tokenDetail?.contractAddress,
