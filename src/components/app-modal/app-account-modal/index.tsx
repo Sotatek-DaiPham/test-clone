@@ -94,7 +94,7 @@ const AccountModal = ({ onClose, ...props }: IAccountModal) => {
             alt="avatar"
             width={74}
             height={74}
-            className="rounded-full object-cover"
+            className="rounded-full [&>img]:!object-cover [&>img]:!w-full [&>img]:!h-full"
           />
         ) : (
           <Image
@@ -102,7 +102,7 @@ const AccountModal = ({ onClose, ...props }: IAccountModal) => {
             alt="avatar"
             width={74}
             height={74}
-            className="rounded-full [&>img]:!object-cover [&>img]:!w-full [&>img]:!h-full"
+            className="rounded-full object-cover"
           />
         )}
         <div>
