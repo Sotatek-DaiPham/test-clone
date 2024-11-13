@@ -89,3 +89,4 @@ export { default as LogoMobileIcon } from "./icons/logo-mobile.svg";
 export { default as Logo1Icon } from "./icons/logo1.png";
 export { default as DiscordIcon } from "./icons/discord-icon.svg";
 export { default as Top1Png } from "./icons/top1.png";
+export { default as Top1Webp } from "./icons/top1.webp";
