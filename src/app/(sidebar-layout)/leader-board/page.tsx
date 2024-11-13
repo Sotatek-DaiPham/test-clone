@@ -279,9 +279,7 @@ const LeaderboardPage = () => {
       )}
       <div
         className={`w-full flex sm:flex-row flex-col items-center ${
-          userId && !debounceSearch && myRankRes?.top
-            ? "justify-between"
-            : "justify-end"
+          userId && !debounceSearch ? "justify-between" : "justify-end"
         }`}
       >
         {userId && !debounceSearch && <MyTopLine data={myRankRes} />}

@@ -568,41 +568,7 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
   };
 
   const handleError = (e: any) => {
-    if (tabKey === TabKey.BUY) {
-      // const remainingUSDT = BigNumber(USDT_THRESHOLD).minus(
-      //   tokenDetailSC?.usdtRaised || "0"
-      // );
-
-      if (coinType === ECoinType.MemeCoin) {
-        // if (BigNumber(usdtShouldPay).gt(remainingUSDT)) {
-        //   error({
-        //     message: `There are no ${tokenDetail?.symbol} left for sale`,
-        //   });
-        //   return;
-        // }
-
-        if (BigNumber(userUSDTBalance).lt(usdtShouldPay)) {
-          error({
-            message: "Insufficient fee",
-          });
-          return;
-        }
-      } else {
-        // if (BigNumber(amountValue).gt(remainingUSDT)) {
-        //   error({
-        //     message: `There are no ${tokenDetail?.symbol} left for sale`,
-        //   });
-        //   return;
-        // }
-
-        if (BigNumber(userUSDTBalance).lt(amountValue)) {
-          error({
-            message: "Insufficient fee",
-          });
-          return;
-        }
-      }
-    } else {
+    if (tabKey === TabKey.SELL) {
       if (BigNumber(balance).lt(amountValue)) {
         error({
           message:
@@ -618,14 +584,6 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
       });
       return;
     }
-
-    // if (e?.reason === ErrorCode.SLIPPAGE_ERROR) {
-    //   error({
-    //     message:
-    //       "The transaction is cancelled due to the price goes out of the slippage range",
-    //   });
-    //   return;
-    // }
 
     if (e?.reason === ErrorCode.TOKEN_ALREADY_MINTED) {
       error({
@@ -645,6 +603,7 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
       error({
         message: "Transaction Error",
       });
+      return;
     }
   };
 
