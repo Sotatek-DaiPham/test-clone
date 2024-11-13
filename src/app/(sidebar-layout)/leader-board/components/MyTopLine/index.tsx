@@ -15,7 +15,7 @@ const showTotal = (data: any) => {
   if (!data.top) {
     return "0";
   } else if (Number(data.latestTimestamp) > Number(data.unixTimestamp)) {
-    return "0";
+    return nFormatter(convertNumber(data?.total, 6), 2);
   } else if (data.top) {
     return nFormatter(convertNumber(data?.total, 6), 2);
   } else return "-";
