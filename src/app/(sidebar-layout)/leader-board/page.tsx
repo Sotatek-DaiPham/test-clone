@@ -284,9 +284,7 @@ const LeaderboardPage = () => {
             : "justify-end"
         }`}
       >
-        {userId && !debounceSearch && myRankRes?.top && (
-          <MyTopLine top={myRankRes?.top} total={myRankRes?.total} />
-        )}
+        {userId && !debounceSearch && <MyTopLine data={myRankRes} />}
         <AppInput
           className="sm:!w-[400px] w-full h-[40px]"
           isSearch={true}
