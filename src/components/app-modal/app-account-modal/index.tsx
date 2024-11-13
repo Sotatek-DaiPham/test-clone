@@ -28,13 +28,13 @@ const AccountModal = ({ onClose, ...props }: IAccountModal) => {
   const { userBalance } = useAccountModal();
   const { logout } = useWalletAuth();
   const { data } = useQuery({
-    queryKey: ["my-profile"],
+    queryKey: ["my-profile", props.open],
     queryFn: async () => {
       return getAPI(API_PATH.USER.PROFILE(address as string)) as Promise<
         AxiosResponse<BeSuccessResponse<MyProfileResponse>, any>
       >;
     },
-    enabled: true,
+    enabled: props.open,
   });
 
   const myProfile = get(data, "data.data", {}) as MyProfileResponse;
@@ -102,7 +102,7 @@ const AccountModal = ({ onClose, ...props }: IAccountModal) => {
             alt="avatar"
             width={74}
             height={74}
-            className="rounded-full object-cover"
+            className="rounded-full [&>img]:!object-cover [&>img]:!w-full [&>img]:!h-full"
           />
         )}
         <div>

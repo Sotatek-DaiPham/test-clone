@@ -126,6 +126,7 @@ const TradeTabAfterListed = ({ tabKey }: { tabKey: TabKey }) => {
     CONTRACT_ROUTER
   );
 
+  console.log("mode", envs.MODE);
   const amountValue = useWatch(AMOUNT_FIELD_NAME, form);
 
   const { balance, refetch: refetchUserBalance } = useTokenBalance(
