@@ -29,15 +29,21 @@ const AppUpload = (props: AppUploadProps) => {
   const { isShowSuggest = true, className, variant = "primary" } = props;
   const handleChange = async (value: UploadChangeParam<UploadFile<any>>) => {
     const file = value.file;
-    try {
-      const fileUrl = await convertFileToBase64(file.originFileObj as File);
+    if (file.status === "uploading") {
+      return;
+    }
 
-      props?.onChange?.({
-        file: file.originFileObj as File,
-        src: fileUrl,
-      });
-    } catch (error) {
-      console.log("error", error);
+    if (file.status === "done") {
+      try {
+        const fileUrl = await convertFileToBase64(file.originFileObj as File);
+
+        props?.onChange?.({
+          file: file.originFileObj as File,
+          src: fileUrl,
+        });
+      } catch (error) {
+        console.log("error", error);
+      }
     }
   };
 
@@ -58,6 +64,11 @@ const AppUpload = (props: AppUploadProps) => {
         onChange={handleChange}
         accept={props.accept}
         disabled={props?.disabled}
+        customRequest={({ file, onSuccess }) => {
+          setTimeout(() => {
+            onSuccess && onSuccess("ok");
+          }, 0);
+        }}
       >
         {props.value?.src && variant === "primary" ? (
           <div
