@@ -81,8 +81,9 @@ const TokenDetailPage = () => {
       removeEvent(ESocketEvent.BUY);
       removeEvent(ESocketEvent.SELL);
       removeEvent(ESocketEvent.CREATE_TOKEN);
+      clearTimeout(timeoutId);
     };
-  }, [isConnected]);
+  }, [isConnected, tokenDetail?.contractAddress]);
 
   const handleNavigateBack = () => {
     if (typeof window !== "undefined" && window.history.length > 2) {
