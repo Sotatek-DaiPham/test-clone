@@ -16,16 +16,29 @@ export interface AppUploadProps {
   variant?: "primary" | "secondary";
 }
 
+const convertFileToBase64 = (file: File): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = (error) => reject(error);
+    reader.readAsDataURL(file);
+  });
+};
+
 const AppUpload = (props: AppUploadProps) => {
   const { isShowSuggest = true, className, variant = "primary" } = props;
-  const handleChange = (value: UploadChangeParam<UploadFile<any>>) => {
+  const handleChange = async (value: UploadChangeParam<UploadFile<any>>) => {
     const file = value.file;
-    const fileUrl = URL.createObjectURL(file.originFileObj as File);
+    try {
+      const fileUrl = await convertFileToBase64(file.originFileObj as File);
 
-    props?.onChange?.({
-      file: file.originFileObj as File,
-      src: fileUrl,
-    });
+      props?.onChange?.({
+        file: file.originFileObj as File,
+        src: fileUrl,
+      });
+    } catch (error) {
+      console.log("error", error);
+    }
   };
 
   const handleRemoveImage = (e: any) => {
