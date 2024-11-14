@@ -109,6 +109,8 @@ const TradeTabAfterListed = ({ tabKey }: { tabKey: TabKey }) => {
     args: [address, CONTRACT_ROUTER],
   });
 
+  console.log("memeTokenAllowance", memeTokenAllowance);
+
   const { data: usdtAllowance } = useReadContract({
     abi: usdtABI,
     address: usdtAddress as any,
@@ -439,8 +441,11 @@ const TradeTabAfterListed = ({ tabKey }: { tabKey: TabKey }) => {
   };
 
   const handleSellToken = async () => {
+    const memeTokenAllowanceConverted = BigNumber(
+      memeTokenAllowance as string
+    ).dividedBy(TOKEN_DECIMAL);
     const needApprove = BigNumber(amountValue).gt(
-      (memeTokenAllowance as string) ?? "0"
+      memeTokenAllowanceConverted ?? "0"
     );
 
     if (needApprove) {
