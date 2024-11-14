@@ -38,6 +38,9 @@ const EditProfileModal = ({ data, onOk, ...props }: IEditProfileModalProps) => {
       return postFormDataAPI(API_PATH.UPLOAD_IMAGE, payload);
     },
     mutationKey: ["upload-images"],
+    onError() {
+      error({ message: "Upload image failed" });
+    },
   });
 
   const { mutate: updateProfile, isPending } = useMutation({

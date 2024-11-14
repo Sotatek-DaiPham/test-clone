@@ -64,11 +64,6 @@ const AppUpload = (props: AppUploadProps) => {
         onChange={handleChange}
         accept={props.accept}
         disabled={props?.disabled}
-        customRequest={({ file, onSuccess }) => {
-          setTimeout(() => {
-            onSuccess && onSuccess("ok");
-          }, 0);
-        }}
       >
         {props.value?.src && variant === "primary" ? (
           <div
