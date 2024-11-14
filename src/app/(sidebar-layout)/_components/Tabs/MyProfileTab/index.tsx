@@ -39,7 +39,7 @@ const MyProfileTab = ({ apiPath }: { apiPath: string }) => {
   const { accessToken } = useWalletAuth();
 
   const { data, refetch } = useQuery({
-    queryKey: ["my-profile", searchParams, userId],
+    queryKey: ["my-profile", searchParams, userId, apiPath],
     queryFn: async () => {
       return getAPI(apiPath, {
         params: {

@@ -25,7 +25,7 @@ import {
   TopLeaderBoardIcon,
   UserTop1,
   UserTop2,
-  UserTop3
+  UserTop3,
 } from "@public/assets";
 import { useQuery } from "@tanstack/react-query";
 import { Spin } from "antd";
@@ -279,10 +279,14 @@ const LeaderboardPage = () => {
       )}
       <div
         className={`w-full flex sm:flex-row flex-col items-center ${
-          userId && !debounceSearch ? "justify-between" : "justify-end"
+          userId && !debounceSearch?.trim() && leaderboardRes?.length > 0
+            ? "justify-between"
+            : "justify-end"
         }`}
       >
-        {userId && !debounceSearch && <MyTopLine data={myRankRes} />}
+        {userId && !debounceSearch?.trim() && leaderboardRes?.length > 0 && (
+          <MyTopLine data={myRankRes} />
+        )}
         <AppInput
           className="sm:!w-[400px] w-full h-[40px]"
           isSearch={true}
