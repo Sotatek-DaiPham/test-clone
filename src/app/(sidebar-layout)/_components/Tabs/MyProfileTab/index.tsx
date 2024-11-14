@@ -148,7 +148,7 @@ const MyProfileTab = ({ apiPath }: { apiPath: string }) => {
             </span>
             <div className="sm:col-span-5 col-span-4 flex flex-row">
               <span className="text-14px-medium text-white-neutral mr-2 break-all">
-                {myProfile?.walletAddress || "-"}
+                {myProfile?.walletAddress}
               </span>
               <Image
                 onClick={() =>
@@ -169,14 +169,14 @@ const MyProfileTab = ({ apiPath }: { apiPath: string }) => {
               User name
             </span>
             <span className="sm:col-span-5 col-span-4 text-14px-medium text-white-neutral">
-              {myProfile?.username || "-"}
+              {myProfile?.username}
             </span>
           </div>
           <AppDivider />
           <div className="grid grid-cols-6 my-4">
             <span className="sm:col-span-1 col-span-2 text-neutral-7">Bio</span>
             <span className="sm:col-span-5 col-span-4 text-14px-medium text-white-neutral">
-              {myProfile?.bio || "-"}
+              {myProfile?.bio}
             </span>
           </div>
         </div>
