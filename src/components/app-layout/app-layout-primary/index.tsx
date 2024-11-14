@@ -26,7 +26,7 @@ export default function AppLayoutPrimary({
             !isDesktop ? "mt-20" : ""
           }`}
         >
-          <div className="relative z-[2]">{children}</div>
+          <div className="relative z-[2] h-full">{children}</div>
           <Image
             className="absolute left-[-226px] top-[-92px]"
             src={BackgounrdEffect1}

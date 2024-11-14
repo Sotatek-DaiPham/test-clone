@@ -120,7 +120,7 @@ const MyRepliesTab = () => {
   const total = get(data, "data.metadata.total", 0) as number;
 
   return (
-    <div>
+    <div className="w-full h-full">
       <div className="w-full flex sm:flex-row flex-col sm:items-center justify-between">
         <TabTitle title="My replies" />
         <AppInput
@@ -133,9 +133,13 @@ const MyRepliesTab = () => {
         />
       </div>
       {isPending ? (
-        <Spin />
+        <div className="!h-full w-full flex justify-center items-center mt-[-62px]">
+          <Spin />
+        </div>
       ) : !myReplies?.length && !isPending ? (
-        <NoData />
+        <div className="!h-full w-full mt-[-62px]">
+          <NoData />
+        </div>
       ) : (
         <div>
           <div className="my-6 grid sm:grid-cols-2 grid-cols-1 gap-6">

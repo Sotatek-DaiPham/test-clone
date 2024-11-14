@@ -83,6 +83,13 @@
       border: none !important;
     }
   }
+
+  .ant-tabs-content-holder > .ant-tabs-content {
+    height: 100% !important;
+    .ant-tabs-tabpane-active {
+      height: 100% !important;
+    }
+  }
 }
 
 .ant-tabs-nav-more.ant-tabs-dropdown-open {

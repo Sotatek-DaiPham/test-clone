@@ -73,7 +73,7 @@ const CoinCreatedTab = ({ walletAddress }: { walletAddress: string }) => {
   }, [isConnected]);
 
   return (
-    <div>
+    <div className="w-full h-full">
       <div className="w-full flex sm:flex-row flex-col sm:items-center justify-between">
         <TabTitle title="Token created" />
         <AppInput
@@ -86,9 +86,13 @@ const CoinCreatedTab = ({ walletAddress }: { walletAddress: string }) => {
         />
       </div>
       {isPending ? (
-        <Spin />
+        <div className="!h-full w-full flex justify-center items-center mt-[-62px]">
+          <Spin />
+        </div>
       ) : !coinCreated?.length && !isPending ? (
-        <NoData />
+        <div className="!h-full w-full mt-[-62px]">
+          <NoData />
+        </div>
       ) : (
         <div>
           <div className="grid xl:grid-cols-3 sm:grid-cols-2 grid-cols-1 gap-6 my-9">
