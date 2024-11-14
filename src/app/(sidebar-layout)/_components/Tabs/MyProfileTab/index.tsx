@@ -54,7 +54,7 @@ const MyProfileTab = ({ apiPath }: { apiPath: string }) => {
     if (searchParams.tab === "my-profile") {
       refetch();
     }
-  }, [accessToken]);
+  }, [accessToken, userId]);
 
   const myProfile = get(data, "data.data", {}) as MyProfileResponse;
 

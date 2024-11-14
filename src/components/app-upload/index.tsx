@@ -27,24 +27,14 @@ const convertFileToBase64 = (file: File): Promise<string> => {
 
 const AppUpload = (props: AppUploadProps) => {
   const { isShowSuggest = true, className, variant = "primary" } = props;
-  const handleChange = async (value: UploadChangeParam<UploadFile<any>>) => {
+  const handleChange = (value: UploadChangeParam<UploadFile<any>>) => {
     const file = value.file;
-    if (file.status === "uploading") {
-      return;
-    }
+    const fileUrl = URL.createObjectURL(file.originFileObj as File);
 
-    if (file.status === "done") {
-      try {
-        const fileUrl = await convertFileToBase64(file.originFileObj as File);
-
-        props?.onChange?.({
-          file: file.originFileObj as File,
-          src: fileUrl,
-        });
-      } catch (error) {
-        console.log("error", error);
-      }
-    }
+    props?.onChange?.({
+      file: file.originFileObj as File,
+      src: fileUrl,
+    });
   };
 
   const handleRemoveImage = (e: any) => {
