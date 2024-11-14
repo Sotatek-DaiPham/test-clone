@@ -87,7 +87,7 @@ const UserProfilePage = () => {
   };
 
   return (
-    <div className="m-auto max-w-[var(--width-content-sidebar-layout)]">
+    <div className="m-auto max-w-[var(--width-content-sidebar-layout)] h-full">
       <AppTabs
         items={tabs}
         className="app-tabs-primary"

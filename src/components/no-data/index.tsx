@@ -13,7 +13,7 @@ const NoData = ({ mode = "primary" }: Props) => {
         mode === "primary" ? "150px" : "10px"
       }] md:mb-[${mode === "primary" ? "150px" : "10px"}]`}
     >
-      <div className="w-fit m-auto">
+      <div className="w-fit mx-auto">
         <Image src={NoDataIcon} alt="no-data" />
       </div>
       <div className="text-16px-medium text-neutral-7 text-center mt-3">

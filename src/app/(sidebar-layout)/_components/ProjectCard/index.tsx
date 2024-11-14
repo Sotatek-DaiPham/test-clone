@@ -75,11 +75,11 @@ const ProjectCard = ({
               </div>
             )}
             <div className="text-neutral-9 text-18px-bold capitalize truncate-1-line">
-              {data?.name || "-"}
+              {data?.name}
             </div>
             <AppDivider />
           </div>
-          <div className="truncate-3-line">{data?.description || "-"}</div>
+          <div className="truncate-3-line">{data?.description}</div>
         </div>
       </div>
       {footer && (

@@ -237,7 +237,7 @@ const LeaderboardPage = () => {
   ];
 
   return (
-    <div className="m-auto max-w-[var(--width-content-sidebar-layout)]">
+    <div className="m-auto max-w-[var(--width-content-sidebar-layout)] h-full">
       {isMobile && (
         <div className="text-20px-bold text-white-neutral mb-4">
           RainPump Leaderboard
@@ -297,9 +297,13 @@ const LeaderboardPage = () => {
         />
       </div>
       {isPending ? (
-        <Spin />
+        <div className="!h-full w-full flex justify-center items-center mt-[-62px]">
+          <Spin />
+        </div>
       ) : leaderboardRes?.length < 3 && !debounceSearch && !isPending ? (
-        <NoData />
+        <div className="!h-full w-full mt-[-62px]">
+          <NoData />
+        </div>
       ) : (
         <div>
           <div className="my-6">

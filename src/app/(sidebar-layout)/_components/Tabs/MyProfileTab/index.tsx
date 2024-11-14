@@ -90,7 +90,7 @@ const MyProfileTab = ({ apiPath }: { apiPath: string }) => {
   };
 
   return (
-    <div>
+    <div className="w-full h-full">
       <div className="w-full flex flex-row items-center justify-between">
         <TabTitle title="My Profile" />
         {id ? (

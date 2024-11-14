@@ -178,7 +178,7 @@ const NotificationPage = () => {
   const total = get(data, "data.metadata.total", 0) as number;
 
   return (
-    <div className="m-auto max-w-[var(--width-content-sidebar-layout)]">
+    <div className="m-auto max-w-[var(--width-content-sidebar-layout)] h-full">
       <div className="w-full flex sm:flex-row flex-col sm:items-center justify-between">
         <TabTitle title="Notification" />
         {/* <AppInput
@@ -191,9 +191,13 @@ const NotificationPage = () => {
         /> */}
       </div>
       {isPending ? (
-        <Spin />
+        <div className="!h-full w-full flex justify-center items-center mt-[-62px]">
+          <Spin />
+        </div>
       ) : !notification?.length && !isPending ? (
-        <NoData />
+        <div className="!h-full w-full mt-[-62px]">
+          <NoData />
+        </div>
       ) : (
         <div>
           <div className="my-6 sm:w-[70%] w-full bg-neutral-2 p-6 rounded-3xl">
