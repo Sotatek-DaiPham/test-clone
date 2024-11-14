@@ -24,13 +24,13 @@ const connectors = connectorsForWallets(
       wallets: [
         metaMaskWallet,
         walletConnectWallet,
-        // coinbaseWallet,
-        // trustWallet,
-        // tahoWallet,
-        // rainbowWallet,
-        // imTokenWallet,
-        // ledgerWallet,
-        // omniWallet,
+        trustWallet,
+        coinbaseWallet,
+        tahoWallet,
+        rainbowWallet,
+        imTokenWallet,
+        ledgerWallet,
+        omniWallet,
       ],
     },
   ],
@@ -51,6 +51,6 @@ export const config = createConfig({
   transports: {
     [arbitrumSepolia.id]: http(process.env.NEXT_PUBLIC_ARBITRUM_RPC_URL),
   },
-  multiInjectedProviderDiscovery: false,
+  // multiInjectedProviderDiscovery: false,
   ssr: true,
 });
