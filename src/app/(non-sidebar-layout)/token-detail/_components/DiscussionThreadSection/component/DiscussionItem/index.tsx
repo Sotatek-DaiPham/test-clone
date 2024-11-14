@@ -43,7 +43,7 @@ const DiscussionItem: React.FC<DiscussionItemProps> = ({
                 router.push(PATH_ROUTER.USER_PROFILE(data?.wallet_address))
               }
             >
-              {data.username || "-"}
+              {data.username}
             </span>
             <span className="text-neutral-7 text-14px-medium">
               {getTimeDDMMMYYYYHHMM(data.created_at)}

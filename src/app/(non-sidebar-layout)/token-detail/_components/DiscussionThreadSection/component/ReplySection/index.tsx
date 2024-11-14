@@ -114,7 +114,7 @@ const ReplySection: React.FC<ReplySectionProps> = ({
                       )
                     }
                   >
-                    {reply.username || "-"}
+                    {reply.username}
                   </span>
                   <span className="text-neutral-7 text-14px-medium break-words">
                     {getTimeDDMMMYYYYHHMM(reply.created_at)}

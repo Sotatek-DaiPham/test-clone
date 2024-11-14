@@ -60,7 +60,7 @@ const UserFollow = ({ data, onFollow }: IUserFollow) => {
           </div>
           {!isMobile && (
             <div className="truncate-2-line text-neutral-7 mt-1">
-              {data?.bio || "-"}
+              {data?.bio}
             </div>
           )}
         </div>
@@ -94,9 +94,7 @@ const UserFollow = ({ data, onFollow }: IUserFollow) => {
         </div>
       </div>
       {isMobile && (
-        <div className="truncate-2-line text-neutral-7 mt-1">
-          {data?.bio || "-"}
-        </div>
+        <div className="truncate-2-line text-neutral-7 mt-1">{data?.bio}</div>
       )}
     </div>
   );
