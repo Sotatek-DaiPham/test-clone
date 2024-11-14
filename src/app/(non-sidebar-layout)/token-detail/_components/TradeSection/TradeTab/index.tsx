@@ -298,9 +298,9 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
       setLoadingStatus((prev) => ({ ...prev, buyToken: false }));
     } catch (e: any) {
       console.log({ e });
-      handleError(e);
-
       setLoadingStatus((prev) => ({ ...prev, buyToken: false }));
+      handleError(e);
+      return;
     }
   };
 
@@ -338,6 +338,7 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
       console.log({ e });
       setLoadingStatus((prev) => ({ ...prev, buyToken: false }));
       handleError(e);
+      return;
     }
   };
 
@@ -396,6 +397,7 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
       console.log({ e });
       setLoadingStatus((prev) => ({ ...prev, buyToken: false }));
       handleError(e);
+      return;
     }
   };
 
@@ -446,6 +448,7 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
       console.log({ e });
       setLoadingStatus((prev) => ({ ...prev, sellToken: false }));
       handleError(e);
+      return;
     }
   };
 
@@ -489,6 +492,7 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
         buyToken: false,
       }));
       handleError(e);
+      return;
     } finally {
       setIsOpenApproveModal(false);
     }
@@ -589,12 +593,12 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
       return;
     }
 
-    if (e?.action === "estimateGas") {
-      error({
-        message: "Insufficient fee",
-      });
-      return;
-    }
+    // if (e?.action === "estimateGas") {
+    //   error({
+    //     message: "Insufficient fee",
+    //   });
+    //   return;
+    // }
 
     if (e) {
       error({

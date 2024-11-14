@@ -237,6 +237,7 @@ const TradeTabAfterListed = ({ tabKey }: { tabKey: TabKey }) => {
         buyToken: false,
       }));
       handleError(e);
+      return;
     } finally {
       setIsOpenApproveModal(false);
     }
@@ -270,6 +271,7 @@ const TradeTabAfterListed = ({ tabKey }: { tabKey: TabKey }) => {
         sellToken: false,
       }));
       handleError(e);
+      return;
     } finally {
       setIsOpenApproveModal(false);
     }
@@ -345,6 +347,7 @@ const TradeTabAfterListed = ({ tabKey }: { tabKey: TabKey }) => {
       error({
         message: "Transaction Error",
       });
+      return;
     }
   };
 
@@ -411,6 +414,7 @@ const TradeTabAfterListed = ({ tabKey }: { tabKey: TabKey }) => {
         setLoadingStatus((prev) => ({ ...prev, sellToken: false }));
       }
       handleError(e);
+      return;
     }
   };
 
