@@ -20,6 +20,25 @@ export const ImageValidator = (
   return Promise.resolve();
 };
 
+export const TokenImageValidator = (file: File) => {
+  if (!file) {
+    return Promise.reject("Icon is required");
+  }
+
+  if (file.size) {
+    const mb = file.size / (1024 * 1024);
+    if (mb > 5) {
+      return Promise.reject("Upload image should not exceed 5mb");
+    }
+
+    if (!checkValidUploadFileType(file)) {
+      return Promise.reject("Please upload PNG, JPG, JPEG, JFIF, GIF only");
+    }
+  }
+
+  return Promise.resolve();
+};
+
 export const ImageLogoValidator = (
   _: any,
   value: { src?: string; file?: File }

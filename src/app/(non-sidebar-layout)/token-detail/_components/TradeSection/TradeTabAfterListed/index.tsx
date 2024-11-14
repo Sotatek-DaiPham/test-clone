@@ -117,6 +117,7 @@ const TradeTabAfterListed = ({ tabKey }: { tabKey: TabKey }) => {
     functionName: "allowance",
     args: [address, CONTRACT_ROUTER],
   });
+
   const [coinType, setCoinType] = useState(ECoinType.StableCoin);
   const [isOpenApproveModal, setIsOpenApproveModal] = useState(false);
   const USDTContract = useContract(usdtABI, usdtAddress as string);
@@ -338,12 +339,12 @@ const TradeTabAfterListed = ({ tabKey }: { tabKey: TabKey }) => {
       return;
     }
 
-    if (e?.action === "estimateGas") {
-      error({
-        message: "Insufficient fee",
-      });
-      return;
-    }
+    // if (e?.action === "estimateGas") {
+    //   error({
+    //     message: "Insufficient fee",
+    //   });
+    //   return;
+    // }
 
     if (e) {
       error({

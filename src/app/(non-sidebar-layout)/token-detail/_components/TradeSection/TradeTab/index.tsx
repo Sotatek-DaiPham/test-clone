@@ -245,7 +245,7 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
   const handleTransactionSuccess = () => {
     form.resetFields();
     setIsOpenApproveModal(false);
-    refetchDetail();
+    // refetchDetail();
     refetchUserUSDTBalance();
     refetchUserBalance();
     refetchAllownce();
