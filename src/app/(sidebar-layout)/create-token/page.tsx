@@ -4,6 +4,7 @@ import { usdtABI } from "@/abi/usdtAbi";
 import AppButton from "@/components/app-button";
 import FormItemLabel from "@/components/app-form-label";
 import AppInput from "@/components/app-input";
+import { FileItem } from "@/components/app-input/app-input-comment";
 import ConfirmModal from "@/components/app-modal/app-confirm-modal";
 import InitialBuyModal from "@/components/app-modal/app-initial-buy-modal";
 import AppUpload from "@/components/app-upload";
@@ -28,7 +29,8 @@ import {
   calculateTokenReceive,
   calculateUsdtShouldPay,
 } from "@/helpers/calculate";
-import { ImageValidator } from "@/helpers/upload";
+import { formatBytes } from "@/helpers/formatNumber";
+import { TokenImageValidator } from "@/helpers/upload";
 import useUsdtAllowance from "@/hooks/useUsdtAllowance";
 import useWindowSize from "@/hooks/useWindowSize";
 import {
@@ -40,14 +42,23 @@ import { NotificationContext } from "@/libs/antd/NotificationProvider";
 import { useAppSelector } from "@/libs/hooks";
 import { postFormDataAPI } from "@/service";
 import { useContract } from "@/web3/contracts/useContract";
+import { CloseIcon, UploadIcon } from "@public/assets";
 import { useMutation } from "@tanstack/react-query";
-import { Form } from "antd";
+import { Form, Input } from "antd";
 import { useWatch } from "antd/es/form/Form";
 import { AxiosResponse } from "axios";
 import BigNumber from "bignumber.js";
 import { get } from "lodash";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useContext, useMemo, useState } from "react";
+import {
+  ChangeEvent,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 
 const FIELD_NAMES = {
   COIN_NAME: "coinName",
@@ -108,7 +119,9 @@ const CreateTokenPage = () => {
   const [tokenCreatedId, setTokenCreatedId] = useState("");
   const { mutateAsync: uploadImages } = useMutation({
     mutationFn: (payload: FormData) => {
-      return postFormDataAPI(API_PATH.UPLOAD_IMAGE, payload);
+      return postFormDataAPI(API_PATH.UPLOAD_IMAGE, payload, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
     },
     mutationKey: ["upload-images"],
     onError: (err) => {
@@ -129,12 +142,12 @@ const CreateTokenPage = () => {
     },
     mutationKey: ["create-token"],
   });
-
+  const [fileList, setFileList] = useState<FileItem[]>([]);
   const [coinType, setCoinType] = useState(ECoinType.StableCoin);
 
   const uploadImage = useWatch(FIELD_NAMES.LOGO_UPLOAD, form);
   const initialBuyAmount = useWatch(AMOUNT_FIELD_NAME, amountForm);
-
+  const fileInputRef = useRef<HTMLInputElement>(null);
   // const usdtShouldPay =
   //   coinType === ECoinType.MemeCoin && initialBuyAmount
   //     ? calculateUsdtShouldPay(initialBuyAmount)
@@ -284,9 +297,8 @@ const CreateTokenPage = () => {
     }
     try {
       const values = form.getFieldsValue();
-      const uploadedFile = await handleUploadFiles(
-        values[FIELD_NAMES.LOGO_UPLOAD]?.file
-      );
+      const file = fileList[0]?.file || null;
+      const uploadedFile = await handleUploadFiles(file);
       const res = await createToken({
         name: values[FIELD_NAMES.COIN_NAME],
         symbol: values[FIELD_NAMES.COIN_TICKER],
@@ -344,6 +356,79 @@ const CreateTokenPage = () => {
       event.preventDefault();
     }
   };
+
+  const handleUpload = (e: ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    try {
+      if (files && files.length > 0) {
+        const file = files[0];
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          if (e.target && e.target.result) {
+            setFileList([
+              {
+                uid: "-1",
+                name: file.name,
+                status: "done",
+                url: e.target.result,
+                file,
+              },
+            ]);
+          }
+        };
+        reader.readAsDataURL(file);
+      }
+    } catch (error: any) {
+      error(error.message);
+    }
+  };
+
+  const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+
+    const files = e.dataTransfer.files;
+    try {
+      if (files && files.length > 0) {
+        const file = files[0];
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          if (e.target && e.target.result) {
+            setFileList([
+              {
+                uid: "-1",
+                name: file.name,
+                status: "done",
+                url: e.target.result,
+                file,
+              },
+            ]);
+          }
+        };
+        reader.readAsDataURL(file);
+      }
+    } catch (error: any) {
+      error(error.message);
+    }
+  };
+
+  const triggerFileInput = () => {
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
+  };
+
+  const removeImage = () => {
+    setFileList([]);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+  };
+
+  useEffect(() => {
+    if (fileList[0]?.file) {
+      form.validateFields([FIELD_NAMES.LOGO_UPLOAD]);
+    }
+  }, [fileList]);
 
   return (
     <div className="create-token-page w-full mr-auto ml-auto">
@@ -418,12 +503,79 @@ const CreateTokenPage = () => {
             className="mb-0"
             rules={[
               {
-                validator: ImageValidator,
+                validator: () => {
+                  const file = fileList[0]?.file || null;
+                  return TokenImageValidator(file);
+                },
               },
             ]}
           >
-            <AppUpload accept={ACCEPT_IMAGE_EXTENSION} variant="secondary" />
+            {/* <AppUpload accept={ACCEPT_IMAGE_EXTENSION} variant="secondary" /> */}
+            <div
+              className="flex justify-center items-center gap-8 p-5 min-w-full  md:min-w-[200px] rounded-lg border border-dashed border-neutral-500 w-fit bg-transparent"
+              onDragOver={(e) => e.preventDefault()}
+              onDrop={handleDrop}
+              onClick={triggerFileInput}
+            >
+              <input
+                type="file"
+                ref={fileInputRef}
+                onChange={handleUpload}
+                style={{ display: "none" }}
+                accept={ACCEPT_IMAGE_EXTENSION}
+              />
+              <div className="flex items-center gap-2 md:gap-8 md:flex-row flex-col">
+                <Image src={UploadIcon} alt="upload icon" />
+                <div className="flex items-center justify-between  flex-col">
+                  <div className="text-white-neutral text-[14px]">
+                    Drag And Drop A File
+                  </div>
+                  <div className="text-[#7A7F86] text-12px-medium">
+                    Max size - 5Mb. Jpg, Jpeg, Png, Jfif, Gif
+                  </div>
+                </div>
+                <AppButton
+                  customClass="!w-[150px]"
+                  typeButton="outline-primary"
+                >
+                  Upload File
+                </AppButton>
+              </div>
+            </div>
           </Form.Item>
+          {fileList[0]?.file ? (
+            <div className="px-2 py-1.5 bg-neutral-3 rounded-[8px] flex justify-between items-center w-full md:w-[460px] mt-2">
+              <div className="flex gap-3 items-center">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={fileList[0]?.url?.toString()}
+                  className="rounded-[10px] object-cover w-9 h-9"
+                  alt="image upload"
+                />
+                <div className="flex flex-col gap-1">
+                  <div
+                    className="text-14px-normal text-neutral-9"
+                    style={{
+                      wordBreak: "break-word",
+                    }}
+                  >
+                    {fileList[0]?.file?.name}
+                  </div>
+                  <div className="text-12px-normal text-neutral-7">
+                    {formatBytes(fileList[0]?.file.size as number)}
+                  </div>
+                </div>
+              </div>
+              <Image
+                src={CloseIcon}
+                height={20}
+                width={20}
+                alt="close icon"
+                onClick={removeImage}
+                className="cursor-pointer"
+              />
+            </div>
+          ) : null}
         </div>
 
         <h5 className="text-primary-main text-16px-bold md:text-22px-bold mt-4 mb-4">
