@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 
 const axiosInstance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_ENDPOINT_URL || "",
+  timeout: 60000,
   // headers: {
   //   "X-TIME-ZONE": new Date().getTimezoneOffset(),
   // },
