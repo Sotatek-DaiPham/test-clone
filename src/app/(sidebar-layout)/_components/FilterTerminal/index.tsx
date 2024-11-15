@@ -133,7 +133,7 @@ const FilterTerminal = ({
                 className="!mr-4"
               >
                 <div
-                  className={`app-button min-w-fit mr-4 middle text-14px-bold flex flex-row items-center px-[15px] py-3 cursor-pointer ${
+                  className={`app-button min-w-fit mr-4 last:!mr-0 middle text-14px-bold flex flex-row items-center px-[15px] py-3 cursor-pointer ${
                     searchParams[filter?.value] ? "outline" : "secondary"
                   }`}
                 >
