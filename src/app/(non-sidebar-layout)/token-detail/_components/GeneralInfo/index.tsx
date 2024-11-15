@@ -14,7 +14,15 @@ const GeneralInfo = () => {
   const { tokenDetail } = useTokenDetail();
   return (
     <div className="flex justify-between items-center px-1 mb-3.5 flex-wrap gap-2">
-      <div className="flex gap-10 ">
+      <div className="flex gap-2 items-center">
+        <div className="text-12px-normal md:text-14px-normal text-neutral-7">
+          Token Name
+        </div>
+        <div className="text-12px-medium md:text-14px-medium text-white-neutral">
+          {tokenDetail?.name} ({tokenDetail?.symbol})
+        </div>
+      </div>
+      <div className="flex gap-10">
         <div className="flex gap-2 items-center">
           <div className="text-12px-normal md:text-14px-normal text-neutral-7">
             Created on
