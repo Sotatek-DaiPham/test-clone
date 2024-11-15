@@ -35,7 +35,7 @@ export const configurationData = {
 
 export const ID_TRADING_VIEW = "tv_chart_container";
 
-export const DEFAULT_TRADING_VIEW_INTERVAL = "1D";
+export const DEFAULT_TRADING_VIEW_INTERVAL = "15";
 
 export const disabledFeatures = [
   "symbol_search_request",
