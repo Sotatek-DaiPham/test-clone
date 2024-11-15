@@ -19,7 +19,10 @@ const GeneralInfo = () => {
           Token Name
         </div>
         <div className="text-12px-medium md:text-14px-medium text-white-neutral">
-          {tokenDetail?.name} ({tokenDetail?.symbol})
+          <div className="flex items-center gap-1">
+            <AppTruncateText text={`${tokenDetail?.name}`} maxLength={15} />
+            <div>({tokenDetail?.symbol})</div>
+          </div>
         </div>
       </div>
       <div className="flex gap-10">
