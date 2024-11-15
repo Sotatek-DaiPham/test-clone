@@ -53,6 +53,7 @@ export const NotificationProvider = ({
         //     {description || "Something went wrong!"}
         //   </div>
         // ),
+        pauseOnHover: false,
         duration: Notification_Duration,
         // closeIcon: <CloseIcon />,
         ...props,
