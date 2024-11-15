@@ -549,7 +549,7 @@ const CreateTokenPage = () => {
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src={fileList[0]?.url?.toString()}
-                  className="rounded-[10px] object-cover min-w-9 h-9"
+                  className="rounded-[10px] object-cover min-w-9 w-9 h-9"
                   alt="image upload"
                 />
                 <div className="flex flex-col gap-1">
