@@ -56,7 +56,7 @@
 
 ::-webkit-scrollbar {
   width: 4px;
-  height: 8px;
+  height: 6px;
   background-color: var(--color-alternative-pressed);
   border-radius: 6px;
 }
@@ -378,4 +378,15 @@ input:-webkit-autofill:active {
 
 body.disable-scroll {
   overflow: hidden !important;
+}
+
+.scroll-container {
+  box-sizing: content-box;
+  padding-bottom: 5px; /* Adds space between content and the scrollbar */
+
+  @media only screen and (max-width: 768px) {
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
 }

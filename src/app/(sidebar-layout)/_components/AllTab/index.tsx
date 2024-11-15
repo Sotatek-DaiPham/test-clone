@@ -194,7 +194,7 @@ const AllTab = () => {
     searchParams.maxProgress,
   ]);
 
-  const { data, isPending, isError, refetch } = useQuery({
+  const { data, isPending, refetch } = useQuery({
     queryKey: ["all-tab", paramsAPI],
     queryFn: async () => {
       return getAPI(API_PATH.TOKEN.LIST, {

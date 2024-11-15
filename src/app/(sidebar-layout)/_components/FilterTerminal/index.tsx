@@ -3,7 +3,7 @@ import AppDropdown from "@/components/app-dropdown";
 import AppInput from "@/components/app-input";
 import { DropdownIcon } from "@public/assets";
 import Image from "next/image";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 interface IFilterTerminal {
   search?: string;
@@ -43,8 +43,8 @@ const FilterTerminal = ({
         value={search}
         onChange={(e) => onChangeSearch(e.target.value)}
       />
-      <div className="w-full flex flex-row justify-between items-center mt-5 overflow-auto">
-        <div className="sm:mr-4 overflow-auto relative flex flex-row mr-0">
+      <div className="w-full flex flex-row justify-between items-start mt-5 overflow-auto">
+        <div className="sm:mr-4 overflow-auto relative flex !items-center flex-row mr-0 scroll-container">
           {[...filterArr?.slice(0, 5)]?.map((filter: any, index: number) => (
             <AppButton
               key={index}
@@ -93,7 +93,7 @@ const FilterTerminal = ({
                             filter?.value
                           );
                         }}
-                        className={`px-2 text-primary-11 !text-14px-normal py-[3px] rounded-3xl bg-primary-5 hover:!bg-primary-2 hover:!text-primary-11 ${
+                        className={`px-2 text-primary-11 !text-14px-normal py-[3px] rounded-3xl bg-primary-5 sm:hover:!bg-primary-2 sm:hover:!text-primary-11 ${
                           children?.value === searchParams?.[filter.value]
                             ? "!bg-white-neutral !text-neutral-1"
                             : ""
@@ -158,7 +158,7 @@ const FilterTerminal = ({
           })}
         </div>
         <AppInput
-          className="!w-[300px] !rounded-full sm:flex hidden"
+          className="!w-[300px] !h-[40px] !rounded-full sm:flex hidden"
           isSearch
           iconPosition="left"
           placeholder="Search"

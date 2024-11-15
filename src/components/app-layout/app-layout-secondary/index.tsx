@@ -13,7 +13,7 @@ export default function AppLayoutSecondary({
   return (
     <>
       <AppHeaderSecondary />
-      <Content className={`relative p-10 ${!isDesktop ? "mt-20 p-4" : ""}`}>
+      <Content className={`relative p-10 ${!isDesktop ? "mt-12 p-4" : "pt-4"}`}>
         <div className="relative z-[2] h-full">{children}</div>
         <Image
           className="absolute left-[-40%] top-[-8%] md:left-[-23%] md:top-[-14%] scale-[0.8]"
