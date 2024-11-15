@@ -243,7 +243,7 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
   };
 
   const handleTransactionSuccess = () => {
-    form.resetFields();
+    form.resetFields(["amount"]);
     setIsOpenApproveModal(false);
     // refetchDetail();
     refetchUserUSDTBalance();

@@ -201,7 +201,7 @@ const TradeTabAfterListed = ({ tabKey }: { tabKey: TabKey }) => {
   };
 
   const handleTransactionSuccess = () => {
-    form.resetFields();
+    form.resetFields(["amount"]);
     setIsOpenApproveModal(false);
     refetchUserBalance();
     refetch();
