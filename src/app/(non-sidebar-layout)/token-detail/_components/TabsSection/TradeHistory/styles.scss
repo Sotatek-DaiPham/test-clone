@@ -1,0 +1,11 @@
+.trade-history-container {
+  .ant-table-filter-column {
+    position: relative;
+    .ant-dropdown-trigger {
+      position: absolute;
+      right: 23px;
+      top: 38%;
+      z-index: 2;
+    }
+  }
+}

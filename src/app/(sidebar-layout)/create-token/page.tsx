@@ -512,7 +512,7 @@ const CreateTokenPage = () => {
           >
             {/* <AppUpload accept={ACCEPT_IMAGE_EXTENSION} variant="secondary" /> */}
             <div
-              className="flex justify-center items-center gap-8 p-5 min-w-full  md:min-w-[200px] rounded-lg border border-dashed border-neutral-500 w-fit bg-transparent"
+              className="flex justify-center items-center gap-8 p-5 min-w-full  md:min-w-[200px] rounded-lg border-neutral-500 w-fit bg-transparent custom-border"
               onDragOver={(e) => e.preventDefault()}
               onDrop={handleDrop}
               onClick={triggerFileInput}

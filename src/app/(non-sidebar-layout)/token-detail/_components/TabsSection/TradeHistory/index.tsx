@@ -35,6 +35,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import "./styles.scss";
 
 const TradeHistory = () => {
   const queryClient = useQueryClient();
@@ -251,7 +252,7 @@ const TradeHistory = () => {
   }, [isConnected]);
 
   return (
-    <div>
+    <div className="trade-history-container">
       <AppTable
         scroll={{ x: 900 }}
         columns={columns}
