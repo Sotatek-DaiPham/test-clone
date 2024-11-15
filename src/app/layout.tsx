@@ -13,8 +13,8 @@ const ReduxProviders = dynamic(() => import("@/providers/StoreProvider"), {
 });
 
 export const metadata: Metadata = {
-  title: "RainMakr MemeCoin",
-  description: "RainMakr MemeCoin",
+  title: "RainPump",
+  description: "RainPump",
 };
 
 export const viewport: Viewport = {
