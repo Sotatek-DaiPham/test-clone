@@ -1,3 +1,4 @@
+import AppNumberToolTip from "@/components/app-number-tooltip";
 import { convertNumber, nFormatter } from "@/helpers/formatNumber";
 import { StarTopIcon } from "@public/assets";
 import Image from "next/image";
@@ -15,9 +16,21 @@ const showTotal = (data: any) => {
   if (!data.top) {
     return "0";
   } else if (Number(data.latestTimestamp) > Number(data.unixTimestamp)) {
-    return nFormatter(convertNumber(data?.total, 6), 2);
+    return (
+      <AppNumberToolTip
+        decimal={2}
+        value={convertNumber(data?.total, 6)}
+        isNoFormatterKMB={true}
+      />
+    );
   } else if (data.top) {
-    return nFormatter(convertNumber(data?.total, 6), 2);
+    return (
+      <AppNumberToolTip
+        decimal={2}
+        value={convertNumber(data?.total, 6)}
+        isNoFormatterKMB={true}
+      />
+    );
   } else return "-";
 };
 
