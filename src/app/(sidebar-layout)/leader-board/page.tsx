@@ -138,7 +138,7 @@ const LeaderboardPage = () => {
               <AppImage
                 src={data?.avatar}
                 alt="avatar"
-                className="w-[40px] min-w-[40px] h-[40px] object-cover rounded-full bg-primary-7 mr-3 flex overflow-hidden"
+                className="w-[40px] min-w-[40px] h-[40px] [&>img]:!object-cover rounded-full bg-primary-7 mr-3 flex overflow-hidden"
               />
             ) : (
               <Image
