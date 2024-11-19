@@ -204,7 +204,11 @@ export default function Home() {
 
   return (
     <div className="h-full !m-[-24px]">
-      <div className="m-auto p-6 max-w-[var(--width-content-sidebar-layout)]">
+      <div
+        className={`m-auto p-6 max-w-[var(--width-content-sidebar-layout)] ${
+          !isMobile ? "pt-2" : ""
+        }`}
+      >
         <div
           className={`grid sm:grid-cols-2 grid-cols-1 gap-6 ${
             !Boolean(kingOfTheSky?.contractAddress) ? "!grid-cols-1" : ""

@@ -16,7 +16,7 @@ const GeneralInfo = () => {
     <div className="flex justify-between items-center px-1 mb-3.5 flex-wrap gap-2">
       <div className="flex gap-2 items-center">
         <div className="text-12px-normal md:text-14px-normal text-neutral-7">
-          Token Name
+          Token name
         </div>
         <div className="text-12px-medium md:text-14px-medium text-white-neutral">
           <div className="flex items-center gap-1">
@@ -38,7 +38,9 @@ const GeneralInfo = () => {
           </div>
         </div>
         <div className="flex gap-2 flex-row items-center">
-          <div className="text-14px-normal text-neutral-7">Creator</div>
+          <div className="text-12px-normal md:text-14px-normal text-neutral-7">
+            Creator
+          </div>
           <Link
             href={PATH_ROUTER.USER_PROFILE(tokenDetail?.userWalletAddress)}
             className="py-[2px] px-3 rounded-[16px] bg-[rgba(15,190,90,0.20)] text-[#0FBE5A] text-14px-normal hover:underline cursor-pointer"
@@ -49,7 +51,7 @@ const GeneralInfo = () => {
       </div>
       <div className="flex flex-row items-center gap-2">
         <div className="text-12px-normal md:text-14px-normal text-neutral-7">
-          Contract Address
+          Contract address
         </div>
         <div className="flex gap-1">
           <div className="text-12px-medium md:text-14px-medium text-white-neutral flex gap-1">
