@@ -78,7 +78,6 @@ async function getData({ resolution, tokenAddress, endTime }: IDataChart) {
       new BigNumber(bar.volume).div(new BigNumber(10).pow(6))?.toString()
     ),
   }));
-  console.log("bar", bars);
   return bars;
 }
 
