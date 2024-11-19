@@ -182,7 +182,7 @@ const TradingView = () => {
         has_weekly_and_monthly: true,
         intraday_multipliers: configurationData.intraday_multipliers,
         supported_resolutions: configurationData.supported_resolutions,
-        // volume_precision: volumePrecision,
+        volume_precision: 5,
       };
       onSymbolResolvedCallback(symbolInfo);
     },
