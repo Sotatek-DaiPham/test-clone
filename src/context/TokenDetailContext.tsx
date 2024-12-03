@@ -12,7 +12,7 @@ import { get } from "lodash";
 import { pumpContractABI } from "@/abi/pumpContractAbi";
 import { envs } from "@/constant/envs";
 import { useReadContract } from "wagmi";
-import { TOKEN_DECIMAL, USDT_DECIMAL } from "@/constant";
+import { TOKEN_DECIMAL, NATIVE_TOKEN_DECIMAL } from "@/constant";
 import BigNumber from "bignumber.js";
 import { useAppSelector } from "@/libs/hooks";
 import { ReadContractErrorType } from "viem";
@@ -50,11 +50,11 @@ const mapToTokenDetail = ([
     .div(TOKEN_DECIMAL)
     .toString(),
   usdtVirtualReserve: BigNumber(usdtVirtualReserve)
-    .div(USDT_DECIMAL)
+    .div(NATIVE_TOKEN_DECIMAL)
     .toString(),
   isListed,
   tokensSold: BigNumber(tokensSold).div(TOKEN_DECIMAL).toString(),
-  usdtRaised: BigNumber(usdtRaised).div(USDT_DECIMAL).toString(),
+  usdtRaised: BigNumber(usdtRaised).div(NATIVE_TOKEN_DECIMAL).toString(),
   id: id.toString(),
   devWallet,
 });

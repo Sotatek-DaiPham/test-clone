@@ -1,4 +1,4 @@
-import { usdtABI } from "@/abi/usdtAbi";
+import { erc20Abi } from "@/abi/usdtAbi";
 import { TOKEN_DECIMAL } from "@/constant";
 import BigNumber from "bignumber.js";
 import { useReadContract } from "wagmi";
@@ -9,7 +9,7 @@ const useTokenBalance = (
   tokenDecimal?: number
 ) => {
   const { data, ...rest } = useReadContract({
-    abi: usdtABI,
+    abi: erc20Abi,
     address: contractAddress,
     functionName: "balanceOf",
     args: [userAddress],

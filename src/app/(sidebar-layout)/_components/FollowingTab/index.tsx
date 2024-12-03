@@ -200,9 +200,9 @@ const FollowingTab = () => {
                       </div>
                       <div className="text-14px-normal">for</div>
                       <div className="mx-1 ml-2">
-                        {formatAmount(convertNumber(project?.usdtAmount, 6)) ||
+                        {formatAmount(convertNumber(project?.ethAmount, 6)) ||
                           "-"}
-                        &nbsp;USDT
+                        &nbsp;ETH
                       </div>
                     </div>
                   )

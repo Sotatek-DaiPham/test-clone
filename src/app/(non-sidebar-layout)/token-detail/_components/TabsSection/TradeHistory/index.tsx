@@ -7,7 +7,7 @@ import {
   ETradeAction,
   LIMIT_COIN_ITEMS_TABLE,
   TOKEN_DECIMAL,
-  USDT_DECIMAL,
+  NATIVE_TOKEN_DECIMAL,
 } from "@/constant";
 import { API_PATH } from "@/constant/api-path";
 import { envs } from "@/constant/envs";
@@ -135,16 +135,16 @@ const TradeHistory = () => {
       },
     },
     {
-      title: "USDT",
-      dataIndex: "usdt_amount",
-      key: "usdt_amount",
+      title: "ETH",
+      dataIndex: "eth_amount",
+      key: "eth_amount",
       render(value, record, index) {
         return (
           <div>
             <AppNumberToolTip
               decimal={6}
               isFormatterK={false}
-              value={BigNumber(value).div(USDT_DECIMAL).toString()}
+              value={BigNumber(value).div(NATIVE_TOKEN_DECIMAL).toString()}
             />
           </div>
         );

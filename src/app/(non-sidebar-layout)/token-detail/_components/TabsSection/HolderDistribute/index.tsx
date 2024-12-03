@@ -1,9 +1,8 @@
-import AppButton from "@/components/app-button";
 import AppModal from "@/components/app-modal";
 import AppNumberToolTip from "@/components/app-number-tooltip";
 import AppPaginationCustom from "@/components/app-pagination/app-pagination-custom";
 import AppTable from "@/components/app-table";
-import { LIMIT_COIN_ITEMS_TABLE, USDT_DECIMAL } from "@/constant";
+import { LIMIT_COIN_ITEMS_TABLE, NATIVE_TOKEN_DECIMAL } from "@/constant";
 import { API_PATH } from "@/constant/api-path";
 import { envs } from "@/constant/envs";
 import { useTokenDetail } from "@/context/TokenDetailContext";
@@ -85,7 +84,7 @@ const HolderDistribute = () => {
             <AppNumberToolTip
               decimal={6}
               isFormatterK={false}
-              value={BigNumber(value).div(USDT_DECIMAL).toString()}
+              value={BigNumber(value).div(NATIVE_TOKEN_DECIMAL).toString()}
             />
           </div>
         );

@@ -9,19 +9,19 @@ export const ErrorCode = {
 export const LIMIT_ITEMS_TABLE = 10;
 export const LIMIT_COIN_ITEMS_TABLE = 100;
 
-export const MINIMUM_BUY_AMOUNT = 0.1;
+export const MINIMUM_BUY_AMOUNT = 0.0001;
 
 export const DECIMAL_USDT = 6;
 
-export const USDT_DECIMAL = 1e6;
+export const NATIVE_TOKEN_DECIMAL = 1e18;
 
 export const TOKEN_DECIMAL = 1e18;
 
-export const USDT_THRESHOLD = 12000;
+export const ETH_THRESHOLD = 3.5;
 
-export const USDT_THRESHOLD_WITH_FEE = 12120;
+export const USDT_THRESHOLD_WITH_FEE = 3.535;
 
-export const PREDEFINE_AMOUNT = ["10", "25", "50", "100", "200"];
+export const PREDEFINE_AMOUNT = ["0.005", "0.01", "0.05", "0.1", "0.5"];
 
 export const PREDEFINE_SELL_PERCENT = ["10%", "25%", "50%", "75%", "100%"];
 
@@ -58,3 +58,5 @@ export enum EEventNoti {
   SELL = "Sell",
   TOKEN_LISTED = "TokenListed",
 }
+
+export const TOKEN_DECIMAL_PLACE = 18;

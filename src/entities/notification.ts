@@ -17,7 +17,7 @@ export interface Information {
   tokenAddress: string;
   walletAddress: string;
   amount: string;
-  usdtAmount: string;
+  ethAmount: string;
   token: Token;
   usernamme: string;
 }
@@ -37,7 +37,7 @@ export interface Token {
   total_supply: string;
   owner: string;
   timestampCreated: any;
-  initUsdtReserve: string;
+  initEthReserve: string;
   kingOfTheHillDate: any;
   website: any;
   twitter: any;

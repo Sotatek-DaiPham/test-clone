@@ -1,5 +1,5 @@
 import { pumpContractABI } from "@/abi/pumpContractAbi";
-import { usdtABI } from "@/abi/usdtAbi";
+import { erc20Abi } from "@/abi/usdtAbi";
 import AppAmountSelect from "@/components/app-amount-select";
 import AppButton from "@/components/app-button";
 import AppInputBalance from "@/components/app-input/app-input-balance";
@@ -14,8 +14,8 @@ import {
   PREDEFINE_AMOUNT,
   PREDEFINE_SELL_PERCENT,
   TOKEN_DECIMAL,
-  USDT_DECIMAL,
-  USDT_THRESHOLD,
+  NATIVE_TOKEN_DECIMAL,
+  ETH_THRESHOLD,
   USDT_THRESHOLD_WITH_FEE,
 } from "@/constant";
 import { envs } from "@/constant/envs";
@@ -43,6 +43,7 @@ import BigNumber from "bignumber.js";
 import Image from "next/image";
 import { useContext, useEffect, useMemo, useState } from "react";
 import { TabKey, useTradeSettings } from "..";
+import { ethers } from "ethers";
 
 export const SETTINGS_FIELD_NAMES = {
   FONT_RUNNING: "fontRunning",
@@ -63,7 +64,7 @@ const amountValidator = (value: string, usdtShouldPay: string) => {
     (usdtShouldPay && BigNumber(usdtShouldPay).lt(MINIMUM_BUY_AMOUNT))
   ) {
     return Promise.reject(
-      new Error(`Minimum transaction amount is ${MINIMUM_BUY_AMOUNT} USDT`)
+      new Error(`Minimum transaction amount is ${MINIMUM_BUY_AMOUNT} ETH`)
     );
   }
   return Promise.resolve();
@@ -74,13 +75,12 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
     (state) => state.user
   );
   const { error, success } = useContext(NotificationContext);
-  const { allowance, refetch: refetchAllownce } = useUsdtAllowance(address);
+  // const { allowance, refetch: refetchAllownce } = useUsdtAllowance(address);
   const [openSettingModal, setOpenSettingModal] = useState(false);
   const [formSetting] = Form.useForm<FormSetting>();
   const [form] = Form.useForm<{ amount: string }>();
   const {
     tokenDetail,
-    refetchDetail,
     tokenDetailSC,
     refetch: refetchDetailSC,
   } = useTokenDetail();
@@ -89,12 +89,6 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
     sellToken: false,
     approve: false,
   });
-
-  const {
-    balance: userUSDTBalance,
-    refetch: refetchUserUSDTBalance,
-    isLoading: isLoadingUserUSDTBalance,
-  } = useTokenBalance(address, envs.USDT_ADDRESS, USDT_DECIMAL);
 
   const { balance, refetch: refetchUserBalance } = useTokenBalance(
     address,
@@ -105,7 +99,7 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
   const [coinType, setCoinType] = useState(ECoinType.StableCoin);
   const [isOpenApproveModal, setIsOpenApproveModal] = useState(false);
 
-  const USDTContract = useContract(usdtABI, envs.USDT_ADDRESS);
+  const USDTContract = useContract(erc20Abi, envs.USDT_ADDRESS);
   const tokenFactoryContract = useContract(
     pumpContractABI,
     envs.TOKEN_FACTORY_ADDRESS || ""
@@ -117,17 +111,15 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
 
   const availableToken = useMemo(() => {
     const tokenThreshold = calculateTokenReceiveWithoutFee(
-      USDT_THRESHOLD.toString()
+      ETH_THRESHOLD.toString()
     );
     return BigNumber(tokenThreshold).minus(tokenDetailSC?.tokensSold || "0");
   }, [tokenDetailSC]);
 
-  console.log("availableToken", availableToken.toString());
-
   const { amount: buyAmountOut } = useCalculateAmount({
     contractAddress: tokenDetail?.contractAddress,
     value: amountValue,
-    decimalIn: USDT_DECIMAL,
+    decimalIn: NATIVE_TOKEN_DECIMAL,
     decimalOut: TOKEN_DECIMAL,
     functionName: "calculateBuyAmountOut",
     coinType: coinType,
@@ -141,15 +133,13 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
     }
   }, [amountValue, availableToken, coinType, buyAmountOut]);
 
-  console.log("isExceedAvailableToken", isExceedAvailableToken);
-
   const { amount: buyAmountIn } = useCalculateAmount({
     contractAddress: tokenDetail?.contractAddress,
     value: isExceedAvailableToken
       ? BigNumber(availableToken).toFixed(6, BigNumber.ROUND_DOWN)
       : amountValue,
     decimalIn: TOKEN_DECIMAL,
-    decimalOut: USDT_DECIMAL,
+    decimalOut: NATIVE_TOKEN_DECIMAL,
     functionName: "calculateBuyAmountIn",
     coinType: coinType,
   });
@@ -158,12 +148,12 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
     contractAddress: tokenDetail?.contractAddress,
     value: amountValue,
     decimalIn: TOKEN_DECIMAL,
-    decimalOut: USDT_DECIMAL,
+    decimalOut: NATIVE_TOKEN_DECIMAL,
     functionName: "calculateSellAmountOut",
     coinType: coinType,
   });
 
-  const usdtShouldPay: any = useMemo(() => {
+  const ethShouldPay: any = useMemo(() => {
     if (amountValue && coinType === ECoinType.MemeCoin) {
       if (isTokenMint) {
         return buyAmountIn;
@@ -209,15 +199,15 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
     availableToken,
   ]);
 
-  const usdtAmount =
+  const ethAmount =
     coinType === ECoinType.MemeCoin
-      ? BigNumber(usdtShouldPay).toFixed(6, BigNumber.ROUND_DOWN)
+      ? BigNumber(ethShouldPay).toFixed(6, BigNumber.ROUND_DOWN)
       : amountValue;
 
   const isDisableBuyButton =
     !amountValue ||
     !!(amountValue && BigNumber(amountValue).lt(MINIMUM_BUY_AMOUNT)) ||
-    !!(usdtShouldPay && BigNumber(usdtShouldPay).lt(MINIMUM_BUY_AMOUNT));
+    !!(ethShouldPay && BigNumber(ethShouldPay).lt(MINIMUM_BUY_AMOUNT));
 
   const isDisableSellButton =
     !isTokenMint ||
@@ -244,11 +234,7 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
 
   const handleTransactionSuccess = () => {
     form.resetFields(["amount"]);
-    setIsOpenApproveModal(false);
-    // refetchDetail();
-    refetchUserUSDTBalance();
     refetchUserBalance();
-    refetchAllownce();
     refetchDetailSC();
     success({
       message: "Transaction completed",
@@ -261,7 +247,7 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
     const contract = await tokenFactoryContract;
     const minTokenOut = Number(tradeSettings?.slippage)
       ? decreaseByPercent(
-          coinType === ECoinType.MemeCoin ? usdtShouldPay : tokenWillReceive,
+          coinType === ECoinType.MemeCoin ? ethShouldPay : tokenWillReceive,
           tradeSettings?.slippage
         )
       : 0;
@@ -275,7 +261,7 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
         "buyAndCreateToken",
         tokenDetail?.symbol,
         tokenDetail?.name,
-        BigNumber(usdtAmount).multipliedBy(USDT_DECIMAL).toFixed(),
+        BigNumber(ethAmount).multipliedBy(NATIVE_TOKEN_DECIMAL).toFixed(),
         BigNumber(minTokenOut).multipliedBy(TOKEN_DECIMAL).toFixed(0),
         address,
         tokenDetail.idx,
@@ -284,12 +270,12 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
       const tx = await contract?.buyAndCreateToken(
         tokenDetail?.symbol,
         tokenDetail?.name,
-        BigNumber(usdtAmount).multipliedBy(USDT_DECIMAL).toFixed(),
         0,
         address,
         tokenDetail.idx,
         tokenDetail?.userWalletAddress,
         {
+          value: ethers.parseUnits(ethAmount, "ether"),
           gasLimit: gasLimit || undefined,
         }
       );
@@ -317,17 +303,17 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
       console.log(
         "buyExactInParam",
         tokenDetail?.contractAddress,
-        BigNumber(amountValue).multipliedBy(USDT_DECIMAL).toFixed(),
+        BigNumber(amountValue).multipliedBy(NATIVE_TOKEN_DECIMAL).toFixed(),
         BigNumber(minTokenOut).multipliedBy(TOKEN_DECIMAL).toFixed(0),
         address
       );
 
       const tx = await contract?.buyExactIn(
         tokenDetail?.contractAddress,
-        BigNumber(amountValue).multipliedBy(USDT_DECIMAL).toFixed(),
         BigNumber(minTokenOut).multipliedBy(TOKEN_DECIMAL).toFixed(0),
         address,
         {
+          value: ethers.parseUnits(amountValue, "ether"),
           gasLimit: gasLimit || undefined,
         }
       );
@@ -345,9 +331,9 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
   const handleBuyTokenExactOut = async () => {
     const contract = await tokenFactoryContract;
     setLoadingStatus((prev) => ({ ...prev, buyToken: true }));
-    const maxUSDTOut = Number(tradeSettings?.slippage)
-      ? increaseByPercent(usdtShouldPay, tradeSettings?.slippage)
-      : usdtShouldPay;
+    const maxEthOut = Number(tradeSettings?.slippage)
+      ? increaseByPercent(ethShouldPay, tradeSettings?.slippage)
+      : ethShouldPay;
     const gasLimit = Number(tradeSettings?.priorityFee)
       ? BigNumber(tradeSettings?.priorityFee).multipliedBy(1e10).toString()
       : 0;
@@ -359,15 +345,15 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
           "buyExactOutParam",
           tokenDetail?.contractAddress,
           BigNumber(amountValue).multipliedBy(TOKEN_DECIMAL).toFixed(),
-          BigNumber(maxUSDTOut).multipliedBy(USDT_DECIMAL).toFixed(0),
+          BigNumber(maxEthOut).multipliedBy(NATIVE_TOKEN_DECIMAL).toFixed(),
           address
         );
         tx = await contract?.buyExactOut(
           tokenDetail?.contractAddress,
           BigNumber(amountValue).multipliedBy(TOKEN_DECIMAL).toFixed(),
-          BigNumber(maxUSDTOut).multipliedBy(USDT_DECIMAL).toFixed(0),
           address,
           {
+            value: ethers.parseUnits(maxEthOut, "ether"),
             gasLimit: gasLimit || undefined,
           }
         );
@@ -375,17 +361,17 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
         console.log(
           "buyExactInParam",
           tokenDetail?.contractAddress,
-          BigNumber(USDT_THRESHOLD).multipliedBy(USDT_DECIMAL).toFixed(),
+          BigNumber(ETH_THRESHOLD).multipliedBy(NATIVE_TOKEN_DECIMAL).toFixed(),
           0,
           address
         );
 
         tx = await contract?.buyExactIn(
           tokenDetail?.contractAddress,
-          BigNumber(USDT_THRESHOLD).multipliedBy(USDT_DECIMAL).toFixed(),
           0,
           address,
           {
+            value: ethers.parseUnits(ETH_THRESHOLD.toString(), "ether"),
             gasLimit: gasLimit || undefined,
           }
         );
@@ -416,7 +402,7 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
       .multipliedBy(DISCOUNT_FACTOR)
       .toString();
 
-    const minUSDTOut = Number(tradeSettings?.slippage)
+    const minEthOut = Number(tradeSettings?.slippage)
       ? decreaseByPercent(sellAmountOutDiscount, tradeSettings?.slippage)
       : 0;
 
@@ -428,13 +414,13 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
         "sellTokenParam",
         tokenDetail?.contractAddress,
         BigNumber(amountValue).multipliedBy(TOKEN_DECIMAL).toFixed(),
-        BigNumber(minUSDTOut).multipliedBy(USDT_DECIMAL).toFixed(0),
+        BigNumber(minEthOut).multipliedBy(NATIVE_TOKEN_DECIMAL).toFixed(0),
         address
       );
       const tx = await contract?.sellExactIn(
         tokenDetail?.contractAddress,
         BigNumber(amountValue).multipliedBy(TOKEN_DECIMAL).toFixed(),
-        BigNumber(minUSDTOut).multipliedBy(USDT_DECIMAL).toFixed(0),
+        BigNumber(minEthOut).multipliedBy(NATIVE_TOKEN_DECIMAL).toFixed(0),
         address,
         {
           gasLimit: gasLimit || undefined,
@@ -459,15 +445,15 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
       console.log(
         "Approve params",
         envs.TOKEN_FACTORY_ADDRESS,
-        BigNumber(usdtAmount)
-          .multipliedBy(USDT_DECIMAL)
+        BigNumber(ethAmount)
+          .multipliedBy(NATIVE_TOKEN_DECIMAL)
           .integerValue(BigNumber.ROUND_HALF_UP)
           .toString()
       );
       const txn = await contract?.approve(
         envs.TOKEN_FACTORY_ADDRESS,
-        BigNumber(usdtAmount)
-          .multipliedBy(USDT_DECIMAL)
+        BigNumber(ethAmount)
+          .multipliedBy(NATIVE_TOKEN_DECIMAL)
           .integerValue(BigNumber.ROUND_HALF_UP)
           .toString()
       );
@@ -499,12 +485,12 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
   };
 
   const handleBuyToken = async () => {
-    const isApproved = BigNumber(usdtAmount).gt(allowance ?? "0");
+    // const isApproved = BigNumber(usdtAmount).gt(allowance ?? "0");
 
-    if (isApproved) {
-      setIsOpenApproveModal(true);
-      return;
-    }
+    // if (isApproved) {
+    //   setIsOpenApproveModal(true);
+    //   return;
+    // }
 
     if (isTokenMint) {
       if (coinType === ECoinType.MemeCoin) {
@@ -531,9 +517,9 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
                 <AppNumberToolTip
                   decimal={6}
                   isFormatterK={false}
-                  value={BigNumber(usdtShouldPay).toString()}
+                  value={BigNumber(ethShouldPay).toString()}
                 />{" "}
-                USDT
+                ETH
               </>
             ) : (
               <>
@@ -561,11 +547,24 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
                 .multipliedBy(DISCOUNT_FACTOR)
                 .toString()}
             />{" "}
-            USDT
+            ETH
           </span>
         </div>
       );
     }
+  };
+
+  const renderBuyExactOutReminder = () => {
+    return coinType === ECoinType.MemeCoin ? (
+      <div className="text-neutral-7 ">
+        <div className="text-12px-bold">Reminder: </div>
+        <div className="text-12px-normal">
+          When using this method to buy tokens, simultaneous transactions may
+          cause repeated transaction failures. If this happens, we recommend
+          switching to buying with an exact amount of ETH.
+        </div>
+      </div>
+    ) : null;
   };
 
   const handleError = (e: any) => {
@@ -609,10 +608,10 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
   };
 
   useEffect(() => {
-    if (usdtAmount || sellAmountOut) {
+    if (ethAmount || sellAmountOut) {
       form.validateFields();
     }
-  }, [usdtAmount, sellAmountOut]);
+  }, [ethAmount, sellAmountOut]);
 
   return (
     <div className="flex flex-col gap-4">
@@ -624,7 +623,7 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
           Minimum amount:{" "}
           <span className="text-white-neutral text-14px-medium">
             {" "}
-            {MINIMUM_BUY_AMOUNT} USDT
+            {MINIMUM_BUY_AMOUNT} ETH
           </span>
         </div>
       </div>
@@ -641,7 +640,7 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
               validator: (_: any, value: string) =>
                 amountValidator(
                   value,
-                  tabKey === TabKey.BUY ? usdtAmount : sellAmountOut
+                  tabKey === TabKey.BUY ? ethAmount : sellAmountOut
                 ),
             },
           ]}
@@ -654,6 +653,7 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
               regex={REGEX_INPUT_DECIMAL(0, 6)}
               placeholder="Enter buy amount"
               isSwap
+              coinType={coinType}
             />
           ) : (
             <AppInputBalance
@@ -677,6 +677,8 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
       )}
 
       {renderAmountInOut()}
+
+      {renderBuyExactOutReminder()}
 
       <div className="flex gap-2 items-center w-full">
         {isAuthenticated ? (

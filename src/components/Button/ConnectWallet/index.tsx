@@ -1,10 +1,10 @@
 import AppButton from "@/components/app-button";
-import { nFormatterVer2 } from "@/helpers/formatNumber";
+import AppTextLoading from "@/components/app-text-loading";
 import { shortenAddress } from "@/helpers/shorten";
 import useWalletAuth from "@/hooks/useWalletAuth";
 import useWindowSize from "@/hooks/useWindowSize";
 import { useAccountModal } from "@/providers/WagmiProvider";
-import { UsdtIcon } from "@public/assets";
+import { EthIcon } from "@public/assets";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 import { Flex } from "antd";
 import Image from "next/image";
@@ -85,7 +85,7 @@ const ConnectWalletButton = ({ customClass }: { customClass?: string }) => {
                     className="flex rounded-[90px] border-[1.5px] border-neutral-4 text-white-neutral text-14px-bold h-[32px] md:h-[40px] overflow-hidden cursor-pointer  w-full md:w-auto"
                     onClick={() => setOpenAccountModal(true)}
                   >
-                    <div className="flex items-center gap-2.5 h-full flex-1 md:flex-auto ml-[5px] mr-2.5">
+                    <div className="flex items-center gap-2.5 h-full flex-1 md:flex-auto ml-[4px] mr-2.5">
                       {chain.hasIcon && (
                         <div
                           className="flex items-center justify-center rounded-full overflow-hidden"
@@ -95,20 +95,27 @@ const ConnectWalletButton = ({ customClass }: { customClass?: string }) => {
                         >
                           {chain.iconUrl && (
                             // eslint-disable-next-line @next/next/no-img-element
-
                             <Image
-                              alt={"USDT Icon"}
-                              src={UsdtIcon}
-                              width={isDesktop ? 32 : 24}
-                              height={isDesktop ? 32 : 24}
+                              alt={"ETH Icon"}
+                              src={EthIcon}
+                              className={`${
+                                isDesktop
+                                  ? "w-[32px] h-[32px]"
+                                  : "w-[24px] h-[24px]"
+                              }`}
                             />
                           )}
                         </div>
                       )}
-                      <div className="text-12px-medium">
-                        {nFormatterVer2(userBalance)}{" "}
-                        {isDesktop ? "USDT" : null}
-                      </div>
+                      <AppTextLoading
+                        loading={!Boolean(isConnected)}
+                        text={
+                          account.displayBalance
+                            ? ` ${account.displayBalance}`
+                            : ""
+                        }
+                        className="text-12px-medium min-w-[50px]"
+                      />
                     </div>
 
                     <div className="p-4 bg-neutral-3 flex items-center text-12px-medium">

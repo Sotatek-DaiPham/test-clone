@@ -1,6 +1,6 @@
 import AppTruncateText from "@/components/app-truncate-text";
 import { ECoinType } from "@/interfaces/token";
-import { SelectDropdownIcon, UsdtIcon } from "@public/assets";
+import { EthIcon, SelectDropdownIcon, UsdtIcon } from "@public/assets";
 import { Input, InputProps, Select } from "antd";
 import BigNumber from "bignumber.js";
 import Image from "next/image";
@@ -17,6 +17,7 @@ interface Props extends InputProps {
   isSwap?: boolean;
   maxValue?: number;
   label?: string;
+  coinType?: ECoinType;
 }
 
 const AppInputBalance = ({
@@ -29,6 +30,7 @@ const AppInputBalance = ({
   onTokenChange,
   maxValue,
   label,
+  coinType,
   ...restProps
 }: Props) => {
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -65,6 +67,7 @@ const AppInputBalance = ({
         <div className="token-balance-input__token">
           <Select
             defaultValue={ECoinType.StableCoin}
+            value={coinType}
             suffixIcon={
               <Image src={SelectDropdownIcon} alt="Select dropdown icon" />
             }
@@ -95,12 +98,10 @@ const AppInputBalance = ({
                       alt="token"
                       width={20}
                       height={20}
-                      src={UsdtIcon}
+                      src={EthIcon}
                       className="rounded-full object-cover h-5"
                     />
-                    <span className="text-neutral-9 text-16px-medium">
-                      USDT
-                    </span>
+                    <span className="text-neutral-9 text-16px-medium">ETH</span>
                   </div>
                 );
               }
@@ -128,10 +129,10 @@ const AppInputBalance = ({
                   alt="token"
                   width={20}
                   height={20}
-                  src={UsdtIcon}
+                  src={EthIcon}
                   className="rounded-full object-cover h-5"
                 />
-                <span className="text-neutral-9 text-16px-medium">USDT</span>
+                <span className="text-neutral-9 text-16px-medium">ETH</span>
               </div>
             </Select.Option>
           </Select>

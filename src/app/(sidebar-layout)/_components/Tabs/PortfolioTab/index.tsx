@@ -43,7 +43,7 @@ const PortfolioTab = ({ walletAddress }: { walletAddress: string }) => {
       return getAPI(API_PATH.TOKEN.PORTFOLIO, {
         params: {
           ...params,
-          orderBy: "valueUsdt",
+          orderBy: "valueEth",
           direction: EDirection.DESC,
           minAmountHeld: hideDustCoin ? 0.1 * (10 ^ 6) : null,
           walletAddress: walletAddress || null,
