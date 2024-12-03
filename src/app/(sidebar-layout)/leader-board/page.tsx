@@ -195,7 +195,7 @@ const LeaderboardPage = () => {
         return (
           <span>
             <AppNumberToolTip
-              value={convertNumber(value, 6)}
+              value={convertNumber(value)}
               isNoFormatterKMB={true}
             />
           </span>
@@ -211,7 +211,7 @@ const LeaderboardPage = () => {
         return (
           <span className="text-success-main">
             <AppNumberToolTip
-              value={convertNumber(value, 6)}
+              value={convertNumber(value)}
               isNoFormatterKMB={true}
             />
           </span>
@@ -227,7 +227,7 @@ const LeaderboardPage = () => {
         return (
           <span className="text-error-main">
             <AppNumberToolTip
-              value={convertNumber(value, 6)}
+              value={convertNumber(value)}
               isNoFormatterKMB={true}
             />
           </span>

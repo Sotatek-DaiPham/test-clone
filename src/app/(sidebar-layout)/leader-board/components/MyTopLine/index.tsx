@@ -19,7 +19,7 @@ const showTotal = (data: any) => {
     return (
       <AppNumberToolTip
         decimal={2}
-        value={convertNumber(data?.total, 6)}
+        value={convertNumber(data?.total)}
         isNoFormatterKMB={true}
       />
     );
@@ -27,7 +27,7 @@ const showTotal = (data: any) => {
     return (
       <AppNumberToolTip
         decimal={2}
-        value={convertNumber(data?.total, 6)}
+        value={convertNumber(data?.total)}
         isNoFormatterKMB={true}
       />
     );

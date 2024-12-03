@@ -110,7 +110,7 @@ const TopUser = ({
               {data?.total ? (
                 <>
                   <AppNumberToolTip
-                    value={convertNumber(data?.total, 6)}
+                    value={convertNumber(data?.total)}
                     isNoFormatterKMB={false}
                     isFormatterK={true}
                   />{" "}
@@ -127,7 +127,7 @@ const TopUser = ({
               {data?.buy ? (
                 <>
                   <AppNumberToolTip
-                    value={convertNumber(data?.buy, 6)}
+                    value={convertNumber(data?.buy)}
                     isNoFormatterKMB={false}
                     isFormatterK={true}
                   />{" "}
@@ -144,7 +144,7 @@ const TopUser = ({
               {data?.sell ? (
                 <>
                   <AppNumberToolTip
-                    value={convertNumber(data?.sell, 6)}
+                    value={convertNumber(data?.sell)}
                     isNoFormatterKMB={false}
                     isFormatterK={true}
                   />{" "}
