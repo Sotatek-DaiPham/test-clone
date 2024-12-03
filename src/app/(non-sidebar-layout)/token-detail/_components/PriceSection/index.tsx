@@ -18,42 +18,18 @@ const PriceSection = () => {
   } = useTokenDetail();
 
   const tokenInfo = useMemo(() => {
-    if (tokenDetail && tokenDetailSC) {
-      const tokenPrice = BigNumber(tokenDetail?.price).div(
-        NATIVE_TOKEN_DECIMAL
-      );
+    const tokenPrice = BigNumber(tokenDetail?.price).div(NATIVE_TOKEN_DECIMAL);
 
-      const tokenTotalSupply = BigNumber(tokenDetail.total_supply).div(
-        TOKEN_DECIMAL
-      );
+    const tokenTotalSupply = BigNumber(tokenDetail?.total_supply).div(
+      TOKEN_DECIMAL
+    );
 
-      const marketCap = BigNumber(tokenPrice)
-        .multipliedBy(tokenTotalSupply)
-        .toString();
-      const volume = BigNumber(tokenDetail.volume)
-        .div(NATIVE_TOKEN_DECIMAL)
-        .toString();
-      const raisedAmount = tokenDetailSC.usdtRaised;
-      const raisedAmountPercent = BigNumber(raisedAmount)
-        .dividedBy(ETH_THRESHOLD)
-        .multipliedBy(100)
-        .toString();
-
-      return {
-        tokenPrice,
-        marketCap,
-        volume,
-        raisedAmount,
-        raisedAmountPercent,
-      };
-    }
+    const marketCap = BigNumber(tokenPrice)
+      .multipliedBy(tokenTotalSupply)
+      .toString();
 
     return {
-      tokenPrice: calculateUsdtShouldPay("1"),
-      marketCap: 3450,
-      volume: 0,
-      raisedAmount: 0,
-      raisedAmountPercent: 0,
+      marketCap,
     };
   }, [tokenDetailSC, tokenDetail]);
 
