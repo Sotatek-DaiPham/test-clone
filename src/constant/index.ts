@@ -19,7 +19,7 @@ export const TOKEN_DECIMAL = 1e18;
 
 export const ETH_THRESHOLD = 3.5;
 
-export const USDT_THRESHOLD_WITH_FEE = 3.535;
+export const ETH_THRESHOLD_WITH_FEE = 3.535;
 
 export const PREDEFINE_AMOUNT = ["0.005", "0.01", "0.05", "0.1", "0.5"];
 

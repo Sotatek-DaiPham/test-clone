@@ -16,7 +16,7 @@ import {
   TOKEN_DECIMAL,
   NATIVE_TOKEN_DECIMAL,
   ETH_THRESHOLD,
-  USDT_THRESHOLD_WITH_FEE,
+  ETH_THRESHOLD_WITH_FEE,
 } from "@/constant";
 import { envs } from "@/constant/envs";
 import { REGEX_INPUT_DECIMAL } from "@/constant/regex";
@@ -162,7 +162,7 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
         const calculatedUsdtShouldPay = calculateUsdtShouldPay(amountValue);
         return BigNumber(calculatedUsdtShouldPay).lt(0) ||
           !BigNumber(calculatedUsdtShouldPay).isFinite()
-          ? USDT_THRESHOLD_WITH_FEE.toString()
+          ? ETH_THRESHOLD_WITH_FEE.toString()
           : calculatedUsdtShouldPay;
       }
     } else {
@@ -180,10 +180,10 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
         const calculatedTokenWillReceive = calculateTokenReceive(amountValue);
 
         const maxTokenWillReceive = calculateTokenReceive(
-          USDT_THRESHOLD_WITH_FEE.toString()
+          ETH_THRESHOLD_WITH_FEE.toString()
         );
 
-        return BigNumber(amountValue).gt(USDT_THRESHOLD_WITH_FEE)
+        return BigNumber(amountValue).gt(ETH_THRESHOLD_WITH_FEE)
           ? maxTokenWillReceive
           : calculatedTokenWillReceive;
       }
