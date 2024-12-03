@@ -85,7 +85,7 @@ export const addTradeToLastCandle = (
   chartRealtimeCallback: (candle: Candle) => void
 ): Candle => {
   const lastCandleEndTime = lastCandle?.time + intervalInMilliseconds;
-  const tradePrice = Number(convertNumber(trade?.nextPrice, 6));
+  const tradePrice = Number(convertNumber(trade?.nextPrice));
   const tradeTime = round(
     new Date(trade?.createdAt).getTime(),
     intervalInMilliseconds
@@ -104,8 +104,8 @@ export const addTradeToLastCandle = (
   } else {
     lastCandle.low = Math.min(tradePrice, lastCandle?.low);
     lastCandle.high = Math.max(tradePrice, lastCandle?.high);
-    lastCandle.close = Number(convertNumber(trade?.nextPrice, 6));
-    lastCandle.volume += Number(convertNumber(trade?.ethAmount, 6));
+    lastCandle.close = Number(convertNumber(trade?.nextPrice));
+    lastCandle.volume += Number(convertNumber(trade?.ethAmount));
     chartRealtimeCallback(lastCandle);
     return lastCandle;
   }

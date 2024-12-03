@@ -113,6 +113,7 @@ const AppTradingView = (props: ChartContainerProps) => {
         overrides: {
           "paneProperties.background": "#171717",
           volumePaneSize: "medium",
+          "priceScale.priceFormat precision": 15,
         },
         studies_overrides: {
           "volume.show ma": true,

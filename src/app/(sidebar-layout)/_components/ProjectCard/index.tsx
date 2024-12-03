@@ -113,9 +113,7 @@ const ProjectCard = ({
                   }
                 >
                   {Number(data?.valueEth) > 0 ? (
-                    <AppNumberToolTip
-                      value={convertNumber(data?.valueEth, 6)}
-                    />
+                    <AppNumberToolTip value={convertNumber(data?.valueEth)} />
                   ) : (
                     "-"
                   )}
