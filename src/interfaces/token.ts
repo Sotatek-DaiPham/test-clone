@@ -16,7 +16,7 @@ export interface ICreateTokenRes {
   tokenFactory: string;
   total_supply: string;
   owner: string;
-  initUsdtReserve: string;
+  initEthReserve: string;
   website: string;
   twitter: string;
   telegram: string;
@@ -77,7 +77,7 @@ export interface ITradeHistoryRes {
   user_address: string;
   token_address: string;
   amount: string;
-  usdt_amount: string;
+  eth_amount: string;
   action: string;
   created_at: string;
   updated_at: string;
@@ -128,7 +128,7 @@ export interface ISocketData {
     tokenName: string;
     txh: string;
     updatedAt: string;
-    usdtAmount: string;
+    ethAmount: string;
     userAddress: string;
     userAvatar: string | null;
     username: string;

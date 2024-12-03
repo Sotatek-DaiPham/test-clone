@@ -1,6 +1,6 @@
 "use client";
 import { pumpContractABI } from "@/abi/pumpContractAbi";
-import { usdtABI } from "@/abi/usdtAbi";
+import { erc20Abi } from "@/abi/usdtAbi";
 import AppButton from "@/components/app-button";
 import FormItemLabel from "@/components/app-form-label";
 import AppInput from "@/components/app-input";
@@ -12,7 +12,8 @@ import ConnectWalletButton from "@/components/Button/ConnectWallet";
 import {
   ACCEPT_IMAGE_EXTENSION,
   AMOUNT_FIELD_NAME,
-  USDT_DECIMAL,
+  TOKEN_DECIMAL_PLACE,
+  NATIVE_TOKEN_DECIMAL,
   USDT_THRESHOLD_WITH_FEE,
 } from "@/constant";
 import { API_PATH } from "@/constant/api-path";
@@ -48,6 +49,7 @@ import { Form, Input } from "antd";
 import { useWatch } from "antd/es/form/Form";
 import { AxiosResponse } from "axios";
 import BigNumber from "bignumber.js";
+import { ethers } from "ethers";
 import { get } from "lodash";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
@@ -129,7 +131,7 @@ const CreateTokenPage = () => {
     },
   });
 
-  const { allowance } = useUsdtAllowance(address);
+  // const { allowance } = useUsdtAllowance(address);
 
   const { mutateAsync: createToken } = useMutation({
     mutationFn: (
@@ -187,7 +189,10 @@ const CreateTokenPage = () => {
 
   const buyAmount =
     coinType === ECoinType.MemeCoin
-      ? BigNumber(usdtShouldPay).toFixed(6, BigNumber.ROUND_DOWN)
+      ? BigNumber(usdtShouldPay).toFixed(
+          TOKEN_DECIMAL_PLACE,
+          BigNumber.ROUND_DOWN
+        )
       : initialBuyAmount;
 
   const tokenFactoryContract = useContract(
@@ -197,7 +202,7 @@ const CreateTokenPage = () => {
 
   const coinTickerValue = useWatch(FIELD_NAMES.COIN_TICKER, form);
 
-  const USDTContract = useContract(usdtABI, envs.USDT_ADDRESS);
+  const USDTContract = useContract(erc20Abi, envs.USDT_ADDRESS);
 
   const handleUploadFiles = async (file: File) => {
     const formData = new FormData();
@@ -240,7 +245,7 @@ const CreateTokenPage = () => {
     try {
       const txn = await contract?.approve(
         envs.TOKEN_FACTORY_ADDRESS,
-        BigNumber(buyAmount).multipliedBy(USDT_DECIMAL).toFixed()
+        BigNumber(buyAmount).multipliedBy(NATIVE_TOKEN_DECIMAL).toFixed()
       );
 
       await txn?.wait();
@@ -264,7 +269,7 @@ const CreateTokenPage = () => {
         "create params",
         values[FIELD_NAMES.COIN_TICKER],
         values[FIELD_NAMES.COIN_NAME],
-        BigNumber(buyAmount).multipliedBy(USDT_DECIMAL).toFixed(),
+        BigNumber(buyAmount).multipliedBy(NATIVE_TOKEN_DECIMAL).toFixed(),
         0,
         address,
         idx,
@@ -274,11 +279,13 @@ const CreateTokenPage = () => {
       const tx = await contract?.buyAndCreateToken(
         values[FIELD_NAMES.COIN_TICKER],
         values[FIELD_NAMES.COIN_NAME],
-        BigNumber(buyAmount).multipliedBy(USDT_DECIMAL).toFixed(),
         0,
         address,
         idx,
-        address
+        address,
+        {
+          value: ethers.parseUnits(buyAmount, "ether"),
+        }
       );
 
       await tx.wait();
@@ -321,12 +328,12 @@ const CreateTokenPage = () => {
         return;
       }
 
-      const isApproved = BigNumber(buyAmount).gt(allowance ?? "0");
+      // const isApproved = BigNumber(buyAmount).gt(allowance ?? "0");
 
-      if (isApproved) {
-        setIsOpenApproveModal(true);
-        return;
-      }
+      // if (isApproved) {
+      //   setIsOpenApproveModal(true);
+      //   return;
+      // }
 
       await handleCreateTokenSC(
         createTokenDetail.idx,
@@ -341,12 +348,6 @@ const CreateTokenPage = () => {
       } else {
         setLoadingStatus((prev) => ({ ...prev, createToken: false }));
       }
-    }
-  };
-
-  const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === " ") {
-      event.preventDefault();
     }
   };
 
@@ -676,7 +677,7 @@ const CreateTokenPage = () => {
         tokenWillReceive={tokenWillReceive}
         coinType={coinType}
         setCoinType={setCoinType}
-        tokenImage={uploadImage?.src}
+        tokenImage={fileList[0]?.url?.toString()}
       />
       <ConfirmModal
         title="You need to approve your tokens in order to make transaction"

@@ -1,4 +1,4 @@
-export const usdtABI = [
+export const erc20Abi = [
   { inputs: [], stateMutability: "nonpayable", type: "constructor" },
   {
     inputs: [

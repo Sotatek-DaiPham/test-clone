@@ -2,7 +2,7 @@ import AppNumberToolTip from "@/components/app-number-tooltip";
 import AppProgress from "@/components/app-progress";
 import AppTextLoading from "@/components/app-text-loading";
 import AppTooltip from "@/components/app-tooltip";
-import { TOKEN_DECIMAL, USDT_DECIMAL, USDT_THRESHOLD } from "@/constant";
+import { TOKEN_DECIMAL, NATIVE_TOKEN_DECIMAL, ETH_THRESHOLD } from "@/constant";
 import { useTokenDetail } from "@/context/TokenDetailContext";
 import { calculateUsdtShouldPay } from "@/helpers/calculate";
 import { nFormatter } from "@/helpers/formatNumber";
@@ -19,7 +19,9 @@ const PriceSection = () => {
 
   const tokenInfo = useMemo(() => {
     if (tokenDetail && tokenDetailSC) {
-      const tokenPrice = BigNumber(tokenDetail?.price).div(USDT_DECIMAL);
+      const tokenPrice = BigNumber(tokenDetail?.price).div(
+        NATIVE_TOKEN_DECIMAL
+      );
 
       const tokenTotalSupply = BigNumber(tokenDetail.total_supply).div(
         TOKEN_DECIMAL
@@ -28,10 +30,12 @@ const PriceSection = () => {
       const marketCap = BigNumber(tokenPrice)
         .multipliedBy(tokenTotalSupply)
         .toString();
-      const volume = BigNumber(tokenDetail.volume).div(USDT_DECIMAL).toString();
+      const volume = BigNumber(tokenDetail.volume)
+        .div(NATIVE_TOKEN_DECIMAL)
+        .toString();
       const raisedAmount = tokenDetailSC.usdtRaised;
       const raisedAmountPercent = BigNumber(raisedAmount)
-        .dividedBy(USDT_THRESHOLD)
+        .dividedBy(ETH_THRESHOLD)
         .multipliedBy(100)
         .toString();
 
@@ -67,7 +71,7 @@ const PriceSection = () => {
                 decimal={6}
                 isFormatterK={false}
                 value={BigNumber(tokenDetail?.price)
-                  .div(USDT_DECIMAL)
+                  .div(NATIVE_TOKEN_DECIMAL)
                   .toString()}
               />
             }
@@ -101,7 +105,7 @@ const PriceSection = () => {
                 decimal={6}
                 isFormatterK={false}
                 value={BigNumber(tokenDetail?.volume)
-                  .div(USDT_DECIMAL)
+                  .div(NATIVE_TOKEN_DECIMAL)
                   .toString()}
               />
             }

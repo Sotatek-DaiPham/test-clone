@@ -1,7 +1,7 @@
 // src/hooks/usePairContract.ts
 
 import { uniswapPairAbi } from "@/abi/uniswapPairContract";
-import { TOKEN_DECIMAL, USDT_DECIMAL } from "@/constant";
+import { TOKEN_DECIMAL, NATIVE_TOKEN_DECIMAL } from "@/constant";
 import BigNumber from "bignumber.js";
 import { useReadContract } from "wagmi";
 
@@ -56,7 +56,7 @@ const usePairContract = (pairAddress: string | null) => {
       ? [token0Address, token1Address]
       : [token1Address, token0Address];
 
-  const [memeTokenReserveIndex, usdtReserveIndex] =
+  const [memeTokenReserveIndex, ethReserveIndex] =
     token0Decimal === 18 ? [0, 1] : [1, 0];
 
   return {
@@ -64,8 +64,8 @@ const usePairContract = (pairAddress: string | null) => {
       (reserveData as any[])?.[memeTokenReserveIndex] as number
     ).div(TOKEN_DECIMAL),
     usdtReserve: BigNumber(
-      (reserveData as any[])?.[usdtReserveIndex] as number
-    ).div(USDT_DECIMAL),
+      (reserveData as any[])?.[ethReserveIndex] as number
+    ).div(NATIVE_TOKEN_DECIMAL),
     memeTokenAddress,
     usdtAddress,
   };

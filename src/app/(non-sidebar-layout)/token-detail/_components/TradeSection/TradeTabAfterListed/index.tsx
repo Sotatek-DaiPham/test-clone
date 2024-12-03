@@ -1,5 +1,5 @@
 import { routerContactAbi } from "@/abi/routerContract";
-import { usdtABI } from "@/abi/usdtAbi";
+import { erc20Abi } from "@/abi/usdtAbi";
 import AppAmountSelect from "@/components/app-amount-select";
 import AppButton from "@/components/app-button";
 import AppInputBalance from "@/components/app-input/app-input-balance";
@@ -13,7 +13,7 @@ import {
   PREDEFINE_AMOUNT,
   PREDEFINE_SELL_PERCENT,
   TOKEN_DECIMAL,
-  USDT_DECIMAL,
+  NATIVE_TOKEN_DECIMAL,
 } from "@/constant";
 import { API_PATH } from "@/constant/api-path";
 import { envs } from "@/constant/envs";
@@ -66,7 +66,7 @@ const amountValidator = (value: string, usdtShouldPay: string) => {
     (usdtShouldPay && BigNumber(usdtShouldPay).lt(MINIMUM_BUY_AMOUNT))
   ) {
     return Promise.reject(
-      new Error(`Minimum transaction amount is ${MINIMUM_BUY_AMOUNT} USDT`)
+      new Error(`Minimum transaction amount is ${MINIMUM_BUY_AMOUNT} ETH`)
     );
   }
   return Promise.resolve();
@@ -103,7 +103,7 @@ const TradeTabAfterListed = ({ tabKey }: { tabKey: TabKey }) => {
     usePairContract(tokenDetail?.pairListDex);
 
   const { data: memeTokenAllowance } = useReadContract({
-    abi: usdtABI,
+    abi: erc20Abi,
     address: memeTokenAddress as any,
     functionName: "allowance",
     args: [address, CONTRACT_ROUTER],
@@ -112,7 +112,7 @@ const TradeTabAfterListed = ({ tabKey }: { tabKey: TabKey }) => {
   console.log("memeTokenAllowance", memeTokenAllowance);
 
   const { data: usdtAllowance } = useReadContract({
-    abi: usdtABI,
+    abi: erc20Abi,
     address: usdtAddress as any,
     functionName: "allowance",
     args: [address, CONTRACT_ROUTER],
@@ -120,8 +120,8 @@ const TradeTabAfterListed = ({ tabKey }: { tabKey: TabKey }) => {
 
   const [coinType, setCoinType] = useState(ECoinType.StableCoin);
   const [isOpenApproveModal, setIsOpenApproveModal] = useState(false);
-  const USDTContract = useContract(usdtABI, usdtAddress as string);
-  const MemeTokenContract = useContract(usdtABI, memeTokenAddress as string);
+  const USDTContract = useContract(erc20Abi, usdtAddress as string);
+  const MemeTokenContract = useContract(erc20Abi, memeTokenAddress as string);
 
   const routerContract = useContract(routerContactAbi, CONTRACT_ROUTER);
 
@@ -132,7 +132,7 @@ const TradeTabAfterListed = ({ tabKey }: { tabKey: TabKey }) => {
     memeTokenAddress
   );
 
-  const usdtShouldPay: any = useMemo(() => {
+  const ethShouldPay: any = useMemo(() => {
     if (amountValue && coinType === ECoinType.MemeCoin) {
       return calculateUsdtShouldPayAfterListed(
         memeTokenReserve,
@@ -170,17 +170,17 @@ const TradeTabAfterListed = ({ tabKey }: { tabKey: TabKey }) => {
 
   const usdtAmount =
     coinType === ECoinType.MemeCoin
-      ? BigNumber(usdtShouldPay)
-          .multipliedBy(USDT_DECIMAL)
+      ? BigNumber(ethShouldPay)
+          .multipliedBy(NATIVE_TOKEN_DECIMAL)
           .integerValue(BigNumber.ROUND_CEIL)
-          .dividedBy(USDT_DECIMAL)
+          .dividedBy(NATIVE_TOKEN_DECIMAL)
           .toFixed(6)
       : amountValue;
 
   const isDisableBuyButton =
     !amountValue ||
     !!(amountValue && BigNumber(amountValue).lt(MINIMUM_BUY_AMOUNT)) ||
-    !!(usdtShouldPay && BigNumber(usdtShouldPay).lt(MINIMUM_BUY_AMOUNT));
+    !!(ethShouldPay && BigNumber(ethShouldPay).lt(MINIMUM_BUY_AMOUNT));
 
   const handleSelect = (value: string) => {
     form.setFieldValue(AMOUNT_FIELD_NAME, value);
@@ -215,18 +215,18 @@ const TradeTabAfterListed = ({ tabKey }: { tabKey: TabKey }) => {
     const contract = await USDTContract;
 
     const approveAmount =
-      coinType === ECoinType.MemeCoin ? usdtShouldPay : amountValue;
+      coinType === ECoinType.MemeCoin ? ethShouldPay : amountValue;
 
     setLoadingStatus((prev) => ({ ...prev, approve: true }));
     try {
       console.log(
         "Approve params",
         CONTRACT_ROUTER,
-        BigNumber(approveAmount).multipliedBy(USDT_DECIMAL).toFixed(0)
+        BigNumber(approveAmount).multipliedBy(NATIVE_TOKEN_DECIMAL).toFixed(0)
       );
       const txn = await contract?.approve(
         CONTRACT_ROUTER,
-        BigNumber(approveAmount).multipliedBy(USDT_DECIMAL).toFixed(0)
+        BigNumber(approveAmount).multipliedBy(NATIVE_TOKEN_DECIMAL).toFixed(0)
       );
 
       await txn?.wait();
@@ -289,7 +289,7 @@ const TradeTabAfterListed = ({ tabKey }: { tabKey: TabKey }) => {
           <span className="text-white-neutral text-16px-medium">
             {" "}
             {coinType === ECoinType.MemeCoin
-              ? `${nFormatter(usdtShouldPay) || 0} USDT`
+              ? `${nFormatter(ethShouldPay) || 0} ETH`
               : `${nFormatter(tokenWillReceive) || 0} ${tokenDetail?.symbol}`}
           </span>
         </div>
@@ -300,7 +300,7 @@ const TradeTabAfterListed = ({ tabKey }: { tabKey: TabKey }) => {
           You will receive
           <span className="text-white-neutral text-16px-medium">
             {" "}
-            {`${nFormatter(sellAmountOut) || 0} USDT`}
+            {`${nFormatter(sellAmountOut) || 0} ETH`}
           </span>
         </div>
       );
@@ -310,8 +310,8 @@ const TradeTabAfterListed = ({ tabKey }: { tabKey: TabKey }) => {
   const getSwapAmount = () => {
     return tabKey === TabKey.BUY
       ? coinType === ECoinType.MemeCoin
-        ? BigNumber(usdtShouldPay).multipliedBy(USDT_DECIMAL).toFixed(0)
-        : BigNumber(amountValue).multipliedBy(USDT_DECIMAL).toFixed(0)
+        ? BigNumber(ethShouldPay).multipliedBy(NATIVE_TOKEN_DECIMAL).toFixed(0)
+        : BigNumber(amountValue).multipliedBy(NATIVE_TOKEN_DECIMAL).toFixed(0)
       : BigNumber(amountValue).multipliedBy(TOKEN_DECIMAL).toFixed();
   };
 
@@ -375,7 +375,9 @@ const TradeTabAfterListed = ({ tabKey }: { tabKey: TabKey }) => {
       "Swap Params",
       swapAmount,
       BigNumber(minTokenOut)
-        .multipliedBy(tabKey === TabKey.BUY ? TOKEN_DECIMAL : USDT_DECIMAL)
+        .multipliedBy(
+          tabKey === TabKey.BUY ? TOKEN_DECIMAL : NATIVE_TOKEN_DECIMAL
+        )
         .toFixed(0),
       path,
       address,
@@ -384,12 +386,29 @@ const TradeTabAfterListed = ({ tabKey }: { tabKey: TabKey }) => {
     );
 
     try {
-      const tx =
-        await contract?.swapExactTokensForTokensSupportingFeeOnTransferTokens(
+      let tx;
+      if (tabKey === TabKey.BUY) {
+        tx =
+          await contract?.swapExactTokensForTokensSupportingFeeOnTransferTokens(
+            swapAmount,
+            BigNumber(minTokenOut)
+              .multipliedBy(
+                tabKey === TabKey.BUY ? TOKEN_DECIMAL : NATIVE_TOKEN_DECIMAL
+              )
+              .toFixed(0),
+            path,
+            address,
+            address,
+            9999999999999,
+            {
+              value: swapAmount,
+              gasLimit: gasLimit || undefined,
+            }
+          );
+      } else {
+        tx = await contract?.swapExactTokensForETHSupportingFeeOnTransferTokens(
           swapAmount,
-          BigNumber(minTokenOut)
-            .multipliedBy(tabKey === TabKey.BUY ? TOKEN_DECIMAL : USDT_DECIMAL)
-            .toFixed(0),
+          BigNumber(minTokenOut).multipliedBy(NATIVE_TOKEN_DECIMAL).toFixed(0),
           path,
           address,
           address,
@@ -398,6 +417,7 @@ const TradeTabAfterListed = ({ tabKey }: { tabKey: TabKey }) => {
             gasLimit: gasLimit || undefined,
           }
         );
+      }
 
       await tx.wait();
       const txHash = tx?.hash;
@@ -424,12 +444,12 @@ const TradeTabAfterListed = ({ tabKey }: { tabKey: TabKey }) => {
   const handleBuyToken = async () => {
     let needApprove;
     if (coinType === ECoinType.MemeCoin) {
-      needApprove = BigNumber(usdtShouldPay).gt(
+      needApprove = BigNumber(ethShouldPay).gt(
         (usdtAllowance as string) ?? "0"
       );
     } else {
       needApprove = BigNumber(amountValue)
-        .multipliedBy(USDT_DECIMAL)
+        .multipliedBy(NATIVE_TOKEN_DECIMAL)
         .gt((usdtAllowance as string) ?? "0");
     }
 
@@ -473,7 +493,7 @@ const TradeTabAfterListed = ({ tabKey }: { tabKey: TabKey }) => {
           Minimum amount:{" "}
           <span className="text-white-neutral text-14px-medium">
             {" "}
-            {MINIMUM_BUY_AMOUNT} USDT
+            {MINIMUM_BUY_AMOUNT} ETH
           </span>
         </div>
       </div>

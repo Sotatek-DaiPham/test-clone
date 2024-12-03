@@ -114,7 +114,7 @@ const TopUser = ({
                     isNoFormatterKMB={false}
                     isFormatterK={true}
                   />{" "}
-                  USDT
+                  ETH
                 </>
               ) : (
                 "-"
@@ -131,7 +131,7 @@ const TopUser = ({
                     isNoFormatterKMB={false}
                     isFormatterK={true}
                   />{" "}
-                  USDT
+                  ETH
                 </>
               ) : (
                 "-"
@@ -148,7 +148,7 @@ const TopUser = ({
                     isNoFormatterKMB={false}
                     isFormatterK={true}
                   />{" "}
-                  USDT
+                  ETH
                 </>
               ) : (
                 "-"

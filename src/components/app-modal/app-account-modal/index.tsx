@@ -4,7 +4,6 @@ import { BeSuccessResponse } from "@/entities/response";
 import { nFormatterVer2 } from "@/helpers/formatNumber";
 import { shortenAddress } from "@/helpers/shorten";
 import useWalletAuth from "@/hooks/useWalletAuth";
-import { useAppSelector } from "@/libs/hooks";
 import { useAccountModal } from "@/providers/WagmiProvider";
 import { getAPI } from "@/service";
 import { useQuery } from "@tanstack/react-query";
@@ -17,6 +16,8 @@ import { useAccount } from "wagmi";
 import "./styles.scss";
 import AppImage from "@/components/app-image";
 import { ImageDefaultIcon } from "@public/assets";
+import BigNumber from "bignumber.js";
+import { NATIVE_TOKEN_DECIMAL } from "@/constant";
 
 interface IAccountModal extends ModalProps {
   onClose: () => void;
@@ -110,7 +111,15 @@ const AccountModal = ({ onClose, ...props }: IAccountModal) => {
             <span>{shortenAddress(address || "", 4, -4)}</span>
           </div>
           <div className="balance  font-[600] text-center text-[#fff9] leading-[18px]">
-            <span>{nFormatterVer2(userBalance)} USDT</span>
+            <span>
+              {userBalance
+                ? nFormatterVer2(
+                    BigNumber(userBalance).div(NATIVE_TOKEN_DECIMAL).toString(),
+                    3
+                  )
+                : "0"}{" "}
+              ETH
+            </span>
           </div>
         </div>
       </div>

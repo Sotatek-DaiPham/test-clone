@@ -1,7 +1,11 @@
 import AppAmountSelect from "@/components/app-amount-select";
 import AppButton from "@/components/app-button";
 import AppInputBalance from "@/components/app-input/app-input-balance";
-import { AMOUNT_FIELD_NAME, MINIMUM_BUY_AMOUNT } from "@/constant";
+import {
+  AMOUNT_FIELD_NAME,
+  MINIMUM_BUY_AMOUNT,
+  PREDEFINE_AMOUNT,
+} from "@/constant";
 import { REGEX_INPUT_DECIMAL } from "@/constant/regex";
 import { nFormatter } from "@/helpers/formatNumber";
 import { ECoinType } from "@/interfaces/token";
@@ -22,7 +26,7 @@ interface IInitialBuyModal extends ModalProps {
   tokenWillReceive: string;
   coinType: ECoinType;
   setCoinType: Dispatch<SetStateAction<ECoinType>>;
-  tokenImage: string;
+  tokenImage: string | undefined;
   form: FormInstance<{
     amount: string;
   }>;
@@ -36,7 +40,7 @@ const amountValidator = (value: string, usdtShouldPay: string) => {
     (usdtShouldPay && BigNumber(usdtShouldPay).lt(MINIMUM_BUY_AMOUNT))
   ) {
     return Promise.reject(
-      new Error(`Minimum transaction amount is ${MINIMUM_BUY_AMOUNT} USDT`)
+      new Error(`Minimum transaction amount is ${MINIMUM_BUY_AMOUNT} ETH`)
     );
   }
   return Promise.resolve();
@@ -58,8 +62,6 @@ const InitialBuyModal = ({
   form,
   ...props
 }: IInitialBuyModal) => {
-  const predefinedNumbers = ["05", "10", "20", "50", "100"];
-
   const isDisableBuyButton =
     !!(
       !initialBuyAmount ||
@@ -99,7 +101,7 @@ const InitialBuyModal = ({
             <div className="text-14px-normal text-neutral-7">
               Minimum amount:{" "}
               <span className="text-white-neutral text-14px-medium">
-                {MINIMUM_BUY_AMOUNT} USDT
+                {MINIMUM_BUY_AMOUNT} ETH
               </span>
             </div>
           </div>
@@ -130,7 +132,7 @@ const InitialBuyModal = ({
           </Form>
           {coinType === ECoinType.StableCoin ? (
             <AppAmountSelect
-              numbers={predefinedNumbers}
+              numbers={PREDEFINE_AMOUNT}
               onSelect={(value) => {
                 form.setFieldValue("amount", value);
               }}
@@ -144,7 +146,7 @@ const InitialBuyModal = ({
               : "You will receive "}
             <span className="text-white-neutral text-14px-medium">
               {coinType === ECoinType.MemeCoin
-                ? `${nFormatter(usdtShouldPay) || 0} USDT`
+                ? `${nFormatter(usdtShouldPay) || 0} ETH`
                 : `${nFormatter(tokenWillReceive) || 0} ${tokenSymbol}`}
             </span>
           </div>

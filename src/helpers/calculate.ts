@@ -13,29 +13,29 @@ declare module "dayjs" {
   }
 }
 
-const TARGET = new BigNumber("3450000000000");
-const ONE_BILLION = new BigNumber("1000000000");
-const BASE = new BigNumber("3450");
+const TARGET = new BigNumber("1000000000");
+const INITIAL_TOKEN_RESERVE = new BigNumber("1000000000");
+const INITIAL_ETH_RESERVE = new BigNumber("1");
 export const DISCOUNT_FACTOR = new BigNumber("0.99");
 
 export const calculateUsdtShouldPay = (y: string): string => {
-  const denominator = ONE_BILLION.minus(new BigNumber(y));
+  const denominator = INITIAL_TOKEN_RESERVE.minus(new BigNumber(y));
   const result = TARGET.dividedBy(denominator)
-    .minus(BASE)
+    .minus(INITIAL_ETH_RESERVE)
     .dividedBy(DISCOUNT_FACTOR);
   return result.toFixed();
 };
 
 export const calculateTokenReceive = (x: string): string => {
   const discountedX = new BigNumber(x).multipliedBy(DISCOUNT_FACTOR);
-  const denominator = BASE.plus(discountedX);
-  const result = ONE_BILLION.minus(TARGET.dividedBy(denominator));
+  const denominator = INITIAL_ETH_RESERVE.plus(discountedX);
+  const result = INITIAL_TOKEN_RESERVE.minus(TARGET.dividedBy(denominator));
   return result.toFixed();
 };
 
 export const calculateTokenReceiveWithoutFee = (x: string): string => {
-  const denominator = BASE.plus(x);
-  const result = ONE_BILLION.minus(TARGET.dividedBy(denominator));
+  const denominator = INITIAL_ETH_RESERVE.plus(x);
+  const result = INITIAL_TOKEN_RESERVE.minus(TARGET.dividedBy(denominator));
   return result.toFixed();
 };
 

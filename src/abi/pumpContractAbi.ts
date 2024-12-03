@@ -42,7 +42,7 @@ export const pumpContractABI = [
       {
         indexed: false,
         internalType: "uint256",
-        name: "usdtAmount",
+        name: "ethAmount",
         type: "uint256",
       },
       { indexed: false, internalType: "uint256", name: "fee", type: "uint256" },
@@ -112,7 +112,7 @@ export const pumpContractABI = [
       {
         indexed: false,
         internalType: "uint256",
-        name: "usdtAmount",
+        name: "ethAmount",
         type: "uint256",
       },
       { indexed: false, internalType: "uint256", name: "fee", type: "uint256" },
@@ -168,14 +168,14 @@ export const pumpContractABI = [
   },
   {
     inputs: [],
-    name: "INITIAL_USDT_RESERVE",
+    name: "INITIAL_ETH_RESERVE",
     outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
     stateMutability: "view",
     type: "function",
   },
   {
     inputs: [],
-    name: "MAX_USDT_RAISED",
+    name: "MAX_ETH_RAISED",
     outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
     stateMutability: "view",
     type: "function",
@@ -205,7 +205,6 @@ export const pumpContractABI = [
     inputs: [
       { internalType: "string", name: "symbol", type: "string" },
       { internalType: "string", name: "name", type: "string" },
-      { internalType: "uint256", name: "usdtAmount", type: "uint256" },
       { internalType: "uint256", name: "minTokenOut", type: "uint256" },
       { internalType: "address", name: "to", type: "address" },
       { internalType: "uint256", name: "id", type: "uint256" },
@@ -213,31 +212,29 @@ export const pumpContractABI = [
     ],
     name: "buyAndCreateToken",
     outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
-    stateMutability: "nonpayable",
+    stateMutability: "payable",
     type: "function",
   },
   {
     inputs: [
       { internalType: "address", name: "tokenAddress", type: "address" },
-      { internalType: "uint256", name: "usdtAmount", type: "uint256" },
       { internalType: "uint256", name: "minTokenOut", type: "uint256" },
       { internalType: "address", name: "to", type: "address" },
     ],
     name: "buyExactIn",
     outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
-    stateMutability: "nonpayable",
+    stateMutability: "payable",
     type: "function",
   },
   {
     inputs: [
       { internalType: "address", name: "tokenAddress", type: "address" },
       { internalType: "uint256", name: "tokenAmount", type: "uint256" },
-      { internalType: "uint256", name: "maxUsdtIn", type: "uint256" },
       { internalType: "address", name: "to", type: "address" },
     ],
     name: "buyExactOut",
     outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
-    stateMutability: "nonpayable",
+    stateMutability: "payable",
     type: "function",
   },
   {
@@ -253,7 +250,7 @@ export const pumpContractABI = [
   {
     inputs: [
       { internalType: "address", name: "tokenAddress", type: "address" },
-      { internalType: "uint256", name: "usdtAmount", type: "uint256" },
+      { internalType: "uint256", name: "ethAmount", type: "uint256" },
     ],
     name: "calculateBuyAmountOut",
     outputs: [
@@ -267,21 +264,11 @@ export const pumpContractABI = [
   {
     inputs: [
       { internalType: "address", name: "tokenAddress", type: "address" },
-      { internalType: "uint256", name: "usdtAmount", type: "uint256" },
-    ],
-    name: "calculateSellAmountIn",
-    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [
-      { internalType: "address", name: "tokenAddress", type: "address" },
       { internalType: "uint256", name: "tokenAmount", type: "uint256" },
     ],
     name: "calculateSellAmountOut",
     outputs: [
-      { internalType: "uint256", name: "usdtAmount", type: "uint256" },
+      { internalType: "uint256", name: "ethAmount", type: "uint256" },
       { internalType: "uint256", name: "tradeFee", type: "uint256" },
       { internalType: "uint256", name: "pumpedFee", type: "uint256" },
     ],
@@ -289,22 +276,7 @@ export const pumpContractABI = [
     type: "function",
   },
   {
-    inputs: [],
-    name: "devWalletPercentage",
-    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "dexListingPercentage",
-    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
     inputs: [
-      { internalType: "address", name: "_usdt", type: "address" },
       { internalType: "address", name: "_uniswapRouter", type: "address" },
       { internalType: "address", name: "_protocolWallet", type: "address" },
     ],
@@ -329,13 +301,6 @@ export const pumpContractABI = [
   },
   {
     inputs: [],
-    name: "protocolWalletPercentage",
-    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
     name: "renounceOwnership",
     outputs: [],
     stateMutability: "nonpayable",
@@ -345,7 +310,7 @@ export const pumpContractABI = [
     inputs: [
       { internalType: "address", name: "tokenAddress", type: "address" },
       { internalType: "uint256", name: "tokenAmount", type: "uint256" },
-      { internalType: "uint256", name: "minUsdtOut", type: "uint256" },
+      { internalType: "uint256", name: "minEthOut", type: "uint256" },
       { internalType: "address", name: "to", type: "address" },
     ],
     name: "sellExactIn",
@@ -355,35 +320,9 @@ export const pumpContractABI = [
   },
   {
     inputs: [
-      { internalType: "address", name: "tokenAddress", type: "address" },
-      { internalType: "uint256", name: "usdtAmount", type: "uint256" },
-      { internalType: "uint256", name: "maxTokenIn", type: "uint256" },
-      { internalType: "address", name: "to", type: "address" },
+      { internalType: "address", name: "_uniswapRouter", type: "address" },
     ],
-    name: "sellExactOut",
-    outputs: [{ internalType: "uint256", name: "", type: "uint256" }],
-    stateMutability: "nonpayable",
-    type: "function",
-  },
-  {
-    inputs: [
-      {
-        internalType: "uint256",
-        name: "_dexListingPercentage",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "_devWalletPercentage",
-        type: "uint256",
-      },
-      {
-        internalType: "uint256",
-        name: "_protocolWalletPercentage",
-        type: "uint256",
-      },
-    ],
-    name: "setPercentages",
+    name: "setUniswapRouter",
     outputs: [],
     stateMutability: "nonpayable",
     type: "function",
@@ -403,10 +342,10 @@ export const pumpContractABI = [
     outputs: [
       { internalType: "string", name: "symbol", type: "string" },
       { internalType: "uint256", name: "tokenVirtualReserve", type: "uint256" },
-      { internalType: "uint256", name: "usdtVirtualReserve", type: "uint256" },
+      { internalType: "uint256", name: "ethVirtualReserve", type: "uint256" },
       { internalType: "bool", name: "isListed", type: "bool" },
       { internalType: "uint256", name: "tokensSold", type: "uint256" },
-      { internalType: "uint256", name: "usdtRaised", type: "uint256" },
+      { internalType: "uint256", name: "ethRaised", type: "uint256" },
       { internalType: "uint256", name: "id", type: "uint256" },
       { internalType: "address", name: "devWallet", type: "address" },
     ],
@@ -430,13 +369,6 @@ export const pumpContractABI = [
         type: "address",
       },
     ],
-    stateMutability: "view",
-    type: "function",
-  },
-  {
-    inputs: [],
-    name: "usdt",
-    outputs: [{ internalType: "address", name: "", type: "address" }],
     stateMutability: "view",
     type: "function",
   },

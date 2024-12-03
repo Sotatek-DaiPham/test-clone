@@ -1,13 +1,13 @@
 "use client";
 import AccountModal from "@/components/app-modal/app-account-modal";
-import { USDT_DECIMAL } from "@/constant";
+import { NATIVE_TOKEN_DECIMAL } from "@/constant";
 import { envs } from "@/constant/envs";
 import useTokenBalance from "@/hooks/useTokenBalance";
 import { darkTheme, RainbowKitProvider, Theme } from "@rainbow-me/rainbowkit";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { merge } from "lodash";
 import * as React from "react";
-import { useAccount, WagmiProvider } from "wagmi";
+import { useAccount, useBalance, WagmiProvider } from "wagmi";
 import { config } from "../wagmi";
 
 const queryClient = new QueryClient({
@@ -33,8 +33,8 @@ interface Props {
 export interface AccountModalContextStates {
   isAccountModalOpen: boolean;
   setOpenAccountModal(open: boolean): void;
-  isBalanceLoading: boolean;
-  refetchUserBalance(): void;
+  // isBalanceLoading: boolean;
+  // refetchUserBalance(): void;
   userBalance: string;
 }
 
@@ -42,8 +42,8 @@ export const AccountModalContext =
   React.createContext<AccountModalContextStates>({
     isAccountModalOpen: false,
     setOpenAccountModal: () => {},
-    isBalanceLoading: false,
-    refetchUserBalance: () => {},
+    // isBalanceLoading: false,
+    // refetchUserBalance: () => {},
     userBalance: "0",
   });
 
@@ -55,11 +55,15 @@ const AccountModalProvider = ({ children }: Props) => {
   const [isOpen, setOpen] = React.useState(false);
   const { address } = useAccount();
 
-  const {
-    balance,
-    refetch: refetchUserBalance,
-    isLoading,
-  } = useTokenBalance(address, envs.USDT_ADDRESS, USDT_DECIMAL);
+  // const {
+  //   balance,
+  //   refetch: refetchUserBalance,
+  //   isLoading,
+  // } = useTokenBalance(address, envs.USDT_ADDRESS, NATIVE_TOKEN_DECIMAL);
+
+  const { data: balance } = useBalance({
+    address,
+  });
 
   React.useEffect(() => {
     if (!address) {
@@ -72,9 +76,9 @@ const AccountModalProvider = ({ children }: Props) => {
       value={{
         isAccountModalOpen: isOpen,
         setOpenAccountModal: setOpen,
-        isBalanceLoading: isLoading,
-        refetchUserBalance,
-        userBalance: balance,
+        // isBalanceLoading: isLoading,
+        // refetchUserBalance,
+        userBalance: balance?.value?.toString() || "0",
       }}
     >
       {children}

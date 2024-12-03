@@ -105,7 +105,7 @@ export const addTradeToLastCandle = (
     lastCandle.low = Math.min(tradePrice, lastCandle?.low);
     lastCandle.high = Math.max(tradePrice, lastCandle?.high);
     lastCandle.close = Number(convertNumber(trade?.nextPrice, 6));
-    lastCandle.volume += Number(convertNumber(trade?.usdtAmount, 6));
+    lastCandle.volume += Number(convertNumber(trade?.ethAmount, 6));
     chartRealtimeCallback(lastCandle);
     return lastCandle;
   }

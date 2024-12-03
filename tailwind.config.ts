@@ -163,6 +163,13 @@ const config: Config = {
             fontWeight: "500",
           },
         ],
+        "12px-bold": [
+          "12px",
+          {
+            lineHeight: "16px",
+            fontWeight: "700",
+          },
+        ],
         "24px-normal": [
           "24px",
           {

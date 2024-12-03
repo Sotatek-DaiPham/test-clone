@@ -3,12 +3,11 @@ import AppImage from "@/components/app-image";
 import AppNumberToolTip from "@/components/app-number-tooltip";
 import AppProgress from "@/components/app-progress";
 import EllipsisTextWithTooltip from "@/components/app-tooltip/EllipsisTextWithTooltip";
-import { DECIMAL_USDT, DEFAULT_AVATAR } from "@/constant";
+import { DEFAULT_AVATAR } from "@/constant";
 import { PATH_ROUTER } from "@/constant/router";
 import { countAgeToken } from "@/helpers/calculate";
 import { convertNumber, formatAmount } from "@/helpers/formatNumber";
 import { CalendarIcon, ImageDefaultIcon, SwapIcon } from "@public/assets";
-import BigNumber from "bignumber.js";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import "./styles.scss";
@@ -108,20 +107,20 @@ const ProjectCard = ({
               <span>
                 <span
                   className={
-                    data?.valueUsdt
+                    data?.valueEth
                       ? "text-primary-main mr-2"
                       : "text-white-neutral mr-2"
                   }
                 >
-                  {Number(data?.valueUsdt) > 0 ? (
+                  {Number(data?.valueEth) > 0 ? (
                     <AppNumberToolTip
-                      value={convertNumber(data?.valueUsdt, 6)}
+                      value={convertNumber(data?.valueEth, 6)}
                     />
                   ) : (
                     "-"
                   )}
                 </span>
-                <span className="text-white-neutral uppercase">USDT</span>
+                <span className="text-white-neutral uppercase">ETH</span>
               </span>
             </div>
           </div>
@@ -135,9 +134,7 @@ const ProjectCard = ({
             </span>
             <span>
               $
-              <AppNumberToolTip
-                value={convertNumber(data?.marketCap, DECIMAL_USDT) || 0}
-              />
+              <AppNumberToolTip value={convertNumber(data?.marketCap) || 0} />
             </span>
           </div>
           <div className="flex flex-row items-center">
@@ -150,9 +147,7 @@ const ProjectCard = ({
               /
               <span className="ml-1 flex flex-row items-center">
                 $
-                <AppNumberToolTip
-                  value={convertNumber(data?.volume, DECIMAL_USDT) || 0}
-                />
+                <AppNumberToolTip value={convertNumber(data?.volume) || 0} />
                 &nbsp;vol
               </span>
             </span>
