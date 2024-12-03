@@ -14,7 +14,7 @@ import {
   AMOUNT_FIELD_NAME,
   TOKEN_DECIMAL_PLACE,
   NATIVE_TOKEN_DECIMAL,
-  USDT_THRESHOLD_WITH_FEE,
+  ETH_THRESHOLD_WITH_FEE,
 } from "@/constant";
 import { API_PATH } from "@/constant/api-path";
 import { envs } from "@/constant/envs";
@@ -166,10 +166,10 @@ const CreateTokenPage = () => {
         calculateTokenReceive(initialBuyAmount);
 
       const maxTokenWillReceive = calculateTokenReceive(
-        USDT_THRESHOLD_WITH_FEE.toString()
+        ETH_THRESHOLD_WITH_FEE.toString()
       );
 
-      return BigNumber(initialBuyAmount).gt(USDT_THRESHOLD_WITH_FEE)
+      return BigNumber(initialBuyAmount).gt(ETH_THRESHOLD_WITH_FEE)
         ? maxTokenWillReceive
         : calculatedTokenWillReceive;
     }
@@ -181,7 +181,7 @@ const CreateTokenPage = () => {
       const calculatedUsdtShouldPay = calculateUsdtShouldPay(initialBuyAmount);
       return BigNumber(calculatedUsdtShouldPay).lt(0) ||
         !BigNumber(calculatedUsdtShouldPay).isFinite()
-        ? USDT_THRESHOLD_WITH_FEE.toString()
+        ? ETH_THRESHOLD_WITH_FEE.toString()
         : calculatedUsdtShouldPay;
     }
     return "";
