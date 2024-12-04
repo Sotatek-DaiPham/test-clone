@@ -45,6 +45,7 @@ import { useContext, useEffect, useMemo, useState } from "react";
 import { useReadContract } from "wagmi";
 import { TabKey, useTradeSettings } from "..";
 import { ethers } from "ethers";
+import useEthBalance from "@/hooks/useEthBalance";
 
 export const SETTINGS_FIELD_NAMES = {
   FONT_RUNNING: "fontRunning",
@@ -77,6 +78,7 @@ const TradeTabAfterListed = ({ tabKey }: { tabKey: TabKey }) => {
   const { accessToken: isAuthenticated, address } = useAppSelector(
     (state) => state.user
   );
+  const { refetchEthBalance, balance: ethBalance } = useEthBalance(address);
   const { error, success } = useContext(NotificationContext);
   const [openSettingModal, setOpenSettingModal] = useState(false);
   const [formSetting] = Form.useForm<FormSetting>();
@@ -112,7 +114,6 @@ const TradeTabAfterListed = ({ tabKey }: { tabKey: TabKey }) => {
 
   const [coinType, setCoinType] = useState(ECoinType.StableCoin);
   const [isOpenApproveModal, setIsOpenApproveModal] = useState(false);
-  const USDTContract = useContract(erc20Abi, wethAddress as string);
   const MemeTokenContract = useContract(erc20Abi, memeTokenAddress as string);
 
   const routerContract = useContract(routerContactAbi, CONTRACT_ROUTER);
@@ -196,7 +197,7 @@ const TradeTabAfterListed = ({ tabKey }: { tabKey: TabKey }) => {
     form.resetFields(["amount"]);
     setIsOpenApproveModal(false);
     refetchUserBalance();
-    refetch();
+    refetchEthBalance();
     success({
       message: "Transaction completed",
       key: "1",
@@ -345,6 +346,16 @@ const TradeTabAfterListed = ({ tabKey }: { tabKey: TabKey }) => {
     try {
       let tx;
       if (tabKey === TabKey.BUY) {
+        if (
+          BigNumber(ethBalance?.toString() || "0").lt(swapAmount.toString())
+        ) {
+          setLoadingStatus((prev) => ({ ...prev, buyToken: false }));
+          error({
+            message: "Insufficient Fee",
+          });
+          return;
+        }
+
         tx = await contract?.swapExactETHForTokens(
           BigNumber(minTokenOut)
             .multipliedBy(

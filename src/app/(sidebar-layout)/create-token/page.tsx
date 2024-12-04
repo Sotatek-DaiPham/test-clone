@@ -7,14 +7,13 @@ import AppInput from "@/components/app-input";
 import { FileItem } from "@/components/app-input/app-input-comment";
 import ConfirmModal from "@/components/app-modal/app-confirm-modal";
 import InitialBuyModal from "@/components/app-modal/app-initial-buy-modal";
-import AppUpload from "@/components/app-upload";
 import ConnectWalletButton from "@/components/Button/ConnectWallet";
 import {
   ACCEPT_IMAGE_EXTENSION,
   AMOUNT_FIELD_NAME,
-  TOKEN_DECIMAL_PLACE,
-  NATIVE_TOKEN_DECIMAL,
   ETH_THRESHOLD_WITH_FEE,
+  NATIVE_TOKEN_DECIMAL,
+  TOKEN_DECIMAL_PLACE,
 } from "@/constant";
 import { API_PATH } from "@/constant/api-path";
 import { envs } from "@/constant/envs";
@@ -32,7 +31,6 @@ import {
 } from "@/helpers/calculate";
 import { formatBytes } from "@/helpers/formatNumber";
 import { TokenImageValidator } from "@/helpers/upload";
-import useUsdtAllowance from "@/hooks/useUsdtAllowance";
 import useWindowSize from "@/hooks/useWindowSize";
 import {
   ECoinType,
@@ -45,7 +43,7 @@ import { postFormDataAPI } from "@/service";
 import { useContract } from "@/web3/contracts/useContract";
 import { CloseIcon, UploadIcon } from "@public/assets";
 import { useMutation } from "@tanstack/react-query";
-import { Form, Input } from "antd";
+import { Form } from "antd";
 import { useWatch } from "antd/es/form/Form";
 import { AxiosResponse } from "axios";
 import BigNumber from "bignumber.js";
@@ -130,8 +128,6 @@ const CreateTokenPage = () => {
       error({ message: "Upload image failed" });
     },
   });
-
-  // const { allowance } = useUsdtAllowance(address);
 
   const { mutateAsync: createToken } = useMutation({
     mutationFn: (

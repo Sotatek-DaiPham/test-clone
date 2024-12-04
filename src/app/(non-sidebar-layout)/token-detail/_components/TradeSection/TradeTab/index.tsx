@@ -31,7 +31,6 @@ import {
 } from "@/helpers/calculate";
 import useCalculateAmount from "@/hooks/useCalculateAmount";
 import useTokenBalance from "@/hooks/useTokenBalance";
-import useUsdtAllowance from "@/hooks/useUsdtAllowance";
 import { ECoinType } from "@/interfaces/token";
 import { NotificationContext } from "@/libs/antd/NotificationProvider";
 import { useAppSelector } from "@/libs/hooks";
@@ -44,6 +43,7 @@ import Image from "next/image";
 import { useContext, useEffect, useMemo, useState } from "react";
 import { TabKey, useTradeSettings } from "..";
 import { ethers } from "ethers";
+import useEthBalance from "@/hooks/useEthBalance";
 
 export const SETTINGS_FIELD_NAMES = {
   FONT_RUNNING: "fontRunning",
@@ -74,6 +74,10 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
   const { accessToken: isAuthenticated, address } = useAppSelector(
     (state) => state.user
   );
+
+  const { formattedBalance: ethBalance, refetchEthBalance } =
+    useEthBalance(address);
+
   const { error, success } = useContext(NotificationContext);
   // const { allowance, refetch: refetchAllownce } = useUsdtAllowance(address);
   const [openSettingModal, setOpenSettingModal] = useState(false);
@@ -235,6 +239,7 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
   const handleTransactionSuccess = () => {
     form.resetFields(["amount"]);
     refetchUserBalance();
+    refetchEthBalance();
     refetchDetailSC();
     success({
       message: "Transaction completed",
@@ -291,6 +296,13 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
   };
 
   const handleBuyTokenExactIn = async () => {
+    if (BigNumber(ethBalance).lt(amountValue)) {
+      error({
+        message: "Insufficient Fee",
+      });
+      return;
+    }
+
     const contract = await tokenFactoryContract;
     setLoadingStatus((prev) => ({ ...prev, buyToken: true }));
     const minTokenOut = Number(tradeSettings?.slippage)
@@ -341,6 +353,14 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
     let tx;
     try {
       if (!isExceedAvailableToken) {
+        if (BigNumber(ethBalance).lt(ethShouldPay)) {
+          setLoadingStatus((prev) => ({ ...prev, buyToken: false }));
+          error({
+            message: "Insufficient Fee",
+          });
+          return;
+        }
+
         console.log(
           "buyExactOutParam",
           tokenDetail?.contractAddress,
@@ -353,11 +373,19 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
           BigNumber(amountValue).multipliedBy(TOKEN_DECIMAL).toFixed(),
           address,
           {
-            value: ethers.parseUnits(maxEthOut, "ether"),
+            value: ethers.parseUnits(ethShouldPay, "ether"),
             gasLimit: gasLimit || undefined,
           }
         );
       } else {
+        if (BigNumber(ethBalance).lt(ETH_THRESHOLD.toString())) {
+          setLoadingStatus((prev) => ({ ...prev, buyToken: false }));
+          error({
+            message: "Insufficient Fee",
+          });
+          return;
+        }
+
         console.log(
           "buyExactInParam",
           tokenDetail?.contractAddress,
