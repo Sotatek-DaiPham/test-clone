@@ -113,12 +113,12 @@ const ProjectCard = ({
                   }
                 >
                   {Number(data?.valueEth) > 0 ? (
-                    <AppNumberToolTip value={convertNumber(data?.valueEth)} />
+                    <AppNumberToolTip value={convertNumber(data?.valueUsd)} />
                   ) : (
                     "-"
                   )}
                 </span>
-                <span className="text-white-neutral uppercase">ETH</span>
+                <span className="text-white-neutral uppercase">USD</span>
               </span>
             </div>
           </div>
