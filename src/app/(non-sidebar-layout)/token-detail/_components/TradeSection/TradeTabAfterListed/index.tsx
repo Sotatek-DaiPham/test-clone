@@ -203,41 +203,6 @@ const TradeTabAfterListed = ({ tabKey }: { tabKey: TabKey }) => {
     });
   };
 
-  const handleApproveWeth = async () => {
-    const contract = await USDTContract;
-
-    const approveAmount =
-      coinType === ECoinType.MemeCoin ? wethShouldPay : amountValue;
-
-    setLoadingStatus((prev) => ({ ...prev, approve: true }));
-    try {
-      console.log(
-        "Approve params",
-        CONTRACT_ROUTER,
-        BigNumber(approveAmount).multipliedBy(NATIVE_TOKEN_DECIMAL).toFixed(0)
-      );
-      const txn = await contract?.approve(
-        CONTRACT_ROUTER,
-        BigNumber(approveAmount).multipliedBy(NATIVE_TOKEN_DECIMAL).toFixed(0)
-      );
-
-      await txn?.wait();
-      await handleSwapToken();
-
-      setLoadingStatus((prev) => ({ ...prev, approve: false }));
-    } catch (e: any) {
-      setLoadingStatus((prev) => ({
-        ...prev,
-        approve: false,
-        buyToken: false,
-      }));
-      handleError(e);
-      return;
-    } finally {
-      setIsOpenApproveModal(false);
-    }
-  };
-
   const handleApproveToken = async () => {
     const contract = await MemeTokenContract;
 
@@ -565,7 +530,7 @@ const TradeTabAfterListed = ({ tabKey }: { tabKey: TabKey }) => {
         onOkText="Approve"
         open={isOpenApproveModal}
         loading={loadingStatus.approve}
-        onOk={tabKey === TabKey.BUY ? handleApproveWeth : handleApproveToken}
+        onOk={handleApproveToken}
         onCancel={() => {
           setIsOpenApproveModal(false);
           setLoadingStatus((prev) => ({ ...prev, approve: false }));
