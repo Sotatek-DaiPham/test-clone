@@ -95,7 +95,7 @@ const PriceSection = () => {
             Bonding curve progress
           </div>
           <AppTooltip
-            title="When the market cap reaches $60.000 all the liquidity from the bonding curve will be deposited into Uniswap."
+            title="When the market cap reaches 3.5 ETH all the liquidity from the bonding curve will be deposited into Uniswap."
             isShowIcon={true}
           />
         </div>

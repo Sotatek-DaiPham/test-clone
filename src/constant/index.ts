@@ -28,11 +28,11 @@ export const PREDEFINE_SELL_PERCENT = ["10%", "25%", "50%", "75%", "100%"];
 export const PREDEFINE_SLIPPAGE = ["05", "10", "15", "20", "25"];
 
 export const PREDEFINE_PRIORITY_FEE = [
-  "0.001",
-  "0.002",
-  "0.003",
-  "0.004",
-  "0.005",
+  "0.0001",
+  "0.0002",
+  "0.0003",
+  "0.0004",
+  "0.0005",
 ];
 
 export const AMOUNT_FIELD_NAME = "amount";
