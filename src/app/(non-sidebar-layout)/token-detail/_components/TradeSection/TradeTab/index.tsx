@@ -17,6 +17,7 @@ import {
   NATIVE_TOKEN_DECIMAL,
   ETH_THRESHOLD,
   ETH_THRESHOLD_WITH_FEE,
+  TOKEN_DECIMAL_PLACE,
 } from "@/constant";
 import { envs } from "@/constant/envs";
 import { REGEX_INPUT_DECIMAL } from "@/constant/regex";
@@ -51,6 +52,7 @@ export const SETTINGS_FIELD_NAMES = {
   PRIORITY_FEE: "priorityFee",
 } as const;
 
+const LOWEST_SELL_AMOUNT = "0.000001";
 export interface FormSetting {
   [SETTINGS_FIELD_NAMES.FONT_RUNNING]: boolean;
   [SETTINGS_FIELD_NAMES.SLIPPAGE]: string;
@@ -102,6 +104,7 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
 
   const [coinType, setCoinType] = useState(ECoinType.StableCoin);
   const [isOpenApproveModal, setIsOpenApproveModal] = useState(false);
+  const [sellAmount, setSellAmount] = useState("");
 
   const USDTContract = useContract(erc20Abi, envs.USDT_ADDRESS);
   const tokenFactoryContract = useContract(
@@ -205,7 +208,10 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
 
   const ethAmount =
     coinType === ECoinType.MemeCoin
-      ? BigNumber(ethShouldPay).toFixed(6, BigNumber.ROUND_DOWN)
+      ? BigNumber(ethShouldPay).toFixed(
+          TOKEN_DECIMAL_PLACE,
+          BigNumber.ROUND_DOWN
+        )
       : amountValue;
 
   const isDisableBuyButton =
@@ -228,9 +234,15 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
 
     const sellValue = BigNumber(balance)
       .multipliedBy(BigNumber(percentNumber).div(100))
+      .toFixed(TOKEN_DECIMAL_PLACE, BigNumber.ROUND_DOWN);
+
+    const formattedSellValue = BigNumber(sellValue)
+      .multipliedBy(BigNumber(percentNumber).div(100))
       .toFixed(6, BigNumber.ROUND_DOWN);
-    if (BigNumber(balance).gt(0.000001)) {
-      form.setFieldValue(AMOUNT_FIELD_NAME, sellValue);
+
+    if (BigNumber(balance).gt(LOWEST_SELL_AMOUNT)) {
+      form.setFieldValue(AMOUNT_FIELD_NAME, formattedSellValue);
+      setSellAmount(sellValue);
     } else {
       return;
     }
@@ -416,7 +428,7 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
   };
 
   const handleSellToken = async () => {
-    if (BigNumber(balance).lt(amountValue)) {
+    if (BigNumber(balance).lt(sellAmount)) {
       error({
         message:
           "The current token balance is lower than the input sell amount",
@@ -441,13 +453,13 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
       console.log(
         "sellTokenParam",
         tokenDetail?.contractAddress,
-        BigNumber(amountValue).multipliedBy(TOKEN_DECIMAL).toFixed(),
+        BigNumber(sellAmount).multipliedBy(TOKEN_DECIMAL).toFixed(),
         BigNumber(minEthOut).multipliedBy(NATIVE_TOKEN_DECIMAL).toFixed(0),
         address
       );
       const tx = await contract?.sellExactIn(
         tokenDetail?.contractAddress,
-        BigNumber(amountValue).multipliedBy(TOKEN_DECIMAL).toFixed(),
+        BigNumber(sellAmount).multipliedBy(TOKEN_DECIMAL).toFixed(),
         BigNumber(minEthOut).multipliedBy(NATIVE_TOKEN_DECIMAL).toFixed(0),
         address,
         {
@@ -456,7 +468,6 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
       );
       await tx.wait();
       handleTransactionSuccess();
-      refetchUserBalance();
       setLoadingStatus((prev) => ({ ...prev, sellToken: false }));
     } catch (e: any) {
       console.log({ e });
