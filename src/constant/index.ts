@@ -17,9 +17,11 @@ export const NATIVE_TOKEN_DECIMAL = 1e18;
 
 export const TOKEN_DECIMAL = 1e18;
 
-export const ETH_THRESHOLD = 3.5;
+// export const ETH_THRESHOLD = 3.5;
+export const ETH_THRESHOLD = 0.5;
 
-export const ETH_THRESHOLD_WITH_FEE = 3.535;
+// export const ETH_THRESHOLD_WITH_FEE = 3.535;
+export const ETH_THRESHOLD_WITH_FEE = 0.505;
 
 export const PREDEFINE_AMOUNT = ["0.005", "0.01", "0.05", "0.1", "0.5"];
 
@@ -27,13 +29,7 @@ export const PREDEFINE_SELL_PERCENT = ["10%", "25%", "50%", "75%", "100%"];
 
 export const PREDEFINE_SLIPPAGE = ["05", "10", "15", "20", "25"];
 
-export const PREDEFINE_PRIORITY_FEE = [
-  "0.0001",
-  "0.0002",
-  "0.0003",
-  "0.0004",
-  "0.0005",
-];
+export const PREDEFINE_PRIORITY_FEE = ["0.0001", "0.0002", "0.0003", "0.0004"];
 
 export const AMOUNT_FIELD_NAME = "amount";
 
