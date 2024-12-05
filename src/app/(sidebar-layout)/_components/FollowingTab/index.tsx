@@ -166,7 +166,7 @@ const FollowingTab = () => {
                   searchParams?.filter === "created" ? null : (
                     <div className="mb-3 flex-row flex items-center">
                       <EllipsisTextWithTooltip
-                        className="mr-2 cursor-pointer text-neutral-7 hover:!underline"
+                        className="mr-1 cursor-pointer text-neutral-7 hover:!underline"
                         onClick={(e) => {
                           e.stopPropagation();
                           router.push(
@@ -191,7 +191,7 @@ const FollowingTab = () => {
                           ? "sold"
                           : "-"}
                       </div>
-                      <div className="mx-1 ml-2">
+                      <div className="mx-1">
                         {formatAmount(
                           convertNumber(project?.amount, project?.decimal)
                         ) || "-"}
@@ -199,7 +199,7 @@ const FollowingTab = () => {
                         {project?.symbol}
                       </div>
                       <div className="text-14px-normal">for</div>
-                      <div className="mx-1 ml-2">
+                      <div className="mx-1">
                         {formatAmount(convertNumber(project?.ethAmount)) || "-"}
                         &nbsp;ETH
                       </div>
