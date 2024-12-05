@@ -1,5 +1,6 @@
 import AppButton from "@/components/app-button";
 import AppTextLoading from "@/components/app-text-loading";
+import { nFormatter } from "@/helpers/formatNumber";
 import { shortenAddress } from "@/helpers/shorten";
 import useWalletAuth from "@/hooks/useWalletAuth";
 import useWindowSize from "@/hooks/useWindowSize";
@@ -111,7 +112,10 @@ const ConnectWalletButton = ({ customClass }: { customClass?: string }) => {
                         loading={!Boolean(isConnected)}
                         text={
                           account.displayBalance
-                            ? ` ${account.displayBalance}`
+                            ? ` ${nFormatter(
+                                account.balanceFormatted || 0,
+                                4
+                              )}` + " ETH"
                             : ""
                         }
                         className="text-12px-medium min-w-[50px]"
