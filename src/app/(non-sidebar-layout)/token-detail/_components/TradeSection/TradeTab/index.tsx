@@ -117,9 +117,7 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
   const amountValue = useWatch(AMOUNT_FIELD_NAME, form);
 
   const availableToken = useMemo(() => {
-    const tokenThreshold = calculateTokenReceiveWithoutFee(
-      ETH_THRESHOLD.toString()
-    );
+    const tokenThreshold = calculateTokenReceive(ETH_THRESHOLD.toString());
     return BigNumber(tokenThreshold).minus(tokenDetailSC?.tokensSold || "0");
   }, [tokenDetailSC]);
 
