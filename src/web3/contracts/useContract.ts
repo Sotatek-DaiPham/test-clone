@@ -72,3 +72,12 @@ export const useReadContract = (
     );
   }, [abi, address, connector, RPC]);
 };
+
+export const useProvider = () => {
+  const RPC = process.env.NEXT_PUBLIC_ARBITRUM_RPC_URL;
+  if (typeof window !== "undefined" && window.ethereum) {
+    return new ethers.BrowserProvider(window.ethereum);
+  } else {
+    return new ethers.JsonRpcProvider(RPC);
+  }
+};

@@ -14,6 +14,7 @@ import {
   PREDEFINE_SELL_PERCENT,
   TOKEN_DECIMAL,
   NATIVE_TOKEN_DECIMAL,
+  GAS_FEE_BUFFER,
 } from "@/constant";
 import { API_PATH } from "@/constant/api-path";
 import { envs } from "@/constant/envs";
@@ -33,7 +34,7 @@ import { ECoinType } from "@/interfaces/token";
 import { NotificationContext } from "@/libs/antd/NotificationProvider";
 import { useAppSelector } from "@/libs/hooks";
 import { postAPI } from "@/service";
-import { useContract } from "@/web3/contracts/useContract";
+import { useContract, useProvider } from "@/web3/contracts/useContract";
 import { SettingIcon } from "@public/assets";
 import { useMutation } from "@tanstack/react-query";
 import { Form } from "antd";
@@ -46,6 +47,7 @@ import { useReadContract } from "wagmi";
 import { TabKey, useTradeSettings } from "..";
 import { ethers } from "ethers";
 import useEthBalance from "@/hooks/useEthBalance";
+import AppTooltip from "@/components/app-tooltip";
 
 export const SETTINGS_FIELD_NAMES = {
   FONT_RUNNING: "fontRunning",
@@ -78,7 +80,12 @@ const TradeTabAfterListed = ({ tabKey }: { tabKey: TabKey }) => {
   const { accessToken: isAuthenticated, address } = useAppSelector(
     (state) => state.user
   );
-  const { refetchEthBalance, balance: ethBalance } = useEthBalance(address);
+  const provider = useProvider();
+  const {
+    refetchEthBalance,
+    balance: ethBalance,
+    formattedBalance,
+  } = useEthBalance(address);
   const { error, success } = useContext(NotificationContext);
   const [openSettingModal, setOpenSettingModal] = useState(false);
   const [formSetting] = Form.useForm<FormSetting>();
@@ -90,6 +97,7 @@ const TradeTabAfterListed = ({ tabKey }: { tabKey: TabKey }) => {
     approve: false,
   });
 
+  const [gasFee, setGasFee] = useState<string>("");
   const { tradeSettings } = useTradeSettings();
 
   const { mutateAsync: confirmHash } = useMutation({
@@ -174,6 +182,32 @@ const TradeTabAfterListed = ({ tabKey }: { tabKey: TabKey }) => {
     !amountValue ||
     !!(amountValue && BigNumber(amountValue).lt(MINIMUM_BUY_AMOUNT)) ||
     !!(wethShouldPay && BigNumber(wethShouldPay).lt(MINIMUM_BUY_AMOUNT));
+
+  const getGasFeeForMaxBalanceTx = async () => {
+    const contract = await routerContract;
+    const path = getSwapPath();
+    const args = [0, path, address, 9999999999999];
+    const gasEstimate = (await contract?.swapExactETHForTokens?.estimateGas(
+      ...args,
+      {
+        value: ethers.parseUnits(formattedBalance, "ether"),
+      }
+    )) as any;
+
+    console.log("gasEstimate", gasEstimate);
+
+    const gasPrice = await provider.getFeeData();
+
+    console.log("gasPrice", gasPrice);
+    const totalCostWei = BigNumber(gasEstimate?.toString() || "0")
+      .multipliedBy(BigNumber(gasPrice.gasPrice?.toString() || "0"))
+      .multipliedBy(GAS_FEE_BUFFER);
+
+    const totalCostEth = ethers.formatEther(totalCostWei.toString());
+    console.log("totalCostEth", totalCostEth);
+
+    setGasFee(totalCostEth);
+  };
 
   const handleSelect = (value: string) => {
     form.setFieldValue(AMOUNT_FIELD_NAME, value);
@@ -356,6 +390,12 @@ const TradeTabAfterListed = ({ tabKey }: { tabKey: TabKey }) => {
           return;
         }
 
+        const etheAmount = BigNumber(formattedBalance).isLessThanOrEqualTo(
+          amountValue
+        )
+          ? BigNumber(formattedBalance).minus(gasFee).toString()
+          : swapAmount;
+
         tx = await contract?.swapExactETHForTokens(
           BigNumber(minTokenOut)
             .multipliedBy(
@@ -431,11 +471,57 @@ const TradeTabAfterListed = ({ tabKey }: { tabKey: TabKey }) => {
     }
   }, [usdtAmount, sellAmountOut]);
 
+  useEffect(() => {
+    getGasFeeForMaxBalanceTx();
+  }, [
+    routerContract,
+    tokenDetail?.contractAddress,
+    address,
+    provider,
+    coinType,
+    formattedBalance,
+  ]);
+
   return (
     <div className="flex flex-col gap-4">
       <div className="flex justify-between items-center">
         <div className="text-14px-normal text-neutral-7">
-          {tabKey === TabKey.BUY ? "Buy Amount" : "Sell Amount"}
+          {tabKey === TabKey.BUY ? (
+            <div className="flex items-center gap-2">
+              Buy Amount
+              <AppTooltip
+                overlayClassName="min-w-[360px] rounded border border-[#44474A] bg-[#131314] shadow-md"
+                arrow={false}
+                title={
+                  <div className="flex flex-col gap-2 ">
+                    <div className="flex justify-between">
+                      <div className="text-14px-normal text-neutral-7">
+                        Estimated gas fee:
+                      </div>
+                      <div className="text-14px-normal text-white-neutral">
+                        {gasFee} ETH
+                      </div>
+                    </div>
+                    <div className="flex justify-between">
+                      <div className="text-14px-normal text-neutral-7">
+                        Maximum buy amount:
+                      </div>
+                      <div className="text-14px-normal text-white-neutral">
+                        {BigNumber(formattedBalance).toFixed(
+                          4,
+                          BigNumber.ROUND_DOWN
+                        )}
+                        ETH
+                      </div>
+                    </div>
+                  </div>
+                }
+                isShowIcon={true}
+              />
+            </div>
+          ) : (
+            "Sell Amount"
+          )}
         </div>
         <div className="text-14px-normal text-neutral-7">
           Minimum amount:{" "}

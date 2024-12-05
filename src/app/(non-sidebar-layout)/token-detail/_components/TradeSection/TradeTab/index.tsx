@@ -18,6 +18,7 @@ import {
   ETH_THRESHOLD,
   ETH_THRESHOLD_WITH_FEE,
   TOKEN_DECIMAL_PLACE,
+  GAS_FEE_BUFFER,
 } from "@/constant";
 import { envs } from "@/constant/envs";
 import { REGEX_INPUT_DECIMAL } from "@/constant/regex";
@@ -35,7 +36,7 @@ import useTokenBalance from "@/hooks/useTokenBalance";
 import { ECoinType } from "@/interfaces/token";
 import { NotificationContext } from "@/libs/antd/NotificationProvider";
 import { useAppSelector } from "@/libs/hooks";
-import { useContract } from "@/web3/contracts/useContract";
+import { useContract, useProvider } from "@/web3/contracts/useContract";
 import { SettingIcon } from "@public/assets";
 import { Form } from "antd";
 import { useWatch } from "antd/es/form/Form";
@@ -45,6 +46,7 @@ import { useContext, useEffect, useMemo, useState } from "react";
 import { TabKey, useTradeSettings } from "..";
 import { ethers } from "ethers";
 import useEthBalance from "@/hooks/useEthBalance";
+import AppTooltip from "@/components/app-tooltip";
 
 export const SETTINGS_FIELD_NAMES = {
   FONT_RUNNING: "fontRunning",
@@ -76,12 +78,12 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
   const { accessToken: isAuthenticated, address } = useAppSelector(
     (state) => state.user
   );
-
+  const provider = useProvider();
   const { formattedBalance: ethBalance, refetchEthBalance } =
     useEthBalance(address);
 
   const { error, success } = useContext(NotificationContext);
-  // const { allowance, refetch: refetchAllownce } = useUsdtAllowance(address);
+  const [gasFee, setGasFee] = useState<string>("");
   const [openSettingModal, setOpenSettingModal] = useState(false);
   const [formSetting] = Form.useForm<FormSetting>();
   const [form] = Form.useForm<{ amount: string }>();
@@ -222,6 +224,35 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
     !amountValue ||
     !!(sellAmountOut && BigNumber(sellAmountOut).lt(MINIMUM_BUY_AMOUNT));
 
+  const getGasFeeForMaxBalanceTx = async () => {
+    const contract = await tokenFactoryContract;
+    const args = [tokenDetail?.contractAddress, 0, address];
+    let gasEstimate;
+    if (coinType === ECoinType.MemeCoin) {
+      gasEstimate = (await contract?.buyExactIn?.estimateGas(...args, {
+        value: ethers.parseUnits(ethBalance, "ether"),
+      })) as any;
+    } else {
+      gasEstimate = (await contract?.buyExactOut?.estimateGas(...args, {
+        value: ethers.parseUnits(ethBalance, "ether"),
+      })) as any;
+    }
+
+    console.log("gasEstimate", gasEstimate);
+
+    const gasPrice = await provider.getFeeData();
+
+    console.log("gasPrice", gasPrice);
+    const totalCostWei = BigNumber(gasEstimate?.toString() || "0")
+      .multipliedBy(BigNumber(gasPrice.gasPrice?.toString() || "0"))
+      .multipliedBy(GAS_FEE_BUFFER);
+
+    const totalCostEth = ethers.formatEther(totalCostWei.toString());
+    console.log("totalCostEth", totalCostEth);
+
+    setGasFee(totalCostEth);
+  };
+
   const handleSelect = (value: string) => {
     form.setFieldValue(AMOUNT_FIELD_NAME, value);
   };
@@ -321,7 +352,13 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
     const gasLimit = Number(tradeSettings?.priorityFee)
       ? BigNumber(tradeSettings?.priorityFee).multipliedBy(1e10).toString()
       : 0;
+
     try {
+      const etheAmount = BigNumber(ethBalance).isLessThanOrEqualTo(amountValue)
+        ? BigNumber(ethBalance).minus(gasFee).toString()
+        : amountValue;
+      console.log("ehtAmount", etheAmount);
+
       console.log(
         "buyExactInParam",
         tokenDetail?.contractAddress,
@@ -335,7 +372,7 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
         BigNumber(minTokenOut).multipliedBy(TOKEN_DECIMAL).toFixed(0),
         address,
         {
-          value: ethers.parseUnits(amountValue, "ether"),
+          value: ethers.parseUnits(etheAmount, "ether"),
           gasLimit: gasLimit || undefined,
         }
       );
@@ -349,6 +386,8 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
       return;
     }
   };
+
+  console.log({ ethBalance });
 
   const handleBuyTokenExactOut = async () => {
     const contract = await tokenFactoryContract;
@@ -371,6 +410,12 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
           return;
         }
 
+        const etheAmount = BigNumber(ethBalance).isGreaterThanOrEqualTo(
+          ethShouldPay
+        )
+          ? BigNumber(ethShouldPay).minus(gasFee).toString()
+          : ethShouldPay;
+
         console.log(
           "buyExactOutParam",
           tokenDetail?.contractAddress,
@@ -378,12 +423,13 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
           BigNumber(maxEthOut).multipliedBy(NATIVE_TOKEN_DECIMAL).toFixed(),
           address
         );
+
         tx = await contract?.buyExactOut(
           tokenDetail?.contractAddress,
           BigNumber(amountValue).multipliedBy(TOKEN_DECIMAL).toFixed(),
           address,
           {
-            value: ethers.parseUnits(ethShouldPay, "ether"),
+            value: ethers.parseUnits(etheAmount, "ether"),
             gasLimit: gasLimit || undefined,
           }
         );
@@ -650,11 +696,53 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
     }
   }, [ethAmount, sellAmountOut]);
 
+  useEffect(() => {
+    getGasFeeForMaxBalanceTx();
+  }, [
+    tokenFactoryContract,
+    tokenDetail?.contractAddress,
+    address,
+    provider,
+    coinType,
+  ]);
+
   return (
     <div className="flex flex-col gap-4">
       <div className="flex justify-between items-center">
         <div className="text-14px-normal text-neutral-7">
-          {tabKey === TabKey.BUY ? "Buy Amount" : "Sell Amount"}
+          {tabKey === TabKey.BUY ? (
+            <div className="flex items-center gap-2">
+              Buy Amount
+              <AppTooltip
+                overlayClassName="min-w-[360px] rounded border border-[#44474A] bg-[#131314] shadow-md"
+                arrow={false}
+                title={
+                  <div className="flex flex-col gap-2 ">
+                    <div className="flex justify-between">
+                      <div className="text-14px-normal text-neutral-7">
+                        Estimated gas fee:
+                      </div>
+                      <div className="text-14px-normal text-white-neutral">
+                        {gasFee} ETH
+                      </div>
+                    </div>
+                    <div className="flex justify-between">
+                      <div className="text-14px-normal text-neutral-7">
+                        Maximum buy amount:
+                      </div>
+                      <div className="text-14px-normal text-white-neutral">
+                        {BigNumber(ethBalance).toFixed(4, BigNumber.ROUND_DOWN)}
+                        ETH
+                      </div>
+                    </div>
+                  </div>
+                }
+                isShowIcon={true}
+              />
+            </div>
+          ) : (
+            "Sell Amount"
+          )}
         </div>
         <div className="text-14px-normal text-neutral-7">
           Minimum amount:{" "}
