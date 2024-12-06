@@ -272,7 +272,7 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
       .multipliedBy(BigNumber(percentNumber).div(100))
       .toFixed(TOKEN_DECIMAL_PLACE, BigNumber.ROUND_DOWN);
 
-    const formattedSellValue = BigNumber(sellValue)
+    const formattedSellValue = BigNumber(balance)
       .multipliedBy(BigNumber(percentNumber).div(100))
       .toFixed(6, BigNumber.ROUND_DOWN);
 
