@@ -227,32 +227,37 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
     !!(sellAmountOut && BigNumber(sellAmountOut).lt(MINIMUM_BUY_AMOUNT));
 
   const getGasFeeForMaxBalanceTx = async () => {
-    const contract = await tokenFactoryContract;
-    const args = [tokenDetail?.contractAddress, 0, address];
-    let gasEstimate;
-    if (coinType === ECoinType.MemeCoin) {
-      gasEstimate = (await contract?.buyExactIn?.estimateGas(...args, {
-        value: ethers.parseUnits(ethBalance, "ether"),
-      })) as any;
-    } else {
-      gasEstimate = (await contract?.buyExactOut?.estimateGas(...args, {
-        value: ethers.parseUnits(ethBalance, "ether"),
-      })) as any;
+    try {
+      const contract = await tokenFactoryContract;
+      const args = [tokenDetail?.contractAddress, 0, address];
+
+      let gasEstimate;
+      if (coinType === ECoinType.MemeCoin) {
+        gasEstimate = (await contract?.buyExactIn?.estimateGas(...args, {
+          value: ethers.parseUnits(ethBalance, "ether"),
+        })) as any;
+      } else {
+        gasEstimate = (await contract?.buyExactOut?.estimateGas(...args, {
+          value: ethers.parseUnits(ethBalance, "ether"),
+        })) as any;
+      }
+
+      console.log("gasEstimate", gasEstimate);
+
+      const gasPrice = await provider.getFeeData();
+
+      console.log("gasPrice", gasPrice);
+      const totalCostWei = BigNumber(gasEstimate?.toString() || "0")
+        .multipliedBy(BigNumber(gasPrice.gasPrice?.toString() || "0"))
+        .multipliedBy(GAS_FEE_BUFFER);
+
+      const totalCostEth = ethers.formatEther(totalCostWei.toString());
+      console.log("totalCostEth", totalCostEth);
+
+      setGasFee(totalCostEth);
+    } catch (e) {
+      console.log({ e });
     }
-
-    console.log("gasEstimate", gasEstimate);
-
-    const gasPrice = await provider.getFeeData();
-
-    console.log("gasPrice", gasPrice);
-    const totalCostWei = BigNumber(gasEstimate?.toString() || "0")
-      .multipliedBy(BigNumber(gasPrice.gasPrice?.toString() || "0"))
-      .multipliedBy(GAS_FEE_BUFFER);
-
-    const totalCostEth = ethers.formatEther(totalCostWei.toString());
-    console.log("totalCostEth", totalCostEth);
-
-    setGasFee(totalCostEth);
   };
 
   const handleSelect = (value: string) => {
@@ -356,9 +361,11 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
       : 0;
 
     try {
-      const etherAmount = BigNumber(ethBalance).eq(amountValue)
-        ? BigNumber(ethBalance).minus(gasFee).toString()
-        : amountValue;
+      const etherAmount =
+        BigNumber(amountValue).isLessThanOrEqualTo(ethBalance) &&
+        BigNumber(amountValue).plus(gasFee).isGreaterThan(ethBalance)
+          ? BigNumber(ethBalance).minus(gasFee).toString()
+          : amountValue;
 
       console.log(
         "buyExactInParam",
@@ -408,9 +415,11 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
           return;
         }
 
-        const etheAmount = BigNumber(ethBalance).eq(ethShouldPay)
-          ? BigNumber(ethBalance).minus(gasFee).toString()
-          : ethShouldPay;
+        const etherAmount =
+          BigNumber(ethShouldPay).isLessThanOrEqualTo(ethBalance) &&
+          BigNumber(ethShouldPay).plus(gasFee).isGreaterThan(ethBalance)
+            ? BigNumber(ethBalance).minus(gasFee).toString()
+            : ethShouldPay;
 
         console.log(
           "buyExactOutParam",
@@ -425,7 +434,7 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
           BigNumber(amountValue).multipliedBy(TOKEN_DECIMAL).toFixed(),
           address,
           {
-            value: ethers.parseUnits(etheAmount, "ether"),
+            value: ethers.parseUnits(etherAmount, "ether"),
             gasLimit: gasLimit || undefined,
           }
         );
@@ -717,7 +726,7 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
             <div className="flex items-center gap-2">
               Buy Amount
               <AppTooltip
-                overlayClassName="min-w-[360px] rounded border border-[#44474A] bg-[#131314] shadow-md"
+                overlayClassName="min-w-[300px] rounded border border-[#44474A] bg-[#131314] shadow-md"
                 arrow={false}
                 title={
                   <div className="flex flex-col gap-2 ">
