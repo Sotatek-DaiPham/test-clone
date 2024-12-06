@@ -5,7 +5,11 @@ import { EDirection } from "@/constant";
 import { API_PATH } from "@/constant/api-path";
 import { PATH_ROUTER } from "@/constant/router";
 import { ITokenDashboardResponse } from "@/entities/dashboard";
-import { convertNumber, formatAmount } from "@/helpers/formatNumber";
+import {
+  convertNumber,
+  formatAmount,
+  nFormatter,
+} from "@/helpers/formatNumber";
 import { useAppSearchParams } from "@/hooks/useAppSearchParams";
 import useDebounce from "@/hooks/useDebounce";
 import { getAPI } from "@/service";
@@ -192,7 +196,7 @@ const FollowingTab = () => {
                           : "-"}
                       </div>
                       <div className="mx-1">
-                        {formatAmount(
+                        {nFormatter(
                           convertNumber(project?.amount, project?.decimal)
                         ) || "-"}
                         &nbsp;
@@ -200,7 +204,7 @@ const FollowingTab = () => {
                       </div>
                       <div className="text-14px-normal">for</div>
                       <div className="mx-1">
-                        {formatAmount(convertNumber(project?.ethAmount)) || "-"}
+                        {nFormatter(convertNumber(project?.ethAmount)) || "-"}
                         &nbsp;ETH
                       </div>
                     </div>
