@@ -15,6 +15,7 @@ import {
   TOKEN_DECIMAL,
   NATIVE_TOKEN_DECIMAL,
   GAS_FEE_BUFFER,
+  DECIMAL_DISPLAY,
 } from "@/constant";
 import { API_PATH } from "@/constant/api-path";
 import { envs } from "@/constant/envs";
@@ -390,11 +391,13 @@ const TradeTabAfterListed = ({ tabKey }: { tabKey: TabKey }) => {
           return;
         }
 
-        const etheAmount = BigNumber(formattedBalance).isLessThanOrEqualTo(
-          amountValue
-        )
-          ? BigNumber(formattedBalance).minus(gasFee).toString()
-          : swapAmount;
+        const etherAmount =
+          BigNumber(formattedBalance).eq(amountValue) ||
+          BigNumber(formattedBalance).eq(wethShouldPay)
+            ? ethers.parseUnits(
+                BigNumber(formattedBalance).minus(gasFee).toString()
+              )
+            : swapAmount;
 
         tx = await contract?.swapExactETHForTokens(
           BigNumber(minTokenOut)
@@ -406,7 +409,7 @@ const TradeTabAfterListed = ({ tabKey }: { tabKey: TabKey }) => {
           address,
           9999999999999,
           {
-            value: swapAmount,
+            value: etherAmount,
             gasLimit: gasLimit || undefined,
           }
         );
@@ -465,6 +468,13 @@ const TradeTabAfterListed = ({ tabKey }: { tabKey: TabKey }) => {
     await handleSwapToken();
   };
 
+  const maxBuyAmount = useMemo(() => {
+    const maxBuyAmount = BigNumber(formattedBalance)
+      .minus(gasFee)
+      .toFixed(DECIMAL_DISPLAY, BigNumber.ROUND_DOWN);
+    return BigNumber(maxBuyAmount).gt(0) ? maxBuyAmount : "0";
+  }, [formattedBalance, gasFee]);
+
   useEffect(() => {
     if (usdtAmount || sellAmountOut) {
       form.validateFields();
@@ -499,7 +509,7 @@ const TradeTabAfterListed = ({ tabKey }: { tabKey: TabKey }) => {
                         Estimated gas fee:
                       </div>
                       <div className="text-14px-normal text-white-neutral">
-                        {gasFee} ETH
+                        {nFormatter(gasFee, DECIMAL_DISPLAY)} ETH
                       </div>
                     </div>
                     <div className="flex justify-between">
@@ -507,11 +517,7 @@ const TradeTabAfterListed = ({ tabKey }: { tabKey: TabKey }) => {
                         Maximum buy amount:
                       </div>
                       <div className="text-14px-normal text-white-neutral">
-                        {BigNumber(formattedBalance).toFixed(
-                          4,
-                          BigNumber.ROUND_DOWN
-                        )}
-                        ETH
+                        {maxBuyAmount} ETH
                       </div>
                     </div>
                   </div>

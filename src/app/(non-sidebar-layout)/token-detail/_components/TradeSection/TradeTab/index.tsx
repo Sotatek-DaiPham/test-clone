@@ -19,6 +19,7 @@ import {
   ETH_THRESHOLD_WITH_FEE,
   TOKEN_DECIMAL_PLACE,
   GAS_FEE_BUFFER,
+  DECIMAL_DISPLAY,
 } from "@/constant";
 import { envs } from "@/constant/envs";
 import { REGEX_INPUT_DECIMAL } from "@/constant/regex";
@@ -47,6 +48,7 @@ import { TabKey, useTradeSettings } from "..";
 import { ethers } from "ethers";
 import useEthBalance from "@/hooks/useEthBalance";
 import AppTooltip from "@/components/app-tooltip";
+import { nFormatter } from "@/helpers/formatNumber";
 
 export const SETTINGS_FIELD_NAMES = {
   FONT_RUNNING: "fontRunning",
@@ -354,10 +356,9 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
       : 0;
 
     try {
-      const etheAmount = BigNumber(ethBalance).isLessThanOrEqualTo(amountValue)
+      const etherAmount = BigNumber(ethBalance).eq(amountValue)
         ? BigNumber(ethBalance).minus(gasFee).toString()
         : amountValue;
-      console.log("ehtAmount", etheAmount);
 
       console.log(
         "buyExactInParam",
@@ -372,7 +373,7 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
         BigNumber(minTokenOut).multipliedBy(TOKEN_DECIMAL).toFixed(0),
         address,
         {
-          value: ethers.parseUnits(etheAmount, "ether"),
+          value: ethers.parseUnits(etherAmount, "ether"),
           gasLimit: gasLimit || undefined,
         }
       );
@@ -386,9 +387,6 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
       return;
     }
   };
-
-  console.log({ ethBalance });
-
   const handleBuyTokenExactOut = async () => {
     const contract = await tokenFactoryContract;
     setLoadingStatus((prev) => ({ ...prev, buyToken: true }));
@@ -410,10 +408,8 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
           return;
         }
 
-        const etheAmount = BigNumber(ethBalance).isGreaterThanOrEqualTo(
-          ethShouldPay
-        )
-          ? BigNumber(ethShouldPay).minus(gasFee).toString()
+        const etheAmount = BigNumber(ethBalance).eq(ethShouldPay)
+          ? BigNumber(ethBalance).minus(gasFee).toString()
           : ethShouldPay;
 
         console.log(
@@ -690,6 +686,13 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
     }
   };
 
+  const maxBuyAmount = useMemo(() => {
+    const maxBuyAmount = BigNumber(ethBalance)
+      .minus(gasFee)
+      .toFixed(DECIMAL_DISPLAY, BigNumber.ROUND_DOWN);
+    return BigNumber(maxBuyAmount).gt(0) ? maxBuyAmount : "0";
+  }, [ethBalance, gasFee]);
+
   useEffect(() => {
     if (ethAmount || sellAmountOut) {
       form.validateFields();
@@ -723,7 +726,7 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
                         Estimated gas fee:
                       </div>
                       <div className="text-14px-normal text-white-neutral">
-                        {gasFee} ETH
+                        {nFormatter(gasFee, DECIMAL_DISPLAY)} ETH
                       </div>
                     </div>
                     <div className="flex justify-between">
@@ -731,8 +734,7 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
                         Maximum buy amount:
                       </div>
                       <div className="text-14px-normal text-white-neutral">
-                        {BigNumber(ethBalance).toFixed(4, BigNumber.ROUND_DOWN)}
-                        ETH
+                        {maxBuyAmount} ETH
                       </div>
                     </div>
                   </div>
