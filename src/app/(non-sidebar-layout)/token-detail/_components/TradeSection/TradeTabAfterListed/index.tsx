@@ -392,8 +392,16 @@ const TradeTabAfterListed = ({ tabKey }: { tabKey: TabKey }) => {
         }
 
         const etherAmount =
-          BigNumber(formattedBalance).eq(amountValue) ||
-          BigNumber(formattedBalance).eq(wethShouldPay)
+          (BigNumber(amountValue).isLessThanOrEqualTo(
+            BigNumber(formattedBalance)
+          ) &&
+            BigNumber(amountValue)
+              .plus(gasFee)
+              .isGreaterThan(formattedBalance)) ||
+          (BigNumber(wethShouldPay).isLessThanOrEqualTo(wethShouldPay) &&
+            BigNumber(wethShouldPay)
+              .plus(gasFee)
+              .isGreaterThan(formattedBalance))
             ? ethers.parseUnits(
                 BigNumber(formattedBalance).minus(gasFee).toString()
               )
@@ -500,7 +508,7 @@ const TradeTabAfterListed = ({ tabKey }: { tabKey: TabKey }) => {
             <div className="flex items-center gap-2">
               Buy Amount
               <AppTooltip
-                overlayClassName="min-w-[360px] rounded border border-[#44474A] bg-[#131314] shadow-md"
+                overlayClassName="min-w-[300px] rounded border border-[#44474A] bg-[#131314] shadow-md"
                 arrow={false}
                 title={
                   <div className="flex flex-col gap-2 ">
