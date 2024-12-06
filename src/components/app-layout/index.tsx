@@ -24,6 +24,7 @@ const AppLayout = ({ children }: { children: React.ReactNode }) => {
     isConnected,
     isLoginLoading,
     logout,
+    disconnectWallet,
   } = useWalletAuth();
 
   useEffect(() => {
@@ -61,6 +62,12 @@ const AppLayout = ({ children }: { children: React.ReactNode }) => {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    if (!isAuth) {
+      disconnectWallet();
+    }
+  }, [isAuth]);
 
   return (
     <Layout className="app-layout">

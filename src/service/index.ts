@@ -1,5 +1,5 @@
 import { API_PATH } from "@/constant/api-path";
-import { updateToken } from "@/libs/slices/userSlice";
+import { clearUser, updateToken } from "@/libs/slices/userSlice";
 import makeStore from "@/libs/store";
 import axios, { AxiosRequestConfig } from "axios";
 import { toast } from "react-toastify";
@@ -121,6 +121,7 @@ axiosInstance.interceptors.response.use(
         return axiosInstance(originalConfig);
       } catch (error) {
         processQueue(err as Error, null);
+        makeStore.dispatch(clearUser());
         return Promise.reject(error);
       } finally {
         isRefreshing = false;
