@@ -735,7 +735,9 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
                         Estimated gas fee:
                       </div>
                       <div className="text-14px-normal text-white-neutral">
-                        {nFormatter(gasFee, DECIMAL_DISPLAY)} ETH
+                        {isTokenMint
+                          ? `${nFormatter(gasFee, DECIMAL_DISPLAY)} ETH`
+                          : "NaN"}
                       </div>
                     </div>
                     <div className="flex justify-between">
@@ -743,7 +745,7 @@ const TradeTab = ({ tabKey }: { tabKey: TabKey }) => {
                         Maximum buy amount:
                       </div>
                       <div className="text-14px-normal text-white-neutral">
-                        {maxBuyAmount} ETH
+                        {isTokenMint ? `${maxBuyAmount} ETH` : "NaN"}
                       </div>
                     </div>
                   </div>
